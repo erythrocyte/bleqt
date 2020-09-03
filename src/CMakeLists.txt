@@ -1,9 +1,17 @@
 set(HEADERS 
-    test.hpp
+    inputData.hpp
+    physData.hpp
+    modelData.hpp
+    gridData.hpp
+    gridType.hpp
+    saturSolverSettings.hpp
+    saturSolverType.hpp
+    outputSettings.hpp
+    dynamicData.hpp
 )
 
 set (SOURCES
-    test.cpp
+	a.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})
