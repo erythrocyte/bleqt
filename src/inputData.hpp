@@ -10,8 +10,8 @@ namespace ble_src{
 class InputData {
 	public:
 		std::shared_ptr<PhysData> phys (new PhysData());
-		std::shared_ptr<ModelData> phys (new ModelData());
-		std::shared_ptr<GridData> phys (new GridData());
+		std::shared_ptr<ModelData> model (new ModelData());
+		std::shared_ptr<GridData> grd (new GridData());
 }
 
 }
