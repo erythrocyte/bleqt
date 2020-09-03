@@ -5,8 +5,8 @@ namespace ble_src {
 
 class ModelData {
 	public:
-		double Period;
-}
+		double period;
+};
 
 }
 

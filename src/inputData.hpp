@@ -4,15 +4,18 @@
 #include <iostream>
 #include <memory>
 
+#include "physData.hpp"
+#include "modelData.hpp"
+#include "gridData.hpp"
 
 namespace ble_src{
 
 class InputData {
 	public:
-		std::shared_ptr<PhysData> phys (new PhysData());
-		std::shared_ptr<ModelData> model (new ModelData());
-		std::shared_ptr<GridData> grd (new GridData());
-}
+		std::shared_ptr<PhysData> phys = std::make_shared<PhysData>();
+		std::shared_ptr<ModelData> model = std::make_shared<ModelData>();
+		std::shared_ptr<GridData> grd = std::make_shared<GridData>();
+};
 
 }
 

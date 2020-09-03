@@ -9,10 +9,13 @@ set(HEADERS
     outputSettings.hpp
     dynamicData.hpp
     diagMatrix.hpp
+    cell.hpp
+    grid.hpp
+    makeGrid.hpp
 )
 
 set (SOURCES
-	a.cpp
+	makeGrid.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})

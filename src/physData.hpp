@@ -10,7 +10,7 @@ class PhysData {
 		double n_wat;
 		double poro;
 		double perm;
-}
+};
 
 }
 

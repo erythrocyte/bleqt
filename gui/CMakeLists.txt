@@ -15,11 +15,19 @@ endif()
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
+set (HEADERS
+	bleFrame.hpp
+)
+
+set (SOURCES
+	bleFrame.cpp
+	main.cpp
+)
+
+
 set (EXE_TARGET ble)
 
-add_executable(${EXE_TARGET}
-    main.cpp
-)
+add_executable(${EXE_TARGET} ${HEADERS} ${SOURCES})
 
 target_link_libraries(${EXE_TARGET} Qt5::Widgets)
 target_link_libraries(${EXE_TARGET} Qt5::Core)

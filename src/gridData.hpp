@@ -11,7 +11,7 @@ class GridData {
 		double n;
 		
 		GridTypeEnum type;
-}
+};
 
 }
 
