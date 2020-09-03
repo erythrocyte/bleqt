@@ -8,6 +8,7 @@ set(HEADERS
     saturSolverType.hpp
     outputSettings.hpp
     dynamicData.hpp
+    diagMatrix.hpp
 )
 
 set (SOURCES
