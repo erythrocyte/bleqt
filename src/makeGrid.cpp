@@ -13,6 +13,10 @@ std::shared_ptr<Grid> make_regular_grid(const std::shared_ptr<InputData> data)
 		fc->x = step * k;
 		fc->cl1 = k;
 		fc->cl2 = k - 1;
+		fc->type = (k == 0)
+			? FaceType::kWell
+			: FaceType::kInner;
+
 		std::shared_ptr<Cell> cl (new Cell());
 		cl->ind = k;
 		cl->xl = k * step;
@@ -32,6 +36,8 @@ std::shared_ptr<Grid> make_regular_grid(const std::shared_ptr<InputData> data)
 	fc->ind = data->grd->n;
 	fc->x = data->grd->l;
 	fc->cl1 = data->grd->n -1;
+	fc->type = FaceType::kContour;
+	fc->bound_press = 1.;
 
 	return result;
 

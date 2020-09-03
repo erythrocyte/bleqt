@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 
 #include "makeGrid.hpp"
+#include "pressureSolver.hpp"
 
 namespace ble_gui{
 
@@ -30,8 +31,10 @@ BleFrame::BleFrame(QWidget* parent)
 
 void BleFrame::handleRunButton()
 {
-	this->getDefaultData();
-	this->makeGrid();
+	this->get_default_data();
+	this->make_grid();
+	this->set_initial_cond();
+	this->solve_press();
 
 	std::ostringstream oss;
 	oss << "cell count = " << grd->cells.size();
@@ -44,7 +47,7 @@ BleFrame::~BleFrame()
 {
 }
 
-void BleFrame::getDefaultData()
+void BleFrame::get_default_data()
 {
 	data = std::make_shared<ble_src::InputData>();
 	data->phys->kmu = 0.125;
@@ -60,9 +63,28 @@ void BleFrame::getDefaultData()
 	data->grd->type = ble_src::GridTypeEnum::kRegular;
 }
 
-void BleFrame::makeGrid()
+void BleFrame::make_grid()
 {
 	grd = ble_src::make_grid(data);
+}
+
+void BleFrame::set_initial_cond()
+{
+	std::vector<double> s(grd->cells.size(), 0.);
+	std::vector<double> p(grd->cells.size(), 1.);
+
+	std::shared_ptr<ble_src::DynamicData> d (new ble_src::DynamicData());
+	d->t = 0;
+	d->p = p;
+	d->s = s;
+
+	results.push_back(d);
+}
+
+void BleFrame::solve_press()
+{
+	std::vector<double> s = results[results.size()-1]->s;
+	std::vector<double> p = ble_src::solve_press(this->grd, s);
 }
 
 }

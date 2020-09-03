@@ -6,6 +6,7 @@
 
 #include "grid.hpp"
 #include "inputData.hpp"
+#include "dynamicData.hpp"
 
 #include <QMainWindow>
 #include <QPushButton>
@@ -33,12 +34,17 @@ class BleFrame : public QMainWindow
 		QPushButton* run_button;
 		QGridLayout* layout;
 		QLabel* label;
+		//QChartView* chartView;
 
 		std::shared_ptr<ble_src::Grid> grd;
 		std::shared_ptr<ble_src::InputData> data;
 
-		void getDefaultData();
-		void makeGrid();
+		std::vector<std::shared_ptr<ble_src::DynamicData>> results;
+
+		void get_default_data();
+		void make_grid();
+		void set_initial_cond();
+		void solve_press();
 };
 
 }
