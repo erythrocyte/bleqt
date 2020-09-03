@@ -39,8 +39,6 @@ class BleFrame : public QMainWindow
 
 		void getDefaultData();
 		void makeGrid();
-
-	
 };
 
 }

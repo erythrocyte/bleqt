@@ -26,9 +26,6 @@ BleFrame::BleFrame(QWidget* parent)
 	this->setFixedSize(600, 400);
 
 	connect(run_button, SIGNAL (released()), this, SLOT (handleRunButton()));
-
-
-
 }
 
 void BleFrame::handleRunButton()
