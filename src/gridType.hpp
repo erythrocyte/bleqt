@@ -4,10 +4,10 @@
 namespace ble_src {
 
 enum GridTypeEnum {
-	kRegural,
+	kRegular,
 	kRadial,
 	kSpheric
-}
+};
 
 }
 
