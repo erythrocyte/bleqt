@@ -3,6 +3,8 @@
 #include <QGridLayout>
 #include <QLabel>
 
+#include "diagMatrix.hpp"
+
 int main(int argc, char **argv)
 {
 	QApplication app(argc, argv);
