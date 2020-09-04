@@ -18,6 +18,7 @@ class Face {
 		double area = 1.;
 
 		double bound_press = 0.;
+		double bound_satur = 0.;
 
 		FaceType type;
 };

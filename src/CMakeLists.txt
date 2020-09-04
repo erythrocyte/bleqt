@@ -15,12 +15,14 @@ set(HEADERS
 	workSigma.hpp
 	pressureSolver.hpp
 	faceType.hpp
+	workRp.hpp
 )
 
 set (SOURCES
 	makeGrid.cpp
 	workSigma.cpp
 	pressureSolver.cpp
+	workRp.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})

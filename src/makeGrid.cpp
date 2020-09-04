@@ -38,6 +38,7 @@ std::shared_ptr<Grid> make_regular_grid(const std::shared_ptr<InputData> data)
 	fc->cl1 = data->grd->n -1;
 	fc->type = FaceType::kContour;
 	fc->bound_press = 1.;
+	fc->bound_satur = 1.;
 	result->faces.push_back(fc);
 
 
