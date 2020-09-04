@@ -14,12 +14,21 @@ BleFrame::BleFrame(QWidget* parent)
 {
 	central = new QWidget(this);
 	layout = new QGridLayout;
-	run_button = new QPushButton("Run");
 
 	label = new QLabel("Test");
-	layout->addWidget(label, 1, 0);
+	layout->addWidget(label, 2, 1);
 
-	layout->addWidget(run_button, 0, 0);
+	run_button = new QPushButton("Run");
+	layout->addWidget(run_button, 2, 0);
+
+	chart = new QChart();
+	chart->legend()->hide();
+	chart->createDefaultAxes();
+	chart->setTitle("p/s");
+
+	chartView = new QChartView(chart);
+	layout->addWidget(chartView, 0, 0, 1, 2);
+
 	central->setLayout(layout);
 
 	setCentralWidget(central);
@@ -34,13 +43,33 @@ void BleFrame::handleRunButton()
 	this->get_default_data();
 	this->make_grid();
 	this->set_initial_cond();
-	this->solve_press();
 
-	std::ostringstream oss;
-	oss << "cell count = " << grd->cells.size();
-	QString qstr = QString::fromStdString(oss.str());
+	int index = 1;
+	while (true) {
+		double t = 0.1;
+		std::vector<double> s_prev = results[0]->s;
+		std::vector<double> p = this->solve_press(s_prev);
+		std::vector<double> s = this->solve_satur();
 
-	label->setText(qstr);
+		std::shared_ptr<ble_src::DynamicData> d (new ble_src::DynamicData());
+		d->t = t;
+		d->p = p;
+		d->s = s;
+
+		results.push_back(d);
+	
+		this->fill_time_series(index);
+		index++;
+
+
+		break;
+	}
+
+	//std::ostringstream oss;
+	//oss << "cell count = " << grd->cells.size();
+	//QString qstr = QString::fromStdString(oss.str());
+
+	//label->setText(qstr);
 }
 
 BleFrame::~BleFrame()
@@ -81,10 +110,42 @@ void BleFrame::set_initial_cond()
 	results.push_back(d);
 }
 
-void BleFrame::solve_press()
+std::vector<double> BleFrame::solve_press(const std::vector<double>& s)
 {
-	std::vector<double> s = results[results.size()-1]->s;
-	std::vector<double> p = ble_src::solve_press(this->grd, s);
+	return ble_src::solve_press(this->grd, s);
+}
+
+std::vector<double> BleFrame::solve_satur()
+{
+	std::vector<double> result(grd->cells.size(), 0.);
+	return result;
+}
+
+void BleFrame::fill_time_series(int index)
+{
+	//try{
+		//chart->removeSeries(series_press);
+	//}
+	//catch(...){
+	//}
+	
+	std::ostringstream oss;
+
+	std::vector<double> p = results[index]->p;
+	//oss.str("");
+	//oss << "p size = " << p.size();
+
+	//label->setText(QString::fromStdString(oss.str()));
+
+	series_press = new QLineSeries();
+	for (auto &cl: grd->cells) {
+		oss.str("");
+		oss << "x = "<< cl->cntr << ", y = " << p[cl->ind];
+		label->setText(QString::fromStdString(oss.str()));
+		series_press->append(cl->cntr, p[cl->ind]);
+	}
+	
+	chart->addSeries(series_press);
 }
 
 }

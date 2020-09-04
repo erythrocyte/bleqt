@@ -12,6 +12,11 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QLabel>
+#include <QChartView>
+#include <QChart>
+#include <QLineSeries>
+
+using namespace QtCharts;
 
 namespace ble_gui{
 
@@ -34,7 +39,9 @@ class BleFrame : public QMainWindow
 		QPushButton* run_button;
 		QGridLayout* layout;
 		QLabel* label;
-		//QChartView* chartView;
+		QChartView* chartView;
+		QChart* chart;
+		QLineSeries* series_press;
 
 		std::shared_ptr<ble_src::Grid> grd;
 		std::shared_ptr<ble_src::InputData> data;
@@ -44,7 +51,10 @@ class BleFrame : public QMainWindow
 		void get_default_data();
 		void make_grid();
 		void set_initial_cond();
-		void solve_press();
+		std::vector<double> solve_press(const std::vector<double>& s);
+		std::vector<double> solve_satur();
+
+		void fill_time_series(int index);
 };
 
 }
