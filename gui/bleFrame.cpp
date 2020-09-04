@@ -8,6 +8,7 @@
 #include "pressureSolver.hpp"
 #include "saturSolver.hpp"
 #include "saturSolverType.hpp"
+#include "workTimeStep.hpp"
 
 namespace ble_gui{
 
@@ -17,19 +18,14 @@ BleFrame::BleFrame(QWidget* parent)
 	central = new QWidget(this);
 	layout = new QGridLayout;
 
-	prev = new QPushButton("<-");
-	layout->addWidget(prev, 1, 0);
+	slider = new QSlider(Qt::Orientation::Horizontal);
+	layout->addWidget(slider, 1, 0, 1, 10);
 
-	next = new QPushButton("->");
-	layout->addWidget(next, 1, 2);
-
-	timeStepInfo = new QLineEdit();
-	timeStepInfo->setReadOnly(true);
-	timeStepInfo->setAlignment(Qt::AlignCenter);
-	layout->addWidget(timeStepInfo, 1, 1);
+	label = new QLabel();
+	layout->addWidget(label, 1, 10);
 
 	run_button = new QPushButton("Run");
-	layout->addWidget(run_button, 2, 0, 1, 3);
+	layout->addWidget(run_button, 2, 0, 1, 11);
 
 	chart = new QChart();
 	
@@ -54,7 +50,7 @@ BleFrame::BleFrame(QWidget* parent)
 	axisYSat->setMax(1.);
 
 	chartView = new QChartView(chart);
-	layout->addWidget(chartView, 0, 0, 1, 3);
+	layout->addWidget(chartView, 0, 0, 1, 11);
 
 	central->setLayout(layout);
 
@@ -63,8 +59,7 @@ BleFrame::BleFrame(QWidget* parent)
 	this->setFixedSize(600, 400);
 
 	connect(run_button, SIGNAL (released()), this, SLOT (handleRunButton()));
-	connect(prev, SIGNAL (released()), this, SLOT (handlePrevButton()));
-	connect(next, SIGNAL (released()), this, SLOT (handleNextButton()));
+	connect(slider, SIGNAL (valueChanged(int)), this, SLOT (handleSliderValueChange()));
 }
 
 void BleFrame::handleRunButton()
@@ -75,10 +70,13 @@ void BleFrame::handleRunButton()
 
 	int index = 1;
 	double sumT = 0.;
-	while (index < 100) {
-		double t = 1.9;
+	while (sumT < data->model->period) {
 		std::vector<double> s_prev = results[index-1]->s;
+
 		std::vector<double> p = this->solve_press(s_prev);
+
+		double t = ble_src::get_time_step(grd, s_prev, data);
+
 		std::vector<double> s = this->solve_satur(t, s_prev);
 		sumT += t;
 
@@ -94,33 +92,25 @@ void BleFrame::handleRunButton()
 
 	}
 
-	update_time_info(showIndex);
-	fill_time_series(showIndex);
+	int count = results.size();
+	slider->setTickInterval(1.);
+	slider->setMinimum(1);
+	slider->setMaximum(count);
+	slider->setValue(1);
+
+	//update_time_info(0);
+	//fill_time_series(0);
 }
 
 BleFrame::~BleFrame()
 {
 }
 
-void BleFrame::handlePrevButton()
+void BleFrame::handleSliderValueChange()
 {
-	if (showIndex < 1)
-		return;
-	showIndex--;
-
-	update_time_info(showIndex);
-	fill_time_series(showIndex);
-}
-
-void BleFrame::handleNextButton()
-{
-	int count = results.size();
-	if (showIndex > count - 2)
-		return;
-	showIndex++;
-
-	update_time_info(showIndex);
-	fill_time_series(showIndex);
+	int value = slider->value() - 1;
+	update_time_info(value);
+	fill_time_series(value);
 }
 
 void BleFrame::update_time_info(int index)
@@ -128,7 +118,7 @@ void BleFrame::update_time_info(int index)
 	int count = results.size();
 	std::ostringstream oss;
 	oss << index + 1 << "/" << count;
-	timeStepInfo->setText(QString::fromStdString(oss.str()));
+	label->setText(QString::fromStdString(oss.str()));
 }
 
 void BleFrame::get_default_data()
@@ -140,13 +130,13 @@ void BleFrame::get_default_data()
 	data->phys->poro = 1.;
 	data->phys->perm = 1.;
 
-	data->model->period = 1.;
+	data->model->period = 500.;
 
 	data->grd->l = 10.;
-	data->grd->n = 20;
+	data->grd->n = 200;
 	data->grd->type = ble_src::GridTypeEnum::kRegular;
 
-	data->satSetts->cur_val = 0.1;
+	data->satSetts->cur_val = 0.9;
 	data->satSetts->pN = 10;
 	data->satSetts->type == ble_src::SaturSolverType::kExplicit;
 }

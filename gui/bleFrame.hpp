@@ -17,6 +17,7 @@
 #include <QLineSeries>
 #include <QValueAxis>
 #include <QLineEdit>
+#include <QSlider>
 
 using namespace QtCharts;
 
@@ -35,8 +36,7 @@ class BleFrame : public QMainWindow
 
 	private slots:
 		void handleRunButton();
-		void handlePrevButton();
-		void handleNextButton();
+		void handleSliderValueChange();
 
 	private:
 		QWidget* central;
@@ -49,16 +49,13 @@ class BleFrame : public QMainWindow
 		QValueAxis* axisX;
 		QValueAxis* axisYPress;
 		QValueAxis* axisYSat;
-		QPushButton* prev;
-		QPushButton* next;
-		QLineEdit* timeStepInfo;
+		QSlider* slider;
+		QLabel* label;
 
 		std::shared_ptr<ble_src::Grid> grd;
 		std::shared_ptr<ble_src::InputData> data;
 
 		std::vector<std::shared_ptr<ble_src::DynamicData>> results;
-
-		int showIndex = 0;
 
 		void get_default_data();
 		void make_grid();

@@ -25,7 +25,7 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
 	}
 
 	for (auto &cl: grd->cells) {
-		result[cl->ind] = init[cl->ind] + tau / data->phys->poro * dvs[cl->ind];
+		result[cl->ind] = init[cl->ind] + tau / (data->phys->poro * cl->volume) * dvs[cl->ind];
 	}
 
 	return result;
