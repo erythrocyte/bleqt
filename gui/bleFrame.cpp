@@ -158,7 +158,7 @@ void BleFrame::set_initial_cond()
 
 std::vector<double> BleFrame::solve_press(const std::vector<double>& s)
 {
-	return ble_src::solve_press(this->grd, s);
+	return ble_src::solve_press(this->grd, s, data->phys);
 }
 
 std::vector<double> BleFrame::solve_satur()

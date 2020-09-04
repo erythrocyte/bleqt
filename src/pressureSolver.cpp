@@ -5,7 +5,7 @@
 
 namespace ble_src {
 
-std::vector<double> solve_press(const std::shared_ptr<Grid> grd, const std::vector<double>& s)
+std::vector<double> solve_press(const std::shared_ptr<Grid> grd, const std::vector<double>& s, const std::shared_ptr<PhysData> data)
 {
 	DiagMat ret;
 	ret.resize(grd->cells.size());
@@ -13,9 +13,7 @@ std::vector<double> solve_press(const std::shared_ptr<Grid> grd, const std::vect
 	std::vector<double> rhs(grd->cells.size(), 0.0);
 
 	for (auto &fc: grd->faces) {
-		double sigma = (fc->cl2 == -1)
-			? get_cell_sigma()
-			: get_face_sigma();
+		double sigma = get_face_sigma(fc, s, data);
 		double h = (fc->cl2 == -1)
 			? std::abs(grd->cells[fc->cl1]->cntr - fc->x)
 			: std::abs(grd->cells[fc->cl1]->cntr - grd->cells[fc->cl2]->cntr);
