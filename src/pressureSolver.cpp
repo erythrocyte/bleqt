@@ -22,12 +22,6 @@ std::vector<double> solve_press(const std::shared_ptr<Grid> grd, const std::vect
 
 		double cf = fc->area * sigma / h;
 
-		if (fc->type == FaceType::kWell) {
-		}
-		else if (fc->type == FaceType::kContour) {
-
-		}
-
 		if (fc->type != FaceType::kInner) {
 			rhs[fc->cl1] += cf * fc->bound_press;
 			ret.C[fc->cl1] += cf;
@@ -35,8 +29,8 @@ std::vector<double> solve_press(const std::shared_ptr<Grid> grd, const std::vect
 		else {
 			ret.C[fc->cl1] += cf;
 			ret.A[fc->cl1] -= cf;
-			ret.B[fc->cl2] += cf;
-			ret.C[fc->cl2] -= cf;
+			ret.B[fc->cl2] -= cf;
+			ret.C[fc->cl2] += cf;
 		}
 	}
 

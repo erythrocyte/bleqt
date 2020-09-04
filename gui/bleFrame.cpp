@@ -22,9 +22,20 @@ BleFrame::BleFrame(QWidget* parent)
 	layout->addWidget(run_button, 2, 0);
 
 	chart = new QChart();
-	chart->legend()->hide();
-	chart->createDefaultAxes();
+	//chart->legend()->hide();
+	//chart->createDefaultAxes();
 	chart->setTitle("p/s");
+	
+	// Настройка осей графика
+	axisX = new QValueAxis();
+	axisX->setTitleText("x");
+	axisX->setLabelFormat("%i");
+	axisX->setTickCount(1);
+
+	axisYPress = new QValueAxis();
+	axisYPress->setTitleText("p");
+	axisYPress->setLabelFormat("%g");
+	axisYPress->setTickCount(5);
 
 	chartView = new QChartView(chart);
 	layout->addWidget(chartView, 0, 0, 1, 2);
@@ -123,19 +134,15 @@ std::vector<double> BleFrame::solve_satur()
 
 void BleFrame::fill_time_series(int index)
 {
-	//try{
-		//chart->removeSeries(series_press);
-	//}
-	//catch(...){
-	//}
+	try{
+		chart->removeSeries(series_press);
+	}
+	catch(...){
+	}
 	
 	std::ostringstream oss;
 
 	std::vector<double> p = results[index]->p;
-	//oss.str("");
-	//oss << "p size = " << p.size();
-
-	//label->setText(QString::fromStdString(oss.str()));
 
 	series_press = new QLineSeries();
 	for (auto &cl: grd->cells) {
@@ -146,6 +153,8 @@ void BleFrame::fill_time_series(int index)
 	}
 	
 	chart->addSeries(series_press);
+	chart->setAxisX(axisX, series_press);
+	chart->setAxisY(axisYPress, series_press);
 }
 
 }

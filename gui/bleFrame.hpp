@@ -15,6 +15,7 @@
 #include <QChartView>
 #include <QChart>
 #include <QLineSeries>
+#include <QValueAxis>
 
 using namespace QtCharts;
 
@@ -42,6 +43,8 @@ class BleFrame : public QMainWindow
 		QChartView* chartView;
 		QChart* chart;
 		QLineSeries* series_press;
+		QValueAxis *axisX;
+		QValueAxis *axisYPress;
 
 		std::shared_ptr<ble_src::Grid> grd;
 		std::shared_ptr<ble_src::InputData> data;

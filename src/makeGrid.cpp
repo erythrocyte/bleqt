@@ -16,6 +16,7 @@ std::shared_ptr<Grid> make_regular_grid(const std::shared_ptr<InputData> data)
 		fc->type = (k == 0)
 			? FaceType::kWell
 			: FaceType::kInner;
+		result->faces.push_back(fc);
 
 		std::shared_ptr<Cell> cl (new Cell());
 		cl->ind = k;
@@ -27,7 +28,6 @@ std::shared_ptr<Grid> make_regular_grid(const std::shared_ptr<InputData> data)
 		cl->volume = step;
 		cl->poro = data->phys->poro;
 		cl->perm = data->phys->perm;
-
 		result->cells.push_back(cl);
 	}
 	
@@ -38,6 +38,8 @@ std::shared_ptr<Grid> make_regular_grid(const std::shared_ptr<InputData> data)
 	fc->cl1 = data->grd->n -1;
 	fc->type = FaceType::kContour;
 	fc->bound_press = 1.;
+	result->faces.push_back(fc);
+
 
 	return result;
 
