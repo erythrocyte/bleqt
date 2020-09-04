@@ -12,16 +12,16 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
 	std::vector<double> dvs(grd->cells.size(), 0.);
 
 	for (auto &fc: grd->faces) {
-		double s = (fc->u < 0.)
+		double s = (fc->u > 0.)
 			? (fc->cl2 == -1)
 				? fc->bound_satur
 				: init[fc->cl2]
 			: init[fc->cl1];
 		
 		double cf = fc->u * get_fbl(s, data->phys) * fc->area;
-		dvs[fc->cl1] -= cf;
+		dvs[fc->cl1] += cf;
 		if (fc->cl2 != -1)
-			dvs[fc->cl2] += cf;
+			dvs[fc->cl2] -= cf;
 	}
 
 	for (auto &cl: grd->cells) {
