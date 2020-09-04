@@ -10,6 +10,8 @@
 namespace ble_src {
 
 std::vector<double> solve_press(const std::shared_ptr<Grid> grd, const std::vector<double>& s, const std::shared_ptr<PhysData> data);
+void calc_u(const std::vector<double>& p, const std::vector<double>& s, const std::shared_ptr<PhysData> data, 
+		std::shared_ptr<Grid> grd);
 
 }
 

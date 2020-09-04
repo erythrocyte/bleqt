@@ -10,7 +10,7 @@ class SaturSolverSetts {
 		double cur_val;
 		int pN; // pressUpdateTimeStepCount;
 		SaturSolverType type;
-}
+};
 
 }
 

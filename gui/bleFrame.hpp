@@ -45,8 +45,10 @@ class BleFrame : public QMainWindow
 		QChartView* chartView;
 		QChart* chart;
 		QLineSeries* series_press;
+		QLineSeries* series_sat_num;
 		QValueAxis* axisX;
 		QValueAxis* axisYPress;
+		QValueAxis* axisYSat;
 		QPushButton* prev;
 		QPushButton* next;
 		QLineEdit* timeStepInfo;
@@ -62,7 +64,7 @@ class BleFrame : public QMainWindow
 		void make_grid();
 		void set_initial_cond();
 		std::vector<double> solve_press(const std::vector<double>& s);
-		std::vector<double> solve_satur();
+		std::vector<double> solve_satur(const double tau, const std::vector<double>& s);
 
 		void fill_time_series(int index);
 

@@ -5,6 +5,13 @@
 
 namespace ble_src {
 
+double get_h(const std::shared_ptr<Face> fc, const std::shared_ptr<Grid> grd)
+{
+	return (fc->cl2 == -1)
+		? std::abs(grd->cells[fc->cl1]->cntr - fc->x)
+		: std::abs(grd->cells[fc->cl1]->cntr - grd->cells[fc->cl2]->cntr);
+}
+
 std::vector<double> solve_press(const std::shared_ptr<Grid> grd, const std::vector<double>& s, const std::shared_ptr<PhysData> data)
 {
 	DiagMat ret;
@@ -14,9 +21,7 @@ std::vector<double> solve_press(const std::shared_ptr<Grid> grd, const std::vect
 
 	for (auto &fc: grd->faces) {
 		double sigma = get_face_sigma(fc, s, data);
-		double h = (fc->cl2 == -1)
-			? std::abs(grd->cells[fc->cl1]->cntr - fc->x)
-			: std::abs(grd->cells[fc->cl1]->cntr - grd->cells[fc->cl2]->cntr);
+		double h = get_h(fc, grd);
 
 		double cf = fc->area * sigma / h;
 
@@ -33,7 +38,22 @@ std::vector<double> solve_press(const std::shared_ptr<Grid> grd, const std::vect
 	}
 
 	return ret.solve(rhs);
+}
 
+void calc_u(const std::vector<double>& p, const std::vector<double>& s, const std::shared_ptr<PhysData> data, 
+		std::shared_ptr<Grid> grd)
+{
+	for (auto &fc: grd->faces) {
+		double sigma = get_face_sigma(fc, s, data);
+		double h = get_h(fc, grd);
+
+		double p1 = p[fc->cl1];
+		double p2 = (fc->cl2 == -1)
+			? fc->bound_press
+			: p[fc->cl2];
+
+		fc->u = - fc->area * sigma * (p1 - p2) / h;
+	}
 }
 
 }

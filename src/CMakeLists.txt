@@ -16,6 +16,7 @@ set(HEADERS
 	pressureSolver.hpp
 	faceType.hpp
 	workRp.hpp
+	saturSolver.hpp
 )
 
 set (SOURCES
@@ -23,6 +24,7 @@ set (SOURCES
 	workSigma.cpp
 	pressureSolver.cpp
 	workRp.cpp
+	saturSolver.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})
