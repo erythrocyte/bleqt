@@ -4,9 +4,9 @@
 namespace ble_src {
 
 enum SaturSolverType {
-	kExpicit,
+	kExplicit,
 	kImplicit
-}
+};
 
 }
 

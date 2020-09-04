@@ -6,6 +6,8 @@
 
 #include "makeGrid.hpp"
 #include "pressureSolver.hpp"
+#include "saturSolver.hpp"
+#include "saturSolverType.hpp"
 
 namespace ble_gui{
 
@@ -44,6 +46,13 @@ BleFrame::BleFrame(QWidget* parent)
 	axisYPress->setMin(0.);
 	axisYPress->setMax(1.);
 
+	axisYSat = new QValueAxis();
+	axisYSat->setTitleText("s");
+	axisYSat->setLabelFormat("%g");
+	axisYSat->setTickCount(5);
+	axisYSat->setMin(0.);
+	axisYSat->setMax(1.);
+
 	chartView = new QChartView(chart);
 	layout->addWidget(chartView, 0, 0, 1, 3);
 
@@ -66,11 +75,11 @@ void BleFrame::handleRunButton()
 
 	int index = 1;
 	double sumT = 0.;
-	while (index < 10) {
-		double t = 0.1;
-		std::vector<double> s_prev = results[0]->s;
+	while (index < 100) {
+		double t = 1.9;
+		std::vector<double> s_prev = results[index-1]->s;
 		std::vector<double> p = this->solve_press(s_prev);
-		std::vector<double> s = this->solve_satur();
+		std::vector<double> s = this->solve_satur(t, s_prev);
 		sumT += t;
 
 		std::shared_ptr<ble_src::DynamicData> d (new ble_src::DynamicData());
@@ -134,8 +143,12 @@ void BleFrame::get_default_data()
 	data->model->period = 1.;
 
 	data->grd->l = 10.;
-	data->grd->n = 10;
+	data->grd->n = 20;
 	data->grd->type = ble_src::GridTypeEnum::kRegular;
+
+	data->satSetts->cur_val = 0.1;
+	data->satSetts->pN = 10;
+	data->satSetts->type == ble_src::SaturSolverType::kExplicit;
 }
 
 void BleFrame::make_grid()
@@ -158,13 +171,15 @@ void BleFrame::set_initial_cond()
 
 std::vector<double> BleFrame::solve_press(const std::vector<double>& s)
 {
-	return ble_src::solve_press(this->grd, s, data->phys);
+	std::vector<double> result = ble_src::solve_press(this->grd, s, data->phys);
+	ble_src::calc_u(result, s, data->phys, grd);
+
+	return result;
 }
 
-std::vector<double> BleFrame::solve_satur()
+std::vector<double> BleFrame::solve_satur(const double tau, const std::vector<double>& s)
 {
-	std::vector<double> result(grd->cells.size(), 0.);
-	return result;
+	return ble_src::solve_satur(tau, s, data, this->grd);
 }
 
 void BleFrame::fill_time_series(int index)
@@ -178,21 +193,28 @@ void BleFrame::fill_time_series(int index)
 	chart->setTitle(QString::fromStdString(oss.str()));
 	try{
 		chart->removeSeries(series_press);
+		chart->removeSeries(series_sat_num);
 	}
 	catch(...){
 	}
-	
 
 	std::vector<double> p = results[index]->p;
+	std::vector<double> s = results[index]->s;
 
 	series_press = new QLineSeries();
+	series_sat_num = new QLineSeries();
 	for (auto &cl: grd->cells) {
 		series_press->append(cl->cntr, p[cl->ind]);
+		series_sat_num->append(cl->cntr, s[cl->ind]);
 	}
 	
 	chart->addSeries(series_press);
 	chart->setAxisX(axisX, series_press);
 	chart->setAxisY(axisYPress, series_press);
+
+	chart->addSeries(series_sat_num);
+	chart->setAxisX(axisX, series_sat_num); // obsolete
+	chart->setAxisY(axisYSat, series_sat_num); // obsolete
 }
 
 }
