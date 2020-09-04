@@ -8,6 +8,7 @@
 #include "pressureSolver.hpp"
 #include "saturSolver.hpp"
 #include "saturSolverType.hpp"
+#include "workTimeStep.hpp"
 
 namespace ble_gui{
 
@@ -75,10 +76,13 @@ void BleFrame::handleRunButton()
 
 	int index = 1;
 	double sumT = 0.;
-	while (index < 100) {
-		double t = 1.9;
+	while (sumT < data->model->period) {
 		std::vector<double> s_prev = results[index-1]->s;
+
 		std::vector<double> p = this->solve_press(s_prev);
+
+		double t = ble_src::get_time_step(grd, s_prev, data);
+
 		std::vector<double> s = this->solve_satur(t, s_prev);
 		sumT += t;
 
@@ -140,7 +144,7 @@ void BleFrame::get_default_data()
 	data->phys->poro = 1.;
 	data->phys->perm = 1.;
 
-	data->model->period = 1.;
+	data->model->period = 10.;
 
 	data->grd->l = 10.;
 	data->grd->n = 20;
