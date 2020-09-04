@@ -8,7 +8,7 @@ class DynamicData {
 		double t;
 		std::vector<double> p;
 		std::vector<double> s;
-}
+};
 
 }
 

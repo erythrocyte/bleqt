@@ -14,6 +14,7 @@ endif()
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt5 COMPONENTS Core REQUIRED)
+find_package(Qt5 COMPONENTS Charts REQUIRED)
 
 set (HEADERS
 	bleFrame.hpp
@@ -31,6 +32,7 @@ add_executable(${EXE_TARGET} ${HEADERS} ${SOURCES})
 
 target_link_libraries(${EXE_TARGET} Qt5::Widgets)
 target_link_libraries(${EXE_TARGET} Qt5::Core)
+target_link_libraries(${EXE_TARGET} Qt5::Charts)
 
 get_target_property(QtCore_location Qt5::Core LOCATION)
 

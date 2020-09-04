@@ -1,6 +1,8 @@
 #ifndef BLE_SRC_FACE_H_
 #define BLE_SRC_FACE_H_
 
+#include "faceType.hpp"
+
 namespace ble_src {
 
 class Face {
@@ -14,6 +16,10 @@ class Face {
 		double u;
 
 		double area = 1.;
+
+		double bound_press = 0.;
+
+		FaceType type;
 };
 
 }
