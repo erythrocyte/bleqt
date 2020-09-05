@@ -8,6 +8,8 @@
 #include "inputData.hpp"
 #include "dynamicData.hpp"
 
+#include "dataWidget.hpp"
+
 #include <QMainWindow>
 #include <QPushButton>
 #include <QGridLayout>
@@ -18,14 +20,15 @@
 #include <QValueAxis>
 #include <QLineEdit>
 #include <QSlider>
+#include <QMenu>
 
 using namespace QtCharts;
 
 namespace ble_gui{
 
-namespace Ui {
-	class BleFrame;
-}
+//namespace Ui {
+	//class BleFrame;
+//}
 
 class BleFrame : public QMainWindow
 {
@@ -51,6 +54,8 @@ class BleFrame : public QMainWindow
 		QValueAxis* axisYSat;
 		QSlider* slider;
 		QLabel* label;
+		DataWidget* dataWidget;
+		QMenu *menu;
 
 		std::shared_ptr<ble_src::Grid> grd;
 		std::shared_ptr<ble_src::InputData> data;

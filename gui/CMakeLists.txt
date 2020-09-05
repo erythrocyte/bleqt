@@ -18,10 +18,14 @@ find_package(Qt5 COMPONENTS Charts REQUIRED)
 
 set (HEADERS
 	bleFrame.hpp
+	dataWidget.hpp
+	modelDataWidget.hpp
 )
 
 set (SOURCES
 	bleFrame.cpp
+	dataWidget.cpp
+	modelDataWidget.cpp
 	main.cpp
 )
 

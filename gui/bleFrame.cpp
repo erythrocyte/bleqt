@@ -3,6 +3,8 @@
 #include <sstream>
 
 #include <QCoreApplication>
+#include <QDockWidget>
+#include <QMenuBar>
 
 #include "makeGrid.hpp"
 #include "pressureSolver.hpp"
@@ -15,7 +17,6 @@ namespace ble_gui{
 BleFrame::BleFrame(QWidget* parent)
 	: QMainWindow(parent)
 {
-	central = new QWidget(this);
 	layout = new QGridLayout;
 
 	slider = new QSlider(Qt::Orientation::Horizontal);
@@ -52,11 +53,24 @@ BleFrame::BleFrame(QWidget* parent)
 	chartView = new QChartView(chart);
 	layout->addWidget(chartView, 0, 0, 1, 11);
 
+	central = new QWidget(this);
 	central->setLayout(layout);
 
 	setCentralWidget(central);
 	setWindowTitle("Ble Frame");
 	this->setFixedSize(600, 400);
+
+	dataWidget = new DataWidget();
+
+	QDockWidget *dock = new QDockWidget(tr("Settings"), this);
+	dock->setWidget(dataWidget);
+	addDockWidget(Qt::LeftDockWidgetArea, dock);
+	QMenuBar* menuBar = new QMenuBar();
+	menu = new QMenu("&Menu");
+	menu->addAction(dock->toggleViewAction());
+
+	menuBar->addMenu(menu);
+	menuBar->show();
 
 	connect(run_button, SIGNAL (released()), this, SLOT (handleRunButton()));
 	connect(slider, SIGNAL (valueChanged(int)), this, SLOT (handleSliderValueChange()));
@@ -97,9 +111,6 @@ void BleFrame::handleRunButton()
 	slider->setMinimum(1);
 	slider->setMaximum(count);
 	slider->setValue(1);
-
-	//update_time_info(0);
-	//fill_time_series(0);
 }
 
 BleFrame::~BleFrame()
