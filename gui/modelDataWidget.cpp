@@ -12,6 +12,10 @@ ModelDataWidget::ModelDataWidget(QWidget* parent)
 	layout->setMargin(0);
 
 	Period = new QDoubleSpinBox();
+	Period->setMinimum(0.1);
+	Period->setMaximum(1e20);
+	Period->setSingleStep(0.1);
+	Period->setValue(5.0);
 	layout->addWidget(Period, 0, 1);
 
 	QLabel* periodLabel = new QLabel("Period");

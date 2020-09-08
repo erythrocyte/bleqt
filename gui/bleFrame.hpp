@@ -11,7 +11,6 @@
 #include "dataWidget.hpp"
 
 #include <QMainWindow>
-#include <QPushButton>
 #include <QGridLayout>
 #include <QLabel>
 #include <QChartView>
@@ -40,10 +39,10 @@ class BleFrame : public QMainWindow
 	private slots:
 		void handleRunButton();
 		void handleSliderValueChange();
+		void updateInputData();
 
 	private:
 		QWidget* central;
-		QPushButton* run_button;
 		QGridLayout* layout;
 		QChartView* chartView;
 		QChart* chart;
