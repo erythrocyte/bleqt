@@ -25,10 +25,6 @@ using namespace QtCharts;
 
 namespace ble_gui{
 
-//namespace Ui {
-	//class BleFrame;
-//}
-
 class BleFrame : public QMainWindow
 {
 	Q_OBJECT
