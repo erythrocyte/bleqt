@@ -3,6 +3,10 @@
 #include <sstream>
 
 #include <QCoreApplication>
+#include <QDockWidget>
+#include <QMenuBar>
+#include <QApplication>
+#include <QCommonStyle>
 
 #include "makeGrid.hpp"
 #include "pressureSolver.hpp"
@@ -15,7 +19,6 @@ namespace ble_gui{
 BleFrame::BleFrame(QWidget* parent)
 	: QMainWindow(parent)
 {
-	central = new QWidget(this);
 	layout = new QGridLayout;
 
 	slider = new QSlider(Qt::Orientation::Horizontal);
@@ -23,9 +26,6 @@ BleFrame::BleFrame(QWidget* parent)
 
 	label = new QLabel();
 	layout->addWidget(label, 1, 10);
-
-	run_button = new QPushButton("Run");
-	layout->addWidget(run_button, 2, 0, 1, 11);
 
 	chart = new QChart();
 	
@@ -52,19 +52,44 @@ BleFrame::BleFrame(QWidget* parent)
 	chartView = new QChartView(chart);
 	layout->addWidget(chartView, 0, 0, 1, 11);
 
+	central = new QWidget(this);
 	central->setLayout(layout);
 
 	setCentralWidget(central);
 	setWindowTitle("Ble Frame");
 	this->setFixedSize(600, 400);
 
-	connect(run_button, SIGNAL (released()), this, SLOT (handleRunButton()));
+	QCommonStyle* style = new QCommonStyle();
+	QAction *quit = new QAction("&Quit", this);
+	quit->setIcon(style->standardIcon(QStyle::SP_DialogCloseButton));
+
+	QMenu *file = menuBar()->addMenu("&File");
+	file->addAction(quit);
+	connect(quit, &QAction::triggered, qApp, QApplication::quit);
+
+	dataWidget = new DataWidget();
+
+	QDockWidget *dock = new QDockWidget(tr("Settings"), this);
+	dock->setWidget(dataWidget);
+	addDockWidget(Qt::LeftDockWidgetArea, dock);
+
+	menu = menuBar()->addMenu("&View");
+	QAction* showSettings = dock->toggleViewAction();
+	showSettings->setIcon(style->standardIcon(QStyle::SP_FileDialogDetailedView));
+	menu->addAction(showSettings);
+
+	menu = menuBar()->addMenu("&Task");
+	QAction* runAction = new QAction("Run");
+	menu->addAction(runAction);
+
+	connect(runAction, SIGNAL(triggered()), this, SLOT (handleRunButton()));
 	connect(slider, SIGNAL (valueChanged(int)), this, SLOT (handleSliderValueChange()));
 }
 
 void BleFrame::handleRunButton()
 {
 	this->get_default_data();
+	this->updateInputData();
 	this->make_grid();
 	this->set_initial_cond();
 
@@ -97,9 +122,6 @@ void BleFrame::handleRunButton()
 	slider->setMinimum(1);
 	slider->setMaximum(count);
 	slider->setValue(1);
-
-	//update_time_info(0);
-	//fill_time_series(0);
 }
 
 BleFrame::~BleFrame()
@@ -205,6 +227,11 @@ void BleFrame::fill_time_series(int index)
 	chart->addSeries(series_sat_num);
 	chart->setAxisX(axisX, series_sat_num); // obsolete
 	chart->setAxisY(axisYSat, series_sat_num); // obsolete
+}
+
+void BleFrame::updateInputData()
+{
+	data->model->period = dataWidget->ModelData->Period->value();
 }
 
 }
