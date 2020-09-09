@@ -1,5 +1,7 @@
 #include "makeGrid.hpp"
 
+#include "shockFront.hpp"
+
 namespace ble_src {
 
 std::shared_ptr<Grid> make_regular_grid(const std::shared_ptr<InputData> data) 
