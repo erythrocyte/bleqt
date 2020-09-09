@@ -18,6 +18,7 @@ set(HEADERS
 	workRp.hpp
 	saturSolver.hpp
 	workTimeStep.hpp
+	shockFront.hpp
 )
 
 set (SOURCES
@@ -27,6 +28,7 @@ set (SOURCES
 	workRp.cpp
 	saturSolver.cpp
 	workTimeStep.cpp
+	shockFront.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})

@@ -13,6 +13,7 @@
 #include "saturSolver.hpp"
 #include "saturSolverType.hpp"
 #include "workTimeStep.hpp"
+#include "shockFront.hpp"
 
 namespace ble_gui{
 
@@ -90,6 +91,7 @@ void BleFrame::handleRunButton()
 {
 	this->get_default_data();
 	this->updateInputData();
+	std::cout << "sc = " << get_shock_front(data->phys) << std::endl;
 	this->make_grid();
 	this->set_initial_cond();
 
