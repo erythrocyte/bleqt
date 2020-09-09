@@ -43,9 +43,7 @@ std::shared_ptr<Grid> make_regular_grid(const std::shared_ptr<InputData> data)
 	fc->bound_satur = 1.;
 	result->faces.push_back(fc);
 
-
 	return result;
-
 }
 
 std::shared_ptr<Grid> make_grid(const std::shared_ptr<InputData> data)

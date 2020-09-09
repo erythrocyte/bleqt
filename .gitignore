@@ -39,3 +39,4 @@ build/
 
 #GDB
 gdb_script/
+.vscode/settings.json
