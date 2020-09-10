@@ -164,10 +164,10 @@ namespace ble_gui
 		data->model->period = 500.;
 
 		data->grd->l = 10.;
-		data->grd->n = 150;
+		data->grd->n = 500;
 		data->grd->type = ble_src::GridTypeEnum::kRegular;
 
-		data->satSetts->cur_val = 0.9;
+		data->satSetts->cur_val = 0.005;
 		data->satSetts->pN = 10;
 		data->satSetts->type == ble_src::SaturSolverType::kExplicit;
 	}
