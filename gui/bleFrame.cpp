@@ -29,6 +29,10 @@ namespace ble_gui
 
 		slider = new QSlider(Qt::Orientation::Horizontal);
 		layout->addWidget(slider, 1, 0, 1, 10);
+		slider->setTickInterval(1.);
+		slider->setMinimum(1);
+		slider->setMaximum(1);
+		slider->setValue(1);
 
 		label = new QLabel();
 		layout->addWidget(label, 1, 10);
@@ -126,11 +130,9 @@ namespace ble_gui
 			index++;
 		}
 
-		int count = results.size();
-		slider->setTickInterval(1.);
-		slider->setMinimum(1);
+		int count = results.size();		
 		slider->setMaximum(count);
-		slider->setValue(1);
+		handleSliderValueChange();
 	}
 
 	BleFrame::~BleFrame()
@@ -140,8 +142,11 @@ namespace ble_gui
 	void BleFrame::handleSliderValueChange()
 	{
 		int value = slider->value() - 1;
-		update_time_info(value);
-		fill_time_series(false, value);
+		if (value < results.size())
+		{
+			update_time_info(value);
+			fill_time_series(false, value);
+		}
 	}
 
 	void BleFrame::update_time_info(int index)
