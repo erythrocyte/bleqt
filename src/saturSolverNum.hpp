@@ -1,5 +1,5 @@
-#ifndef BLE_SRC_SATURSOLVER_H_
-#define BLE_SRC_SATURSOLVER_H_
+#ifndef BLE_SRC_SATURSOLVERNUM_H_
+#define BLE_SRC_SATURSOLVERNUM_H_
 
 #include <iostream>
 #include <vector>

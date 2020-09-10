@@ -16,9 +16,13 @@ set(HEADERS
 	pressureSolver.hpp
 	faceType.hpp
 	workRp.hpp
-	saturSolver.hpp
+	saturSolverNum.hpp
 	workTimeStep.hpp
 	shockFront.hpp
+	commonMath.hpp
+	saturSolverAnalytic.hpp
+	commonVector.hpp
+	workParam.hpp
 )
 
 set (SOURCES
@@ -26,9 +30,13 @@ set (SOURCES
 	workSigma.cpp
 	pressureSolver.cpp
 	workRp.cpp
-	saturSolver.cpp
+	saturSolverNum.cpp
 	workTimeStep.cpp
 	shockFront.cpp
+	commonMath.cpp
+	saturSolverAnalytic.cpp
+	commonVector.cpp
+	workParam.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})

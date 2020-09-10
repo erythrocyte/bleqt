@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <tuple>
 
 namespace ble_src
 {
@@ -13,6 +14,8 @@ namespace ble_src
 		double t;
 		std::vector<double> p;
 		std::vector<double> s;
+
+		std::vector<std::tuple<double, double>> s_an;
 	};
 
 } // namespace ble_src
