@@ -2,6 +2,8 @@
 
 #include <sstream>
 #include <tuple>
+#include <chrono>
+#include <iomanip>
 
 #include <QCoreApplication>
 #include <QDockWidget>
@@ -89,15 +91,28 @@ namespace ble_gui
 		this->set_default_data();
 		this->update_sc(true);
 
+		statusBar = new QStatusBar();
+		statusLabel = new QLabel(tr("Ready to run calculation"));		
+		statusBar->addWidget(statusLabel);
+		statusProgressBar = new QProgressBar();
+		statusBar->addWidget(statusProgressBar);
+		
+		this->setStatusBar(statusBar);
+
 		connect(runAction, SIGNAL(triggered()), this, SLOT(handleRunButton()));
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(handleSliderValueChange()));
 	}
 
 	void BleFrame::handleRunButton()
 	{
+		auto start = std::chrono::high_resolution_clock::now();
+
 		this->updateInputData();
 		this->make_grid();
 		this->set_initial_cond();
+
+		statusLabel->setText(tr("calculation status: "));
+		statusProgressBar->setMaximum(100);
 
 		double sc = ble_src::get_shock_front(data->phys);
 
@@ -128,11 +143,22 @@ namespace ble_gui
 
 			this->fill_time_series(index == 1, index);
 			index++;
+
+			double perc = std::min(100.0, (sumT / data->model->period * 100.0));
+			statusProgressBar->setValue(perc);
 		}
 
 		int count = results.size();		
 		slider->setMaximum(count);
 		handleSliderValueChange();
+
+		auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff = end-start;
+
+		std::ostringstream oss;
+		oss << "calculation completed in " << std::fixed << std::setprecision(1) << diff.count() << " s.";
+
+		statusLabel->setText(QString::fromStdString(oss.str()));
 	}
 
 	BleFrame::~BleFrame()
