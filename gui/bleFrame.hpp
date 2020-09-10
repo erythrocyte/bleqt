@@ -44,6 +44,7 @@ class BleFrame : public QMainWindow
 		QChart* chart;
 		QLineSeries* series_press;
 		QLineSeries* series_sat_num;
+		QLineSeries* series_sat_an;
 		QLineSeries* series_sc;
 		QValueAxis* axisX;
 		QValueAxis* axisYPress;

@@ -1,19 +1,23 @@
 #include "bleFrame.hpp"
 
 #include <sstream>
+#include <tuple>
 
 #include <QCoreApplication>
 #include <QDockWidget>
 #include <QMenuBar>
 #include <QApplication>
 #include <QCommonStyle>
+#include <QPen>
 
 #include "makeGrid.hpp"
 #include "pressureSolver.hpp"
-#include "saturSolver.hpp"
+#include "saturSolverNum.hpp"
 #include "saturSolverType.hpp"
 #include "workTimeStep.hpp"
 #include "shockFront.hpp"
+#include "saturSolverAnalytic.hpp"
+#include "workParam.hpp"
 
 namespace ble_gui
 {
@@ -91,8 +95,11 @@ namespace ble_gui
 		this->make_grid();
 		this->set_initial_cond();
 
+		double sc = ble_src::get_shock_front(data->phys);
+
 		int index = 1;
 		double sumT = 0.;
+		double sumU = 0.;
 		while (sumT < data->model->period)
 		{
 			std::vector<double> s_prev = results[index - 1]->s;
@@ -101,6 +108,9 @@ namespace ble_gui
 
 			double t = ble_src::get_time_step(grd, s_prev, data);
 
+			sumU += ble_src::getULiqInject(grd) * t;
+			std::vector<std::tuple<double, double>> xs_an = ble_src::get_satur_exact(sc, sumU, data);
+
 			std::vector<double> s = this->solve_satur(t, s_prev);
 			sumT += t;
 
@@ -108,6 +118,7 @@ namespace ble_gui
 			d->t = sumT;
 			d->p = p;
 			d->s = s;
+			d->s_an = xs_an;
 
 			results.push_back(d);
 
@@ -153,7 +164,7 @@ namespace ble_gui
 		data->model->period = 500.;
 
 		data->grd->l = 10.;
-		data->grd->n = 200;
+		data->grd->n = 150;
 		data->grd->type = ble_src::GridTypeEnum::kRegular;
 
 		data->satSetts->cur_val = 0.9;
@@ -206,17 +217,22 @@ namespace ble_gui
 		{
 			series_press = new QLineSeries();
 			series_press->setName("p");
-			
+
 			series_sat_num = new QLineSeries();
 			series_sat_num->setName("s_num");
+
+			series_sat_an = new QLineSeries();
+			series_sat_an->setName("s_an");
 		}
 		else
 		{
 			chart->removeSeries(series_press);
 			chart->removeSeries(series_sat_num);
+			chart->removeSeries(series_sat_an);
 
 			series_press->clear();
 			series_sat_num->clear();
+			series_sat_an->clear();
 		}
 
 		std::vector<double> p = results[index]->p;
@@ -228,6 +244,14 @@ namespace ble_gui
 			series_sat_num->append(cl->cntr, s[cl->ind]);
 		}
 
+		std::vector<std::tuple<double, double>> xs_an = results[index]->s_an;
+		for (auto &v : xs_an)
+		{
+			double x1, s1;
+			std::tie(x1, s1) = v;
+			series_sat_an->append(x1, s1);
+		}
+
 		chart->addSeries(series_press);
 		chart->setAxisX(axisX, series_press);
 		chart->setAxisY(axisYSat, series_press);
@@ -235,6 +259,10 @@ namespace ble_gui
 		chart->addSeries(series_sat_num);
 		chart->setAxisX(axisX, series_sat_num);	   // obsolete
 		chart->setAxisY(axisYSat, series_sat_num); // obsolete
+
+		chart->addSeries(series_sat_an);
+		chart->setAxisX(axisX, series_sat_an);	  // obsolete
+		chart->setAxisY(axisYSat, series_sat_an); // obsolete
 	}
 
 	void BleFrame::updateInputData()
@@ -247,6 +275,11 @@ namespace ble_gui
 		if (init)
 		{
 			series_sc = new QLineSeries();
+			QPen pen;
+			pen.setStyle(Qt::DotLine);
+			pen.setWidth(2);
+			// pen.setBrush(Qt::green);
+			series_sc->setPen(pen);
 			series_sc->setName(tr("sc"));
 		}
 		else
