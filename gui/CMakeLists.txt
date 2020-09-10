@@ -20,12 +20,14 @@ set (HEADERS
 	bleFrame.hpp
 	dataWidget.hpp
 	modelDataWidget.hpp
+	physicDataWidget.hpp
 )
 
 set (SOURCES
 	bleFrame.cpp
 	dataWidget.cpp
 	modelDataWidget.cpp
+	physicDataWidget.cpp
 	main.cpp
 )
 
