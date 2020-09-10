@@ -46,7 +46,7 @@ class BleFrame : public QMainWindow
 		QLineSeries* series_sat_num;
 		QLineSeries* series_sc;
 		QValueAxis* axisX;
-		// QValueAxis* axisYPress;
+		QValueAxis* axisYPress;
 		QValueAxis* axisYSat;
 		QSlider* slider;
 		QLabel* label;
