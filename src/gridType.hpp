@@ -22,36 +22,27 @@ namespace ble_src
 
 		static std::string get_description(TypeEnum enumVal)
 		{
-			std::map<TypeEnum, std::string> descriptions = get_descriptions();
-			return descriptions.find(enumVal)->second;
+			switch (enumVal)
+			{
+			case TypeEnum::kRadial:
+				return "Radial";
+			case TypeEnum::kRegular:
+				return "Regular";
+			case TypeEnum::kSpheric:
+				return "Spheric";
+			default:
+				return "Undefined";
+			}
 		}
 
 		TypeEnum get_enum(std::string val)
 		{
-			std::map<TypeEnum, std::string> descriptions = get_descriptions();
-			TypeEnum result = TypeEnum::kRegular;
-			for (const auto &d : descriptions)
-			{
-				if (d.second == val)
-				{
-					return d.first;
-				}
-
-			}
-
-			return result;
-		}
-
-	private:
-		static std::map<TypeEnum, std::string> get_descriptions()
-		{
-			std::map<TypeEnum, std::string> result;
-
-			result.insert(std::make_pair(TypeEnum::kRadial, "Radial"));
-			result.insert(std::make_pair(TypeEnum::kRegular, "Regular"));
-			result.insert(std::make_pair(TypeEnum::kSpheric, "Spheric"));
-
-			return result;
+			if (val == "Radial")
+				return TypeEnum::kRegular;
+			else if (val == "Spheric")
+				return TypeEnum::kSpheric;
+			else
+				return TypeEnum::kRegular;
 		}
 	};
 

@@ -9,7 +9,7 @@ class SaturSolverSetts {
 	public:
 		double cur_val;
 		int pN; // pressUpdateTimeStepCount;
-		SaturSolverType type;
+		SaturSolverType::TypeEnum type;
 };
 
 }
