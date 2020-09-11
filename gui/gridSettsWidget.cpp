@@ -21,10 +21,10 @@ namespace ble_gui
         Length->setMaximum(1000);
         Length->setSingleStep(1.0);
         Length->setValue(1.0);
-        layout->addWidget(Length, 0, 1);
+        // layout->addWidget(Length, 0, 1);
 
         QLabel *lengthLabel = new QLabel("Length");
-        layout->addWidget(lengthLabel, 0, 0);
+        // layout->addWidget(lengthLabel, 0, 0);
 
         CellCount = new QSpinBox();
         CellCount->setMinimum(1);

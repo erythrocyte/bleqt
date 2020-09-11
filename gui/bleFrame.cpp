@@ -207,20 +207,20 @@ namespace ble_gui
 	void BleFrame::set_default_data()
 	{
 		data = std::make_shared<ble_src::InputData>();
-		data->phys->kmu = 0.125;
-		data->phys->n_oil = 2;
-		data->phys->n_wat = 2;
-		data->phys->poro = 1.;
-		data->phys->perm = 1.;
+		data->phys->kmu = dataWidget->PhysData->Kmu->value();
+		data->phys->n_oil = dataWidget->PhysData->Noil->value();
+		data->phys->n_wat = dataWidget->PhysData->Nwat->value();
+		data->phys->poro = dataWidget->PhysData->Poro->value();
+		data->phys->perm = dataWidget->PhysData->Perm->value();
 
-		data->model->period = 500.;
+		data->model->period = dataWidget->ModelData->Period->value();
 
-		data->grd->l = 10.;
-		data->grd->n = 2000;
+		data->grd->l = dataWidget->GridSetts->Length->value();
+		data->grd->n = dataWidget->GridSetts->CellCount->value();
 		data->grd->type = ble_src::GridTypeEnum::kRegular;
 
-		data->satSetts->cur_val = 0.005;
-		data->satSetts->pN = 10;
+		data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
+		data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
 		data->satSetts->type == ble_src::SaturSolverType::kExplicit;
 	}
 
