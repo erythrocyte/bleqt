@@ -7,19 +7,23 @@
 #include <QWidget>
 
 #include "modelDataWidget.hpp"
+#include "physicDataWidget.hpp"
 
-namespace ble_gui {
+namespace ble_gui
+{
 
-class DataWidget : public QWidget {
-	Q_OBJECT
-	
+	class DataWidget : public QWidget
+	{
+		Q_OBJECT
+
 	public:
-		DataWidget(QWidget* parent = nullptr);
+		DataWidget(QWidget *parent = nullptr);
 		~DataWidget() {}
 
-		ModelDataWidget* ModelData;
-};
+		ModelDataWidget *ModelData;
+		PhysDataWidget *PhysData;
+	};
 
-}
+} // namespace ble_gui
 
 #endif
