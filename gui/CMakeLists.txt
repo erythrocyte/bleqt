@@ -21,6 +21,7 @@ set (HEADERS
 	dataWidget.hpp
 	modelDataWidget.hpp
 	physicDataWidget.hpp
+	satSolverSettsWidget.hpp
 )
 
 set (SOURCES
@@ -28,6 +29,7 @@ set (SOURCES
 	dataWidget.cpp
 	modelDataWidget.cpp
 	physicDataWidget.cpp
+	satSolverSettsWidget.cpp
 	main.cpp
 )
 

@@ -130,13 +130,20 @@ namespace ble_gui
 		double sc = ble_src::get_shock_front(data->phys);
 
 		int index = 1;
+		int pressIndex = 0;
 		double sumT = 0.;
 		double sumU = 0.;
 		while (sumT < data->model->period)
 		{
 			std::vector<double> s_prev = results[index - 1]->s;
 
-			std::vector<double> p = this->solve_press(s_prev);
+			std::vector<double> p = results[index - 1]->p;
+			if (pressIndex == 0 || pressIndex == data->satSetts->pN)
+			{
+				p = this->solve_press(s_prev);
+				pressIndex = 0;
+			}
+			pressIndex++;
 
 			double t = ble_src::get_time_step(grd, s_prev, data);
 
@@ -209,7 +216,7 @@ namespace ble_gui
 		data->model->period = 500.;
 
 		data->grd->l = 10.;
-		data->grd->n = 500;
+		data->grd->n = 2000;
 		data->grd->type = ble_src::GridTypeEnum::kRegular;
 
 		data->satSetts->cur_val = 0.005;
@@ -308,6 +315,9 @@ namespace ble_gui
 		data->phys->n_wat = dataWidget->PhysData->Nwat->value();
 		data->phys->perm = dataWidget->PhysData->Perm->value();
 		data->phys->poro = dataWidget->PhysData->Poro->value();
+
+		data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
+		data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
 
 		this->update_sc(false);
 	}
