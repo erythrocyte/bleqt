@@ -49,10 +49,10 @@ std::shared_ptr<Grid> make_regular_grid(const std::shared_ptr<InputData> data)
 std::shared_ptr<Grid> make_grid(const std::shared_ptr<InputData> data)
 {
 	switch (data->grd->type) { 
-		case GridTypeEnum::kRegular:
+		case GridType::TypeEnum::kRegular:
 			return make_regular_grid(data);
-		case GridTypeEnum::kRadial:
-		case GridTypeEnum::kSpheric:
+		case GridType::TypeEnum::kRadial:
+		case GridType::TypeEnum::kSpheric:
 		default:
 			return std::make_shared<Grid>();
 	}

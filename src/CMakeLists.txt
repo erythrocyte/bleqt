@@ -23,6 +23,7 @@ set(HEADERS
 	saturSolverAnalytic.hpp
 	commonVector.hpp
 	workParam.hpp
+	mapInit.hpp
 )
 
 set (SOURCES

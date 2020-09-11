@@ -10,7 +10,7 @@ class GridData {
 		double l;
 		double n;
 		
-		GridTypeEnum type;
+		GridType::TypeEnum type;
 };
 
 }

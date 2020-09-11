@@ -1,5 +1,7 @@
 #include "satSolverSettsWidget.hpp"
 
+#include "saturSolverType.hpp"
+
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
@@ -37,6 +39,11 @@ namespace ble_gui
 		layout->addWidget(recalcPressLabel, 1, 0);
 
 		SolverType = new QComboBox();
+        for (ble_src::SaturSolverType::TypeEnum v : ble_src::SaturSolverTypeEnumIterator())
+        {
+            SolverType->addItem(QString::fromStdString(ble_src::SaturSolverType::get_description(v)));
+        }
+        SolverType->setEnabled(false);
 		layout->addWidget(SolverType, 2, 1);
 
 		QLabel *solverTypeLabel = new QLabel("Solver type");

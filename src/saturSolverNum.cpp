@@ -35,9 +35,9 @@ std::vector<double> solve_satur(const double tau, const std::vector<double>& ini
 		const std::shared_ptr<Grid> grd)
 {
 	switch(data->satSetts->type) {
-		case SaturSolverType::kExplicit:
+		case SaturSolverType::TypeEnum::kExplicit:
 			return solve_explicit(tau, init, data, grd);
-		case SaturSolverType::kImplicit:
+		case SaturSolverType::TypeEnum::kImplicit:
 		default:
 			return solve_explicit(tau, init, data, grd);
 	}
