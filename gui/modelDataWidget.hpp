@@ -7,16 +7,18 @@
 #include <QWidget>
 #include <QDoubleSpinBox>
 
-namespace ble_gui {
+namespace ble_gui
+{
 
-class ModelDataWidget: public QWidget {
-	Q_OBJECT
+	class ModelDataWidget : public QWidget
+	{
+		Q_OBJECT
 	public:
-		ModelDataWidget(QWidget* parent = nullptr);
+		ModelDataWidget(QWidget *parent = nullptr);
 		~ModelDataWidget() {}
-		QDoubleSpinBox* Period;
-};
+		QDoubleSpinBox *Period;
+	};
 
-}
+} // namespace ble_gui
 
 #endif

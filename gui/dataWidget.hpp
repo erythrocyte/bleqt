@@ -8,6 +8,7 @@
 
 #include "modelDataWidget.hpp"
 #include "physicDataWidget.hpp"
+#include "satSolverSettsWidget.hpp"
 
 namespace ble_gui
 {
@@ -22,6 +23,7 @@ namespace ble_gui
 
 		ModelDataWidget *ModelData;
 		PhysDataWidget *PhysData;
+		SaturSolverSettsWidget *SaturSolverSetts;
 	};
 
 } // namespace ble_gui
