@@ -92,12 +92,22 @@ namespace ble_gui
 		this->update_sc(true);
 
 		statusBar = new QStatusBar();
-		statusLabel = new QLabel(tr("Ready to run calculation"));		
+		statusLabel = new QLabel(tr("Ready to run calculation"));
 		statusBar->addWidget(statusLabel);
 		statusProgressBar = new QProgressBar();
+		statusProgressBar->setMaximum(100);
 		statusBar->addWidget(statusProgressBar);
-		
+
 		this->setStatusBar(statusBar);
+
+		series_press = new QLineSeries();
+		series_press->setName("p");
+
+		series_sat_num = new QLineSeries();
+		series_sat_num->setName("s_num");
+
+		series_sat_an = new QLineSeries();
+		series_sat_an->setName("s_an");
 
 		connect(runAction, SIGNAL(triggered()), this, SLOT(handleRunButton()));
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(handleSliderValueChange()));
@@ -107,12 +117,15 @@ namespace ble_gui
 	{
 		auto start = std::chrono::high_resolution_clock::now();
 
+		results.clear();
+		slider->setValue(1);
+		label->setText("");
+
 		this->updateInputData();
 		this->make_grid();
 		this->set_initial_cond();
 
 		statusLabel->setText(tr("calculation status: "));
-		statusProgressBar->setMaximum(100);
 
 		double sc = ble_src::get_shock_front(data->phys);
 
@@ -141,19 +154,20 @@ namespace ble_gui
 
 			results.push_back(d);
 
-			this->fill_time_series(index == 1, index);
+			this->fill_time_series(graphFirst, index);
+			graphFirst = false;
 			index++;
 
 			double perc = std::min(100.0, (sumT / data->model->period * 100.0));
 			statusProgressBar->setValue(perc);
 		}
 
-		int count = results.size();		
+		int count = results.size();
 		slider->setMaximum(count);
 		handleSliderValueChange();
 
 		auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> diff = end-start;
+		std::chrono::duration<double> diff = end - start;
 
 		std::ostringstream oss;
 		oss << "calculation completed in " << std::fixed << std::setprecision(1) << diff.count() << " s.";
@@ -244,18 +258,7 @@ namespace ble_gui
 
 		chart->setTitle(QString::fromStdString(oss.str()));
 
-		if (init)
-		{
-			series_press = new QLineSeries();
-			series_press->setName("p");
-
-			series_sat_num = new QLineSeries();
-			series_sat_num->setName("s_num");
-
-			series_sat_an = new QLineSeries();
-			series_sat_an->setName("s_an");
-		}
-		else
+		if (!init)
 		{
 			chart->removeSeries(series_press);
 			chart->removeSeries(series_sat_num);
@@ -299,6 +302,14 @@ namespace ble_gui
 	void BleFrame::updateInputData()
 	{
 		data->model->period = dataWidget->ModelData->Period->value();
+
+		data->phys->kmu = dataWidget->PhysData->Kmu->value();
+		data->phys->n_oil = dataWidget->PhysData->Noil->value();
+		data->phys->n_wat = dataWidget->PhysData->Nwat->value();
+		data->phys->perm = dataWidget->PhysData->Perm->value();
+		data->phys->poro = dataWidget->PhysData->Poro->value();
+
+		this->update_sc(false);
 	}
 
 	void BleFrame::update_sc(bool init)

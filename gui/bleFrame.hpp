@@ -76,6 +76,8 @@ namespace ble_gui
 		void update_time_info(int index);
 
 		void update_sc(bool init);
+
+		bool graphFirst = true;
 	};
 
 } // namespace ble_gui
