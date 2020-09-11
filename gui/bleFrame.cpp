@@ -345,6 +345,11 @@ namespace ble_gui
 		}
 
 		double sc = ble_src::get_shock_front(data->phys);
+
+		std::ostringstream oss;
+		oss << "Shock front = " << std::fixed << std::setprecision(3) << sc;
+		dataWidget->ShockFrontSetts->shockFrontValue->setText(QString::fromStdString(oss.str()));
+
 		series_sc->append(0.0, sc);
 		series_sc->append(data->grd->l, sc);
 		chart->addSeries(series_sc);
