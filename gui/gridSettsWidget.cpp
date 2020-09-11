@@ -1,5 +1,7 @@
 #include "gridSettsWidget.hpp"
 
+#include "gridType.hpp"
+
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
@@ -36,6 +38,11 @@ namespace ble_gui
         layout->addWidget(cellCountLabel, 1, 0);
 
         GridType = new QComboBox();
+        for (ble_src::GridType::TypeEnum v : ble_src::GridTypeEnumIterator())
+        {
+            GridType->addItem(QString::fromStdString(ble_src::GridType::get_description(v)));
+        }
+        GridType->setEnabled(false);
         layout->addWidget(GridType, 2, 1);
 
         QLabel *gridTypeLabel = new QLabel("Grid type");

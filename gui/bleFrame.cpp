@@ -217,7 +217,7 @@ namespace ble_gui
 
 		data->grd->l = dataWidget->GridSetts->Length->value();
 		data->grd->n = dataWidget->GridSetts->CellCount->value();
-		data->grd->type = ble_src::GridTypeEnum::kRegular;
+		data->grd->type = ble_src::GridType::TypeEnum::kRegular;
 
 		data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
 		data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
