@@ -63,7 +63,7 @@ namespace ble_gui
 
 		setCentralWidget(central);
 		setWindowTitle("Ble Frame");
-		this->setFixedSize(800, 500);
+		this->setFixedSize(1100, 700);
 
 		QCommonStyle *style = new QCommonStyle();
 		QAction *quit = new QAction("&Quit", this);
@@ -318,6 +318,10 @@ namespace ble_gui
 
 		data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
 		data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
+
+
+		data->grd->l = dataWidget->GridSetts->Length->value();
+		data->grd->n = dataWidget->GridSetts->CellCount->value();
 
 		this->update_sc(false);
 	}

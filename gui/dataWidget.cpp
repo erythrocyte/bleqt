@@ -19,6 +19,9 @@ DataWidget::DataWidget(QWidget *parent)
 	SaturSolverSetts = new SaturSolverSettsWidget();
 	layout->addWidget(SaturSolverSetts);
 
+	GridSetts = new GridSettsWidget();
+	layout->addWidget(GridSetts);
+
 	this->setLayout(layout);
 }
 
