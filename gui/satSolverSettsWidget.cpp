@@ -8,18 +8,18 @@
 
 namespace ble_gui
 {
-    SaturSolverSettsWidget::SaturSolverSettsWidget(QWidget *parent)
-    {
-        QGroupBox* groupBox = new QGroupBox("Saturation solver");
-        QVBoxLayout* mainLayout = new QVBoxLayout(this);
-        mainLayout->addWidget(groupBox);
-        QGridLayout *layout = new QGridLayout(groupBox);
-        groupBox->setLayout(layout);
+	SaturSolverSettsWidget::SaturSolverSettsWidget(QWidget *parent)
+	{
+		QGroupBox *groupBox = new QGroupBox("Saturation solver");
+		QVBoxLayout *mainLayout = new QVBoxLayout(this);
+		mainLayout->addWidget(groupBox);
+		QGridLayout *layout = new QGridLayout(groupBox);
+		groupBox->setLayout(layout);
 
-        layout->setMargin(5);
+		layout->setMargin(5);
 
 		Curant = new QDoubleSpinBox();
-        Curant->setDecimals(4);
+		Curant->setDecimals(4);
 		Curant->setMinimum(1e-6);
 		Curant->setMaximum(1e6);
 		Curant->setSingleStep(0.001);
@@ -39,14 +39,14 @@ namespace ble_gui
 		layout->addWidget(recalcPressLabel, 1, 0);
 
 		SolverType = new QComboBox();
-        for (ble_src::SaturSolverType::TypeEnum v : ble_src::SaturSolverTypeEnumIterator())
-        {
-            SolverType->addItem(QString::fromStdString(ble_src::SaturSolverType::get_description(v)));
-        }
-        SolverType->setEnabled(false);
+		for (ble_src::SaturSolverType::TypeEnum v : ble_src::SaturSolverTypeEnumIterator())
+		{
+			SolverType->addItem(QString::fromStdString(ble_src::SaturSolverType::get_description(v)));
+		}
+		SolverType->setEnabled(false);
 		layout->addWidget(SolverType, 2, 1);
 
 		QLabel *solverTypeLabel = new QLabel("Solver type");
 		layout->addWidget(solverTypeLabel, 2, 0);
-    }
+	}
 } // namespace ble_gui

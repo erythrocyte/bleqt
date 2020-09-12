@@ -23,6 +23,7 @@ set (HEADERS
 	physicDataWidget.hpp
 	satSolverSettsWidget.hpp
 	gridSettsWidget.hpp
+	shockFrontSettsWidget.hpp
 )
 
 set (SOURCES
@@ -32,6 +33,7 @@ set (SOURCES
 	physicDataWidget.cpp
 	satSolverSettsWidget.cpp
 	gridSettsWidget.cpp
+	shockFrontSettsWidget.cpp
 	main.cpp
 )
 

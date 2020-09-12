@@ -10,6 +10,7 @@
 #include "physicDataWidget.hpp"
 #include "satSolverSettsWidget.hpp"
 #include "gridSettsWidget.hpp"
+#include "shockFrontSettsWidget.hpp"
 
 namespace ble_gui
 {
@@ -26,6 +27,7 @@ namespace ble_gui
 		PhysDataWidget *PhysData;
 		SaturSolverSettsWidget *SaturSolverSetts;
 		GridSettsWidget *GridSetts;
+		ShockFrontSettsWidget* ShockFrontSetts;
 	};
 
 } // namespace ble_gui

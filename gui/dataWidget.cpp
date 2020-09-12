@@ -2,27 +2,32 @@
 
 #include <QVBoxLayout>
 
-namespace ble_gui {
-
-DataWidget::DataWidget(QWidget *parent)
-	: QWidget(parent)
+namespace ble_gui
 {
-	QVBoxLayout* layout = new QVBoxLayout(this);
-	layout->setMargin(0);
 
-	PhysData = new PhysDataWidget();
-	layout->addWidget(PhysData);
+	DataWidget::DataWidget(QWidget *parent)
+		: QWidget(parent)
+	{
+		QVBoxLayout *layout = new QVBoxLayout(this);
+		layout->setMargin(0);
+		layout->setSpacing(0);
 
-	ModelData = new ModelDataWidget();
-	layout->addWidget(ModelData);
+		PhysData = new PhysDataWidget();
+		layout->addWidget(PhysData);
 
-	SaturSolverSetts = new SaturSolverSettsWidget();
-	layout->addWidget(SaturSolverSetts);
+		ModelData = new ModelDataWidget();
+		layout->addWidget(ModelData);
 
-	GridSetts = new GridSettsWidget();
-	layout->addWidget(GridSetts);
+		SaturSolverSetts = new SaturSolverSettsWidget();
+		layout->addWidget(SaturSolverSetts);
 
-	this->setLayout(layout);
-}
+		GridSetts = new GridSettsWidget();
+		layout->addWidget(GridSetts);
 
-}
+		ShockFrontSetts = new ShockFrontSettsWidget();
+		layout->addWidget(ShockFrontSetts);
+
+		this->setLayout(layout);
+	}
+
+} // namespace ble_gui
