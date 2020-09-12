@@ -24,7 +24,7 @@ namespace ble_gui
 		GridSetts = new GridSettsWidget();
 		layout->addWidget(GridSetts);
 
-		ShockFrontSetts = new ShockFrontSettsWidget();
+		ShockFrontSetts = new widgets::ShockFrontSettsWidget();
 		layout->addWidget(ShockFrontSetts);
 
 		this->setLayout(layout);

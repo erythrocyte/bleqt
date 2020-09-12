@@ -27,7 +27,7 @@ namespace ble_gui
 		PhysDataWidget *PhysData;
 		SaturSolverSettsWidget *SaturSolverSetts;
 		GridSettsWidget *GridSetts;
-		ShockFrontSettsWidget* ShockFrontSetts;
+		widgets::ShockFrontSettsWidget* ShockFrontSetts;
 	};
 
 } // namespace ble_gui
