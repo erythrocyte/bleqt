@@ -86,10 +86,11 @@ namespace ble_gui
 
 		menu = menuBar()->addMenu("&Task");
 		QAction *runAction = new QAction("Run");
+		connect(runAction, SIGNAL(triggered()), this, SLOT(handleRunButton()));
 		menu->addAction(runAction);
 
 		this->set_default_data();
-		this->update_sc(true);
+		this->update_sc_series(true);
 
 		statusBar = new QStatusBar();
 		statusLabel = new QLabel(tr("Ready to run calculation"));
@@ -109,8 +110,29 @@ namespace ble_gui
 		series_sat_an = new QLineSeries();
 		series_sat_an->setName("s_an");
 
-		connect(runAction, SIGNAL(triggered()), this, SLOT(handleRunButton()));
+		this->set_signals();
+	}
+
+	void BleFrame::set_signals()
+	{
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(handleSliderValueChange()));
+		connect(dataWidget->ShockFrontSetts->showCurve, SIGNAL(stateChanged(int)), this, SLOT(showScCheckedChange()));
+		connect(dataWidget->PhysData->Noil, SIGNAL(valueChanged(double)), this, SLOT(update_sc()));
+		connect(dataWidget->PhysData->Nwat, SIGNAL(valueChanged(double)), this, SLOT(update_sc()));
+		connect(dataWidget->PhysData->Kmu, SIGNAL(valueChanged(double)), this, SLOT(update_sc()));
+	}
+
+	void BleFrame::showScCheckedChange()
+	{
+		if (dataWidget->ShockFrontSetts->showCurve->isChecked())
+		{
+			this->fill_sc_series();
+		}
+		else
+		{
+			chart->removeSeries(series_sc);
+			series_sc->clear();
+		}
 	}
 
 	void BleFrame::handleRunButton()
@@ -319,14 +341,13 @@ namespace ble_gui
 		data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
 		data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
 
-
 		data->grd->l = dataWidget->GridSetts->Length->value();
 		data->grd->n = dataWidget->GridSetts->CellCount->value();
 
-		this->update_sc(false);
+		this->update_sc_series(false);
 	}
 
-	void BleFrame::update_sc(bool init)
+	void BleFrame::update_sc_series(bool init)
 	{
 		if (init)
 		{
@@ -344,6 +365,11 @@ namespace ble_gui
 			series_sc->clear();
 		}
 
+		fill_sc_series();
+	}
+
+	void BleFrame::fill_sc_series()
+	{
 		double sc = ble_src::get_shock_front(data->phys);
 
 		std::ostringstream oss;
@@ -355,6 +381,12 @@ namespace ble_gui
 		chart->addSeries(series_sc);
 		chart->setAxisX(axisX, series_sc);
 		chart->setAxisY(axisYSat, series_sc);
+	}
+
+	void BleFrame::update_sc()
+	{
+		this->updateInputData();
+		this->update_sc_series(false);
 	}
 
 } // namespace ble_gui

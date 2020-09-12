@@ -35,10 +35,30 @@ namespace ble_gui
 		explicit BleFrame(QWidget *parent = nullptr);
 		virtual ~BleFrame();
 
+	private:
+		std::shared_ptr<ble_src::Grid> grd;
+		std::shared_ptr<ble_src::InputData> data;
+		bool graphFirst = true;
+		std::vector<std::shared_ptr<ble_src::DynamicData>> results;
+
+		std::vector<double> solve_press(const std::vector<double> &s);
+		std::vector<double> solve_satur(const double tau, const std::vector<double> &s);
+
+		void set_default_data();
+		void make_grid();
+		void set_initial_cond();
+		void fill_time_series(bool init, int index);
+		void update_time_info(int index);
+		void fill_sc_series();
+		void set_signals();
+		void update_sc_series(bool init);
+
 	private slots:
 		void handleRunButton();
 		void handleSliderValueChange();
 		void updateInputData();
+		void showScCheckedChange();
+		void update_sc();
 
 	private:
 		QWidget *central;
@@ -59,25 +79,6 @@ namespace ble_gui
 		QStatusBar *statusBar;
 		QLabel *statusLabel;
 		QProgressBar *statusProgressBar;
-
-		std::shared_ptr<ble_src::Grid> grd;
-		std::shared_ptr<ble_src::InputData> data;
-
-		std::vector<std::shared_ptr<ble_src::DynamicData>> results;
-
-		void set_default_data();
-		void make_grid();
-		void set_initial_cond();
-		std::vector<double> solve_press(const std::vector<double> &s);
-		std::vector<double> solve_satur(const double tau, const std::vector<double> &s);
-
-		void fill_time_series(bool init, int index);
-
-		void update_time_info(int index);
-
-		void update_sc(bool init);
-
-		bool graphFirst = true;
 	};
 
 } // namespace ble_gui
