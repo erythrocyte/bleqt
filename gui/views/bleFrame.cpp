@@ -70,7 +70,7 @@ ble_gui::views::BleFrame::BleFrame(QWidget *parent)
 	file->addAction(quit);
 	connect(quit, &QAction::triggered, qApp, QApplication::quit);
 
-	dataWidget = new DataWidget();
+	dataWidget = new widgets::DataWidget();
 
 	QDockWidget *dock = new QDockWidget(tr("Settings"), this);
 	dock->setWidget(dataWidget);

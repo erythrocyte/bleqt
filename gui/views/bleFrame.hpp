@@ -75,7 +75,7 @@ namespace ble_gui
 			QValueAxis *axisYSat;
 			QSlider *slider;
 			QLabel *label;
-			DataWidget *dataWidget;
+			widgets::DataWidget *dataWidget;
 			QMenu *menu;
 			QStatusBar *statusBar;
 			QLabel *statusLabel;

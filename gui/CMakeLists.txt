@@ -16,11 +16,11 @@ find_package(Qt5 COMPONENTS Charts REQUIRED)
 
 set (SOURCES
 	views/bleFrame.cpp
-	dataWidget.cpp
-	modelDataWidget.cpp
-	physicDataWidget.cpp
-	satSolverSettsWidget.cpp
-	gridSettsWidget.cpp
+	widgets/dataWidget.cpp
+	widgets/modelDataWidget.cpp
+	widgets/physicDataWidget.cpp
+	widgets/satSolverSettsWidget.cpp
+	widgets/gridSettsWidget.cpp
 	widgets/shockFrontSettsWidget.cpp
 	main.cpp
 )

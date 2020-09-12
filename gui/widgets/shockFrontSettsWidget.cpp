@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 
 ble_gui::widgets::ShockFrontSettsWidget::ShockFrontSettsWidget(QWidget *parent)
+    : QWidget(parent)
 {
     QGroupBox *groupBox = new QGroupBox("Shock front");
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
