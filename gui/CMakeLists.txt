@@ -22,6 +22,7 @@ set (SOURCES
 	widgets/satSolverSettsWidget.cpp
 	widgets/gridSettsWidget.cpp
 	widgets/shockFrontSettsWidget.cpp
+	widgets/resultDataVisualWidget.cpp
 	frames/qVerticalLabel.cpp
 	main.cpp
 )

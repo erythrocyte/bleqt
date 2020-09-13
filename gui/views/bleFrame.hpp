@@ -10,21 +10,16 @@
 #include "bleCalc.hpp"
 
 #include "dataWidget.hpp"
+#include "resultDataVisualWidget.hpp"
 
 #include <QMainWindow>
 #include <QGridLayout>
 #include <QLabel>
-#include <QChartView>
-#include <QChart>
-#include <QLineSeries>
-#include <QValueAxis>
 #include <QLineEdit>
-#include <QSlider>
 #include <QMenu>
 #include <QStatusBar>
 #include <QProgressBar>
-
-using namespace QtCharts;
+#include <QDockWidget>
 
 namespace ble_gui
 {
@@ -40,22 +35,13 @@ namespace ble_gui
 		private:
 			QWidget *central;
 			QGridLayout *layout;
-			QChartView *chartView;
-			QChart *chart;
-			QLineSeries *series_press;
-			QLineSeries *series_sat_num;
-			QLineSeries *series_sat_an;
-			QLineSeries *series_sc;
-			QValueAxis *axisX;
-			QValueAxis *axisYPress;
-			QValueAxis *axisYSat;
-			QSlider *slider;
-			QLabel *label;
 			widgets::DataWidget *dataWidget;
+			widgets::ResultDataVisualWidget *resultDataVisual;
 			QMenu *menu;
 			QStatusBar *statusBar;
 			QLabel *statusLabel;
 			QProgressBar *statusProgressBar;
+			QDockWidget *_dock;
 
 			std::shared_ptr<ble_src::Grid> _grd;
 			std::shared_ptr<ble_src::InputData> _data;
@@ -67,16 +53,16 @@ namespace ble_gui
 			void set_default_data();
 			void make_grid();
 			void set_initial_cond();
-			void fill_time_series(bool init, const std::shared_ptr<ble_src::DynamicData> d);
 			void update_time_info(int index);
-			void fill_sc_series();
 			void set_signals();
-			void update_sc_series(bool init);
 			void update_progress(double perc);
+
+			void set_menu();
+			void set_settings_widget();
+			void set_visual_data_widget();
 
 		private slots:
 			void handleRunButton();
-			void handleSliderValueChange();
 			void updateInputData();
 			void showScCheckedChange();
 			void update_sc();

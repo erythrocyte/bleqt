@@ -6,14 +6,15 @@
 #include <memory>
 
 #include "dynamicData.hpp"
+#include "grid.hpp"
+#include "physData.hpp"
 
 namespace ble_src
 {
     class BleResultData
     {
     public:
-        double length;
-        double sc;
+        std::shared_ptr<ble_src::Grid> grd;
         std::vector<std::shared_ptr<DynamicData>> data;
     };
 } // namespace ble_src
