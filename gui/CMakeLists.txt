@@ -10,37 +10,28 @@ if(CMAKE_VERSION VERSION_LESS "3.7.0")
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
 endif()
 
-#set (CMAKE_PREFIX_PATH /usr/local/opt/qt5/)
-
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 find_package(Qt5 COMPONENTS Charts REQUIRED)
 
-set (HEADERS
-	bleFrame.hpp
-	dataWidget.hpp
-	modelDataWidget.hpp
-	physicDataWidget.hpp
-	satSolverSettsWidget.hpp
-	gridSettsWidget.hpp
-	shockFrontSettsWidget.hpp
-)
-
 set (SOURCES
-	bleFrame.cpp
-	dataWidget.cpp
-	modelDataWidget.cpp
-	physicDataWidget.cpp
-	satSolverSettsWidget.cpp
-	gridSettsWidget.cpp
-	shockFrontSettsWidget.cpp
+	views/bleFrame.cpp
+	widgets/dataWidget.cpp
+	widgets/modelDataWidget.cpp
+	widgets/physicDataWidget.cpp
+	widgets/satSolverSettsWidget.cpp
+	widgets/gridSettsWidget.cpp
+	widgets/shockFrontSettsWidget.cpp
+	widgets/resultDataVisualWidget.cpp
+	widgets/fluidParamsVisualWidget.cpp
+	frames/qVerticalLabel.cpp
 	main.cpp
 )
 
 
 set (EXE_TARGET ble)
 
-add_executable(${EXE_TARGET} ${HEADERS} ${SOURCES})
+add_executable(${EXE_TARGET} ${SOURCES})
 
 target_link_libraries(${EXE_TARGET} Qt5::Widgets)
 target_link_libraries(${EXE_TARGET} Qt5::Core)
@@ -49,4 +40,10 @@ target_link_libraries(${EXE_TARGET} Qt5::Charts)
 get_target_property(QtCore_location Qt5::Core LOCATION)
 
 target_link_libraries(${EXE_TARGET} ${LIB_BLE_TARGET})
+
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/gui)
+include_directories(${CMAKE_SOURCE_DIR}/gui/widgets)
+include_directories(${CMAKE_SOURCE_DIR}/gui/frames)
+
+include_directories(views)

@@ -24,6 +24,7 @@ set(HEADERS
 	commonVector.hpp
 	workParam.hpp
 	mapInit.hpp
+	bleCalc.hpp
 )
 
 set (SOURCES
@@ -38,6 +39,7 @@ set (SOURCES
 	saturSolverAnalytic.cpp
 	commonVector.cpp
 	workParam.cpp
+	bleCalc.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})

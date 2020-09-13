@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 {
 	QApplication app(argc, argv);
 
-	ble_gui::BleFrame mainWindow;
+	ble_gui::views::BleFrame mainWindow;
 	mainWindow.show();
 
 	return app.exec();
