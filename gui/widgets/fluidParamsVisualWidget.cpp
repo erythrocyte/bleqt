@@ -29,7 +29,7 @@ ble_gui::widgets::FluidParamsVisualWidget::FluidParamsVisualWidget(QWidget *pare
 
     _axis_dfY = new QValueAxis();
     _axis_dfY->setTitleText("dfdbl");
-    _axis_dfY->setLabelFormat("%g");
+    _axis_dfY->setLabelFormat("%.2f");
     _axis_dfY->setTickCount(5);
     _axis_dfY->setMin(0.);
 
