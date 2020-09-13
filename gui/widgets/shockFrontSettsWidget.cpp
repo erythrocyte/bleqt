@@ -9,7 +9,7 @@ ble_gui::widgets::ShockFrontSettsWidget::ShockFrontSettsWidget(QWidget *parent)
     QGroupBox *groupBox = new QGroupBox("Shock front");
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(groupBox);
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(groupBox);
     groupBox->setLayout(layout);
 
     shockFrontValue = new QLabel("");
@@ -20,3 +20,4 @@ ble_gui::widgets::ShockFrontSettsWidget::ShockFrontSettsWidget(QWidget *parent)
 
     layout->addWidget(showCurve);
 }
+ 

@@ -1,5 +1,5 @@
-#ifndef BLE_GUI_GRIDSETTSWIDGET_H_
-#define BLE_GUI_GRIDSETTSWIDGET_H_
+#ifndef BLEGUI_WIDGETS_GRIDSETTSWIDGET_H_
+#define BLEGUI_WIDGETS_GRIDSETTSWIDGET_H_
 
 #include <iostream>
 #include <memory>

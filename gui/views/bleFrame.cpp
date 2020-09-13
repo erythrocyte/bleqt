@@ -21,9 +21,17 @@
 #include "saturSolverAnalytic.hpp"
 #include "workParam.hpp"
 
+#include "qVerticalLabel.hpp"
+
+void a(double c)
+{
+	std::cout << "progress = " << c << " %" << std::endl;
+}
+
 ble_gui::views::BleFrame::BleFrame(QWidget *parent)
 	: QMainWindow(parent)
 {
+	_solver = std::make_shared<ble_src::BleCalc>();
 	layout = new QGridLayout;
 
 	slider = new QSlider(Qt::Orientation::Horizontal);
@@ -60,7 +68,7 @@ ble_gui::views::BleFrame::BleFrame(QWidget *parent)
 
 	setCentralWidget(central);
 	setWindowTitle("Ble Frame");
-	this->setFixedSize(1100, 700);
+	this->setFixedSize(1100, 750);
 
 	QCommonStyle *style = new QCommonStyle();
 	QAction *quit = new QAction("&Quit", this);
@@ -70,10 +78,20 @@ ble_gui::views::BleFrame::BleFrame(QWidget *parent)
 	file->addAction(quit);
 	connect(quit, &QAction::triggered, qApp, QApplication::quit);
 
+	QTabWidget *tabSettings = new QTabWidget();
+	tabSettings->setTabPosition(QTabWidget::TabPosition::West);
 	dataWidget = new widgets::DataWidget();
+	tabSettings->addTab(dataWidget, "");
+
+	frames::QVerticalLabel *tabSettingsLabel1 = new frames::QVerticalLabel("Main");
+	tabSettingsLabel1->setStyleSheet("QLabel { color : #C0BBFE }");
+
+	QTabBar *tabbar = tabSettings->tabBar();
+	tabSettings->setTabText(0, "");
+	tabbar->setTabButton(0, QTabBar::LeftSide, tabSettingsLabel1);
 
 	QDockWidget *dock = new QDockWidget(tr("Settings"), this);
-	dock->setWidget(dataWidget);
+	dock->setWidget(tabSettings);
 	addDockWidget(Qt::LeftDockWidgetArea, dock);
 
 	menu = menuBar()->addMenu("&View");
@@ -136,88 +154,74 @@ void ble_gui::views::BleFrame::handleRunButton()
 {
 	auto start = std::chrono::high_resolution_clock::now();
 
-	results.clear();
 	slider->setValue(1);
 	label->setText("");
 
 	this->updateInputData();
 	this->make_grid();
-	this->set_initial_cond();
 
-	statusLabel->setText(tr("calculation status: "));
+	statusLabel->setText(tr("calculation running"));
 
-	double sc = ble_src::get_shock_front(data->phys);
+	std::function<void(int)> a = std::bind(&BleFrame::update_progress, this, std::placeholders::_1);
 
-	int index = 1;
-	int pressIndex = 0;
-	double sumT = 0.;
-	double sumU = 0.;
-	while (sumT < data->model->period)
-	{
-		std::vector<double> s_prev = results[index - 1]->s;
-
-		std::vector<double> p = results[index - 1]->p;
-		if (pressIndex == 0 || pressIndex == data->satSetts->pN)
-		{
-			p = this->solve_press(s_prev);
-			pressIndex = 0;
-		}
-		pressIndex++;
-
-		double t = ble_src::get_time_step(grd, s_prev, data);
-
-		sumU += ble_src::getULiqInject(grd) * t;
-		std::vector<std::tuple<double, double>> xs_an = ble_src::get_satur_exact(sc, sumU, data);
-
-		std::vector<double> s = this->solve_satur(t, s_prev);
-		sumT += t;
-
-		std::shared_ptr<ble_src::DynamicData> d(new ble_src::DynamicData());
-		d->t = sumT;
-		d->p = p;
-		d->s = s;
-		d->s_an = xs_an;
-
-		results.push_back(d);
-
-		this->fill_time_series(graphFirst, index);
-		graphFirst = false;
-		index++;
-
-		double perc = std::min(100.0, (sumT / data->model->period * 100.0));
-		statusProgressBar->setValue(perc);
-	}
-
-	int count = results.size();
-	slider->setMaximum(count);
-	handleSliderValueChange();
+	_solver->calc(_grd, _data, a);
 
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> diff = end - start;
 
 	std::ostringstream oss;
 	oss << "calculation completed in " << std::fixed << std::setprecision(1) << diff.count() << " s.";
-
 	statusLabel->setText(QString::fromStdString(oss.str()));
+
+	statusLabel->setText(tr("chart series filling"));
+	start = std::chrono::high_resolution_clock::now();
+	std::shared_ptr<ble_src::BleResultData> results = _solver->get_result();
+
+	int index = 0;
+	size_t count = results->data.size();
+	for (auto &d : results->data)
+	{
+		this->fill_time_series(index == 0, d);
+		double perc = std::min(100.0, ((double)index / count * 100.0));
+		if (index % (count / 20) == 0)
+			update_progress(perc);
+		index++;
+	}
+	update_progress(100.0);
+
+	end = std::chrono::high_resolution_clock::now();
+	diff = end - start;
+
+	oss.str("");
+	oss << "charts completed in " << std::fixed << std::setprecision(1) << diff.count() << " s.";
+	statusLabel->setText(QString::fromStdString(oss.str()));
+
+	slider->setMaximum(count);
+	handleSliderValueChange();
 }
 
 ble_gui::views::BleFrame::~BleFrame()
 {
 }
 
+void ble_gui::views::BleFrame::update_progress(double perc)
+{
+	statusProgressBar->setValue(perc);
+}
+
 void ble_gui::views::BleFrame::handleSliderValueChange()
 {
 	int value = slider->value() - 1;
-	if (value < results.size())
+	if (value < _solver->get_data_len())
 	{
 		update_time_info(value);
-		fill_time_series(false, value);
+		fill_time_series(false, _solver->get_data(value));
 	}
 }
 
 void ble_gui::views::BleFrame::update_time_info(int index)
 {
-	int count = results.size();
+	int count = _solver->get_data_len(); // resultData->data.size();
 	std::ostringstream oss;
 	oss << index + 1 << "/" << count;
 	label->setText(QString::fromStdString(oss.str()));
@@ -225,59 +229,32 @@ void ble_gui::views::BleFrame::update_time_info(int index)
 
 void ble_gui::views::BleFrame::set_default_data()
 {
-	data = std::make_shared<ble_src::InputData>();
-	data->phys->kmu = dataWidget->PhysData->Kmu->value();
-	data->phys->n_oil = dataWidget->PhysData->Noil->value();
-	data->phys->n_wat = dataWidget->PhysData->Nwat->value();
-	data->phys->poro = dataWidget->PhysData->Poro->value();
-	data->phys->perm = dataWidget->PhysData->Perm->value();
+	_data = std::make_shared<ble_src::InputData>();
+	_data->phys->kmu = dataWidget->PhysData->Kmu->value();
+	_data->phys->n_oil = dataWidget->PhysData->Noil->value();
+	_data->phys->n_wat = dataWidget->PhysData->Nwat->value();
+	_data->phys->poro = dataWidget->PhysData->Poro->value();
+	_data->phys->perm = dataWidget->PhysData->Perm->value();
 
-	data->model->period = dataWidget->ModelData->Period->value();
+	_data->model->period = dataWidget->ModelData->Period->value();
 
-	data->grd->l = dataWidget->GridSetts->Length->value();
-	data->grd->n = dataWidget->GridSetts->CellCount->value();
-	data->grd->type = ble_src::GridType::TypeEnum::kRegular;
+	_data->grd->l = dataWidget->GridSetts->Length->value();
+	_data->grd->n = dataWidget->GridSetts->CellCount->value();
+	_data->grd->type = ble_src::GridType::TypeEnum::kRegular;
 
-	data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
-	data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
-	data->satSetts->type == ble_src::SaturSolverType::kExplicit;
+	_data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
+	_data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
+	_data->satSetts->type == ble_src::SaturSolverType::kExplicit;
 }
 
 void ble_gui::views::BleFrame::make_grid()
 {
-	grd = ble_src::make_grid(data);
+	_grd = ble_src::make_grid(_data);
 }
 
-void ble_gui::views::BleFrame::set_initial_cond()
+void ble_gui::views::BleFrame::fill_time_series(bool init,
+												const std::shared_ptr<ble_src::DynamicData> d)
 {
-	std::vector<double> s(grd->cells.size(), 0.);
-	std::vector<double> p(grd->cells.size(), 1.);
-
-	std::shared_ptr<ble_src::DynamicData> d(new ble_src::DynamicData());
-	d->t = 0;
-	d->p = p;
-	d->s = s;
-
-	results.push_back(d);
-}
-
-std::vector<double> ble_gui::views::BleFrame::solve_press(const std::vector<double> &s)
-{
-	std::vector<double> result = ble_src::solve_press(this->grd, s, data->phys);
-	ble_src::calc_u(result, s, data->phys, grd);
-
-	return result;
-}
-
-std::vector<double> ble_gui::views::BleFrame::solve_satur(const double tau, const std::vector<double> &s)
-{
-	return ble_src::solve_satur(tau, s, data, this->grd);
-}
-
-void ble_gui::views::BleFrame::fill_time_series(bool init, int index)
-{
-	std::shared_ptr<ble_src::DynamicData> d = results[index];
-
 	std::ostringstream oss;
 	oss.str("");
 	oss << "t = " << d->t;
@@ -295,17 +272,13 @@ void ble_gui::views::BleFrame::fill_time_series(bool init, int index)
 		series_sat_an->clear();
 	}
 
-	std::vector<double> p = results[index]->p;
-	std::vector<double> s = results[index]->s;
-
-	for (auto &cl : grd->cells)
+	for (auto &cl : _grd->cells)
 	{
-		series_press->append(cl->cntr, p[cl->ind]);
-		series_sat_num->append(cl->cntr, s[cl->ind]);
+		series_press->append(cl->cntr, d->p[cl->ind]);
+		series_sat_num->append(cl->cntr, d->s[cl->ind]);
 	}
 
-	std::vector<std::tuple<double, double>> xs_an = results[index]->s_an;
-	for (auto &v : xs_an)
+	for (auto &v : d->s_an)
 	{
 		double x1, s1;
 		std::tie(x1, s1) = v;
@@ -327,19 +300,19 @@ void ble_gui::views::BleFrame::fill_time_series(bool init, int index)
 
 void ble_gui::views::BleFrame::updateInputData()
 {
-	data->model->period = dataWidget->ModelData->Period->value();
+	_data->model->period = dataWidget->ModelData->Period->value();
 
-	data->phys->kmu = dataWidget->PhysData->Kmu->value();
-	data->phys->n_oil = dataWidget->PhysData->Noil->value();
-	data->phys->n_wat = dataWidget->PhysData->Nwat->value();
-	data->phys->perm = dataWidget->PhysData->Perm->value();
-	data->phys->poro = dataWidget->PhysData->Poro->value();
+	_data->phys->kmu = dataWidget->PhysData->Kmu->value();
+	_data->phys->n_oil = dataWidget->PhysData->Noil->value();
+	_data->phys->n_wat = dataWidget->PhysData->Nwat->value();
+	_data->phys->perm = dataWidget->PhysData->Perm->value();
+	_data->phys->poro = dataWidget->PhysData->Poro->value();
 
-	data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
-	data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
+	_data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
+	_data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
 
-	data->grd->l = dataWidget->GridSetts->Length->value();
-	data->grd->n = dataWidget->GridSetts->CellCount->value();
+	_data->grd->l = dataWidget->GridSetts->Length->value();
+	_data->grd->n = dataWidget->GridSetts->CellCount->value();
 
 	this->update_sc_series(false);
 }
@@ -367,14 +340,14 @@ void ble_gui::views::BleFrame::update_sc_series(bool init)
 
 void ble_gui::views::BleFrame::fill_sc_series()
 {
-	double sc = ble_src::get_shock_front(data->phys);
+	double sc = ble_src::get_shock_front(_data->phys);
 
 	std::ostringstream oss;
 	oss << "Shock front = " << std::fixed << std::setprecision(3) << sc;
 	dataWidget->ShockFrontSetts->shockFrontValue->setText(QString::fromStdString(oss.str()));
 
 	series_sc->append(0.0, sc);
-	series_sc->append(data->grd->l, sc);
+	series_sc->append(_data->grd->l, sc);
 	chart->addSeries(series_sc);
 	chart->setAxisX(axisX, series_sc);
 	chart->setAxisY(axisYSat, series_sc);

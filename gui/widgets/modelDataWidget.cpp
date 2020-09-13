@@ -19,7 +19,7 @@ ble_gui::widgets::ModelDataWidget::ModelDataWidget(QWidget *parent)
 	Period->setMinimum(0.1);
 	Period->setMaximum(1e10);
 	Period->setSingleStep(0.1);
-	Period->setValue(300);
+	Period->setValue(30);
 	layout->addWidget(Period, 0, 1);
 
 	QLabel *periodLabel = new QLabel("Period");

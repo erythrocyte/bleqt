@@ -22,6 +22,7 @@ set (SOURCES
 	widgets/satSolverSettsWidget.cpp
 	widgets/gridSettsWidget.cpp
 	widgets/shockFrontSettsWidget.cpp
+	frames/qVerticalLabel.cpp
 	main.cpp
 )
 
@@ -41,5 +42,6 @@ target_link_libraries(${EXE_TARGET} ${LIB_BLE_TARGET})
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/gui)
 include_directories(${CMAKE_SOURCE_DIR}/gui/widgets)
+include_directories(${CMAKE_SOURCE_DIR}/gui/frames)
 
 include_directories(views)
