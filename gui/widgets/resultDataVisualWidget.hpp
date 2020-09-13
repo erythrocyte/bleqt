@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <functional>
 
 #include "bleResultData.hpp"
 
@@ -36,6 +37,8 @@ namespace ble_gui
             QSlider *slider;
             QLabel *label;
 
+            bool _firstInit = true;
+
             std::shared_ptr<ble_src::BleResultData> _data;
 
             void update_time_info(int index);
@@ -45,7 +48,8 @@ namespace ble_gui
             ResultDataVisualWidget(QWidget *parent = nullptr);
             ~ResultDataVisualWidget() {}
 
-            void setData(const std::shared_ptr<ble_src::BleResultData> data);
+            void setData(const std::shared_ptr<ble_src::BleResultData> data,
+                         std::function<void(double)> progress);
             void update_sc_series(double l, double sc);
             void set_sc_visible(bool visible);
 

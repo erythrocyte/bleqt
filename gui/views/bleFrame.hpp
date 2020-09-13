@@ -8,6 +8,7 @@
 #include "dynamicData.hpp"
 #include "grid.hpp"
 #include "bleCalc.hpp"
+#include "bleResultData.hpp"
 
 #include "dataWidget.hpp"
 #include "resultDataVisualWidget.hpp"

@@ -21,6 +21,7 @@ void ble_src::BleCalc::calc(const std::shared_ptr<Grid> grd,
                             const std::shared_ptr<InputData> data,
                             std::function<void(double)> set_progress)
 {
+    _results->data.clear();
     set_initial_cond(grd->cells.size());
     double sc = ble_src::get_shock_front(data->phys);
 

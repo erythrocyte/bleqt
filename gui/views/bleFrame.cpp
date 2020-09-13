@@ -22,11 +22,6 @@
 
 #include "qVerticalLabel.hpp"
 
-void a(double c)
-{
-	std::cout << "progress = " << c << " %" << std::endl;
-}
-
 ble_gui::views::BleFrame::BleFrame(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -115,7 +110,6 @@ void ble_gui::views::BleFrame::set_visual_data_widget()
 
 void ble_gui::views::BleFrame::set_signals()
 {
-
 	connect(dataWidget->ShockFrontSetts->showCurve, SIGNAL(stateChanged(int)), this, SLOT(showScCheckedChange()));
 	connect(dataWidget->PhysData->Noil, SIGNAL(valueChanged(double)), this, SLOT(update_sc()));
 	connect(dataWidget->PhysData->Nwat, SIGNAL(valueChanged(double)), this, SLOT(update_sc()));
@@ -147,27 +141,10 @@ void ble_gui::views::BleFrame::handleRunButton()
 	oss << "calculation completed in " << std::fixed << std::setprecision(1) << diff.count() << " s.";
 	statusLabel->setText(QString::fromStdString(oss.str()));
 
-	statusLabel->setText(tr("chart series filling"));
-	start = std::chrono::high_resolution_clock::now();
 	std::shared_ptr<ble_src::BleResultData> results = _solver->get_result();
+	results->grd = _grd;
 
-	int index = 0;
-	size_t count = results->data.size();
-	for (auto &d : results->data)
-	{
-		// this->fill_time_series(index == 0, d);
-		double perc = std::min(100.0, ((double)index / count * 100.0));
-		if (index % (count / 20) == 0)
-			update_progress(perc);
-		index++;
-	}
-	update_progress(100.0);
-
-	end = std::chrono::high_resolution_clock::now();
-	diff = end - start;
-
-	oss.str("");
-	oss << "charts completed in " << std::fixed << std::setprecision(1) << diff.count() << " s.";
+	resultDataVisual->setData(results, a);
 	statusLabel->setText(QString::fromStdString(oss.str()));
 }
 
@@ -195,7 +172,7 @@ void ble_gui::views::BleFrame::set_default_data()
 	_data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
 	_data->satSetts->type == ble_src::SaturSolverType::kExplicit;
 
-	update_sc();	
+	update_sc();
 }
 
 void ble_gui::views::BleFrame::make_grid()

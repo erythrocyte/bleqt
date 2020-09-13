@@ -49,6 +49,10 @@ ble_gui::widgets::ResultDataVisualWidget::ResultDataVisualWidget(QWidget *parent
 	series_sat_an = new QLineSeries();
 	series_sat_an->setName("s_an");
 
+	chart->addSeries(series_press);
+	chart->addSeries(series_sat_num);
+	chart->addSeries(series_sat_an);
+
 	series_sc = new QLineSeries();
 	QPen pen;
 	pen.setStyle(Qt::DotLine);
@@ -62,17 +66,15 @@ ble_gui::widgets::ResultDataVisualWidget::ResultDataVisualWidget(QWidget *parent
 	connect(slider, SIGNAL(valueChanged(int)), this, SLOT(handleSliderValueChange()));
 }
 
-void ble_gui::widgets::ResultDataVisualWidget::setData(const std::shared_ptr<ble_src::BleResultData> data)
+void ble_gui::widgets::ResultDataVisualWidget::setData(const std::shared_ptr<ble_src::BleResultData> data,
+													   std::function<void(double)> progress)
 {
 	_data = data;
 	// clear all;
 	slider->setValue(1);
 	label->setText("");
 
-	// redraw;
-
 	slider->setMaximum(_data->data.size());
-	handleSliderValueChange();
 }
 
 void ble_gui::widgets::ResultDataVisualWidget::handleSliderValueChange()
@@ -94,16 +96,13 @@ void ble_gui::widgets::ResultDataVisualWidget::fill_time_series(bool init,
 
 	chart->setTitle(QString::fromStdString(oss.str()));
 
-	if (!init)
-	{
-		chart->removeSeries(series_press);
-		chart->removeSeries(series_sat_num);
-		chart->removeSeries(series_sat_an);
+	chart->removeSeries(series_press);
+	chart->removeSeries(series_sat_num);
+	chart->removeSeries(series_sat_an);
 
-		series_press->clear();
-		series_sat_num->clear();
-		series_sat_an->clear();
-	}
+	series_press->clear();
+	series_sat_num->clear();
+	series_sat_an->clear();
 
 	for (auto &cl : _data->grd->cells)
 	{
@@ -119,14 +118,15 @@ void ble_gui::widgets::ResultDataVisualWidget::fill_time_series(bool init,
 	}
 
 	chart->addSeries(series_press);
+	chart->addSeries(series_sat_num);
+	chart->addSeries(series_sat_an);
+
 	chart->setAxisX(axisX, series_press);
 	chart->setAxisY(axisYSat, series_press);
 
-	chart->addSeries(series_sat_num);
 	chart->setAxisX(axisX, series_sat_num);	   // obsolete
 	chart->setAxisY(axisYSat, series_sat_num); // obsolete
 
-	chart->addSeries(series_sat_an);
 	chart->setAxisX(axisX, series_sat_an);	  // obsolete
 	chart->setAxisY(axisYSat, series_sat_an); // obsolete
 }
