@@ -35,14 +35,20 @@ ble_gui::views::BleFrame::BleFrame(QWidget *parent)
 	setWindowTitle("Ble Frame");
 	this->setFixedSize(1100, 750);
 
-	set_settings_widget();
-
-	set_visual_data_widget();
-
-	set_menu();
-
+	this->set_settings_widget();
+	this->set_visual_data_widget();
+	this->set_menu();
 	this->set_default_data();
+	this->set_status_bar();
+	this->set_signals();
+}
 
+ble_gui::views::BleFrame::~BleFrame()
+{
+}
+
+void ble_gui::views::BleFrame::set_status_bar()
+{
 	statusBar = new QStatusBar();
 	statusLabel = new QLabel(tr("Ready to run calculation"));
 	statusBar->addWidget(statusLabel);
@@ -51,12 +57,6 @@ ble_gui::views::BleFrame::BleFrame(QWidget *parent)
 	statusBar->addWidget(statusProgressBar);
 
 	this->setStatusBar(statusBar);
-
-	this->set_signals();
-}
-
-ble_gui::views::BleFrame::~BleFrame()
-{
 }
 
 void ble_gui::views::BleFrame::set_menu()
@@ -159,23 +159,11 @@ void ble_gui::views::BleFrame::update_progress(double perc)
 void ble_gui::views::BleFrame::set_default_data()
 {
 	_data = std::make_shared<ble_src::InputData>();
-	_data->phys->kmu = dataWidget->PhysData->Kmu->value();
-	_data->phys->n_oil = dataWidget->PhysData->Noil->value();
-	_data->phys->n_wat = dataWidget->PhysData->Nwat->value();
-	_data->phys->poro = dataWidget->PhysData->Poro->value();
-	_data->phys->perm = dataWidget->PhysData->Perm->value();
-
-	_data->model->period = dataWidget->ModelData->Period->value();
-
-	_data->grd->l = dataWidget->GridSetts->Length->value();
-	_data->grd->n = dataWidget->GridSetts->CellCount->value();
 	_data->grd->type = ble_src::GridType::TypeEnum::kRegular;
-
-	_data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
-	_data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
 	_data->satSetts->type == ble_src::SaturSolverType::kExplicit;
 
-	update_static_visual();	
+	updateInputData();
+	update_static_visual();
 }
 
 void ble_gui::views::BleFrame::make_grid()

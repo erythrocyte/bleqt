@@ -28,14 +28,21 @@ ble_gui::widgets::ResultDataVisualWidget::ResultDataVisualWidget(QWidget *parent
 	axisX = new QValueAxis();
 	axisX->setTitleText("x");
 	axisX->setLabelFormat("%g");
-	axisX->setTickCount(1);
+	axisX->setTickCount(5);
+	axisX->setRange(0., 1.);
 
 	axisYSat = new QValueAxis();
-	axisYSat->setTitleText("s / p");
+	axisYSat->setTitleText("s");
 	axisYSat->setLabelFormat("%g");
 	axisYSat->setTickCount(5);
-	axisYSat->setMin(0.);
-	axisYSat->setMax(1.);
+	axisYSat->setRange(0., 1.);
+
+	axisYPress = new QValueAxis();
+	axisYPress->setTitleText("p");
+	axisYPress->setLabelFormat("%g");
+	axisYPress->setTickCount(5);
+	axisYPress->setRange(0., 1.);
+
 
 	chartView = new QChartView(chart);
 	layout->addWidget(chartView, 0, 0, 1, 11);
@@ -53,6 +60,10 @@ ble_gui::widgets::ResultDataVisualWidget::ResultDataVisualWidget(QWidget *parent
 	chart->addSeries(series_sat_num);
 	chart->addSeries(series_sat_an);
 
+	chart->addAxis(axisX, Qt::AlignBottom);
+    chart->addAxis(axisYPress, Qt::AlignLeft);
+    chart->addAxis(axisYSat, Qt::AlignRight);
+
 	series_sc = new QLineSeries();
 	QPen pen;
 	pen.setStyle(Qt::DotLine);
@@ -60,6 +71,7 @@ ble_gui::widgets::ResultDataVisualWidget::ResultDataVisualWidget(QWidget *parent
 	// pen.setBrush(Qt::green);
 	series_sc->setPen(pen);
 	series_sc->setName(tr("sc"));
+	chart->addSeries(series_sc);
 
 	setLayout(layout);
 
@@ -75,6 +87,7 @@ void ble_gui::widgets::ResultDataVisualWidget::setData(const std::shared_ptr<ble
 	label->setText("");
 
 	slider->setMaximum(_data->data.size());
+	handleSliderValueChange(); // call slider value change handler. setValue does not call it;
 }
 
 void ble_gui::widgets::ResultDataVisualWidget::handleSliderValueChange()
@@ -122,7 +135,7 @@ void ble_gui::widgets::ResultDataVisualWidget::fill_time_series(bool init,
 	chart->addSeries(series_sat_an);
 
 	chart->setAxisX(axisX, series_press);
-	chart->setAxisY(axisYSat, series_press);
+	chart->setAxisY(axisYPress, series_press);
 
 	chart->setAxisX(axisX, series_sat_num);	   // obsolete
 	chart->setAxisY(axisYSat, series_sat_num); // obsolete

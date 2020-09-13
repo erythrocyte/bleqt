@@ -63,6 +63,7 @@ namespace ble_gui
 			void set_menu();
 			void set_settings_widget();
 			void set_visual_data_widget();
+			void set_status_bar();
 
 		private slots:
 			void handleRunButton();
