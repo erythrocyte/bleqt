@@ -20,7 +20,7 @@ std::vector<double> solve_press(const std::shared_ptr<Grid> grd, const std::vect
 	std::vector<double> rhs(grd->cells.size(), 0.0);
 
 	for (auto &fc: grd->faces) {
-		double sigma = get_face_sigma(fc, s, data);
+		double sigma = get_face_sigma(fc, s, data, grd);
 		double h = get_h(fc, grd);
 
 		double cf = fc->area * sigma / h;
@@ -44,7 +44,7 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s, const st
 		std::shared_ptr<Grid> grd)
 {
 	for (auto &fc: grd->faces) {
-		double sigma = get_face_sigma(fc, s, data);
+		double sigma = get_face_sigma(fc, s, data, grd);
 		double h = get_h(fc, grd);
 
 		double p1 = p[fc->cl1];
