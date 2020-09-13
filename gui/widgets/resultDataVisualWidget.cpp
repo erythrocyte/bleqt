@@ -27,7 +27,7 @@ ble_gui::widgets::ResultDataVisualWidget::ResultDataVisualWidget(QWidget *parent
 	// Настройка осей графика
 	axisX = new QValueAxis();
 	axisX->setTitleText("x");
-	axisX->setLabelFormat("%i");
+	axisX->setLabelFormat("%g");
 	axisX->setTickCount(1);
 
 	axisYSat = new QValueAxis();

@@ -5,7 +5,7 @@
 namespace ble_src
 {
 
-	double get_rhs(double sc, const std::shared_ptr<PhysData> data)
+	double get_shock_front_rhs(double sc, const std::shared_ptr<PhysData> data)
 	{
 		if (std::abs(sc - 0.) < 1e-6)
 		{
@@ -33,7 +33,7 @@ namespace ble_src
 		{
 			double sc = eps + k * ds;
 			double f1 = get_dfbl(sc, data);
-			double f2 = get_rhs(sc, data);
+			double f2 = get_shock_front_rhs(sc, data);
 
 			double diff = std::abs(f1 - f2);
 			if (diff < minDiff)

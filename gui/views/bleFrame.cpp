@@ -105,15 +105,18 @@ void ble_gui::views::BleFrame::set_visual_data_widget()
 	resultDataVisual = new widgets::ResultDataVisualWidget();
 	visDataWidget->addTab(resultDataVisual, "Results");
 
+	fluidParamsVisual = new widgets::FluidParamsVisualWidget();
+	visDataWidget->addTab(fluidParamsVisual, "Fluid params");
+
 	layout->addWidget(visDataWidget, 0, 0);
 }
 
 void ble_gui::views::BleFrame::set_signals()
 {
 	connect(dataWidget->ShockFrontSetts->showCurve, SIGNAL(stateChanged(int)), this, SLOT(showScCheckedChange()));
-	connect(dataWidget->PhysData->Noil, SIGNAL(valueChanged(double)), this, SLOT(update_sc()));
-	connect(dataWidget->PhysData->Nwat, SIGNAL(valueChanged(double)), this, SLOT(update_sc()));
-	connect(dataWidget->PhysData->Kmu, SIGNAL(valueChanged(double)), this, SLOT(update_sc()));
+	connect(dataWidget->PhysData->Noil, SIGNAL(valueChanged(double)), this, SLOT(update_static_visual()));
+	connect(dataWidget->PhysData->Nwat, SIGNAL(valueChanged(double)), this, SLOT(update_static_visual()));
+	connect(dataWidget->PhysData->Kmu, SIGNAL(valueChanged(double)), this, SLOT(update_static_visual()));
 }
 
 void ble_gui::views::BleFrame::showScCheckedChange()
@@ -172,7 +175,7 @@ void ble_gui::views::BleFrame::set_default_data()
 	_data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
 	_data->satSetts->type == ble_src::SaturSolverType::kExplicit;
 
-	update_sc();
+	update_static_visual();	
 }
 
 void ble_gui::views::BleFrame::make_grid()
@@ -197,7 +200,7 @@ void ble_gui::views::BleFrame::updateInputData()
 	_data->grd->n = dataWidget->GridSetts->CellCount->value();
 }
 
-void ble_gui::views::BleFrame::update_sc()
+void ble_gui::views::BleFrame::update_static_visual()
 {
 	updateInputData();
 	double sc = ble_src::get_shock_front(_data->phys);
@@ -206,4 +209,6 @@ void ble_gui::views::BleFrame::update_sc()
 	std::ostringstream oss;
 	oss << "Shock front = " << std::fixed << std::setprecision(3) << sc;
 	dataWidget->ShockFrontSetts->shockFrontValue->setText(QString::fromStdString(oss.str()));
+
+	fluidParamsVisual->update_view(_data->phys, sc);
 }

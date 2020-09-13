@@ -12,6 +12,7 @@
 
 #include "dataWidget.hpp"
 #include "resultDataVisualWidget.hpp"
+#include "fluidParamsVisualWidget.hpp"
 
 #include <QMainWindow>
 #include <QGridLayout>
@@ -38,6 +39,7 @@ namespace ble_gui
 			QGridLayout *layout;
 			widgets::DataWidget *dataWidget;
 			widgets::ResultDataVisualWidget *resultDataVisual;
+			widgets::FluidParamsVisualWidget *fluidParamsVisual;
 			QMenu *menu;
 			QStatusBar *statusBar;
 			QLabel *statusLabel;
@@ -66,7 +68,7 @@ namespace ble_gui
 			void handleRunButton();
 			void updateInputData();
 			void showScCheckedChange();
-			void update_sc();
+			void update_static_visual();
 		};
 	} // namespace views
 } // namespace ble_gui

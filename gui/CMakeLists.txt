@@ -23,6 +23,7 @@ set (SOURCES
 	widgets/gridSettsWidget.cpp
 	widgets/shockFrontSettsWidget.cpp
 	widgets/resultDataVisualWidget.cpp
+	widgets/fluidParamsVisualWidget.cpp
 	frames/qVerticalLabel.cpp
 	main.cpp
 )

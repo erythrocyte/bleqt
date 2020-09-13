@@ -9,6 +9,7 @@
 namespace ble_src{
 
 double get_shock_front(const std::shared_ptr<PhysData> data);
+double get_shock_front_rhs(double sc, const std::shared_ptr<PhysData> data);
 
 }
 
