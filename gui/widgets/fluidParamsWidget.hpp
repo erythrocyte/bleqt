@@ -11,7 +11,7 @@
 namespace ble_gui {
 namespace widgets {
 
-    class FluidParamsVisualWidget : public QWidget, public UI::FluidParams {
+    class FluidParamsVisualWidget : public QWidget, private UI::FluidParams {
         Q_OBJECT
 
     public:

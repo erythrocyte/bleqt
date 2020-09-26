@@ -13,7 +13,7 @@
 
 namespace ble_gui {
 namespace widgets {
-    class GridSettsWidget : public QWidget, public UI::GridSetts {
+    class GridSettsWidget : public QWidget, private UI::GridSetts {
         Q_OBJECT
     public:
         GridSettsWidget(QWidget* parent = nullptr);

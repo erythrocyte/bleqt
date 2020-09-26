@@ -173,7 +173,7 @@ void ble_gui::views::BleFrame::make_grid()
 
 void ble_gui::views::BleFrame::updateInputData()
 {
-	_data->model->period = dataWidget->ModelData->Period->value();
+	_data->model->period = dataWidget->ModelData->getModelingPeriod();
 
 	_data->phys->kmu = dataWidget->PhysData->Kmu->value();
 	_data->phys->n_oil = dataWidget->PhysData->Noil->value();
