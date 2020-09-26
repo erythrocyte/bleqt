@@ -184,8 +184,8 @@ void ble_gui::views::BleFrame::updateInputData()
 	_data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
 	_data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
 
-	_data->grd->l = dataWidget->GridSetts->Length->value();
-	_data->grd->n = dataWidget->GridSetts->CellCount->value();
+	_data->grd->l = dataWidget->GridSetts->getLenght();
+	_data->grd->n = dataWidget->GridSetts->getCellCount();
 }
 
 void ble_gui::views::BleFrame::update_static_visual()

@@ -1,7 +1,12 @@
+#ifndef BLEGUI_WIDGETS_UI_FLUIDPARAMSVISUAL_H_
+#define BLEGUI_WIDGETS_UI_FLUIDPARAMSVISUAL_H_
+
 #include <QChart>
 #include <QChartView>
 #include <QGridLayout>
 #include <QWidget>
+#include <QLineSeries>
+#include <QValueAxis>
 
 using namespace QtCharts;
 
@@ -10,7 +15,7 @@ namespace widgets {
 
     namespace UI {
 
-        class FluidParamsVisual {
+        class FluidParams {
         public:
             QLineSeries* series_kw;
             QLineSeries* series_koil;
@@ -137,3 +142,5 @@ namespace widgets {
     }
 }
 }
+
+#endif

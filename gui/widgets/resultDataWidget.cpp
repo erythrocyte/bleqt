@@ -1,4 +1,4 @@
-#include "resultDataVisualWidget.hpp"
+#include "resultDataWidget.hpp"
 
 #include <sstream>
 

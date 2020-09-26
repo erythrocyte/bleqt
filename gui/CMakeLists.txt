@@ -22,8 +22,8 @@ set (SOURCES
 	widgets/satSolverSettsWidget.cpp
 	widgets/gridSettsWidget.cpp
 	widgets/shockFrontSettsWidget.cpp
-	widgets/resultDataVisualWidget.cpp
-	widgets/fluidParamsVisualWidget.cpp
+	widgets/resultDataWidget.cpp
+	widgets/fluidParamsWidget.cpp
 	frames/qVerticalLabel.cpp
 	bleapp.cpp
 	main.cpp

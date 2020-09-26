@@ -1,24 +1,21 @@
-#include "fluidParamsVisualWidget.hpp"
+#include "fluidParamsWidget.hpp"
 
 #include "commonMath.hpp"
 #include "shockFront.hpp"
 #include "workRp.hpp"
 
-#include <QGridLayout>
-
 ble_gui::widgets::FluidParamsVisualWidget::FluidParamsVisualWidget(QWidget* parent)
     : QWidget(parent)
-    , ui(new UI::FluidParamsVisual)
+    , ui(new UI::FluidParams)
 
 {
     ui->setupUI(this);
     setLayout(ui->layout);
 }
 
-void ble_gui::widgets::FluidParamsVisualWidget::update_view(const std::shared_ptr<ble_src::PhysData> data,
-    double sc)
+void ble_gui::widgets::FluidParamsVisualWidget::update_view(
+    const std::shared_ptr<ble_src::PhysData> data, double sc)
 {
-
     ui->series_kw->clear();
     ui->series_koil->clear();
     ui->series_fbl->clear();
@@ -28,18 +25,18 @@ void ble_gui::widgets::FluidParamsVisualWidget::update_view(const std::shared_pt
     fill_data(data, sc);
 }
 
-void ble_gui::widgets::FluidParamsVisualWidget::fill_data(const std::shared_ptr<ble_src::PhysData> data,
-    double sc)
+void ble_gui::widgets::FluidParamsVisualWidget::fill_data(
+    const std::shared_ptr<ble_src::PhysData> data, double sc)
 {
-    int n = 200;
-    double ds = 1.0 / (n - 1);
+    int n = 200; // point count;
+    double ds = 1.0 / (n - 1); // step;
 
     double max_dfbl = 1.0;
 
     double dsc = ble_src::get_fbl(sc, data);
 
     for (int k = 0; k < n; k++) {
-        double s = ds * k;
+        double s = ds * k; // saturation;
         double kw = ble_src::get_kw(s, data);
         double koil = ble_src::get_koil(s, data);
         double fbl = ble_src::get_fbl(s, data);

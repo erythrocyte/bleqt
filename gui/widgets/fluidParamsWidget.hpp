@@ -6,20 +6,12 @@
 #include <memory>
 
 #include "physData.hpp"
-
-#include <QChart>
-#include <QChartView>
-#include <QLineSeries>
-#include <QValueAxis>
-
-#include "uis/ui_fluidParamsVisualWidget.hpp"
-
-using namespace QtCharts;
+#include "uis/ui_fluidParamsWidget.hpp"
 
 namespace ble_gui {
 namespace widgets {
 
-    class FluidParamsVisualWidget : public QWidget, public UI::FluidParamsVisual {
+    class FluidParamsVisualWidget : public QWidget, public UI::FluidParams {
         Q_OBJECT
 
     public:
@@ -29,7 +21,7 @@ namespace widgets {
         void update_view(const std::shared_ptr<ble_src::PhysData> data, double sc);
 
     private:
-        UI::FluidParamsVisual* ui;
+        UI::FluidParams* ui;
 
         void fill_data(const std::shared_ptr<ble_src::PhysData> data, double sc);
     };

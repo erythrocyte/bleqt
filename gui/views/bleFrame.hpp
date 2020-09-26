@@ -11,8 +11,8 @@
 #include "bleResultData.hpp"
 
 #include "dataWidget.hpp"
-#include "resultDataVisualWidget.hpp"
-#include "fluidParamsVisualWidget.hpp"
+#include "resultDataWidget.hpp"
+#include "fluidParamsWidget.hpp"
 
 #include <QMainWindow>
 #include <QGridLayout>
