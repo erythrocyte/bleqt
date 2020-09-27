@@ -16,12 +16,12 @@ ble_gui::widgets::GridSettsWidget::GridSettsWidget(QWidget* parent)
     }
 }
 
-double ble_gui::widgets::GridSettsWidget::getLenght()
+double ble_gui::widgets::GridSettsWidget::getLenght() const
 {
     return ui->Length->value();
 }
 
-int ble_gui::widgets::GridSettsWidget::getCellCount()
+int ble_gui::widgets::GridSettsWidget::getCellCount() const
 {
     return ui->CellCount->value();
 }

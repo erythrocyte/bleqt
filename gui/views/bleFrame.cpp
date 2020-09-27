@@ -114,9 +114,7 @@ void ble_gui::views::BleFrame::set_visual_data_widget()
 void ble_gui::views::BleFrame::set_signals()
 {
 	connect(dataWidget->ShockFrontSetts->showCurve, SIGNAL(stateChanged(int)), this, SLOT(showScCheckedChange()));
-	connect(dataWidget->PhysData->Noil, SIGNAL(valueChanged(double)), this, SLOT(update_static_visual()));
-	connect(dataWidget->PhysData->Nwat, SIGNAL(valueChanged(double)), this, SLOT(update_static_visual()));
-	connect(dataWidget->PhysData->Kmu, SIGNAL(valueChanged(double)), this, SLOT(update_static_visual()));
+	connect(dataWidget->PhysData, SIGNAL(valuesUpdated()), this, SLOT(update_static_visual()));
 }
 
 void ble_gui::views::BleFrame::showScCheckedChange()
@@ -175,11 +173,9 @@ void ble_gui::views::BleFrame::updateInputData()
 {
 	_data->model->period = dataWidget->ModelData->getModelingPeriod();
 
-	_data->phys->kmu = dataWidget->PhysData->Kmu->value();
-	_data->phys->n_oil = dataWidget->PhysData->Noil->value();
-	_data->phys->n_wat = dataWidget->PhysData->Nwat->value();
-	_data->phys->perm = dataWidget->PhysData->Perm->value();
-	_data->phys->poro = dataWidget->PhysData->Poro->value();
+	_data->phys->kmu = dataWidget->PhysData->getKmu();
+	_data->phys->n_oil = dataWidget->PhysData->getNoil();
+	_data->phys->n_wat = dataWidget->PhysData->getNwat();
 
 	_data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
 	_data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();

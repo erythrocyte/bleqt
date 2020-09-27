@@ -7,7 +7,7 @@ ble_gui::widgets::ModelDataWidget::ModelDataWidget(QWidget* parent)
     ui->setupUi(this);
 }
 
-double ble_gui::widgets::ModelDataWidget::getModelingPeriod()
+double ble_gui::widgets::ModelDataWidget::getModelingPeriod() const
 {
     return ui->Period->value();
 }
