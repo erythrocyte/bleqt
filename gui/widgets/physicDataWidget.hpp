@@ -14,9 +14,9 @@ namespace widgets {
         PhysDataWidget(QWidget* parent = nullptr);
         ~PhysDataWidget() { delete ui; }
 
-        double getKmu() const;
-        double getNwat() const;
-        double getNoil() const;
+        double getKmu() const { return ui->Kmu->value(); }
+        double getNwat() const { return ui->Nwat->value(); }
+        double getNoil() const { return ui->Noil->value(); }
 
     signals:
         void valuesUpdated();
@@ -29,7 +29,7 @@ namespace widgets {
             int spinboxRow, int spinboxCol, QLabel* label, int labelRow, int labelCol);
 
     private slots:
-        void changeValues();
+        void changeValues() { emit valuesUpdated(); }
     };
 } // namespace widgets
 } // namespace ble_gui

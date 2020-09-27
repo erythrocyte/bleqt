@@ -10,7 +10,6 @@ ble_gui::widgets::FluidParamsVisualWidget::FluidParamsVisualWidget(QWidget* pare
 
 {
     ui->setupUI(this);
-    setLayout(ui->layout);
 }
 
 void ble_gui::widgets::FluidParamsVisualWidget::update_view(

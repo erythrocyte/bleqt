@@ -19,8 +19,8 @@ namespace widgets {
         GridSettsWidget(QWidget* parent = nullptr);
         ~GridSettsWidget() { delete ui; }
 
-        double getLenght() const;
-        int getCellCount() const;
+        double getLenght() const { return ui->Length->value(); }
+        int getCellCount() const { return ui->CellCount->value(); }
 
     private:
         UI::GridSetts* ui;

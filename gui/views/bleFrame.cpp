@@ -177,8 +177,8 @@ void ble_gui::views::BleFrame::updateInputData()
 	_data->phys->n_oil = dataWidget->PhysData->getNoil();
 	_data->phys->n_wat = dataWidget->PhysData->getNwat();
 
-	_data->satSetts->cur_val = dataWidget->SaturSolverSetts->Curant->value();
-	_data->satSetts->pN = dataWidget->SaturSolverSetts->RecalcPressN->value();
+	_data->satSetts->cur_val = dataWidget->SaturSolverSetts->getCurantVal();
+	_data->satSetts->pN = dataWidget->SaturSolverSetts->getPressRecalcN();
 
 	_data->grd->l = dataWidget->GridSetts->getLenght();
 	_data->grd->n = dataWidget->GridSetts->getCellCount();

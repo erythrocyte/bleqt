@@ -1,62 +1,59 @@
 #ifndef BLEGUI_WIDGETS_DATAVISUALWIDGET_H_
 #define BLEGUI_WIDGETS_DATAVISUALWIDGET_H_
 
+#include <functional>
 #include <iostream>
 #include <memory>
-#include <functional>
 
 #include "bleResultData.hpp"
 
-#include <QLabel>
-#include <QChartView>
 #include <QChart>
+#include <QChartView>
+#include <QLabel>
 #include <QLineSeries>
-#include <QValueAxis>
 #include <QSlider>
+#include <QValueAxis>
 
 using namespace QtCharts;
 
-namespace ble_gui
-{
-    namespace widgets
-    {
-        class ResultDataVisualWidget : public QWidget
-        {
-            Q_OBJECT
+namespace ble_gui {
+namespace widgets {
+    class ResultDataVisualWidget : public QWidget {
+        Q_OBJECT
 
-        private:
-            QChartView *chartView;
-            QChart *chart;
-            QLineSeries *series_press;
-            QLineSeries *series_sat_num;
-            QLineSeries *series_sat_an;
-            QLineSeries *series_sc;
-            QValueAxis *axisX;
-            QValueAxis *axisYPress;
-            QValueAxis *axisYSat;
-            QSlider *slider;
-            QLabel *label;
+    public:
+        ResultDataVisualWidget(QWidget* parent = nullptr);
+        ~ResultDataVisualWidget() { }
 
-            bool _firstInit = true;
+        void setData(const std::shared_ptr<ble_src::BleResultData> data,
+            std::function<void(double)> progress);
+        void update_sc_series(double l, double sc);
+        void set_sc_visible(bool visible);
 
-            std::shared_ptr<ble_src::BleResultData> _data;
+    private:
+        QChartView* chartView;
+        QChart* chart;
+        QLineSeries* series_press;
+        QLineSeries* series_sat_num;
+        QLineSeries* series_sat_an;
+        QLineSeries* series_sc;
+        QValueAxis* axisX;
+        QValueAxis* axisYPress;
+        QValueAxis* axisYSat;
+        QSlider* slider;
+        QLabel* label;
 
-            void update_time_info(int index);
-            void fill_time_series(bool init, const std::shared_ptr<ble_src::DynamicData> d);
+        bool _firstInit = true;
 
-        public:
-            ResultDataVisualWidget(QWidget *parent = nullptr);
-            ~ResultDataVisualWidget() {}
+        std::shared_ptr<ble_src::BleResultData> _data;
 
-            void setData(const std::shared_ptr<ble_src::BleResultData> data,
-                         std::function<void(double)> progress);
-            void update_sc_series(double l, double sc);
-            void set_sc_visible(bool visible);
+        void update_time_info(int index);
+        void fill_time_series(bool init, const std::shared_ptr<ble_src::DynamicData> d);
 
-        private slots:
-            void handleSliderValueChange();
-        };
-    } // namespace widgets
+    private slots:
+        void handleSliderValueChange();
+    };
+} // namespace widgets
 } // namespace ble_gui
 
 #endif

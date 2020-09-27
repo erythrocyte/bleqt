@@ -32,23 +32,3 @@ ble_gui::widgets::PhysDataWidget::PhysDataWidget(QWidget* parent)
     connect(ui->Nwat, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
     connect(ui->Kmu, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
 }
-
-void ble_gui::widgets::PhysDataWidget::changeValues()
-{
-    emit valuesUpdated();
-}
-
-double ble_gui::widgets::PhysDataWidget::getKmu() const
-{
-    return ui->Kmu->value();
-}
-
-double ble_gui::widgets::PhysDataWidget::getNwat() const
-{
-    return ui->Nwat->value();
-}
-
-double ble_gui::widgets::PhysDataWidget::getNoil() const
-{
-    return ui->Noil->value();
-}

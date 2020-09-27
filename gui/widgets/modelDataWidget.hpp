@@ -14,7 +14,7 @@ namespace widgets {
         ModelDataWidget(QWidget* parent = nullptr);
         ~ModelDataWidget() { delete ui; }
 
-        double getModelingPeriod() const;
+        double getModelingPeriod() const { return ui->Period->value(); }
 
     private:
         UI::ModelData* ui;

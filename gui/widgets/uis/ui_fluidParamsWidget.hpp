@@ -35,7 +35,7 @@ namespace widgets {
 
             void setupUI(QWidget* widget)
             {
-                layout = new QGridLayout();
+                layout = new QGridLayout(widget);
 
                 chart = new QChart();
                 chart->legend()->setVisible(true);
