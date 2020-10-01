@@ -5,10 +5,6 @@
 #include <memory>
 
 #include "uis/ui_satSolverSettsWidget.hpp"
-// #include <QWidget>
-// #include <QDoubleSpinBox>
-// #include <QSpinBox>
-// #include <QComboBox>
 
 namespace ble_gui {
 namespace widgets {

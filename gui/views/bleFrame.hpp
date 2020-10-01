@@ -68,7 +68,7 @@ namespace ble_gui
 		private slots:
 			void handleRunButton();
 			void updateInputData();
-			void showScCheckedChange();
+			void showScCheckedChange(bool);
 			void update_static_visual();
 		};
 	} // namespace views
