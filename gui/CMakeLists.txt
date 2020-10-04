@@ -46,5 +46,6 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/gui)
 include_directories(${CMAKE_SOURCE_DIR}/gui/widgets)
 include_directories(${CMAKE_SOURCE_DIR}/gui/frames)
+include_directories(${CMAKE_SOURCE_DIR}/gui/mvp)
 
 include_directories(views)

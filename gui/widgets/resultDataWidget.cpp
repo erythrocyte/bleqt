@@ -4,8 +4,6 @@
 
 #include "shockFront.hpp"
 
-#include <QGridLayout>
-
 ble_gui::widgets::ResultDataVisualWidget::ResultDataVisualWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::ResultDataVisual)

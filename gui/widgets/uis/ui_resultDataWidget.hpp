@@ -20,7 +20,6 @@ namespace widgets {
     namespace UI {
         class ResultDataVisual {
         public:
-            
             QChart* Chart;
             QLineSeries* SeriesPress;
             QLineSeries* SeriesSatNum;
@@ -77,7 +76,7 @@ namespace widgets {
                 Chart->addAxis(_axisYPress, Qt::AlignLeft);
                 Chart->addAxis(_axisYSat, Qt::AlignRight);
 
-                SeriesSc = new QLineSeries();                
+                SeriesSc = new QLineSeries();
                 _pen.setStyle(Qt::DotLine);
                 _pen.setWidth(2);
                 // pen.setBrush(Qt::green);
