@@ -18,7 +18,8 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
 				: init[fc->cl2]
 			: init[fc->cl1];
 		
-		double cf = fc->u * get_fbl(s, data->phys) * fc->area;
+		double fbl = get_fbl(s, data->phys);
+		double cf = fc->u * fbl * fc->area;
 		dvs[fc->cl1] += cf;
 		if (fc->cl2 != -1)
 			dvs[fc->cl2] -= cf;
@@ -26,6 +27,16 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
 
 	for (auto &cl: grd->cells) {
 		result[cl->ind] = init[cl->ind] + tau / (data->phys->poro * cl->volume) * dvs[cl->ind];
+
+		if (cl->ind > 0)
+		{
+			if (result[cl->ind-1] > result[cl->ind])
+			{
+				std::cout << "for cell ind = " << cl->ind - 1 << " bad calc" << std::endl;
+				std::cout << "\t vol = " << grd->cells[cl->ind-1]->volume << std::endl;
+				std::cout << "\t dvs = " << dvs[cl->ind] << std::endl;
+			}
+		}
 	}
 
 	return result;

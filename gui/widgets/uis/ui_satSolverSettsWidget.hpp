@@ -36,7 +36,7 @@ namespace widgets {
                 Curant->setMinimum(1e-6);
                 Curant->setMaximum(1e6);
                 Curant->setSingleStep(0.001);
-                Curant->setValue(0.001);
+                Curant->setValue(0.1);
                 _layout->addWidget(Curant, 0, 1);
 
                 _curantLabel = new QLabel();

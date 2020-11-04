@@ -41,7 +41,7 @@ namespace ble_src
 			if (uw_right > 0.)
 				uw_in += uw_right;
 
-			double cell_size = std::abs(cl->xr - cl->xl);
+			double cell_size = cl->volume;// std::abs(cl->xr - cl->xl);
 
 			if (uw_in > 1e-10)
 			{

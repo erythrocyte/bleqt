@@ -1,11 +1,14 @@
 #include "bleCalc.hpp"
 
-#include "shockFront.hpp"
-#include "workTimeStep.hpp"
-#include "workParam.hpp"
+#include <fstream>
+#include <sstream>
+
+#include "pressureSolver.hpp"
 #include "saturSolverAnalytic.hpp"
 #include "saturSolverNum.hpp"
-#include "pressureSolver.hpp"
+#include "shockFront.hpp"
+#include "workParam.hpp"
+#include "workTimeStep.hpp"
 
 ble_src::BleCalc::BleCalc()
 {
@@ -18,26 +21,25 @@ ble_src::BleCalc::~BleCalc()
 }
 
 void ble_src::BleCalc::calc(const std::shared_ptr<Grid> grd,
-                            const std::shared_ptr<InputData> data,
-                            std::function<void(double)> set_progress)
+    const std::shared_ptr<InputData> data,
+    std::function<void(double)> set_progress)
 {
     _results->data.clear();
     set_initial_cond(grd->cells.size());
     double sc = ble_src::get_shock_front(data->phys);
 
-    int index = 1;
+    int index = 0;
     int pressIndex = 0;
     double sumT = 0.;
     double sumU = 0.;
-    while (sumT < data->model->period)
-    {
-        std::vector<double> s_prev = _results->data[index - 1]->s;
+    while (sumT < data->model->period) {
+        std::vector<double> s_prev = _results->data[index]->s;
 
-        std::vector<double> p = _results->data[index - 1]->p;
-        if (pressIndex == 0 || pressIndex == data->satSetts->pN)
-        {
+        std::vector<double> p = _results->data[index]->p;
+        if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
             p = solve_press(grd, s_prev, data->phys);
             calc_u(p, s_prev, data->phys, grd);
+            save_press(index, grd, p);
             pressIndex = 0;
         }
         pressIndex++;
@@ -77,4 +79,21 @@ void ble_src::BleCalc::set_initial_cond(size_t n)
     d->s = s;
 
     _results->data.push_back(d);
+}
+
+void ble_src::BleCalc::save_press(int index, const std::shared_ptr<Grid> grd,
+    const std::vector<double> p)
+{
+    std::ostringstream oss;
+    oss << "press_" << index << ".dat";
+    std::ofstream ofs(oss.str().c_str());
+
+    ofs << "cind\tpress\tum\tup";
+
+    for (auto& cl : grd->cells) {
+        ofs << cl->ind << "\t" << p[cl->ind] << "\t" <<
+        grd->faces[cl->fl]->u << "\t" << grd->faces[cl->fr]->u << std::endl;
+    }
+
+    ofs.close();
 }
