@@ -1,29 +1,29 @@
 #include "bleapp.hpp"
 
-gui::BleApplication::BleApplication()
+#include <QApplication>
+#include <QWidget>
+
+#include "bleFrame.hpp"
+
+ble::BleApplication::BleApplication()
 {
-    std::shared_ptr<Hypodermic::ContainerBuilder> builder;
+    Hypodermic::ContainerBuilder builder;
 
-    // What we say here is: when I need an IMessageSerializer,
-    // // I want you to use this implementation.
-    // builder.registerType<LengthPrefixedMessageSerializer>()
-    //     .as<IMessageSerializer>();
+    builder.registerType<ble_gui::views::BleFrame>();
 
-    // builder.registerType<ConsoleMessageWriter>().as<IMessageWriter>();
-
-    // Actually build the `Container` we have just configured.
-    m_container = builder->build();
+    m_container = builder.build();
 }
 
-gui::BleApplication::~BleApplication()
+ble::BleApplication::~BleApplication()
 {
 }
 
-void gui::BleApplication::run()
+void ble::BleApplication::run(int argc, char** argv)
 {
-    // // Container, give us an instance of `IMessageWriter`.
-    // auto messageWriter = m_container->resolve<IMessageWriter>();
+    QApplication qapp(argc, argv);
 
-    // // Alright then, we can write some message.
-    // messageWriter->write("The app is running");
+    auto mainWindow = m_container->resolve<ble_gui::views::BleFrame>();
+    mainWindow->show();
+
+    qapp.exec();
 }

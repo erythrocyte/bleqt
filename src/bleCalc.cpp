@@ -39,7 +39,7 @@ void ble_src::BleCalc::calc(const std::shared_ptr<Grid> grd,
         if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
             p = solve_press(grd, s_prev, data->phys);
             calc_u(p, s_prev, data->phys, grd);
-            save_press(index, grd, p);
+            //save_press(index, grd, p);
             pressIndex = 0;
         }
         pressIndex++;
@@ -92,7 +92,7 @@ void ble_src::BleCalc::save_press(int index, const std::shared_ptr<Grid> grd,
 
     for (auto& cl : grd->cells) {
         ofs << cl->ind << "\t" << p[cl->ind] << "\t" <<
-        grd->faces[cl->fl]->u << "\t" << grd->faces[cl->fr]->u << std::endl;
+        grd->faces[cl->faces[0]]->u << "\t" << grd->faces[cl->faces[1]]->u << std::endl;
     }
 
     ofs.close();

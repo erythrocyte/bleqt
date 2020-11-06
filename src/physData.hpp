@@ -8,8 +8,8 @@ public:
     double kmu; // = mw / moil;
     double n_oil;
     double n_wat;
-    double poro = 1.0;
-    double perm = 1.0;
+    double poro = 1.;
+    double perm = 1.;
 };
 
 }

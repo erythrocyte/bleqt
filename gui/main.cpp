@@ -1,16 +1,12 @@
-#include <QApplication>
-#include <QWidget>
-#include <QGridLayout>
-#include <QLabel>
+#include <iostream>
+#include <memory>
 
-#include "bleFrame.hpp"
+#include "bleapp.hpp"
 
 int main(int argc, char **argv)
 {
-	QApplication app(argc, argv);
+	std::shared_ptr<ble::BleApplication> app (new ble::BleApplication());
+	app->run(argc, argv);
 
-	ble_gui::views::BleFrame mainWindow;
-	mainWindow.show();
-
-	return app.exec();
+	return 1;
 }

@@ -11,8 +11,7 @@ class Cell {
 		double xr;
 		double cntr;
 
-		int fl;
-		int fr;
+		std::vector<int> faces;
 
 		double volume;
 

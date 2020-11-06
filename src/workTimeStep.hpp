@@ -10,9 +10,9 @@
 
 namespace ble_src {
 
-double get_time_step(const std::shared_ptr<Grid> grd, const std::vector<double>&s, const std::shared_ptr<InputData> data);
+double get_time_step(const std::shared_ptr<Grid> grd,
+    const std::vector<double>& s, const std::shared_ptr<InputData> data);
 
 }
-
 
 #endif
