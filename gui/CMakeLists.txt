@@ -16,6 +16,7 @@ find_package(Qt5 COMPONENTS Charts REQUIRED)
 
 set (SOURCES
 	views/bleFrame.cpp
+	views/presenters/bleFramePresenter.cpp
 	widgets/dataWidget.cpp
 	widgets/modelDataWidget.cpp
 	widgets/physicDataWidget.cpp
@@ -46,6 +47,6 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/gui)
 include_directories(${CMAKE_SOURCE_DIR}/gui/widgets)
 include_directories(${CMAKE_SOURCE_DIR}/gui/frames)
+include_directories(${CMAKE_SOURCE_DIR}/gui/views)
+include_directories(${CMAKE_SOURCE_DIR}/gui/views/presenters)
 include_directories(${CMAKE_SOURCE_DIR}/gui/mvp)
-
-include_directories(views)
