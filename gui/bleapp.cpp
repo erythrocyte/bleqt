@@ -6,13 +6,15 @@
 #include "bleFrame.hpp"
 #include "presenters/bleFramePresenter.hpp"
 #include "ibleFrame.hpp"
+#include "widgets/presenters/fluidParamWidgetPresenter.hpp"
 
 ble::BleApplication::BleApplication()
 {
     Hypodermic::ContainerBuilder builder;
 
     builder.registerType<ble_gui::views::BleFrame>();
-    // builder.registerType<ble_gui::views::presenters::BleFramePresenter>();
+    builder.registerType<ble_gui::widgets::FluidParamsVisualWidget>();
+    builder.registerType<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
 
     m_container = builder.build();
 }

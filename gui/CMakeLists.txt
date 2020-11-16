@@ -25,6 +25,7 @@ set (SOURCES
 	widgets/shockFrontSettsWidget.cpp
 	widgets/resultDataWidget.cpp
 	widgets/fluidParamsWidget.cpp
+	widgets/presenters/fluidParamWidgetPresenter.cpp
 	frames/qVerticalLabel.cpp
 	bleapp.cpp
 	main.cpp

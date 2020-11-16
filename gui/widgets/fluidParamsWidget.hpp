@@ -7,6 +7,7 @@
 
 #include "physData.hpp"
 #include "uis/ui_fluidParamsWidget.hpp"
+#include "models/fluidParamsModel.hpp"
 
 namespace ble_gui {
 namespace widgets {
@@ -18,12 +19,13 @@ namespace widgets {
         FluidParamsVisualWidget(QWidget* parent = nullptr);
         ~FluidParamsVisualWidget() { delete ui; }
 
-        void update_view(const std::shared_ptr<ble_src::PhysData> data, double sc);
+        void update_view(const std::shared_ptr<ble_src::PhysData> physData, double sc);
+
+    signals:
+        std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> get_data(const std::shared_ptr<ble_src::PhysData> physData, double sc);
 
     private:
         UI::FluidParams* ui;
-
-        void fill_data(const std::shared_ptr<ble_src::PhysData> data, double sc);
     };
 } // namespace widgets
 } // namespace ble_gui
