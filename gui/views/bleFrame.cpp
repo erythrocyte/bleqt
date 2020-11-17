@@ -36,7 +36,7 @@ ble_gui::views::BleFrame::BleFrame(QWidget* parent)
     this->setFixedSize(1100, 750);
 
     this->set_settings_widget();
-    this->set_visual_data_widget();
+    // this->set_visual_data_widget();
     this->set_menu();
     this->set_default_data();
     this->set_status_bar();
@@ -99,14 +99,13 @@ void ble_gui::views::BleFrame::set_settings_widget()
     addDockWidget(Qt::LeftDockWidgetArea, _dock);
 }
 
-void ble_gui::views::BleFrame::set_visual_data_widget()
+void ble_gui::views::BleFrame::set_visual_data_widget(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual)
 {
     QTabWidget* visDataWidget = new QTabWidget();
     resultDataVisual = new widgets::ResultDataVisualWidget();
     visDataWidget->addTab(resultDataVisual, "Results");
 
-    fluidParamsVisual = new widgets::FluidParamsVisualWidget();
-    visDataWidget->addTab(fluidParamsVisual, "Fluid params");
+    visDataWidget->addTab(fluidParamsVisual.get(), "Fluid params");
 
     layout->addWidget(visDataWidget, 0, 0);
 }
@@ -194,5 +193,5 @@ void ble_gui::views::BleFrame::update_static_visual()
     oss << "Shock front = " << std::fixed << std::setprecision(3) << sc;
     dataWidget->ShockFrontSetts->SetShockFrontValue(oss.str());
 
-    fluidParamsVisual->update_view(_data->phys, sc);
+    // fluidParamsVisual->update_view(_data->phys, sc);
 }

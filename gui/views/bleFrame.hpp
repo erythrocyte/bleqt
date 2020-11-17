@@ -35,12 +35,14 @@ namespace views {
 
         virtual void run() { show(); }
 
+        void set_visual_data_widget(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
+
     private:
         QWidget* central;
         QGridLayout* layout;
         widgets::DataWidget* dataWidget;
         widgets::ResultDataVisualWidget* resultDataVisual;
-        widgets::FluidParamsVisualWidget* fluidParamsVisual;
+        // widgets::FluidParamsVisualWidget* fluidParamsVisual;
         QMenu* menu;
         QStatusBar* statusBar;
         QLabel* statusLabel;
@@ -63,7 +65,6 @@ namespace views {
 
         void set_menu();
         void set_settings_widget();
-        void set_visual_data_widget();
         void set_status_bar();
 
     private slots:

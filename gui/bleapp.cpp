@@ -4,17 +4,18 @@
 #include <QWidget>
 
 #include "bleFrame.hpp"
-#include "presenters/bleFramePresenter.hpp"
 #include "ibleFrame.hpp"
+#include "presenters/bleFramePresenter.hpp"
 #include "widgets/presenters/fluidParamWidgetPresenter.hpp"
 
 ble::BleApplication::BleApplication()
 {
     Hypodermic::ContainerBuilder builder;
 
-    builder.registerType<ble_gui::views::BleFrame>();
+    builder.registerType<ble_gui::views::BleFrame>().as<ble_gui::views::IBleFrame>();
     builder.registerType<ble_gui::widgets::FluidParamsVisualWidget>();
     builder.registerType<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
+    builder.registerType<ble_gui::views::presenters::BleFramePresenter>();
 
     m_container = builder.build();
 }
@@ -27,8 +28,8 @@ void ble::BleApplication::run(int argc, char** argv)
 {
     QApplication qapp(argc, argv);
 
-    auto mainWindow = m_container->resolve<ble_gui::views::BleFrame>();
-    auto mainPresenter(new ble_gui::views::presenters::BleFramePresenter(m_container, mainWindow));
+    auto mainPresenter = m_container->resolve<ble_gui::views::presenters::BleFramePresenter>();
+    // (m_container, mainWindow));
 
     qapp.exec();
 }

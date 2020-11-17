@@ -4,6 +4,7 @@
 
 #include "commonMath.hpp"
 #include "workRp.hpp"
+#include "bleFrame.hpp"
 
 ble_gui::widgets::presenters::FluidParamWidgetPresenter::FluidParamWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,
@@ -15,6 +16,9 @@ ble_gui::widgets::presenters::FluidParamWidgetPresenter::FluidParamWidgetPresent
         SIGNAL(get_data(const std::shared_ptr<ble_src::PhysData>, double)),
         this,
         SLOT(send_data));
+
+    auto mainWindow = container->resolve<ble_gui::views::BleFrame>();
+    mainWindow->set_visual_data_widget(view);
 }
 
 std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> ble_gui::widgets::presenters::FluidParamWidgetPresenter::send_data(const std::shared_ptr<ble_src::PhysData> data, double sc)
