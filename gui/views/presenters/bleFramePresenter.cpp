@@ -7,6 +7,8 @@ ble_gui::views::presenters::BleFramePresenter::BleFramePresenter(std::shared_ptr
 {
     m_container = container;
     m_view = view;
+
+    auto fluidVisualPresenter = m_container->resolve<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
 }
 
 void ble_gui::views::presenters::BleFramePresenter::run()

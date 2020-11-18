@@ -1,8 +1,5 @@
 #include "fluidParamsWidget.hpp"
 
-#include "commonMath.hpp"
-#include "shockFront.hpp"
-#include "workRp.hpp"
 
 ble_gui::widgets::FluidParamsVisualWidget::FluidParamsVisualWidget(QWidget* parent)
     : QWidget(parent)

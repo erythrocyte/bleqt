@@ -13,9 +13,10 @@ ble::BleApplication::BleApplication()
     Hypodermic::ContainerBuilder builder;
 
     builder.registerType<ble_gui::views::BleFrame>().as<ble_gui::views::IBleFrame>();
+    builder.registerType<ble_gui::views::presenters::BleFramePresenter>();
     builder.registerType<ble_gui::widgets::FluidParamsVisualWidget>();
     builder.registerType<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
-    builder.registerType<ble_gui::views::presenters::BleFramePresenter>();
+    
 
     m_container = builder.build();
 }
@@ -29,7 +30,7 @@ void ble::BleApplication::run(int argc, char** argv)
     QApplication qapp(argc, argv);
 
     auto mainPresenter = m_container->resolve<ble_gui::views::presenters::BleFramePresenter>();
-    // (m_container, mainWindow));
+    mainPresenter->run();
 
     qapp.exec();
 }

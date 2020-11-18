@@ -185,13 +185,13 @@ void ble_gui::views::BleFrame::updateInputData()
 
 void ble_gui::views::BleFrame::update_static_visual()
 {
-    updateInputData();
-    double sc = ble_src::get_shock_front(_data->phys);
-    resultDataVisual->update_sc_series(_data->grd->l, sc);
+    // updateInputData();
+    // double sc = ble_src::get_shock_front(_data->phys);
+    // resultDataVisual->update_sc_series(_data->grd->l, sc);
 
-    std::ostringstream oss;
-    oss << "Shock front = " << std::fixed << std::setprecision(3) << sc;
-    dataWidget->ShockFrontSetts->SetShockFrontValue(oss.str());
+    // std::ostringstream oss;
+    // oss << "Shock front = " << std::fixed << std::setprecision(3) << sc;
+    // dataWidget->ShockFrontSetts->SetShockFrontValue(oss.str());
 
-    // fluidParamsVisual->update_view(_data->phys, sc);
+    // // fluidParamsVisual->update_view(_data->phys, sc);
 }
