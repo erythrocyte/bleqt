@@ -2,6 +2,7 @@
 #define BLE_GUI_VIEWS_IBLEFRAME
 
 #include <iostream>
+#include "fluidParamsWidget.hpp"
 
 namespace ble_gui {
 namespace views {
@@ -9,6 +10,7 @@ namespace views {
     public:
         virtual ~IBleFrame() { }
         virtual void run() = 0;
+        virtual void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidWidget) = 0;
     };
 }
 }

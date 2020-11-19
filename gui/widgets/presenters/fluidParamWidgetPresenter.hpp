@@ -16,10 +16,17 @@ namespace widgets {
         class FluidParamWidgetPresenter : public QObject {
         public:
             FluidParamWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
-                std::shared_ptr<ble_gui::widgets::FluidParamsVisualWidget> view);
+                std::shared_ptr<FluidParamsVisualWidget> view);
+
+            std::shared_ptr<FluidParamsVisualWidget> get_view();
+
+        private:
+            std::shared_ptr<Hypodermic::Container> m_container;
+            std::shared_ptr<FluidParamsVisualWidget> m_view;
 
         private slots:
-            std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> send_data(const std::shared_ptr<ble_src::PhysData> data, double sc);
+            std::shared_ptr<models::FluidParamsModel>
+            send_data(const std::shared_ptr<ble_src::PhysData> data, double sc);
         };
     }
 }

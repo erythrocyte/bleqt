@@ -35,7 +35,7 @@ namespace views {
 
         virtual void run() { show(); }
 
-        void set_visual_data_widget(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
+        virtual void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
 
     private:
         QWidget* central;
