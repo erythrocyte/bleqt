@@ -37,6 +37,9 @@ namespace views {
 
         virtual void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
 
+    signals:
+        virtual std::shared_ptr<widgets::FluidParamsVisualWidget> on_get_visual_widget();
+
     private:
         QWidget* central;
         QGridLayout* layout;

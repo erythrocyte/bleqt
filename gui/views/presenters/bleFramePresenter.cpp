@@ -1,6 +1,5 @@
 #include "bleFramePresenter.hpp"
 
-#include "widgets/presenters/fluidParamWidgetPresenter.hpp"
 
 ble_gui::views::presenters::BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> container,
     std::shared_ptr<IBleFrame> view)
@@ -8,9 +7,16 @@ ble_gui::views::presenters::BleFramePresenter::BleFramePresenter(std::shared_ptr
     m_container = container;
     m_view = view;
 
-    auto fluidVisualPresenter = m_container->resolve<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
+    QObject* view_obj = dynamic_cast<QObject*>(view.get());
+
+    QObject::connect(view_obj,
+        SIGNAL(on_get_visual_widget),
+        this,
+        SLOT(get_visual_widget));
+
+    m_fluidVisualPresenter = m_container->resolve<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
     
-    auto fluidVisual = fluidVisualPresenter->get_view();
+    auto fluidVisual = m_fluidVisualPresenter->get_view();
     m_view->set_widgets(fluidVisual);
 }
 
