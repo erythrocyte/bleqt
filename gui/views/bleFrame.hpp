@@ -38,7 +38,9 @@ namespace views {
         virtual void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
 
     signals:
-        virtual std::shared_ptr<widgets::FluidParamsVisualWidget> on_get_visual_widget();
+        virtual void update_fluid_view(
+            const std::shared_ptr<ble_src::PhysData> physData,
+            double sc);
 
     private:
         QWidget* central;

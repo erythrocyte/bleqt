@@ -8,7 +8,9 @@
 #include "presenters/bleFramePresenter.hpp"
 #include "widgets/presenters/fluidParamWidgetPresenter.hpp"
 
-ble::BleApplication::BleApplication()
+namespace ble {
+
+BleApplication::BleApplication()
 {
     Hypodermic::ContainerBuilder builder;
 
@@ -16,16 +18,15 @@ ble::BleApplication::BleApplication()
     builder.registerType<ble_gui::views::presenters::BleFramePresenter>();
     builder.registerType<ble_gui::widgets::FluidParamsVisualWidget>();
     builder.registerType<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
-    
 
     m_container = builder.build();
 }
 
-ble::BleApplication::~BleApplication()
+BleApplication::~BleApplication()
 {
 }
 
-void ble::BleApplication::run(int argc, char** argv)
+void BleApplication::run(int argc, char** argv)
 {
     QApplication qapp(argc, argv);
 
@@ -33,4 +34,6 @@ void ble::BleApplication::run(int argc, char** argv)
     mainPresenter->run();
 
     qapp.exec();
+}
+
 }

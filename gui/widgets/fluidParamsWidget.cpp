@@ -1,6 +1,5 @@
 #include "fluidParamsWidget.hpp"
 
-
 ble_gui::widgets::FluidParamsVisualWidget::FluidParamsVisualWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::FluidParams)

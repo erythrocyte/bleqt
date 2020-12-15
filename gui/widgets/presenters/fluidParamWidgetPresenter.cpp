@@ -6,7 +6,9 @@
 #include "commonMath.hpp"
 #include "workRp.hpp"
 
-ble_gui::widgets::presenters::FluidParamWidgetPresenter::FluidParamWidgetPresenter(
+namespace ble_gui::widgets::presenters {
+
+FluidParamWidgetPresenter::FluidParamWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,
     std::shared_ptr<FluidParamsVisualWidget> view)
 {
@@ -21,12 +23,12 @@ ble_gui::widgets::presenters::FluidParamWidgetPresenter::FluidParamWidgetPresent
         SLOT(send_data));
 }
 
-std::shared_ptr<ble_gui::widgets::FluidParamsVisualWidget> ble_gui::widgets::presenters::FluidParamWidgetPresenter::get_view()
+std::shared_ptr<ble_gui::widgets::FluidParamsVisualWidget> FluidParamWidgetPresenter::get_view()
 {
     return m_view;
 }
 
-std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> ble_gui::widgets::presenters::FluidParamWidgetPresenter::send_data(const std::shared_ptr<ble_src::PhysData> data, double sc)
+std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> FluidParamWidgetPresenter::send_data(const std::shared_ptr<ble_src::PhysData> data, double sc)
 {
     auto result = std::make_shared<ble_gui::widgets::models::FluidParamsModel>();
 
@@ -61,4 +63,12 @@ std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> ble_gui::widgets::pr
     result->scs.append(QPointF(sc, 0.));
 
     return result;
+}
+
+void FluidParamWidgetPresenter::update_view(
+    const std::shared_ptr<ble_src::PhysData> physData, double sc)
+{
+    m_view->update_view(physData, sc);
+}
+
 }
