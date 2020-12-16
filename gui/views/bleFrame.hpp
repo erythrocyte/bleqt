@@ -27,18 +27,24 @@
 
 namespace ble_gui {
 namespace views {
-    class BleFrame : public QMainWindow, public IBleFrame {
+    class BleFrame : public QMainWindow{ //, public IBleFrame {
         Q_OBJECT
     public:
         explicit BleFrame(QWidget* parent = nullptr);
-        virtual ~BleFrame();
+        // virtual ~BleFrame();
 
-        virtual void run() { show(); }
+        // virtual void run() { show(); }
 
-        virtual void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
+        // virtual void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
+
+        ~BleFrame();
+
+        void run() { show(); }
+
+        void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
 
     signals:
-        virtual void update_fluid_view(
+        void update_fluid_view(
             const std::shared_ptr<ble_src::PhysData> physData,
             double sc);
 

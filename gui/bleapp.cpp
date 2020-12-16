@@ -14,7 +14,7 @@ BleApplication::BleApplication()
 {
     Hypodermic::ContainerBuilder builder;
 
-    builder.registerType<ble_gui::views::BleFrame>().as<ble_gui::views::IBleFrame>();
+    builder.registerType<ble_gui::views::BleFrame>(); //.as<ble_gui::views::IBleFrame>();
     builder.registerType<ble_gui::views::presenters::BleFramePresenter>();
     builder.registerType<ble_gui::widgets::FluidParamsVisualWidget>();
     builder.registerType<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();

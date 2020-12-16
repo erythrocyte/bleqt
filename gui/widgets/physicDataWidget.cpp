@@ -28,7 +28,7 @@ ble_gui::widgets::PhysDataWidget::PhysDataWidget(QWidget* parent)
     addQDoubleSpinBoxLabel(ui->Nwat, 0.1, 10, 0.1, 3.0, 1, 1, 1, ui->LabelNwat, 1, 0);
     addQDoubleSpinBoxLabel(ui->Noil, 0.1, 10, 0.1, 3.0, 1, 2, 1, ui->LabelNoil, 2, 0);
 
-    connect(ui->Noil, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
+    auto a = connect(ui->Noil, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
     connect(ui->Nwat, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
     connect(ui->Kmu, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
 }

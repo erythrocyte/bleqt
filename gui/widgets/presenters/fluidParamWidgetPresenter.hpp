@@ -11,8 +11,9 @@
 #include "physData.hpp"
 
 namespace ble_gui::widgets::presenters {
-    
+
 class FluidParamWidgetPresenter : public QObject {
+    Q_OBJECT
 public:
     FluidParamWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<FluidParamsVisualWidget> view);

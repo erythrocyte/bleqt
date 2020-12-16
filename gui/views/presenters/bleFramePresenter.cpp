@@ -3,17 +3,19 @@
 namespace ble_gui::views::presenters {
 
 BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> container,
-    std::shared_ptr<IBleFrame> view)
+    std::shared_ptr<BleFrame> view)
 {
     m_container = container;
     m_view = view;
 
     QObject* view_obj = dynamic_cast<QObject*>(view.get());
 
-    QObject::connect(view_obj,
+    auto success = QObject::connect(view_obj, 
         SIGNAL(update_fluid_view(const std::shared_ptr<ble_src::PhysData>, double)),
         this,
-        SLOT(on_update_fluid_widget));
+        SLOT(on_update_fluid_widget(const std::shared_ptr<ble_src::PhysData>, double)));
+
+    // Q_ASSERT(success);
 
     m_fluidVisualPresenter = m_container->resolve<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
 

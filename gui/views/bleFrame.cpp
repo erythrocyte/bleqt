@@ -196,5 +196,5 @@ void ble_gui::views::BleFrame::update_static_visual()
     dataWidget->ShockFrontSetts->SetShockFrontValue(oss.str());
 
     // fluidParamsVisual->update_view(_data->phys, sc);
-    update_fluid_view(_data->phys, sc);
+    emit update_fluid_view(_data->phys, sc);
 }

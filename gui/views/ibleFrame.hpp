@@ -6,7 +6,6 @@
 #include "fluidParamsWidget.hpp"
 #include "physData.hpp"
 
-
 namespace ble_gui::views {
 class IBleFrame {
 public:
@@ -16,8 +15,9 @@ public:
             fluidWidget)
         = 0;
     virtual void update_fluid_view(
-        const std::shared_ptr<ble_src::PhysData> physData, 
-        double sc) = 0;
+        const std::shared_ptr<ble_src::PhysData> physData,
+        double sc)
+        = 0;
 };
 }
 
