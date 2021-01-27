@@ -17,10 +17,12 @@ FluidParamWidgetPresenter::FluidParamWidgetPresenter(
 
     QObject* view_obj = dynamic_cast<QObject*>(view.get());
 
-    QObject::connect(view_obj,
+    const bool connected = connect(view_obj,
         SIGNAL(get_data(const std::shared_ptr<ble_src::PhysData>, double)),
         this,
-        SLOT(send_data));
+        SLOT(send_data(const std::shared_ptr<ble_src::PhysData>, double)));
+
+    // Q_ASSERT(connected);
 }
 
 std::shared_ptr<ble_gui::widgets::FluidParamsVisualWidget> FluidParamWidgetPresenter::get_view()
