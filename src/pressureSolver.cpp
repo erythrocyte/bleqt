@@ -52,7 +52,7 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s, const st
 			? fc->bound_press
 			: p[fc->cl2];
 
-		fc->u = - fc->area * sigma * (p1 - p2) / h;
+		fc->u = - sigma * (p1 - p2) / h;
 	}
 }
 

@@ -1,56 +1,34 @@
 #include "physicDataWidget.hpp"
 
 #include <QGridLayout>
-#include <QLabel>
 #include <QGroupBox>
+#include <QLabel>
 #include <QVBoxLayout>
 
-void addQDoubleSpinBoxLabel(QGridLayout *layout, QDoubleSpinBox *widget,
-                            double min, double max,
-                            double step, double value,
-                            int decimals,
-                            int spinboxRow, int spinboxCol,
-                            QString labelCaption, int labelRow, int labelCol,
-                            bool addWidget = true)
+void ble_gui::widgets::PhysDataWidget::addQDoubleSpinBoxLabel(QDoubleSpinBox* dSpinBox,
+    double min, double max, double step, double value, int decimals,
+    int spinboxRow, int spinboxCol, QLabel* label, int labelRow, int labelCol)
 {
-    // widget = new QDoubleSpinBox();
-    widget->setMinimum(min);
-    widget->setMaximum(max);
-    widget->setSingleStep(step);
-    widget->setDecimals(decimals);
-    widget->setValue(value);
+    dSpinBox->setMinimum(min);
+    dSpinBox->setMaximum(max);
+    dSpinBox->setSingleStep(step);
+    dSpinBox->setDecimals(decimals);
+    dSpinBox->setValue(value);
 
-    if (addWidget)
-        layout->addWidget(widget, spinboxRow, spinboxCol);
-
-    QLabel *label = new QLabel(labelCaption);
-    if (addWidget)
-        layout->addWidget(label, labelRow, labelCol);
+    ui->Layout->addWidget(label, labelRow, labelCol);
+    ui->Layout->addWidget(dSpinBox, spinboxRow, spinboxCol);
 }
 
-ble_gui::widgets::PhysDataWidget::PhysDataWidget(QWidget *parent)
+ble_gui::widgets::PhysDataWidget::PhysDataWidget(QWidget* parent)
     : QWidget(parent)
+    , ui(new UI::PhysicData)
 {
-    QGroupBox *groupBox = new QGroupBox("Physical data");
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->addWidget(groupBox);
-    QGridLayout *layout = new QGridLayout(groupBox);
-    groupBox->setLayout(layout);
+    ui->setupUi(this);
+    addQDoubleSpinBoxLabel(ui->Kmu, 0.1, 100, 0.1, 1.0, 3, 0, 1, ui->LabelKmu, 0, 0);
+    addQDoubleSpinBoxLabel(ui->Nwat, 0.1, 10, 0.1, 3.0, 1, 1, 1, ui->LabelNwat, 1, 0);
+    addQDoubleSpinBoxLabel(ui->Noil, 0.1, 10, 0.1, 3.0, 1, 2, 1, ui->LabelNoil, 2, 0);
 
-    layout->setMargin(5);
-
-    Kmu = new QDoubleSpinBox();
-    addQDoubleSpinBoxLabel(layout, Kmu, 0.1, 100, 0.1, 0.125, 3, 0, 1, tr("Kmu"), 0, 0);
-
-    Nwat = new QDoubleSpinBox();
-    addQDoubleSpinBoxLabel(layout, Nwat, 0.1, 10, 0.1, 2.0, 1, 1, 1, tr("Nwat"), 1, 0);
-
-    Noil = new QDoubleSpinBox();
-    addQDoubleSpinBoxLabel(layout, Noil, 0.1, 10, 0.1, 2.0, 1, 2, 1, tr("Noil"), 2, 0);
-
-    Poro = new QDoubleSpinBox();
-    addQDoubleSpinBoxLabel(layout, Poro, 0.1, 10000, 0.1, 1.0, 1, 3, 1, tr("Poro"), 3, 0, false);
-
-    Perm = new QDoubleSpinBox();
-    addQDoubleSpinBoxLabel(layout, Perm, 0.1, 10000, 0.1, 1.0, 1, 4, 1, tr("Perm"), 4, 0, false);
+    auto a = connect(ui->Noil, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
+    connect(ui->Nwat, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
+    connect(ui->Kmu, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
 }

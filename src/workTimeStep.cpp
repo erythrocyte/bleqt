@@ -2,56 +2,56 @@
 
 #include "workRp.hpp"
 
-namespace ble_src
+namespace ble_src {
+
+double get_face_dfbl(const std::shared_ptr<Face> fc, const std::vector<double>& init,
+    std::shared_ptr<PhysData> data)
 {
+    double s2 = (fc->cl2 == -1)
+        ? fc->bound_satur
+        : init[fc->cl2];
+    double s1 = init[fc->cl1];
+    double s_av = (s2 + s1) / 2.0;
 
-	double get_face_uw(int fc_ind, const std::shared_ptr<Grid> grd, const std::vector<double> &init, std::shared_ptr<PhysData> data)
-	{
-		std::shared_ptr<Face> fc = grd->faces[fc_ind];
+    double dfbl = std::max(
+        std::max(
+            get_dfbl(s2, data),
+            get_dfbl(s1, data)),
+        get_dfbl(s_av, data));
 
-		if (fc->u < 0.)
-		{
-			return 0.; // out flow;
-		}
+    return dfbl;
+}
 
-		double s_in = (fc->cl2 == -1)
-						  ? fc->bound_satur
-						  : init[fc->cl2];
-		double s0 = init[fc->cl1];
-		double s_av = (s_in + s0) / 2.0;
+double get_time_step(const std::shared_ptr<Grid> grd,
+    const std::vector<double>& s, const std::shared_ptr<InputData> data)
+{
+    double result = 1e19;
 
-		double dfbl = std::max(
-			std::max(
-				get_dfbl(s_in, data), get_dfbl(s0, data)),
-			get_dfbl(s_av, data));
+    std::vector<double> udfbls(grd->cells.size(), 0.);
 
-		return fc->u * dfbl;
-	}
+    for (auto& fc : grd->faces) {
+        double dfbl = get_face_dfbl(fc, s, data->phys);
+        double udfbl = fc->u * dfbl;
+        if (fc->u > 0.) {
+            udfbls[fc->cl1] += udfbl;
+        } else {
+            if (fc->cl2 != -1)
+                udfbls[fc->cl2] -= udfbl;
+        }
+    }
 
-	double get_time_step(const std::shared_ptr<Grid> grd, const std::vector<double> &s, const std::shared_ptr<InputData> data)
-	{
-		double result = 1e19;
-		for (auto &cl : grd->cells)
-		{
-			double uw_in = 0.;
-			double uw_left = get_face_uw(cl->fl, grd, s, data->phys);
-			if (uw_left > 0.)
-				uw_in += uw_left;
-			double uw_right = get_face_uw(cl->fr, grd, s, data->phys);
-			if (uw_right > 0.)
-				uw_in += uw_right;
+    double cv = data->satSetts->cur_val;
+    for (auto& cl : grd->cells) {
+        double udfbl = udfbls[cl->ind];
+        double poro = data->phys->poro; // for every cell
+        if (udfbl > 1e-10) {
+            double t = (cv * poro * cl->volume) / udfbl;
+            if (t > 1e-8 && t < result)
+                result = t;
+        }
+    }
 
-			double cell_size = std::abs(cl->xr - cl->xl);
-
-			if (uw_in > 1e-10)
-			{
-				double t = (data->satSetts->cur_val * cell_size) / uw_in;
-				if (t > 1e-8 && t < result)
-					result = t;
-			}
-		}
-
-		return result;
-	}
+    return result;
+}
 
 } // namespace ble_src

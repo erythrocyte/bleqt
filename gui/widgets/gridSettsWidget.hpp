@@ -4,27 +4,28 @@
 #include <iostream>
 #include <memory>
 
-#include <QWidget>
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QSpinBox>
-#include <QComboBox>
+#include <QWidget>
 
-namespace ble_gui
-{
-    namespace widgets
-    {
-        class GridSettsWidget : public QWidget
-        {
-            Q_OBJECT
-        public:
-            GridSettsWidget(QWidget *parent = nullptr);
-            ~GridSettsWidget() {}
+#include "uis/ui_gridSettsWidget.hpp"
 
-            QDoubleSpinBox *Length;
-            QSpinBox *CellCount;
-            QComboBox *GridType;
-        };
-    } // namespace widgets
+namespace ble_gui {
+namespace widgets {
+    class GridSettsWidget : public QWidget, private UI::GridSetts {
+        Q_OBJECT
+    public:
+        GridSettsWidget(QWidget* parent = nullptr);
+        ~GridSettsWidget() { delete ui; }
+
+        double getLenght() const { return ui->Length->value(); }
+        int getCellCount() const { return ui->CellCount->value(); }
+
+    private:
+        UI::GridSetts* ui;
+    };
+} // namespace widgets
 } // namespace ble_gui
 
 #endif

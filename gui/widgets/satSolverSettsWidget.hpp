@@ -4,27 +4,23 @@
 #include <iostream>
 #include <memory>
 
-#include <QWidget>
-#include <QDoubleSpinBox>
-#include <QSpinBox>
-#include <QComboBox>
+#include "uis/ui_satSolverSettsWidget.hpp"
 
-namespace ble_gui
-{
-    namespace widgets
-    {
-        class SaturSolverSettsWidget : public QWidget
-        {
-            Q_OBJECT
-        public:
-            SaturSolverSettsWidget(QWidget *parent = nullptr);
-            ~SaturSolverSettsWidget() {}
+namespace ble_gui {
+namespace widgets {
+    class SaturSolverSettsWidget : public QWidget, private UI::SaturSolverSetts {
+        Q_OBJECT
+    public:
+        SaturSolverSettsWidget(QWidget* parent = nullptr);
+        ~SaturSolverSettsWidget() { delete ui; }
 
-            QDoubleSpinBox *Curant;
-            QSpinBox *RecalcPressN;
-            QComboBox *SolverType;
-        };
-    } // namespace widgets
+        double getCurantVal() const { return ui->Curant->value(); }
+        int getPressRecalcN() const { return ui->RecalcPressN->value(); }
+
+    private:
+        UI::SaturSolverSetts* ui;
+    };
+} // namespace widgets
 } // namespace ble_gui
 
 #endif

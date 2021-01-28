@@ -18,7 +18,8 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
 				: init[fc->cl2]
 			: init[fc->cl1];
 		
-		double cf = fc->u * get_fbl(s, data->phys) * fc->area;
+		double fbl = get_fbl(s, data->phys);
+		double cf = fc->u * fbl * fc->area;
 		dvs[fc->cl1] += cf;
 		if (fc->cl2 != -1)
 			dvs[fc->cl2] -= cf;
