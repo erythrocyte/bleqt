@@ -14,10 +14,9 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
         SIGNAL(update_fluid_view(const std::shared_ptr<ble_src::PhysData>, double)),
         this,
         SLOT(on_update_fluid_widget(const std::shared_ptr<ble_src::PhysData>, double)));
+    Q_ASSERT(success);
 
-    // Q_ASSERT(success);
-
-    m_fluidVisualPresenter = m_container->resolve<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
+    m_fluidVisualPresenter = m_container->resolve<widgets::presenters::FluidParamWidgetPresenter>();
 
     auto fluidVisual = m_fluidVisualPresenter->get_view();
     m_view->set_widgets(fluidVisual);

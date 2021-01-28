@@ -25,60 +25,60 @@
 #include <QProgressBar>
 #include <QStatusBar>
 
-namespace ble_gui {
-namespace views {
-    class BleFrame : public QMainWindow{ //, public IBleFrame {
-        Q_OBJECT
-    public:
-        explicit BleFrame(QWidget* parent = nullptr);
+namespace ble_gui::views {
 
-        ~BleFrame();
+class BleFrame : public QMainWindow { //, public IBleFrame {
+    Q_OBJECT
+public:
+    explicit BleFrame(QWidget* parent = nullptr);
 
-        void run() { show(); }
+    ~BleFrame();
 
-        void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
+    void run() { show(); }
 
-    signals:
-        void update_fluid_view(
-            const std::shared_ptr<ble_src::PhysData> physData,
-            double sc);
+    void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
 
-    private:
-        QWidget* central;
-        QGridLayout* layout;
-        widgets::DataWidget* dataWidget;
-        widgets::ResultDataVisualWidget* resultDataVisual;
-        QMenu* menu;
-        QStatusBar* statusBar;
-        QLabel* statusLabel;
-        QProgressBar* statusProgressBar;
-        QDockWidget* _dock;
+signals:
+    void update_fluid_view(
+        const std::shared_ptr<ble_src::PhysData> physData,
+        double sc);
 
-        std::shared_ptr<ble_src::Grid> _grd;
-        std::shared_ptr<ble_src::InputData> _data;
-        std::shared_ptr<ble_src::BleCalc> _solver;
+private:
+    QWidget* central;
+    QGridLayout* layout;
+    widgets::DataWidget* dataWidget;
+    widgets::ResultDataVisualWidget* resultDataVisual;
+    QMenu* menu;
+    QStatusBar* statusBar;
+    QLabel* statusLabel;
+    QProgressBar* statusProgressBar;
+    QDockWidget* _dock;
 
-        std::vector<double> solve_press(const std::vector<double>& s);
-        std::vector<double> solve_satur(const double tau, const std::vector<double>& s);
+    std::shared_ptr<ble_src::Grid> _grd;
+    std::shared_ptr<ble_src::InputData> _data;
+    std::shared_ptr<ble_src::BleCalc> _solver;
 
-        void set_default_data();
-        void make_grid();
-        void set_initial_cond();
-        void update_time_info(int index);
-        void set_signals();
-        void update_progress(double perc);
+    std::vector<double> solve_press(const std::vector<double>& s);
+    std::vector<double> solve_satur(const double tau, const std::vector<double>& s);
 
-        void set_menu();
-        void set_settings_widget();
-        void set_status_bar();
+    void set_default_data();
+    void make_grid();
+    void set_initial_cond();
+    void update_time_info(int index);
+    void set_signals();
+    void update_progress(double perc);
 
-    private slots:
-        void handleRunButton();
-        void updateInputData();
-        void showScCheckedChange(bool);
-        void update_static_visual();
-    };
-} // namespace views
-} // namespace ble_gui
+    void set_menu();
+    void set_settings_widget();
+    void set_status_bar();
+
+private slots:
+    void handleRunButton();
+    void updateInputData();
+    void showScCheckedChange(bool);
+    void update_static_visual();
+};
+
+} // namespace ble_gui::views
 
 #endif
