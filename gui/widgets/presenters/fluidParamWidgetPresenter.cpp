@@ -21,8 +21,7 @@ FluidParamWidgetPresenter::FluidParamWidgetPresenter(
         SIGNAL(get_data(const std::shared_ptr<ble_src::PhysData>, double)),
         this,
         SLOT(send_data(const std::shared_ptr<ble_src::PhysData>, double)));
-
-    // Q_ASSERT(connected);
+    Q_ASSERT(connected);
 }
 
 std::shared_ptr<ble_gui::widgets::FluidParamsVisualWidget> FluidParamWidgetPresenter::get_view()

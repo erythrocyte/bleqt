@@ -31,11 +31,6 @@ namespace views {
         Q_OBJECT
     public:
         explicit BleFrame(QWidget* parent = nullptr);
-        // virtual ~BleFrame();
-
-        // virtual void run() { show(); }
-
-        // virtual void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
 
         ~BleFrame();
 
@@ -53,7 +48,6 @@ namespace views {
         QGridLayout* layout;
         widgets::DataWidget* dataWidget;
         widgets::ResultDataVisualWidget* resultDataVisual;
-        // widgets::FluidParamsVisualWidget* fluidParamsVisual;
         QMenu* menu;
         QStatusBar* statusBar;
         QLabel* statusLabel;

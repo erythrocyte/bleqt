@@ -36,7 +36,6 @@ ble_gui::views::BleFrame::BleFrame(QWidget* parent)
     this->setFixedSize(1100, 750);
 
     this->set_settings_widget();
-    // this->set_visual_data_widget();
     this->set_menu();
 
     this->set_status_bar();
@@ -195,6 +194,5 @@ void ble_gui::views::BleFrame::update_static_visual()
     oss << "Shock front = " << std::fixed << std::setprecision(3) << sc;
     dataWidget->ShockFrontSetts->SetShockFrontValue(oss.str());
 
-    // fluidParamsVisual->update_view(_data->phys, sc);
     emit update_fluid_view(_data->phys, sc);
 }
