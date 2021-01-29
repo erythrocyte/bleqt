@@ -36,7 +36,7 @@ public:
 
     void run() { show(); }
 
-    void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
+    void set_widgets(std::shared_ptr<widgets::FluidParamsWidget> fluidParamsVisual);
 
 signals:
     void update_fluid_view(

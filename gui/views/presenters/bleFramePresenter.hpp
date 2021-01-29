@@ -24,7 +24,7 @@ public:
     void run();
 
 private slots:
-    std::shared_ptr<widgets::FluidParamsVisualWidget> get_fluid_widget() { return m_fluidVisualPresenter->get_view(); }
+    std::shared_ptr<widgets::FluidParamsWidget> get_fluid_widget() { return m_fluidVisualPresenter->get_view(); }
     void on_update_fluid_widget(
         const std::shared_ptr<ble_src::PhysData> physData, double sc);
 };

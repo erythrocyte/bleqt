@@ -11,7 +11,7 @@ class IBleFrame {
 public:
     virtual ~IBleFrame() { }
     virtual void run() = 0;
-    virtual void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget>
+    virtual void set_widgets(std::shared_ptr<widgets::FluidParamsWidget>
             fluidWidget)
         = 0;
     virtual void update_fluid_view(

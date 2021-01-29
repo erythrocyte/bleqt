@@ -12,12 +12,12 @@
 namespace ble_gui {
 namespace widgets {
 
-    class FluidParamsVisualWidget : public QWidget, private UI::FluidParams {
+    class FluidParamsWidget : public QWidget, private UI::FluidParams {
         Q_OBJECT
 
     public:
-        FluidParamsVisualWidget(QWidget* parent = nullptr);
-        ~FluidParamsVisualWidget() { delete ui; }
+        FluidParamsWidget(QWidget* parent = nullptr);
+        ~FluidParamsWidget() { delete ui; }
 
         void update_view(const std::shared_ptr<ble_src::PhysData> physData, double sc);
 

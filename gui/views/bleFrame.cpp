@@ -98,7 +98,7 @@ void ble_gui::views::BleFrame::set_settings_widget()
     addDockWidget(Qt::LeftDockWidgetArea, _dock);
 }
 
-void ble_gui::views::BleFrame::set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual)
+void ble_gui::views::BleFrame::set_widgets(std::shared_ptr<widgets::FluidParamsWidget> fluidParamsVisual)
 {
     QTabWidget* visDataWidget = new QTabWidget();
     resultDataVisual = new widgets::ResultDataVisualWidget();
