@@ -34,12 +34,6 @@ ble_gui::views::BleFrame::BleFrame(QWidget* parent)
     setCentralWidget(central);
     setWindowTitle("Ble Frame");
     this->setFixedSize(1100, 750);
-
-    this->set_settings_widget();
-    this->set_menu();
-
-    this->set_status_bar();
-    this->set_signals();
 }
 
 ble_gui::views::BleFrame::~BleFrame()
@@ -83,8 +77,7 @@ void ble_gui::views::BleFrame::set_settings_widget()
 {
     QTabWidget* tabSettings = new QTabWidget();
     tabSettings->setTabPosition(QTabWidget::TabPosition::West);
-    dataWidget = new widgets::DataWidget();
-    tabSettings->addTab(dataWidget, "");
+    tabSettings->addTab(_dataWidget.get(), "");
 
     frames::QVerticalLabel* tabSettingsLabel1 = new frames::QVerticalLabel("Main");
     tabSettingsLabel1->setStyleSheet("QLabel { color : #C0BBFE }");
@@ -98,8 +91,16 @@ void ble_gui::views::BleFrame::set_settings_widget()
     addDockWidget(Qt::LeftDockWidgetArea, _dock);
 }
 
-void ble_gui::views::BleFrame::set_widgets(std::shared_ptr<widgets::FluidParamsWidget> fluidParamsVisual)
+void ble_gui::views::BleFrame::set_widgets(
+    std::shared_ptr<widgets::FluidParamsWidget> fluidParamsVisual,
+    std::shared_ptr<widgets::DataWidget> dataWidget)
 {
+    _dataWidget = dataWidget;
+    this->set_settings_widget();
+    this->set_menu();
+    this->set_status_bar();
+    this->set_signals();
+
     QTabWidget* visDataWidget = new QTabWidget();
     resultDataVisual = new widgets::ResultDataVisualWidget();
     visDataWidget->addTab(resultDataVisual, "Results");
@@ -113,8 +114,11 @@ void ble_gui::views::BleFrame::set_widgets(std::shared_ptr<widgets::FluidParamsW
 
 void ble_gui::views::BleFrame::set_signals()
 {
-    connect(dataWidget->ShockFrontSetts, SIGNAL(checkBoxStatusChanged(bool)), this, SLOT(showScCheckedChange(bool)));
-    connect(dataWidget->PhysData, SIGNAL(valuesUpdated()), this, SLOT(update_static_visual()));
+    QObject::connect(
+        _dataWidget->ShockFrontSetts, SIGNAL(checkBoxStatusChanged(bool)),
+        this, SLOT(showScCheckedChange(bool)));
+    connect(_dataWidget->PhysData, SIGNAL(valuesUpdated()),
+        this, SLOT(update_static_visual()));
 }
 
 void ble_gui::views::BleFrame::showScCheckedChange(bool status)
@@ -171,17 +175,17 @@ void ble_gui::views::BleFrame::make_grid()
 
 void ble_gui::views::BleFrame::updateInputData()
 {
-    _data->model->period = dataWidget->ModelData->getModelingPeriod();
+    _data->model->period = _dataWidget->ModelData->getModelingPeriod();
 
-    _data->phys->kmu = dataWidget->PhysData->getKmu();
-    _data->phys->n_oil = dataWidget->PhysData->getNoil();
-    _data->phys->n_wat = dataWidget->PhysData->getNwat();
+    _data->phys->kmu = _dataWidget->PhysData->getKmu();
+    _data->phys->n_oil = _dataWidget->PhysData->getNoil();
+    _data->phys->n_wat = _dataWidget->PhysData->getNwat();
 
-    _data->satSetts->cur_val = dataWidget->SaturSolverSetts->getCurantVal();
-    _data->satSetts->pN = dataWidget->SaturSolverSetts->getPressRecalcN();
+    _data->satSetts->cur_val = _dataWidget->SaturSolverSetts->getCurantVal();
+    _data->satSetts->pN = _dataWidget->SaturSolverSetts->getPressRecalcN();
 
-    _data->grd->l = dataWidget->GridSetts->getLenght();
-    _data->grd->n = dataWidget->GridSetts->getCellCount();
+    _data->grd->l = _dataWidget->GridSetts->getLenght();
+    _data->grd->n = _dataWidget->GridSetts->getCellCount();
 }
 
 void ble_gui::views::BleFrame::update_static_visual()
@@ -192,7 +196,7 @@ void ble_gui::views::BleFrame::update_static_visual()
 
     std::ostringstream oss;
     oss << "Shock front = " << std::fixed << std::setprecision(3) << sc;
-    dataWidget->ShockFrontSetts->SetShockFrontValue(oss.str());
+    _dataWidget->ShockFrontSetts->SetShockFrontValue(oss.str());
 
     emit update_fluid_view(_data->phys, sc);
 }

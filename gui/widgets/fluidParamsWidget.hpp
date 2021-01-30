@@ -5,29 +5,28 @@
 #include <iostream>
 #include <memory>
 
+#include "models/fluidParamsModel.hpp"
 #include "physData.hpp"
 #include "uis/ui_fluidParamsWidget.hpp"
-#include "models/fluidParamsModel.hpp"
 
-namespace ble_gui {
-namespace widgets {
+namespace ble_gui::widgets {
 
-    class FluidParamsWidget : public QWidget, private UI::FluidParams {
-        Q_OBJECT
+class FluidParamsWidget : public QWidget, private UI::FluidParams {
+    Q_OBJECT
 
-    public:
-        FluidParamsWidget(QWidget* parent = nullptr);
-        ~FluidParamsWidget() { delete ui; }
+public:
+    FluidParamsWidget(QWidget* parent = nullptr);
+    ~FluidParamsWidget() { delete ui; }
 
-        void update_view(const std::shared_ptr<ble_src::PhysData> physData, double sc);
+    void update_view(const std::shared_ptr<ble_src::PhysData> physData, double sc);
 
-    signals:
-        std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> get_data(const std::shared_ptr<ble_src::PhysData> physData, double sc);
+signals:
+    std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> get_data(const std::shared_ptr<ble_src::PhysData> physData, double sc);
 
-    private:
-        UI::FluidParams* ui;
-    };
-} // namespace widgets
-} // namespace ble_gui
+private:
+    UI::FluidParams* ui;
+};
+
+} // namespace ble_gui::widgets
 
 #endif

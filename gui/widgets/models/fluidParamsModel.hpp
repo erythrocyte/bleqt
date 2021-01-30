@@ -3,19 +3,19 @@
 
 #include <iostream>
 
-namespace ble_gui {
-namespace widgets {
-    namespace models {
-        struct FluidParamsModel {
-            double max_dfbl;
-            QList<QPointF> kws;
-            QList<QPointF> koils;
-            QList<QPointF> fbls;
-            QList<QPointF> dfbls;
-            QList<QPointF> scs;
-        };
-    }
-}
+#include <QList>
+
+namespace ble_gui::widgets::models {
+
+struct FluidParamsModel {
+    double max_dfbl;
+    QList<QPointF> kws;
+    QList<QPointF> koils;
+    QList<QPointF> fbls;
+    QList<QPointF> dfbls;
+    QList<QPointF> scs;
+};
+
 }
 
 #endif
