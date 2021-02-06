@@ -20,11 +20,16 @@ public:
     DataWidget(QWidget* parent = nullptr);
     ~DataWidget() { }
 
+    void set_view_objects(std::shared_ptr<ModelDataWidget> modelData);
+
     ModelDataWidget* ModelData;
     PhysDataWidget* PhysData;
     SaturSolverSettsWidget* SaturSolverSetts;
     GridSettsWidget* GridSetts;
     ShockFrontSettsWidget* ShockFrontSetts;
+
+private:
+    std::shared_ptr<ModelDataWidget> _modelDataWidget;
 };
 
 } // namespace ble_gui::widgets

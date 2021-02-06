@@ -21,6 +21,8 @@ public:
 private:
     std::shared_ptr<Hypodermic::Container> m_container;
     std::shared_ptr<DataWidget> m_view;
+
+    void set_widgets_to_view(std::shared_ptr<Hypodermic::Container> container);
 };
 
 }
