@@ -20,7 +20,7 @@ public:
     DataWidget(QWidget* parent = nullptr);
     ~DataWidget() { }
 
-    void set_view_objects(std::shared_ptr<ModelDataWidget> modelData);
+    // void set_view_objects(std::shared_ptr<ModelDataWidget> modelData);
 
     ModelDataWidget* ModelData;
     PhysDataWidget* PhysData;
@@ -29,7 +29,7 @@ public:
     ShockFrontSettsWidget* ShockFrontSetts;
 
 private:
-    std::shared_ptr<ModelDataWidget> _modelDataWidget;
+    // std::shared_ptr<ModelDataWidget> _modelDataWidget;
 };
 
 } // namespace ble_gui::widgets
