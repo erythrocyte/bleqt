@@ -1,6 +1,6 @@
 #include "fluidParamsWidget.hpp"
 
-ble_gui::widgets::FluidParamsVisualWidget::FluidParamsVisualWidget(QWidget* parent)
+ble_gui::widgets::FluidParamsWidget::FluidParamsWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::FluidParams)
 
@@ -8,7 +8,7 @@ ble_gui::widgets::FluidParamsVisualWidget::FluidParamsVisualWidget(QWidget* pare
     ui->setupUI(this);
 }
 
-void ble_gui::widgets::FluidParamsVisualWidget::update_view(
+void ble_gui::widgets::FluidParamsWidget::update_view(
     const std::shared_ptr<ble_src::PhysData> physData, double sc)
 {
     ui->series_kw->clear();

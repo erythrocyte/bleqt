@@ -10,16 +10,18 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
 
     QObject* view_obj = dynamic_cast<QObject*>(view.get());
 
-    auto success = QObject::connect(view_obj, 
-        SIGNAL(update_fluid_view(const std::shared_ptr<ble_src::PhysData>, double)),
-        this,
-        SLOT(on_update_fluid_widget(const std::shared_ptr<ble_src::PhysData>, double)));
+    auto success = QObject::connect(
+        view_obj, SIGNAL(update_fluid_view(const std::shared_ptr<ble_src::PhysData>, double)),
+        this, SLOT(on_update_fluid_widget(const std::shared_ptr<ble_src::PhysData>, double)));
     Q_ASSERT(success);
 
-    m_fluidVisualPresenter = m_container->resolve<widgets::presenters::FluidParamWidgetPresenter>();
+    m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamWidgetPresenter>();
+    auto fluidVisualView = m_fluidWidgetPresenter->get_view();
 
-    auto fluidVisual = m_fluidVisualPresenter->get_view();
-    m_view->set_widgets(fluidVisual);
+    m_dataWidgetPresenter = m_container->resolve<bwp::DataWidgetPresenter>();
+    auto dataWidgetView = m_dataWidgetPresenter->get_view();
+
+    m_view->set_widgets(fluidVisualView, dataWidgetView);
 }
 
 void BleFramePresenter::run()
@@ -30,7 +32,7 @@ void BleFramePresenter::run()
 void BleFramePresenter::on_update_fluid_widget(
     const std::shared_ptr<ble_src::PhysData> physData, double sc)
 {
-    m_fluidVisualPresenter->update_view(physData, sc);
+    m_fluidWidgetPresenter->update_view(physData, sc);
 }
 
 }

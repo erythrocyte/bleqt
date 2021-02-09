@@ -26,6 +26,9 @@ set (SOURCES
 	widgets/resultDataWidget.cpp
 	widgets/fluidParamsWidget.cpp
 	widgets/presenters/fluidParamWidgetPresenter.cpp
+	widgets/presenters/dataWidgetPresenter.cpp
+	widgets/presenters/gridSettsWidgetPresenter.cpp
+	widgets/presenters/bleWidgetPresenter.cpp
 	frames/qVerticalLabel.cpp
 	bleapp.cpp
 	main.cpp

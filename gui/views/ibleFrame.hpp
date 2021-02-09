@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "fluidParamsWidget.hpp"
+#include "dataWidget.hpp"
 #include "physData.hpp"
 
 namespace ble_gui::views {
@@ -11,8 +12,9 @@ class IBleFrame {
 public:
     virtual ~IBleFrame() { }
     virtual void run() = 0;
-    virtual void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget>
-            fluidWidget)
+    virtual void set_widgets(
+        std::shared_ptr<widgets::FluidParamsWidget> fluidWidget,
+        std::shared_ptr<widgets::DataWidget> dataWidget)
         = 0;
     virtual void update_fluid_view(
         const std::shared_ptr<ble_src::PhysData> physData,

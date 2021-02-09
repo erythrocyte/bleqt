@@ -7,6 +7,7 @@
 #include "ibleFrame.hpp"
 #include "presenters/bleFramePresenter.hpp"
 #include "widgets/presenters/fluidParamWidgetPresenter.hpp"
+#include "widgets/presenters/dataWidgetPresenter.hpp"
 
 namespace ble {
 
@@ -16,8 +17,10 @@ BleApplication::BleApplication()
 
     builder.registerType<ble_gui::views::BleFrame>();
     builder.registerType<ble_gui::views::presenters::BleFramePresenter>();
-    builder.registerType<ble_gui::widgets::FluidParamsVisualWidget>();
+    builder.registerType<ble_gui::widgets::FluidParamsWidget>();
     builder.registerType<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
+    builder.registerType<ble_gui::widgets::DataWidget>();
+    builder.registerType<ble_gui::widgets::presenters::DataWidgetPresenter>();
 
     m_container = builder.build();
 }

@@ -36,7 +36,8 @@ public:
 
     void run() { show(); }
 
-    void set_widgets(std::shared_ptr<widgets::FluidParamsVisualWidget> fluidParamsVisual);
+    void set_widgets(std::shared_ptr<widgets::FluidParamsWidget> fluidParamsVisual,
+        std::shared_ptr<widgets::DataWidget> dataWidget);
 
 signals:
     void update_fluid_view(
@@ -46,7 +47,7 @@ signals:
 private:
     QWidget* central;
     QGridLayout* layout;
-    widgets::DataWidget* dataWidget;
+    std::shared_ptr<widgets::DataWidget> _dataWidget;
     widgets::ResultDataVisualWidget* resultDataVisual;
     QMenu* menu;
     QStatusBar* statusBar;

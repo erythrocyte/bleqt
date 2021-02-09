@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "bleFrame.hpp"
 #include "commonMath.hpp"
 #include "workRp.hpp"
 
@@ -10,7 +9,7 @@ namespace ble_gui::widgets::presenters {
 
 FluidParamWidgetPresenter::FluidParamWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,
-    std::shared_ptr<FluidParamsVisualWidget> view)
+    std::shared_ptr<FluidParamsWidget> view)
 {
     m_container = container;
     m_view = view;
@@ -24,7 +23,7 @@ FluidParamWidgetPresenter::FluidParamWidgetPresenter(
     Q_ASSERT(connected);
 }
 
-std::shared_ptr<ble_gui::widgets::FluidParamsVisualWidget> FluidParamWidgetPresenter::get_view()
+std::shared_ptr<ble_gui::widgets::FluidParamsWidget> FluidParamWidgetPresenter::get_view()
 {
     return m_view;
 }
