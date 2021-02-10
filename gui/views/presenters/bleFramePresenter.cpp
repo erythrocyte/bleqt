@@ -1,5 +1,7 @@
 #include "bleFramePresenter.hpp"
 
+#include "widgets/dataWidget.hpp"
+
 namespace ble_gui::views::presenters {
 
 BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> container,
@@ -19,7 +21,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     auto fluidVisualView = m_fluidWidgetPresenter->get_view();
 
     m_dataWidgetPresenter = m_container->resolve<bwp::DataWidgetPresenter>();
-    auto dataWidgetView = m_dataWidgetPresenter->get_view();
+    auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
 
     m_view->set_widgets(fluidVisualView, dataWidgetView);
 }
