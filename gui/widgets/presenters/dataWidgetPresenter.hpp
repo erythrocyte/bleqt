@@ -12,6 +12,7 @@
 namespace ble_gui::widgets::presenters {
 
 class DataWidgetPresenter : public BleWidgetPresenter {
+    Q_OBJECT
 public:
     DataWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<DataWidget> view);
