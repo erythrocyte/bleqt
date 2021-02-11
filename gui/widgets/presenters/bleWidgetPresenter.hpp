@@ -14,7 +14,7 @@ class BleWidgetPresenter : public QObject {
     Q_OBJECT
 public:
     BleWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
-        std::shared_ptr<QWidget> view) {}
+        std::shared_ptr<QWidget> view);
 
     std::shared_ptr<QWidget> get_view() { return m_view; }
     virtual ~BleWidgetPresenter() = 0;
