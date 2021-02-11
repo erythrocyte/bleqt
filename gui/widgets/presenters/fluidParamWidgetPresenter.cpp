@@ -10,12 +10,12 @@ namespace ble_gui::widgets::presenters {
 FluidParamWidgetPresenter::FluidParamWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,
     std::shared_ptr<FluidParamsWidget> view)
+    : BleWidgetPresenter(container, view)
 {
-    m_container = container;
-    m_view = view;
+    // m_container = container;
+    // m_view = view;
 
     QObject* view_obj = dynamic_cast<QObject*>(view.get());
-
     const bool connected = connect(view_obj,
         SIGNAL(get_data(const std::shared_ptr<ble_src::PhysData>, double)),
         this,
@@ -23,10 +23,10 @@ FluidParamWidgetPresenter::FluidParamWidgetPresenter(
     Q_ASSERT(connected);
 }
 
-std::shared_ptr<ble_gui::widgets::FluidParamsWidget> FluidParamWidgetPresenter::get_view()
-{
-    return m_view;
-}
+// std::shared_ptr<ble_gui::widgets::FluidParamsWidget> FluidParamWidgetPresenter::get_view()
+// {
+//     return m_view;
+// }
 
 std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> FluidParamWidgetPresenter::send_data(const std::shared_ptr<ble_src::PhysData> data, double sc)
 {
@@ -68,7 +68,7 @@ std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> FluidParamWidgetPres
 void FluidParamWidgetPresenter::update_view(
     const std::shared_ptr<ble_src::PhysData> physData, double sc)
 {
-    m_view->update_view(physData, sc);
+    std::static_pointer_cast<widgets::FluidParamsWidget>(m_view)->update_view(physData, sc);
 }
 
 }

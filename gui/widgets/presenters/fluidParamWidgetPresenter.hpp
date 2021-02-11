@@ -9,21 +9,21 @@
 #include "fluidParamsWidget.hpp"
 #include "models/fluidParamsModel.hpp"
 #include "physData.hpp"
+#include "bleWidgetPresenter.hpp"
 
 namespace ble_gui::widgets::presenters {
 
-class FluidParamWidgetPresenter : public QObject {
-    Q_OBJECT
+class FluidParamWidgetPresenter : public BleWidgetPresenter {
 public:
     FluidParamWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<FluidParamsWidget> view);
 
-    std::shared_ptr<FluidParamsWidget> get_view();
+    // std::shared_ptr<FluidParamsWidget> get_view();
     void update_view(const std::shared_ptr<ble_src::PhysData> physData, double sc);
 
-private:
-    std::shared_ptr<Hypodermic::Container> m_container;
-    std::shared_ptr<FluidParamsWidget> m_view;
+private:    
+    // std::shared_ptr<Hypodermic::Container> m_container;
+    // std::shared_ptr<FluidParamsWidget> m_view;
 
 private slots:
     std::shared_ptr<models::FluidParamsModel>
