@@ -33,6 +33,9 @@ ble_gui::views::BleFrame::BleFrame(QWidget* parent)
     setCentralWidget(ui->central);
     setWindowTitle("Ble Frame");
     this->setFixedSize(1100, 750);
+
+    // status bar
+    this->setStatusBar(ui->statusBar);
 }
 
 // void ble_gui::views::BleFrame::set_status_bar()

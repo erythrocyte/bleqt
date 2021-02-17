@@ -18,13 +18,9 @@
 #include "ui_bleFrame.hpp"
 
 #include <QDockWidget>
-#include <QGridLayout>
-#include <QLabel>
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QMenu>
-#include <QProgressBar>
-#include <QStatusBar>
 
 namespace ble_gui::views {
 
