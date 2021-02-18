@@ -71,8 +71,8 @@ private:
 //     void set_settings_widget();
 //     void set_status_bar();
 
-// private slots:
-//     void handleRunButton();
+private slots:
+    void handleRunButton();
 //     void updateInputData();
 //     void showScCheckedChange(bool);
 //     void update_static_visual();

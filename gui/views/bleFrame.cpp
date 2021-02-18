@@ -36,6 +36,14 @@ ble_gui::views::BleFrame::BleFrame(QWidget* parent)
 
     // status bar
     this->setStatusBar(ui->statusBar);
+
+    // menu
+    this->setMenuBar(ui->menuBar);
+    connect(ui->quit, &QAction::triggered, qApp, QApplication::quit);
+    connect(ui->runAction, SIGNAL(triggered()), this, SLOT(handleRunButton()));
+
+    addDockWidget(Qt::LeftDockWidgetArea, ui->dockSettings);
+    addDockWidget(Qt::BottomDockWidgetArea, ui->dockMessages);
 }
 
 // void ble_gui::views::BleFrame::set_status_bar()
@@ -124,32 +132,32 @@ ble_gui::views::BleFrame::BleFrame(QWidget* parent)
 //     resultDataVisual->set_sc_visible(status);
 // }
 
-// void ble_gui::views::BleFrame::handleRunButton()
-// {
-//     auto start = std::chrono::high_resolution_clock::now();
+void ble_gui::views::BleFrame::handleRunButton()
+{
+    // auto start = std::chrono::high_resolution_clock::now();
 
-//     this->updateInputData();
-//     this->make_grid();
+    // this->updateInputData();
+    // this->make_grid();
 
-//     statusLabel->setText(tr("calculation running"));
+    // statusLabel->setText(tr("calculation running"));
 
-//     std::function<void(int)> a = std::bind(&BleFrame::update_progress, this, std::placeholders::_1);
+    // std::function<void(int)> a = std::bind(&BleFrame::update_progress, this, std::placeholders::_1);
 
-//     _solver->calc(_grd, _data, a);
+    // _solver->calc(_grd, _data, a);
 
-//     auto end = std::chrono::high_resolution_clock::now();
-//     std::chrono::duration<double> diff = end - start;
+    // auto end = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<double> diff = end - start;
 
-//     std::ostringstream oss;
-//     oss << "calculation completed in " << std::fixed << std::setprecision(1) << diff.count() << " s.";
-//     statusLabel->setText(QString::fromStdString(oss.str()));
+    // std::ostringstream oss;
+    // oss << "calculation completed in " << std::fixed << std::setprecision(1) << diff.count() << " s.";
+    // statusLabel->setText(QString::fromStdString(oss.str()));
 
-//     std::shared_ptr<ble_src::BleResultData> results = _solver->get_result();
-//     results->grd = _grd;
+    // std::shared_ptr<ble_src::BleResultData> results = _solver->get_result();
+    // results->grd = _grd;
 
-//     resultDataVisual->setData(results, a);
-//     statusLabel->setText(QString::fromStdString(oss.str()));
-// }
+    // resultDataVisual->setData(results, a);
+    // statusLabel->setText(QString::fromStdString(oss.str()));
+}
 
 // void ble_gui::views::BleFrame::update_progress(double perc)
 // {
