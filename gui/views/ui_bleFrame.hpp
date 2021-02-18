@@ -104,7 +104,6 @@ private:
 
         menu = menuBar->addMenu("&Task");
         runAction = new QAction("Run");
-        // connect(runAction, SIGNAL(triggered()), this, SLOT(handleRunButton()));
         menu->addAction(runAction);
     }
 };
