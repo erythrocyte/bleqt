@@ -29,6 +29,7 @@ public:
     QDockWidget* dockSettings;
     QDockWidget* dockMessages;
     QPlainTextEdit* messagePlainText;
+    QTabWidget* tabs;
 
     void retranslateUi(QWidget* widget)
     {
@@ -52,6 +53,9 @@ public:
         setupStatusBar(widget);
         setupDock(widget);
         setupMenu(widget);
+
+        tabs = new QTabWidget(widget);
+        layout->addWidget(tabs, 0, 0);
     }
 
 private:
