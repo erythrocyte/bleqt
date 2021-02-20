@@ -97,26 +97,23 @@ ble_gui::views::BleFrame::BleFrame(QWidget* parent)
 //     addDockWidget(Qt::LeftDockWidgetArea, _dock);
 // }
 
-// void ble_gui::views::BleFrame::set_widgets(
-//     std::shared_ptr<widgets::FluidParamsWidget> fluidParamsVisual,
+void ble_gui::views::BleFrame::set_widgets(
+    std::shared_ptr<widgets::FluidParamsWidget> fluidParamsVisual)
 //     std::shared_ptr<widgets::DataWidget> dataWidget)
-// {
-//     _dataWidget = dataWidget;
-//     this->set_settings_widget();
-//     this->set_menu();
-//     this->set_status_bar();
-//     this->set_signals();
+{
+    // _dataWidget = dataWidget;
+    // this->set_settings_widget();
+    // this->set_menu();
+    // this->set_status_bar();
+    // this->set_signals();
 
-//     QTabWidget* visDataWidget = new QTabWidget();
-//     resultDataVisual = new widgets::ResultDataVisualWidget();
-//     visDataWidget->addTab(resultDataVisual, "Results");
+    // QTabWidget* visDataWidget = new QTabWidget();
+    // resultDataVisual = new widgets::ResultDataVisualWidget();
+    // visDataWidget->addTab(resultDataVisual, "Results");
 
-//     visDataWidget->addTab(fluidParamsVisual.get(), "Fluid params");
-
-//     layout->addWidget(visDataWidget, 0, 0);
-
-//     this->set_default_data();
-// }
+    ui->tabs->addTab(fluidParamsVisual.get(), "Fluid params");
+    // this->set_default_data();
+}
 
 // void ble_gui::views::BleFrame::set_signals()
 // {

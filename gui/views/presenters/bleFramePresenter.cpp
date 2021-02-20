@@ -21,10 +21,10 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamWidgetPresenter>();
     auto fluidVisualView = std::static_pointer_cast<widgets::FluidParamsWidget>(m_fluidWidgetPresenter->get_view());
 
-    m_dataWidgetPresenter = m_container->resolve<bwp::DataWidgetPresenter>();
-    auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
+    // m_dataWidgetPresenter = m_container->resolve<bwp::DataWidgetPresenter>();
+    // auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
 
-    // m_view->set_widgets(fluidVisualView, dataWidgetView);
+    m_view->set_widgets(fluidVisualView); //, dataWidgetView);
 }
 
 void BleFramePresenter::run()

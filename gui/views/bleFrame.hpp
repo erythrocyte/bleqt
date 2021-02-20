@@ -4,8 +4,6 @@
 #include <iostream>
 #include <memory>
 
-#include "ibleFrame.hpp"
-
 #include "bleCalc.hpp"
 #include "bleResultData.hpp"
 #include "dynamicData.hpp"
@@ -33,8 +31,8 @@ public:
 
     void run() { show(); }
 
-    // void set_widgets(std::shared_ptr<widgets::FluidParamsWidget> fluidParamsVisual,
-    //     std::shared_ptr<widgets::DataWidget> dataWidget);
+    void set_widgets(std::shared_ptr<widgets::FluidParamsWidget> fluidParamsVisual); 
+        // std::shared_ptr<widgets::DataWidget> dataWidget);
 
 // signals:
 //     void update_fluid_view(

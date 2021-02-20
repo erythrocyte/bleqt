@@ -4,7 +4,6 @@
 #include <QWidget>
 
 #include "bleFrame.hpp"
-#include "ibleFrame.hpp"
 #include "presenters/bleFramePresenter.hpp"
 #include "widgets/presenters/fluidParamWidgetPresenter.hpp"
 #include "widgets/presenters/dataWidgetPresenter.hpp"
