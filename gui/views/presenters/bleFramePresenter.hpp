@@ -8,30 +8,33 @@
 
 #include "bleFrame.hpp"
 
+#include "blePresenter.hpp"
 #include "widgets/presenters/dataWidgetPresenter.hpp"
 #include "widgets/presenters/fluidParamWidgetPresenter.hpp"
+#include "widgets/presenters/resultDataWidgetPresenter.hpp"
 
 namespace bwp = ble_gui::widgets::presenters;
 
 namespace ble_gui::views::presenters {
-class BleFramePresenter : QObject {
-    Q_OBJECT
-private:
-    std::shared_ptr<Hypodermic::Container> m_container;
-    std::shared_ptr<BleFrame> m_view;
-    std::shared_ptr<bwp::FluidParamWidgetPresenter> m_fluidWidgetPresenter;
-    std::shared_ptr<bwp::DataWidgetPresenter> m_dataWidgetPresenter;
 
+class BleFramePresenter : public mvp::BlePresenter {
+    Q_OBJECT
 public:
     BleFramePresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<BleFrame> view);
-
+    ~BleFramePresenter() { }
     void run();
+
+private:
+    std::shared_ptr<bwp::FluidParamWidgetPresenter> m_fluidWidgetPresenter;
+    std::shared_ptr<bwp::DataWidgetPresenter> m_dataWidgetPresenter;
+    std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;
 
 private slots:
     void on_update_fluid_widget(
         const std::shared_ptr<ble_src::PhysData> physData, double sc);
 };
+
 }
 
 #endif

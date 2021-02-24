@@ -28,22 +28,21 @@ set (SOURCES
 	widgets/presenters/fluidParamWidgetPresenter.cpp
 	widgets/presenters/dataWidgetPresenter.cpp
 	widgets/presenters/gridSettsWidgetPresenter.cpp
-	widgets/presenters/bleWidgetPresenter.cpp
+	mvp/blePresenter.cpp
+	widgets/presenters/resultDataWidgetPresenter.cpp
 	frames/qVerticalLabel.cpp
 	bleapp.cpp
 	main.cpp
 )
 
 
-set (EXE_TARGET ble)
-
 add_executable(${EXE_TARGET} ${SOURCES})
+
+get_target_property(QtCore_location Qt5::Core LOCATION)
 
 target_link_libraries(${EXE_TARGET} Qt5::Widgets)
 target_link_libraries(${EXE_TARGET} Qt5::Core)
 target_link_libraries(${EXE_TARGET} Qt5::Charts)
-
-get_target_property(QtCore_location Qt5::Core LOCATION)
 
 target_link_libraries(${EXE_TARGET} ${LIB_BLE_TARGET})
 

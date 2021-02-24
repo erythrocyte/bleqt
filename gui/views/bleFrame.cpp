@@ -98,7 +98,8 @@ ble_gui::views::BleFrame::BleFrame(QWidget* parent)
 // }
 
 void ble_gui::views::BleFrame::set_widgets(
-    std::shared_ptr<widgets::FluidParamsWidget> fluidParamsVisual)
+    std::shared_ptr<widgets::FluidParamsWidget> fluidParamsWidget,
+    std::shared_ptr<widgets::ResultDataWidget> resultDataWidget)
 //     std::shared_ptr<widgets::DataWidget> dataWidget)
 {
     // _dataWidget = dataWidget;
@@ -109,9 +110,9 @@ void ble_gui::views::BleFrame::set_widgets(
 
     // QTabWidget* visDataWidget = new QTabWidget();
     // resultDataVisual = new widgets::ResultDataVisualWidget();
-    // visDataWidget->addTab(resultDataVisual, "Results");
-
-    ui->tabs->addTab(fluidParamsVisual.get(), "Fluid params");
+    // visDataWidget->addTab(resultDataVisual, "");
+    ui->tabs->addTab(resultDataWidget.get(), "Results");
+    ui->tabs->addTab(fluidParamsWidget.get(), "Fluid params");
     // this->set_default_data();
 }
 

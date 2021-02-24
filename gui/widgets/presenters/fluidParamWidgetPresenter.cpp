@@ -10,7 +10,7 @@ namespace ble_gui::widgets::presenters {
 FluidParamWidgetPresenter::FluidParamWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,
     std::shared_ptr<FluidParamsWidget> view)
-    : BleWidgetPresenter(container, view)
+    : BlePresenter(container, view)
 {
     QObject* view_obj = dynamic_cast<QObject*>(view.get());
     const bool connected = connect(view_obj,

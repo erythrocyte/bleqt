@@ -7,11 +7,11 @@
 #include "Hypodermic/Hypodermic.h"
 
 #include "gridSettsWidget.hpp"
-#include "bleWidgetPresenter.hpp"
+#include "blePresenter.hpp"
 
 namespace ble_gui::widgets::presenters {
 
-class GridSettsWidgetPresenter : public BleWidgetPresenter {
+class GridSettsWidgetPresenter : public mvp::BlePresenter {
 public:
     GridSettsWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<GridSettsWidget> view);

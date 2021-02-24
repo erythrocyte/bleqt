@@ -6,14 +6,14 @@
 
 #include "Hypodermic/Hypodermic.h"
 
-#include "bleWidgetPresenter.hpp"
+#include "blePresenter.hpp"
 #include "fluidParamsWidget.hpp"
 #include "models/fluidParamsModel.hpp"
 #include "physData.hpp"
 
 namespace ble_gui::widgets::presenters {
 
-class FluidParamWidgetPresenter : public BleWidgetPresenter {
+class FluidParamWidgetPresenter : public mvp::BlePresenter {
     Q_OBJECT
 public:
     FluidParamWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
