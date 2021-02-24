@@ -4,16 +4,16 @@
 
 #include "shockFront.hpp"
 
-ble_gui::widgets::ResultDataVisualWidget::ResultDataVisualWidget(QWidget* parent)
+ble_gui::widgets::ResultDataWidget::ResultDataWidget(QWidget* parent)
     : QWidget(parent)
-    , ui(new UI::ResultDataVisual)
+    , ui(new UI::ResultData)
 {
     ui->setupUi(this);
 
     connect(ui->Slider, SIGNAL(valueChanged(int)), this, SLOT(handleSliderValueChange()));
 }
 
-void ble_gui::widgets::ResultDataVisualWidget::setData(
+void ble_gui::widgets::ResultDataWidget::setData(
     const std::shared_ptr<ble_src::BleResultData> data,
     std::function<void(double)> progress)
 {
@@ -26,7 +26,7 @@ void ble_gui::widgets::ResultDataVisualWidget::setData(
     handleSliderValueChange(); // call slider value change handler. setValue does not call it;
 }
 
-void ble_gui::widgets::ResultDataVisualWidget::handleSliderValueChange()
+void ble_gui::widgets::ResultDataWidget::handleSliderValueChange()
 {
     int value = ui->Slider->value() - 1;
     if (value < _data->data.size()) {
@@ -35,7 +35,7 @@ void ble_gui::widgets::ResultDataVisualWidget::handleSliderValueChange()
     }
 }
 
-void ble_gui::widgets::ResultDataVisualWidget::fill_time_series(bool init,
+void ble_gui::widgets::ResultDataWidget::fill_time_series(bool init,
     const std::shared_ptr<ble_src::DynamicData> d)
 {
     std::ostringstream oss;
@@ -60,7 +60,7 @@ void ble_gui::widgets::ResultDataVisualWidget::fill_time_series(bool init,
     }
 }
 
-void ble_gui::widgets::ResultDataVisualWidget::update_sc_series(double l, double sc)
+void ble_gui::widgets::ResultDataWidget::update_sc_series(double l, double sc)
 {
     ui->SeriesSc->clear();
 
@@ -68,7 +68,7 @@ void ble_gui::widgets::ResultDataVisualWidget::update_sc_series(double l, double
     ui->SeriesSc->append(l, sc);
 }
 
-void ble_gui::widgets::ResultDataVisualWidget::update_time_info(int index)
+void ble_gui::widgets::ResultDataWidget::update_time_info(int index)
 {
     int count = _data->data.size();
     std::ostringstream oss;

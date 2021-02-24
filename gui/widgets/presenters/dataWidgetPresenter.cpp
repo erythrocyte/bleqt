@@ -7,7 +7,7 @@ namespace ble_gui::widgets::presenters {
 DataWidgetPresenter::DataWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,
     std::shared_ptr<DataWidget> view)
-    : BleWidgetPresenter(container, view)
+    : BlePresenter(container, view)
 {
     // set_widgets_to_view(container);
 }

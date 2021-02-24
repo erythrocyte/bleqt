@@ -6,12 +6,12 @@
 
 #include "Hypodermic/Hypodermic.h"
 
-#include "bleWidgetPresenter.hpp"
+#include "blePresenter.hpp"
 #include "dataWidget.hpp"
 
 namespace ble_gui::widgets::presenters {
 
-class DataWidgetPresenter : public BleWidgetPresenter {
+class DataWidgetPresenter : public mvp::BlePresenter {
     Q_OBJECT
 public:
     DataWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
