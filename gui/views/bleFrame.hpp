@@ -11,7 +11,7 @@
 #include "inputData.hpp"
 
 #include "dataWidget.hpp"
-#include "fluidParamsWidget.hpp"
+#include "fluidParamsGraphWidget.hpp"
 #include "resultDataWidget.hpp"
 #include "ui_bleFrame.hpp"
 
@@ -31,7 +31,7 @@ public:
 
     void run() { show(); }
 
-    void set_widgets(std::shared_ptr<widgets::FluidParamsWidget> fluidParamsWidget,
+    void set_widgets(std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
         std::shared_ptr<widgets::ResultDataWidget> resultDataWidget);
     // std::shared_ptr<widgets::DataWidget> dataWidget);
 

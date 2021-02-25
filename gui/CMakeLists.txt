@@ -24,8 +24,8 @@ set (SOURCES
 	widgets/gridSettsWidget.cpp
 	widgets/shockFrontSettsWidget.cpp
 	widgets/resultDataWidget.cpp
-	widgets/fluidParamsWidget.cpp
-	widgets/presenters/fluidParamWidgetPresenter.cpp
+	widgets/fluidParamsGraphWidget.cpp
+	widgets/presenters/fluidParamGraphWidgetPresenter.cpp
 	widgets/presenters/dataWidgetPresenter.cpp
 	widgets/presenters/gridSettsWidgetPresenter.cpp
 	mvp/blePresenter.cpp
@@ -34,7 +34,6 @@ set (SOURCES
 	bleapp.cpp
 	main.cpp
 )
-
 
 add_executable(${EXE_TARGET} ${SOURCES})
 
@@ -49,6 +48,8 @@ target_link_libraries(${EXE_TARGET} ${LIB_BLE_TARGET})
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/gui)
 include_directories(${CMAKE_SOURCE_DIR}/gui/widgets)
+include_directories(${CMAKE_SOURCE_DIR}/gui/widgets/models)
+include_directories(${CMAKE_SOURCE_DIR}/gui/widgets/presenters)
 include_directories(${CMAKE_SOURCE_DIR}/gui/frames)
 include_directories(${CMAKE_SOURCE_DIR}/gui/views)
 include_directories(${CMAKE_SOURCE_DIR}/gui/views/presenters)

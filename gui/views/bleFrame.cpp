@@ -98,7 +98,7 @@ ble_gui::views::BleFrame::BleFrame(QWidget* parent)
 // }
 
 void ble_gui::views::BleFrame::set_widgets(
-    std::shared_ptr<widgets::FluidParamsWidget> fluidParamsWidget,
+    std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
     std::shared_ptr<widgets::ResultDataWidget> resultDataWidget)
 //     std::shared_ptr<widgets::DataWidget> dataWidget)
 {

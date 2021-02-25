@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_FLUIDPARAMSVISUALWIDGET_H_
-#define BLEGUI_WIDGETS_FLUIDPARAMSVISUALWIDGET_H_
+#ifndef BLEGUI_WIDGETS_FLUIDPARAMSGRAPHWIDGET_H_
+#define BLEGUI_WIDGETS_FLUIDPARAMSGRAPHWIDGET_H_
 
 #include <functional>
 #include <iostream>
@@ -11,12 +11,12 @@
 
 namespace ble_gui::widgets {
 
-class FluidParamsWidget : public QWidget, private UI::FluidParams {
+class FluidParamsGraphWidget : public QWidget, private UI::FluidParams {
     Q_OBJECT
 
 public:
-    FluidParamsWidget(QWidget* parent = nullptr);
-    ~FluidParamsWidget() { delete ui; }
+    FluidParamsGraphWidget(QWidget* parent = nullptr);
+    ~FluidParamsGraphWidget() { delete ui; }
 
     void update_view(const std::shared_ptr<ble_src::PhysData> physData, double sc);
 

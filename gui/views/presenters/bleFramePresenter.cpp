@@ -1,7 +1,7 @@
 #include "bleFramePresenter.hpp"
 
-#include "widgets/dataWidget.hpp"
-#include "widgets/fluidParamsWidget.hpp"
+#include "dataWidget.hpp"
+#include "fluidParamsGraphWidget.hpp"
 
 namespace ble_gui::views::presenters {
 
@@ -16,8 +16,8 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     //     this, SLOT(on_update_fluid_widget(const std::shared_ptr<ble_src::PhysData>, double)));
     // Q_ASSERT(success);
 
-    m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamWidgetPresenter>();
-    auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsWidget>(m_fluidWidgetPresenter->get_view());
+    m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
+    auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
 
     m_resultDataWidgetPresenter = m_container->resolve<bwp::ResultDataWidgetPresenter>();
     auto resultDataWidget = std::static_pointer_cast<widgets::ResultDataWidget>(m_resultDataWidgetPresenter->get_view());

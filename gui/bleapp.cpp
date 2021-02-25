@@ -4,10 +4,10 @@
 #include <QWidget>
 
 #include "bleFrame.hpp"
-#include "presenters/bleFramePresenter.hpp"
-#include "widgets/presenters/fluidParamWidgetPresenter.hpp"
-#include "widgets/presenters/dataWidgetPresenter.hpp"
-#include "widgets/presenters/resultDataWidgetPresenter.hpp"
+#include "bleFramePresenter.hpp"
+#include "fluidParamGraphWidgetPresenter.hpp"
+#include "dataWidgetPresenter.hpp"
+#include "resultDataWidgetPresenter.hpp"
 
 namespace ble {
 
@@ -17,8 +17,8 @@ BleApplication::BleApplication()
 
     builder.registerType<ble_gui::views::BleFrame>();
     builder.registerType<ble_gui::views::presenters::BleFramePresenter>();
-    builder.registerType<ble_gui::widgets::FluidParamsWidget>();
-    builder.registerType<ble_gui::widgets::presenters::FluidParamWidgetPresenter>();
+    builder.registerType<ble_gui::widgets::FluidParamsGraphWidget>();
+    builder.registerType<ble_gui::widgets::presenters::FluidParamGraphWidgetPresenter>();
     builder.registerType<ble_gui::widgets::DataWidget>();
     builder.registerType<ble_gui::widgets::presenters::DataWidgetPresenter>();
     builder.registerType<ble_gui::widgets::ResultDataWidget>();
