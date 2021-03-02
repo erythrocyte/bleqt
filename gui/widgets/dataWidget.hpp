@@ -8,7 +8,7 @@
 
 #include "gridSettsWidget.hpp"
 #include "modelDataWidget.hpp"
-#include "physicDataWidget.hpp"
+#include "relPermDataWidget.hpp"
 #include "satSolverSettsWidget.hpp"
 #include "shockFrontSettsWidget.hpp"
 
@@ -23,7 +23,7 @@ public:
     // void set_view_objects(std::shared_ptr<ModelDataWidget> modelData);
 
     ModelDataWidget* ModelData;
-    PhysDataWidget* PhysData;
+    RelPermDataWidget* PhysData;
     SaturSolverSettsWidget* SaturSolverSetts;
     GridSettsWidget* GridSetts;
     ShockFrontSettsWidget* ShockFrontSetts;

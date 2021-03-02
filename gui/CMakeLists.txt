@@ -19,7 +19,7 @@ set (SOURCES
 	views/presenters/bleFramePresenter.cpp
 	widgets/dataWidget.cpp
 	widgets/modelDataWidget.cpp
-	widgets/physicDataWidget.cpp
+	widgets/relPermDataWidget.cpp
 	widgets/satSolverSettsWidget.cpp
 	widgets/gridSettsWidget.cpp
 	widgets/shockFrontSettsWidget.cpp

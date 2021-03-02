@@ -9,7 +9,7 @@ ble_gui::widgets::DataWidget::DataWidget(QWidget *parent)
 	layout->setMargin(0);
 	layout->setSpacing(0);
 
-	PhysData = new PhysDataWidget();
+	PhysData = new RelPermDataWidget();
 	layout->addWidget(PhysData);
 
 	ModelData = new ModelDataWidget();
