@@ -9,6 +9,7 @@
 #include "blePresenter.hpp"
 #include "dataWidget.hpp"
 #include "gridSettsWidgetPresenter.hpp"
+#include "modelDataWidgetPresenter.hpp"
 
 namespace ble_gui::widgets::presenters {
 
@@ -20,7 +21,7 @@ public:
 
 private:
     std::shared_ptr<GridSettsWidgetPresenter> m_gridset_presenter;
-    // std::shared_ptr<ModelDataWidget> m_modeldata_widget;
+    std::shared_ptr<ModelDataWidgetPresenter> m_modeldata_presenter;
 
     void set_widgets_to_view();
     void resolve_sub_presenters();

@@ -24,7 +24,7 @@ void ble_gui::widgets::DataWidget::set_view_objects(std::shared_ptr<models::Data
     // 	layout->addWidget(PhysData);
 
     // 	// ModelData = new ModelDataWidget();
-    // 	layout->addWidget(_modelDataWidget.get());
+    layout->addWidget(components->modeldata_view.get());
 
     // 	SaturSolverSetts = new SaturSolverSettsWidget();
     // 	layout->addWidget(SaturSolverSetts);

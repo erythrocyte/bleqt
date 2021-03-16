@@ -5,11 +5,11 @@
 
 #include "bleFrame.hpp"
 #include "bleFramePresenter.hpp"
-#include "fluidParamGraphWidgetPresenter.hpp"
 #include "dataWidgetPresenter.hpp"
-#include "resultDataWidgetPresenter.hpp"
+#include "fluidParamGraphWidgetPresenter.hpp"
 #include "gridSettsWidgetPresenter.hpp"
-
+#include "modelDataWidget.hpp"
+#include "resultDataWidgetPresenter.hpp"
 
 namespace ble {
 
@@ -26,6 +26,7 @@ BleApplication::BleApplication()
     builder.registerType<ble_gui::widgets::ResultDataWidget>();
     builder.registerType<ble_gui::widgets::presenters::ResultDataWidgetPresenter>();
     builder.registerType<ble_gui::widgets::presenters::GridSettsWidgetPresenter>();
+    builder.registerType<ble_gui::widgets::presenters::ModelDataWidgetPresenter>();
 
     m_container = builder.build();
 }

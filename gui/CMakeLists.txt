@@ -17,6 +17,7 @@ find_package(Qt5 COMPONENTS Charts REQUIRED)
 set (SOURCES
 	views/bleFrame.cpp
 	views/presenters/bleFramePresenter.cpp
+
 	widgets/dataWidget.cpp
 	widgets/modelDataWidget.cpp
 	widgets/relPermDataWidget.cpp
@@ -25,12 +26,17 @@ set (SOURCES
 	widgets/shockFrontSettsWidget.cpp
 	widgets/resultDataWidget.cpp
 	widgets/fluidParamsGraphWidget.cpp
+
 	widgets/presenters/fluidParamGraphWidgetPresenter.cpp
 	widgets/presenters/dataWidgetPresenter.cpp
 	widgets/presenters/gridSettsWidgetPresenter.cpp
-	mvp/blePresenter.cpp
 	widgets/presenters/resultDataWidgetPresenter.cpp
+	widgets/presenters/modelDataWidgetPresenter.cpp
+
+	mvp/blePresenter.cpp
+	
 	frames/qVerticalLabel.cpp
+
 	bleapp.cpp
 	main.cpp
 )
