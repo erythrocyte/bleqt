@@ -79,28 +79,26 @@ ble_gui::views::BleFrame::BleFrame(QWidget* parent)
 //     menu->addAction(runAction);
 // }
 
-// void ble_gui::views::BleFrame::set_settings_widget()
-// {
-//     QTabWidget* tabSettings = new QTabWidget();
-//     tabSettings->setTabPosition(QTabWidget::TabPosition::West);
-//     tabSettings->addTab(_dataWidget.get(), "");
+void ble_gui::views::BleFrame::set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget)
+{
+    QTabWidget* tabSettings = new QTabWidget();
+    tabSettings->setTabPosition(QTabWidget::TabPosition::West);
+    tabSettings->addTab(dataWidget.get(), "");
 
-//     frames::QVerticalLabel* tabSettingsLabel1 = new frames::QVerticalLabel("Main");
-//     tabSettingsLabel1->setStyleSheet("QLabel { color : #C0BBFE }");
+    frames::QVerticalLabel* tabSettingsLabel1 = new frames::QVerticalLabel("Main");
+    tabSettingsLabel1->setStyleSheet("QLabel { color : #C0BBFE }");
 
-//     QTabBar* tabbar = tabSettings->tabBar();
-//     tabSettings->setTabText(0, "");
-//     tabbar->setTabButton(0, QTabBar::LeftSide, tabSettingsLabel1);
+    QTabBar* tabbar = tabSettings->tabBar();
+    tabSettings->setTabText(0, "");
+    tabbar->setTabButton(0, QTabBar::LeftSide, tabSettingsLabel1);
 
-//     _dock = new QDockWidget(tr("Settings"), this);
-//     _dock->setWidget(tabSettings);
-//     addDockWidget(Qt::LeftDockWidgetArea, _dock);
-// }
+    ui->dockSettings->setWidget(tabSettings);
+}
 
 void ble_gui::views::BleFrame::set_widgets(
     std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
-    std::shared_ptr<widgets::ResultDataWidget> resultDataWidget)
-//     std::shared_ptr<widgets::DataWidget> dataWidget)
+    std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
+    std::shared_ptr<widgets::DataWidget> dataWidget)
 {
     // _dataWidget = dataWidget;
     // this->set_settings_widget();
@@ -111,6 +109,7 @@ void ble_gui::views::BleFrame::set_widgets(
     // QTabWidget* visDataWidget = new QTabWidget();
     // resultDataVisual = new widgets::ResultDataVisualWidget();
     // visDataWidget->addTab(resultDataVisual, "");
+    this->set_settings_widget(dataWidget);
     ui->tabs->addTab(resultDataWidget.get(), "Results");
     ui->tabs->addTab(fluidParamsWidget.get(), "Fluid params");
     // this->set_default_data();

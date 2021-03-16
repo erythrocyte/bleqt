@@ -37,6 +37,8 @@ set (SOURCES
 
 add_executable(${EXE_TARGET} ${SOURCES})
 
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -fPIC") 
+
 get_target_property(QtCore_location Qt5::Core LOCATION)
 
 target_link_libraries(${EXE_TARGET} Qt5::Widgets)

@@ -5,9 +5,11 @@
 #include <iostream>
 #include <memory>
 
-#include "models/fluidParamsModel.hpp"
+#include "models/fluidParamsDto.hpp"
 #include "physData.hpp"
 #include "uis/ui_fluidParamsWidget.hpp"
+
+namespace wmf = ble_gui::widgets::models;
 
 namespace ble_gui::widgets {
 
@@ -21,7 +23,7 @@ public:
     void update_view(const std::shared_ptr<ble_src::PhysData> physData, double sc);
 
 signals:
-    std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> get_data(const std::shared_ptr<ble_src::PhysData> physData, double sc);
+    std::shared_ptr<wmf::FluidParamsDto> get_data(const std::shared_ptr<ble_src::PhysData> physData, double sc);
 
 private:
     UI::FluidParams* ui;

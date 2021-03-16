@@ -8,6 +8,8 @@
 #include "fluidParamGraphWidgetPresenter.hpp"
 #include "dataWidgetPresenter.hpp"
 #include "resultDataWidgetPresenter.hpp"
+#include "gridSettsWidgetPresenter.hpp"
+
 
 namespace ble {
 
@@ -23,6 +25,7 @@ BleApplication::BleApplication()
     builder.registerType<ble_gui::widgets::presenters::DataWidgetPresenter>();
     builder.registerType<ble_gui::widgets::ResultDataWidget>();
     builder.registerType<ble_gui::widgets::presenters::ResultDataWidgetPresenter>();
+    builder.registerType<ble_gui::widgets::presenters::GridSettsWidgetPresenter>();
 
     m_container = builder.build();
 }

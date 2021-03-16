@@ -32,8 +32,8 @@ public:
     void run() { show(); }
 
     void set_widgets(std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
-        std::shared_ptr<widgets::ResultDataWidget> resultDataWidget);
-    // std::shared_ptr<widgets::DataWidget> dataWidget);
+        std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
+        std::shared_ptr<widgets::DataWidget> dataWidget);
 
     // signals:
     //     void update_fluid_view(
@@ -67,7 +67,7 @@ private:
     //     void update_progress(double perc);
 
     //     void set_menu();
-    //     void set_settings_widget();
+    void set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget);
     //     void set_status_bar();
 
 private slots:

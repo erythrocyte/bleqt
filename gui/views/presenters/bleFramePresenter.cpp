@@ -9,7 +9,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     std::shared_ptr<BleFrame> view)
     : BlePresenter(container, view)
 {
-    QObject* view_obj = dynamic_cast<QObject*>(view.get());
+    // QObject* view_obj = dynamic_cast<QObject*>(view.get());
 
     // auto success = QObject::connect(
     //     view_obj, SIGNAL(update_fluid_view(const std::shared_ptr<ble_src::PhysData>, double)),
@@ -22,10 +22,10 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_resultDataWidgetPresenter = m_container->resolve<bwp::ResultDataWidgetPresenter>();
     auto resultDataWidget = std::static_pointer_cast<widgets::ResultDataWidget>(m_resultDataWidgetPresenter->get_view());
 
-    // m_dataWidgetPresenter = m_container->resolve<bwp::DataWidgetPresenter>();
-    // auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
+    m_dataWidgetPresenter = m_container->resolve<bwp::DataWidgetPresenter>();
+    auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
 
-    std::static_pointer_cast<BleFrame>(m_view)->set_widgets(fluidParamsWidget, resultDataWidget);
+    std::static_pointer_cast<BleFrame>(m_view)->set_widgets(fluidParamsWidget, resultDataWidget, dataWidgetView);
 }
 
 void BleFramePresenter::run()

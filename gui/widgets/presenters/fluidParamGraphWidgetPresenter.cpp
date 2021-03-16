@@ -20,10 +20,10 @@ FluidParamGraphWidgetPresenter::FluidParamGraphWidgetPresenter(
     Q_ASSERT(connected);
 }
 
-std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> FluidParamGraphWidgetPresenter::send_data(
+std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_data(
     const std::shared_ptr<ble_src::PhysData> data, double sc)
 {
-    auto result = std::make_shared<ble_gui::widgets::models::FluidParamsModel>();
+    auto result = std::make_shared<models::FluidParamsDto>();
 
     int n = 200; // point count;
     double ds = 1.0 / (n - 1); // step;

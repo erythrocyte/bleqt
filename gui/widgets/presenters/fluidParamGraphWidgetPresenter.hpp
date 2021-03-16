@@ -8,7 +8,7 @@
 
 #include "blePresenter.hpp"
 #include "fluidParamsGraphWidget.hpp"
-#include "models/fluidParamsModel.hpp"
+#include "models/fluidParamsDto.hpp"
 #include "physData.hpp"
 
 namespace ble_gui::widgets::presenters {
@@ -23,7 +23,7 @@ public:
     void update_view(const std::shared_ptr<ble_src::PhysData> physData, double sc);
 
 private slots:
-    std::shared_ptr<models::FluidParamsModel>
+    std::shared_ptr<models::FluidParamsDto>
     send_data(const std::shared_ptr<ble_src::PhysData> data, double sc);
 };
 
