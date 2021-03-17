@@ -19,9 +19,7 @@ void ble_gui::widgets::DataWidget::set_view_objects(std::shared_ptr<models::Data
     layout->addWidget(components->modeldata_view.get());
     layout->addWidget(components->satsolverset_view.get());
     layout->addWidget(components->gridset_view.get());
-
-    // auto ShockFrontSetts = new ShockFrontSettsWidget();
-    // layout->addWidget(ShockFrontSetts);
+    layout->addWidget(components->shockfront_view.get());
 
     this->setLayout(layout);
 }

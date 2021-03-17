@@ -34,6 +34,7 @@ set (SOURCES
 	widgets/presenters/modelDataWidgetPresenter.cpp
 	widgets/presenters/relPermDataWidgetPresenter.cpp
 	widgets/presenters/satSolverSettsWidgetPresenter.cpp
+	widgets/presenters/shockFrontSettsWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	
