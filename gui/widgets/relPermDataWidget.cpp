@@ -3,12 +3,13 @@
 #include <QLabel>
 
 namespace ble_gui::widgets {
+
 RelPermDataWidget::RelPermDataWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::PhysicData)
 {
     ui->setupUi(this);
-    addQDoubleSpinBoxLabel(ui->Kmu, 0.1, 100, 0.1, 1.0, 3, 0, 1, ui->LabelKmu, 0, 0);
+    addQDoubleSpinBoxLabel(ui->Kmu, 0.1, 100, 0.1, 1.0, 1, 0, 1, ui->LabelKmu, 0, 0);
     addQDoubleSpinBoxLabel(ui->Nwat, 0.1, 10, 0.1, 3.0, 1, 1, 1, ui->LabelNwat, 1, 0);
     addQDoubleSpinBoxLabel(ui->Noil, 0.1, 10, 0.1, 3.0, 1, 2, 1, ui->LabelNoil, 2, 0);
 
@@ -30,4 +31,5 @@ void RelPermDataWidget::addQDoubleSpinBoxLabel(QDoubleSpinBox* dSpinBox,
     ui->Layout->addWidget(label, labelRow, labelCol);
     ui->Layout->addWidget(dSpinBox, spinboxRow, spinboxCol);
 }
+
 }

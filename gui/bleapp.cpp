@@ -10,6 +10,7 @@
 #include "gridSettsWidgetPresenter.hpp"
 #include "modelDataWidget.hpp"
 #include "resultDataWidgetPresenter.hpp"
+#include "relPermDataWidgetPresenter.hpp"
 
 namespace ble {
 
@@ -27,6 +28,7 @@ BleApplication::BleApplication()
     builder.registerType<ble_gui::widgets::presenters::ResultDataWidgetPresenter>();
     builder.registerType<ble_gui::widgets::presenters::GridSettsWidgetPresenter>();
     builder.registerType<ble_gui::widgets::presenters::ModelDataWidgetPresenter>();
+    builder.registerType<ble_gui::widgets::presenters::RelPermDataWidgetPresenter>();
 
     m_container = builder.build();
 }

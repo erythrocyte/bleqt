@@ -21,7 +21,7 @@ void ble_gui::widgets::DataWidget::set_view_objects(std::shared_ptr<models::Data
     // 	layout->setSpacing(0);
 
     // 	PhysData = new PhysDataWidget();
-    // 	layout->addWidget(PhysData);
+    layout->addWidget(components->relperm_view.get());
 
     // 	// ModelData = new ModelDataWidget();
     layout->addWidget(components->modeldata_view.get());

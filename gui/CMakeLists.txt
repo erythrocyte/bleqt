@@ -32,6 +32,7 @@ set (SOURCES
 	widgets/presenters/gridSettsWidgetPresenter.cpp
 	widgets/presenters/resultDataWidgetPresenter.cpp
 	widgets/presenters/modelDataWidgetPresenter.cpp
+	widgets/presenters/relPermDataWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	
