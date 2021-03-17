@@ -2,11 +2,9 @@
 
 #include "gridType.hpp"
 
-#include <QGridLayout>
-#include <QGroupBox>
-#include <QLabel>
+namespace ble_gui::widgets {
 
-ble_gui::widgets::GridSettsWidget::GridSettsWidget(QWidget* parent)
+GridSettsWidget::GridSettsWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::GridSetts)
 {
@@ -14,4 +12,6 @@ ble_gui::widgets::GridSettsWidget::GridSettsWidget(QWidget* parent)
     for (ble_src::GridType::TypeEnum v : ble_src::GridTypeEnumIterator()) {
         ui->GridType->addItem(QString::fromStdString(ble_src::GridType::get_description(v)));
     }
+}
+
 }

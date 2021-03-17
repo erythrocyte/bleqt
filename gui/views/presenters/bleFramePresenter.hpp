@@ -9,9 +9,9 @@
 #include "bleFrame.hpp"
 
 #include "blePresenter.hpp"
-#include "widgets/presenters/dataWidgetPresenter.hpp"
-#include "widgets/presenters/fluidParamWidgetPresenter.hpp"
-#include "widgets/presenters/resultDataWidgetPresenter.hpp"
+#include "dataWidgetPresenter.hpp"
+#include "fluidParamGraphWidgetPresenter.hpp"
+#include "resultDataWidgetPresenter.hpp"
 
 namespace bwp = ble_gui::widgets::presenters;
 
@@ -26,7 +26,7 @@ public:
     void run();
 
 private:
-    std::shared_ptr<bwp::FluidParamWidgetPresenter> m_fluidWidgetPresenter;
+    std::shared_ptr<bwp::FluidParamGraphWidgetPresenter> m_fluidWidgetPresenter;
     std::shared_ptr<bwp::DataWidgetPresenter> m_dataWidgetPresenter;
     std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;
 

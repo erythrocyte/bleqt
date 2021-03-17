@@ -6,9 +6,9 @@
 
 #include <QWidget>
 
-#include "gridSettsWidget.hpp"
+#include "models/dataWidgetComponentsDto.hpp"
 #include "modelDataWidget.hpp"
-#include "physicDataWidget.hpp"
+#include "relPermDataWidget.hpp"
 #include "satSolverSettsWidget.hpp"
 #include "shockFrontSettsWidget.hpp"
 
@@ -20,16 +20,7 @@ public:
     DataWidget(QWidget* parent = nullptr);
     ~DataWidget() { }
 
-    // void set_view_objects(std::shared_ptr<ModelDataWidget> modelData);
-
-    ModelDataWidget* ModelData;
-    PhysDataWidget* PhysData;
-    SaturSolverSettsWidget* SaturSolverSetts;
-    GridSettsWidget* GridSetts;
-    ShockFrontSettsWidget* ShockFrontSetts;
-
-private:
-    // std::shared_ptr<ModelDataWidget> _modelDataWidget;
+    void set_view_objects(std::shared_ptr<models::DataWidgetComponentsDto> components);
 };
 
 } // namespace ble_gui::widgets

@@ -1,4 +1,4 @@
-#include "fluidParamWidgetPresenter.hpp"
+#include "fluidParamGraphWidgetPresenter.hpp"
 
 #include <memory>
 
@@ -7,9 +7,9 @@
 
 namespace ble_gui::widgets::presenters {
 
-FluidParamWidgetPresenter::FluidParamWidgetPresenter(
+FluidParamGraphWidgetPresenter::FluidParamGraphWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,
-    std::shared_ptr<FluidParamsWidget> view)
+    std::shared_ptr<FluidParamsGraphWidget> view)
     : BlePresenter(container, view)
 {
     QObject* view_obj = dynamic_cast<QObject*>(view.get());
@@ -20,10 +20,10 @@ FluidParamWidgetPresenter::FluidParamWidgetPresenter(
     Q_ASSERT(connected);
 }
 
-std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> FluidParamWidgetPresenter::send_data(
+std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_data(
     const std::shared_ptr<ble_src::PhysData> data, double sc)
 {
-    auto result = std::make_shared<ble_gui::widgets::models::FluidParamsModel>();
+    auto result = std::make_shared<models::FluidParamsDto>();
 
     int n = 200; // point count;
     double ds = 1.0 / (n - 1); // step;
@@ -58,10 +58,10 @@ std::shared_ptr<ble_gui::widgets::models::FluidParamsModel> FluidParamWidgetPres
     return result;
 }
 
-void FluidParamWidgetPresenter::update_view(
+void FluidParamGraphWidgetPresenter::update_view(
     const std::shared_ptr<ble_src::PhysData> physData, double sc)
 {
-    std::static_pointer_cast<widgets::FluidParamsWidget>(m_view)->update_view(physData, sc);
+    std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_view)->update_view(physData, sc);
 }
 
 }

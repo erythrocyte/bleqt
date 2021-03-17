@@ -10,8 +10,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-namespace ble_gui {
-namespace widgets {
+namespace ble_gui::widgets {
     namespace UI {
         class ShockFrontSetts {
         public:
@@ -26,7 +25,7 @@ namespace widgets {
                 _layout = new QVBoxLayout(_groupBox);
                 _groupBox->setLayout(_layout);
 
-                shockFrontValue = new QLabel("");
+                shockFrontValue = new QLabel("Shock front value: -");
                 _layout->addWidget(shockFrontValue);
 
                 showCurve = new QCheckBox();
@@ -52,7 +51,7 @@ namespace widgets {
             QVBoxLayout* _layout;
         };
     }
-}
+
 }
 
 #endif

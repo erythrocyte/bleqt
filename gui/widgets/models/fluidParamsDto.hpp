@@ -7,7 +7,7 @@
 
 namespace ble_gui::widgets::models {
 
-struct FluidParamsModel {
+struct FluidParamsDto {
     double max_dfbl;
     QList<QPointF> kws;
     QList<QPointF> koils;
