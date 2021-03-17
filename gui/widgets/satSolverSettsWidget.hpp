@@ -6,21 +6,21 @@
 
 #include "uis/ui_satSolverSettsWidget.hpp"
 
-namespace ble_gui {
-namespace widgets {
-    class SaturSolverSettsWidget : public QWidget, private UI::SaturSolverSetts {
-        Q_OBJECT
-    public:
-        SaturSolverSettsWidget(QWidget* parent = nullptr);
-        ~SaturSolverSettsWidget() { delete ui; }
+namespace ble_gui::widgets {
 
-        double getCurantVal() const { return ui->Curant->value(); }
-        int getPressRecalcN() const { return ui->RecalcPressN->value(); }
+class SatSolverSettsWidget : public QWidget, private UI::SaturSolverSetts {
+    Q_OBJECT
+public:
+    SatSolverSettsWidget(QWidget* parent = nullptr);
+    ~SatSolverSettsWidget() { delete ui; }
 
-    private:
-        UI::SaturSolverSetts* ui;
-    };
-} // namespace widgets
-} // namespace ble_gui
+    double getCurantVal() const { return ui->Curant->value(); }
+    int getPressRecalcN() const { return ui->RecalcPressN->value(); }
+
+private:
+    UI::SaturSolverSetts* ui;
+};
+
+} // namespace ble_gui::widgets
 
 #endif

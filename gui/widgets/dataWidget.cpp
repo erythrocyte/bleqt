@@ -14,21 +14,10 @@ void ble_gui::widgets::DataWidget::set_view_objects(std::shared_ptr<models::Data
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setMargin(0);
     layout->setSpacing(0);
-    // 	_modelDataWidget = modelData;
 
-    // 	QVBoxLayout *layout = new QVBoxLayout(this);
-    // 	layout->setMargin(0);
-    // 	layout->setSpacing(0);
-
-    // 	PhysData = new PhysDataWidget();
     layout->addWidget(components->relperm_view.get());
-
-    // 	// ModelData = new ModelDataWidget();
     layout->addWidget(components->modeldata_view.get());
-
-    // 	SaturSolverSetts = new SaturSolverSettsWidget();
-    // 	layout->addWidget(SaturSolverSetts);
-
+    layout->addWidget(components->satsolverset_view.get());
     layout->addWidget(components->gridset_view.get());
 
     // auto ShockFrontSetts = new ShockFrontSettsWidget();

@@ -2,11 +2,9 @@
 
 #include "saturSolverType.hpp"
 
-#include <QGridLayout>
-#include <QGroupBox>
-#include <QLabel>
+namespace ble_gui::widgets {
 
-ble_gui::widgets::SaturSolverSettsWidget::SaturSolverSettsWidget(QWidget* parent)
+SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::SaturSolverSetts)
 {
@@ -15,4 +13,6 @@ ble_gui::widgets::SaturSolverSettsWidget::SaturSolverSettsWidget(QWidget* parent
         ui->SolverType->addItem(
             QString::fromStdString(ble_src::SaturSolverType::get_description(v)));
     }
+}
+
 }

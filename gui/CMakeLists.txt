@@ -33,6 +33,7 @@ set (SOURCES
 	widgets/presenters/resultDataWidgetPresenter.cpp
 	widgets/presenters/modelDataWidgetPresenter.cpp
 	widgets/presenters/relPermDataWidgetPresenter.cpp
+	widgets/presenters/satSolverSettsWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	
