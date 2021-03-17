@@ -6,7 +6,7 @@ namespace ble_gui::widgets {
 
 SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
     : QWidget(parent)
-    , ui(new UI::SaturSolverSetts)
+    , ui(new UI::SatSolverSetts)
 {
     ui->setupUi(this);
     for (ble_src::SaturSolverType::TypeEnum v : ble_src::SaturSolverTypeEnumIterator()) {

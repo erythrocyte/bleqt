@@ -7,7 +7,7 @@
 #include "uis/ui_relPermDataWidget.hpp"
 
 namespace ble_gui::widgets {
-class RelPermDataWidget : public QWidget, private UI::PhysicData {
+class RelPermDataWidget : public QWidget, private UI::RelPermData {
     Q_OBJECT
 public:
     RelPermDataWidget(QWidget* parent = nullptr);
@@ -21,7 +21,7 @@ signals:
     void valuesUpdated();
 
 private:
-    UI::PhysicData* ui;
+    UI::RelPermData* ui;
 
     void addQDoubleSpinBoxLabel(QDoubleSpinBox* widget,
         double min, double max, double step, double value, int decimals,

@@ -8,7 +8,7 @@
 
 namespace ble_gui::widgets {
 
-class SatSolverSettsWidget : public QWidget, private UI::SaturSolverSetts {
+class SatSolverSettsWidget : public QWidget, private UI::SatSolverSetts {
     Q_OBJECT
 public:
     SatSolverSettsWidget(QWidget* parent = nullptr);
@@ -18,7 +18,7 @@ public:
     int getPressRecalcN() const { return ui->RecalcPressN->value(); }
 
 private:
-    UI::SaturSolverSetts* ui;
+    UI::SatSolverSetts* ui;
 };
 
 } // namespace ble_gui::widgets

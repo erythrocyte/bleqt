@@ -6,7 +6,7 @@ namespace ble_gui::widgets {
 
 RelPermDataWidget::RelPermDataWidget(QWidget* parent)
     : QWidget(parent)
-    , ui(new UI::PhysicData)
+    , ui(new UI::RelPermData)
 {
     ui->setupUi(this);
     addQDoubleSpinBoxLabel(ui->Kmu, 0.1, 100, 0.1, 1.0, 1, 0, 1, ui->LabelKmu, 0, 0);

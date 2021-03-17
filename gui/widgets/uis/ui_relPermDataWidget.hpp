@@ -13,7 +13,7 @@
 
 namespace ble_gui::widgets {
 namespace UI {
-    class PhysicData {
+    class RelPermData {
     public:
         QDoubleSpinBox* Kmu;
         QDoubleSpinBox* Nwat;

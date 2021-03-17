@@ -15,7 +15,7 @@
 namespace ble_gui {
 namespace widgets {
     namespace UI {
-        class SaturSolverSetts {
+        class SatSolverSetts {
         public:
             QDoubleSpinBox* Curant;
             QSpinBox* RecalcPressN;
