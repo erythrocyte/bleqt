@@ -21,15 +21,6 @@ public:
     ~DataWidget() { }
 
     void set_view_objects(std::shared_ptr<models::DataWidgetComponentsDto> components);
-
-    // ModelDataWidget* ModelData;
-    // RelPermDataWidget* PhysData;
-    // SaturSolverSettsWidget* SaturSolverSetts;
-    // GridSettsWidget* GridSetts;
-    // ShockFrontSettsWidget* ShockFrontSetts;
-
-private:
-    // std::shared_ptr<ModelDataWidget> _modelDataWidget;
 };
 
 } // namespace ble_gui::widgets
