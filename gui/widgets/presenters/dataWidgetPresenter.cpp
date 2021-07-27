@@ -43,4 +43,13 @@ void DataWidgetPresenter::set_widgets_to_view()
     view->set_view_objects(model);
 }
 
+void DataWidgetPresenter::set_signals()
+{
+    auto success = QObject::connect(m_shockfront_presenter.get(), SIGNAL(showShockFrontCurve(bool)),
+        this, SLOT(onShowShockFrontCurve(bool)));
+    Q_ASSERT(success);
+}
+
+
+
 }
