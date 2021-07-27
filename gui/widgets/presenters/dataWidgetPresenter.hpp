@@ -31,6 +31,10 @@ private:
 
     void set_widgets_to_view();
     void resolve_sub_presenters();
+    void set_signals();
+
+private slots:
+    void onShowShockFrontCurve(bool status);
 };
 
 }

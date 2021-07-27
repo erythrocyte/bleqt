@@ -113,20 +113,20 @@ namespace widgets {
                 // _series_sc->attachAxis(_axisS);
                 // _series_sc->attachAxis(_axis_dfY);
 
-                chart->setAxisX(_axisS, series_kw);
-                chart->setAxisY(_axis_kY, series_kw);
+                // chart->setAxisX(_axisS, series_kw);
+                // chart->setAxisY(_axis_kY, series_kw);
 
-                chart->setAxisX(_axisS, series_koil); // TODO : obsolete
-                chart->setAxisY(_axis_kY, series_koil); // obsolete
+                // chart->setAxisX(_axisS, series_koil); // TODO : obsolete
+                // chart->setAxisY(_axis_kY, series_koil); // obsolete
 
-                chart->setAxisX(_axisS, series_fbl); // obsolete
-                chart->setAxisY(_axis_kY, series_fbl); // obsolete
+                // chart->setAxisX(_axisS, series_fbl); // obsolete
+                // chart->setAxisY(_axis_kY, series_fbl); // obsolete
 
-                chart->setAxisX(_axisS, series_dfbl); // obsolete
-                chart->setAxisY(axis_dfY, series_dfbl); // obsolete
+                // chart->setAxisX(_axisS, series_dfbl); // obsolete
+                // chart->setAxisY(axis_dfY, series_dfbl); // obsolete
 
-                chart->setAxisX(_axisS, series_sc); // obsolete
-                chart->setAxisY(_axis_kY, series_sc); // obsolete
+                // chart->setAxisX(_axisS, series_sc); // obsolete
+                // chart->setAxisY(_axis_kY, series_sc); // obsolete
 
                 retranslateUi(widget);
             }
