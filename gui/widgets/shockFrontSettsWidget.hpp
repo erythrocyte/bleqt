@@ -16,6 +16,7 @@ public:
     ~ShockFrontSettsWidget() { delete ui; }
 
     void SetShockFrontValue(std::string value);
+    void set_show_shockfront_status(bool status);
 
 signals:
     void showShockFrontCurve(bool status);

@@ -16,6 +16,13 @@ public:
     RelPermDataWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<RelPermDataWidget> view);
     ~RelPermDataWidgetPresenter() { }
+
+    double get_kmu();
+    double get_nwat();
+    double get_noil();
+
+    std::shared_ptr<RelPermDataWidget> get_view();
+
 };
 
 }

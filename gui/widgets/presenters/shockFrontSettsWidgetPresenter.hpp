@@ -18,6 +18,9 @@ public:
         std::shared_ptr<ShockFrontSettsWidget> view);
     ~ShockFrontSettsWidgetPresenter() { }
 
+    std::shared_ptr<ShockFrontSettsWidget> get_view();
+    void set_show_shockfront_status(bool status);
+
 signals:
     void showShockFrontCurve(bool status);
 

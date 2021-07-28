@@ -9,6 +9,7 @@
 #include "blePresenter.hpp"
 #include "dataWidget.hpp"
 #include "gridSettsWidgetPresenter.hpp"
+#include "inputData.hpp"
 #include "modelDataWidgetPresenter.hpp"
 #include "relPermDataWidgetPresenter.hpp"
 #include "satSolverSettsWidgetPresenter.hpp"
@@ -22,6 +23,13 @@ public:
     DataWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<DataWidget> view);
 
+    std::shared_ptr<ble_src::InputData> get_input_data();
+    void set_show_shockfront_status(bool status);
+    std::shared_ptr<DataWidget> get_view();
+
+signals:
+    void showShockFrontCurve(bool status);
+
 private:
     std::shared_ptr<GridSettsWidgetPresenter> m_gridset_presenter;
     std::shared_ptr<ModelDataWidgetPresenter> m_modeldata_presenter;
@@ -34,7 +42,7 @@ private:
     void set_signals();
 
 private slots:
-    void onShowShockFrontCurve(bool status);
+    void onShowShockFrontCurve(bool status) { emit showShockFrontCurve(status); }
 };
 
 }

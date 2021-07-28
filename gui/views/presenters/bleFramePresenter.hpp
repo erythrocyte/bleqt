@@ -30,9 +30,13 @@ private:
     std::shared_ptr<bwp::DataWidgetPresenter> m_dataWidgetPresenter;
     std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;
 
+    void set_signals();
+
 private slots:
-    void on_update_fluid_widget(
-        const std::shared_ptr<ble_src::PhysData> physData, double sc);
+    // void on_update_fluid_widget(
+    //     const std::shared_ptr<ble_src::PhysData> physData, double sc);
+private slots:
+    void onShowShockFrontCurve(bool status);
 };
 
 }

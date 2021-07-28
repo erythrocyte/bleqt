@@ -18,4 +18,14 @@ void ShockFrontSettsWidgetPresenter::set_signals()
     Q_ASSERT(success);
 }
 
+std::shared_ptr<ShockFrontSettsWidget> ShockFrontSettsWidgetPresenter::get_view()
+{
+    return std::static_pointer_cast<ShockFrontSettsWidget>(m_view);
+}
+
+void ShockFrontSettsWidgetPresenter::set_show_shockfront_status(bool status)
+{
+    get_view()->set_show_shockfront_status(status);
+}
+
 }
