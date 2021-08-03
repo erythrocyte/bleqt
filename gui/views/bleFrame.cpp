@@ -1,23 +1,6 @@
 #include "bleFrame.hpp"
 
-#include <iomanip>
-#include <sstream>
-#include <tuple>
-
 #include <QApplication>
-#include <QCommonStyle>
-#include <QCoreApplication>
-#include <QMenuBar>
-#include <QPen>
-
-#include "makeGrid.hpp"
-#include "pressureSolver.hpp"
-#include "saturSolverAnalytic.hpp"
-#include "saturSolverNum.hpp"
-#include "saturSolverType.hpp"
-#include "shockFront.hpp"
-#include "workParam.hpp"
-#include "workTimeStep.hpp"
 
 #include "qVerticalLabel.hpp"
 

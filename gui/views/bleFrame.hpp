@@ -9,10 +9,7 @@
 #include "resultDataWidget.hpp"
 #include "ui_bleFrame.hpp"
 
-#include <QDockWidget>
-#include <QLineEdit>
 #include <QMainWindow>
-#include <QMenu>
 
 namespace ble_gui::views {
 
