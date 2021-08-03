@@ -31,6 +31,7 @@ private:
     std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;
 
     void set_signals();
+    double get_sc();
 
 private slots:
     void onShowShockFrontCurve(bool status);
