@@ -30,6 +30,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
 
     set_signals();
     m_dataWidgetPresenter->set_show_shockfront_status(true);
+    onRpValuesUpdated();
 }
 
 void BleFramePresenter::run()
@@ -42,6 +43,9 @@ void BleFramePresenter::set_signals()
     auto success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(showShockFrontCurve(bool)),
         this, SLOT(onShowShockFrontCurve(bool)));
     Q_ASSERT(success);
+    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(rpValuesUpdated()),
+        this, SLOT(onRpValuesUpdated()));
+    Q_ASSERT(success);
 }
 
 void BleFramePresenter::onShowShockFrontCurve(bool status)
@@ -52,6 +56,13 @@ void BleFramePresenter::onShowShockFrontCurve(bool status)
         double sc = ble_src::get_shock_front(data->phys);
         m_resultDataWidgetPresenter->update_sc(data->grd->l, sc);
     }
+}
+
+void BleFramePresenter::onRpValuesUpdated()
+{
+    auto data = m_dataWidgetPresenter->get_input_data();
+    double sc = ble_src::get_shock_front(data->phys);
+    m_dataWidgetPresenter->set_shockfront_value(sc);
 }
 
 // void BleFramePresenter::on_update_fluid_widget(

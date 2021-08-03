@@ -33,10 +33,8 @@ private:
     void set_signals();
 
 private slots:
-    // void on_update_fluid_widget(
-    //     const std::shared_ptr<ble_src::PhysData> physData, double sc);
-private slots:
     void onShowShockFrontCurve(bool status);
+    void onRpValuesUpdated();
 };
 
 }

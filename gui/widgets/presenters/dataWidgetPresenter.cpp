@@ -49,6 +49,9 @@ void DataWidgetPresenter::set_signals()
     auto success = QObject::connect(m_shockfront_presenter.get(), SIGNAL(showShockFrontCurve(bool)),
         this, SLOT(onShowShockFrontCurve(bool)));
     Q_ASSERT(success);
+    success = QObject::connect(m_relperm_presenter.get(), SIGNAL(valuesChanged()),
+        this, SLOT(onRpValuesChanged()));
+    Q_ASSERT(success);
 }
 
 std::shared_ptr<ble_src::InputData> DataWidgetPresenter::get_input_data()
@@ -59,15 +62,15 @@ std::shared_ptr<ble_src::InputData> DataWidgetPresenter::get_input_data()
 
     result->model->period = m_modeldata_presenter->get_modeling_period();
 
-        result->phys->kmu = m_relperm_presenter->get_kmu();
-        result->phys->n_oil = m_relperm_presenter->get_noil();
-        result->phys->n_wat = m_relperm_presenter->get_nwat();
+    result->phys->kmu = m_relperm_presenter->get_kmu();
+    result->phys->n_oil = m_relperm_presenter->get_noil();
+    result->phys->n_wat = m_relperm_presenter->get_nwat();
 
-        result->satSetts->cur_val = m_satsolverset_presenter->get_curant_value();
-        result->satSetts->pN = m_satsolverset_presenter->get_press_recalc_n();
+    result->satSetts->cur_val = m_satsolverset_presenter->get_curant_value();
+    result->satSetts->pN = m_satsolverset_presenter->get_press_recalc_n();
 
-        result->grd->l = m_gridset_presenter->get_domain_len();
-        result->grd->n = m_gridset_presenter->get_cell_count();
+    result->grd->l = m_gridset_presenter->get_domain_len();
+    result->grd->n = m_gridset_presenter->get_cell_count();
 
     return result;
 }
@@ -80,6 +83,16 @@ std::shared_ptr<DataWidget> DataWidgetPresenter::get_view()
 void DataWidgetPresenter::set_show_shockfront_status(bool status)
 {
     m_shockfront_presenter->set_show_shockfront_status(status);
+}
+
+void DataWidgetPresenter::set_shockfront_value(double value)
+{
+    m_shockfront_presenter->set_shockfront_value(value);
+}
+
+void DataWidgetPresenter::onUpdateShockFrontValue(double value)
+{
+    m_shockfront_presenter->set_shockfront_value(value);
 }
 
 }

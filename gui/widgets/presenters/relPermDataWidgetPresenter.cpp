@@ -7,6 +7,7 @@ RelPermDataWidgetPresenter ::RelPermDataWidgetPresenter(
     std::shared_ptr<RelPermDataWidget> view)
     : BlePresenter(container, view)
 {
+    set_signals();
 }
 
 double RelPermDataWidgetPresenter::get_kmu()
@@ -27,6 +28,13 @@ double RelPermDataWidgetPresenter::get_noil()
 std::shared_ptr<RelPermDataWidget> RelPermDataWidgetPresenter::get_view()
 {
     return std::static_pointer_cast<RelPermDataWidget>(m_view);
+}
+
+void RelPermDataWidgetPresenter::set_signals()
+{
+    QObject* view_obj = dynamic_cast<QObject*>(m_view.get());
+    auto success = QObject::connect(view_obj, SIGNAL(valuesUpdated()), this, SLOT(onValuesChanged()));
+    Q_ASSERT(success);
 }
 
 }

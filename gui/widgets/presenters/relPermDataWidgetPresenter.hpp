@@ -12,6 +12,7 @@
 namespace ble_gui::widgets::presenters {
 
 class RelPermDataWidgetPresenter : public mvp::BlePresenter {
+    Q_OBJECT
 public:
     RelPermDataWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<RelPermDataWidget> view);
@@ -23,6 +24,14 @@ public:
 
     std::shared_ptr<RelPermDataWidget> get_view();
 
+signals:
+    void valuesChanged();
+
+private:
+    void set_signals();
+
+private slots:
+    void onValuesChanged() { emit valuesChanged(); }
 };
 
 }

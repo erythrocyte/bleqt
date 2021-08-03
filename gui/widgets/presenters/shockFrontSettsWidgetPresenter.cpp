@@ -28,4 +28,9 @@ void ShockFrontSettsWidgetPresenter::set_show_shockfront_status(bool status)
     get_view()->set_show_shockfront_status(status);
 }
 
+void ShockFrontSettsWidgetPresenter::set_shockfront_value(double value)
+{
+    get_view()->SetShockFrontValue(value);
+}
+
 }

@@ -15,7 +15,7 @@ public:
     ShockFrontSettsWidget(QWidget* parent = nullptr);
     ~ShockFrontSettsWidget() { delete ui; }
 
-    void SetShockFrontValue(std::string value);
+    void SetShockFrontValue(double value);
     void set_show_shockfront_status(bool status);
 
 signals:

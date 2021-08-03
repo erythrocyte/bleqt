@@ -10,9 +10,9 @@ ShockFrontSettsWidget::ShockFrontSettsWidget(QWidget* parent)
     connect(ui->showCurve, SIGNAL(stateChanged(int)), this, SLOT(changeCheckStatus()));
 }
 
-void ShockFrontSettsWidget::SetShockFrontValue(std::string value)
+void ShockFrontSettsWidget::SetShockFrontValue(double value)
 {
-    ui->shockFrontValue->setText(QString::fromStdString(value));
+    ui->shockFrontValue->setText(QString::number(value));
 }
 
 void ShockFrontSettsWidget::set_show_shockfront_status(bool status)
