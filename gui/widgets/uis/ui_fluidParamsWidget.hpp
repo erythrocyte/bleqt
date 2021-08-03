@@ -4,9 +4,9 @@
 #include <QChart>
 #include <QChartView>
 #include <QGridLayout>
-#include <QWidget>
 #include <QLineSeries>
 #include <QValueAxis>
+#include <QWidget>
 
 using namespace QtCharts;
 
@@ -98,35 +98,20 @@ namespace widgets {
                 chart->addAxis(_axis_kY, Qt::AlignLeft);
                 chart->addAxis(axis_dfY, Qt::AlignRight);
 
-                // _series_kw->attachAxis(_axisS); // use instead of setAxisX,
-                // _series_kw->attachAxis(_axis_kY); // but does not work for different points;
+                series_kw->attachAxis(_axisS); // use instead of setAxisX,
+                series_kw->attachAxis(_axis_kY); // but does not work for different points;
 
-                // _series_koil->attachAxis(_axisS);
-                // _series_koil->attachAxis(_axis_kY);
+                series_koil->attachAxis(_axisS);
+                series_koil->attachAxis(_axis_kY);
 
-                // _series_fbl->attachAxis(_axisS);
-                // _series_fbl->attachAxis(_axis_kY);
+                series_fbl->attachAxis(_axisS);
+                series_fbl->attachAxis(_axis_kY);
 
-                // _series_dfbl->attachAxis(_axisS);
-                // _series_dfbl->attachAxis(_axis_dfY);
+                series_sc->attachAxis(_axisS);
+                series_sc->attachAxis(_axis_kY);
 
-                // _series_sc->attachAxis(_axisS);
-                // _series_sc->attachAxis(_axis_dfY);
-
-                // chart->setAxisX(_axisS, series_kw);
-                // chart->setAxisY(_axis_kY, series_kw);
-
-                // chart->setAxisX(_axisS, series_koil); // TODO : obsolete
-                // chart->setAxisY(_axis_kY, series_koil); // obsolete
-
-                // chart->setAxisX(_axisS, series_fbl); // obsolete
-                // chart->setAxisY(_axis_kY, series_fbl); // obsolete
-
-                // chart->setAxisX(_axisS, series_dfbl); // obsolete
-                // chart->setAxisY(axis_dfY, series_dfbl); // obsolete
-
-                // chart->setAxisX(_axisS, series_sc); // obsolete
-                // chart->setAxisY(_axis_kY, series_sc); // obsolete
+                series_dfbl->attachAxis(_axisS);
+                series_dfbl->attachAxis(axis_dfY);
 
                 retranslateUi(widget);
             }

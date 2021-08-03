@@ -64,12 +64,7 @@ void BleFramePresenter::onRpValuesUpdated()
     double sc = ble_src::get_shock_front(data->phys);
     m_dataWidgetPresenter->set_shockfront_value(sc);
     m_resultDataWidgetPresenter->update_sc(data->grd->l, sc);
+    m_fluidWidgetPresenter->update_view(data->phys, sc);
 }
-
-// void BleFramePresenter::on_update_fluid_widget(
-//     const std::shared_ptr<ble_src::PhysData> physData, double sc)
-// {
-//     m_fluidWidgetPresenter->update_view(physData, sc);
-// }
 
 }
