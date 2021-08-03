@@ -12,7 +12,7 @@ ShockFrontSettsWidget::ShockFrontSettsWidget(QWidget* parent)
 
 void ShockFrontSettsWidget::SetShockFrontValue(double value)
 {
-    ui->shockFrontValue->setText(QString::number(value));
+    ui->shockFrontValue->setText("Value = " + QString::number(value));
 }
 
 void ShockFrontSettsWidget::set_show_shockfront_status(bool status)
