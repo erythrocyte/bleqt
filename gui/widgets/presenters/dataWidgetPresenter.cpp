@@ -27,21 +27,14 @@ void DataWidgetPresenter::resolve_sub_presenters()
 
 void DataWidgetPresenter::set_widgets_to_view()
 {
-    auto gridset_view = m_gridset_presenter->get_view();
-    auto modeldata_view = m_modeldata_presenter->get_view();
-    auto relperm_view = m_relperm_presenter->get_view();
-    auto satsolverset_view = m_satsolverset_presenter->get_view();
-    auto shockfront_view = m_shockfront_presenter->get_view();
-
     auto model = std::make_shared<models::DataWidgetComponentsDto>();
-    model->gridset_view = gridset_view;
-    model->modeldata_view = modeldata_view;
-    model->relperm_view = relperm_view;
-    model->satsolverset_view = satsolverset_view;
-    model->shockfront_view = shockfront_view;
+    model->gridset_view = m_gridset_presenter->get_view();
+    model->modeldata_view = m_modeldata_presenter->get_view();
+    model->relperm_view = m_relperm_presenter->get_view();
+    model->satsolverset_view = m_satsolverset_presenter->get_view();
+    model->shockfront_view = m_shockfront_presenter->get_view();
 
-    auto view = std::static_pointer_cast<widgets::DataWidget>(m_view);
-    view->set_view_objects(model);
+    get_view()->set_view_objects(model);
 }
 
 void DataWidgetPresenter::set_signals()
