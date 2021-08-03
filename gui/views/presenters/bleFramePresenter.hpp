@@ -24,6 +24,7 @@ public:
         std::shared_ptr<BleFrame> view);
     ~BleFramePresenter() { }
     void run();
+    std::shared_ptr<BleFrame> get_view();
 
 private:
     std::shared_ptr<bwp::FluidParamGraphWidgetPresenter> m_fluidWidgetPresenter;
@@ -32,12 +33,15 @@ private:
 
     void set_signals();
     double get_sc();
+    void update_progress(double perc) { get_view()->update_progress(perc); }
+    void set_status(QString str) { get_view()->set_status(str); }
 
 private slots:
-    void onShowShockFrontCurve(bool status);
+    void
+    onShowShockFrontCurve(bool status);
     void onRpValuesUpdated();
+    void on_run_calc();
 };
-
 }
 
 #endif

@@ -25,6 +25,7 @@ set(HEADERS
 	workParam.hpp
 	mapInit.hpp
 	bleCalc.hpp
+	workString.hpp
 )
 
 set (SOURCES
@@ -40,6 +41,7 @@ set (SOURCES
 	commonVector.cpp
 	workParam.cpp
 	bleCalc.cpp
+	workString.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})

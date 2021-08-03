@@ -30,6 +30,8 @@ public:
     QDockWidget* dockMessages;
     QPlainTextEdit* messagePlainText;
     QTabWidget* tabs;
+    QProgressBar* statusProgressBar;
+    QLabel* statusLabel;
 
     void retranslateUi(QWidget* widget)
     {
@@ -61,8 +63,6 @@ public:
 private:
     QGridLayout* layout;
     QMenu* menu;
-    QLabel* statusLabel;
-    QProgressBar* statusProgressBar;
 
     void setupStatusBar(QWidget* widget)
     {
