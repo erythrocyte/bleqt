@@ -31,4 +31,5 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
 
     return result;
 }
+
 } // namespace ble_src

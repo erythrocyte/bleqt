@@ -16,12 +16,12 @@ std::shared_ptr<GridSettsWidget> GridSettsWidgetPresenter::get_view()
 
 double GridSettsWidgetPresenter::get_domain_len()
 {
-return get_view()->getLenght();
+    return get_view()->getLenght();
 }
 
-        int GridSettsWidgetPresenter::get_cell_count()
-        {
-return get_view()->getCellCount();
-        }
+int GridSettsWidgetPresenter::get_cell_count()
+{
+    return get_view()->getCellCount();
+}
 
 }
