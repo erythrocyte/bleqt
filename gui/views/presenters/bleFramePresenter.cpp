@@ -2,6 +2,7 @@
 
 #include "dataWidget.hpp"
 #include "fluidParamsGraphWidget.hpp"
+#include "shockFront.hpp"
 
 namespace ble_gui::views::presenters {
 
@@ -26,6 +27,10 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
 
     std::static_pointer_cast<BleFrame>(m_view)->set_widgets(fluidParamsWidget, resultDataWidget, dataWidgetView);
+
+    set_signals();
+    m_dataWidgetPresenter->set_show_shockfront_status(true);
+    onRpValuesUpdated();
 }
 
 void BleFramePresenter::run()
@@ -33,10 +38,33 @@ void BleFramePresenter::run()
     std::static_pointer_cast<BleFrame>(m_view)->run();
 }
 
-void BleFramePresenter::on_update_fluid_widget(
-    const std::shared_ptr<ble_src::PhysData> physData, double sc)
+void BleFramePresenter::set_signals()
 {
-    m_fluidWidgetPresenter->update_view(physData, sc);
+    auto success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(showShockFrontCurve(bool)),
+        this, SLOT(onShowShockFrontCurve(bool)));
+    Q_ASSERT(success);
+    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(rpValuesUpdated()),
+        this, SLOT(onRpValuesUpdated()));
+    Q_ASSERT(success);
+}
+
+void BleFramePresenter::onShowShockFrontCurve(bool status)
+{
+    m_resultDataWidgetPresenter->set_sc_visibility(status);
+    if (status) {
+        auto data = m_dataWidgetPresenter->get_input_data();
+        double sc = ble_src::get_shock_front(data->phys);
+        m_resultDataWidgetPresenter->update_sc(data->grd->l, sc);
+    }
+}
+
+void BleFramePresenter::onRpValuesUpdated()
+{
+    auto data = m_dataWidgetPresenter->get_input_data();
+    double sc = ble_src::get_shock_front(data->phys);
+    m_dataWidgetPresenter->set_shockfront_value(sc);
+    m_resultDataWidgetPresenter->update_sc(data->grd->l, sc);
+    m_fluidWidgetPresenter->update_view(data->phys, sc);
 }
 
 }

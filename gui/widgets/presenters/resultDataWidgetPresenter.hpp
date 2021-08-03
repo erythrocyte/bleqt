@@ -18,6 +18,9 @@ public:
     ~ResultDataWidgetPresenter() {}
 
     void update_sc(double l, double sc);
+    void set_sc_visibility(bool state);
+    
+    std::shared_ptr<ResultDataWidget> get_view();
 };
 
 }

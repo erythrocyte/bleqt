@@ -16,6 +16,11 @@ public:
     SatSolverSettsWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<SatSolverSettsWidget> view);
     ~SatSolverSettsWidgetPresenter() { }
+
+
+    std::shared_ptr<SatSolverSettsWidget> get_view();
+    double get_curant_value();
+        double get_press_recalc_n();
 };
 
 }

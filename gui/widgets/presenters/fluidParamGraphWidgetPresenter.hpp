@@ -21,6 +21,7 @@ public:
     ~FluidParamGraphWidgetPresenter() { }
 
     void update_view(const std::shared_ptr<ble_src::PhysData> physData, double sc);
+    std::shared_ptr<FluidParamsGraphWidget> get_view();
 
 private slots:
     std::shared_ptr<models::FluidParamsDto>

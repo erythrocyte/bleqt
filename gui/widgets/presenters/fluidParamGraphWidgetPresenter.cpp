@@ -64,4 +64,9 @@ void FluidParamGraphWidgetPresenter::update_view(
     std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_view)->update_view(physData, sc);
 }
 
+std::shared_ptr<FluidParamsGraphWidget> FluidParamGraphWidgetPresenter::get_view()
+{
+    return std::static_pointer_cast<FluidParamsGraphWidget>(m_view);
+}
+
 }

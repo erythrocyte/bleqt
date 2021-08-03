@@ -16,6 +16,11 @@ public:
     ModelDataWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<ModelDataWidget> view);
     ~ModelDataWidgetPresenter() { }
+
+    double get_modeling_period();
+
+    std::shared_ptr<ModelDataWidget> get_view();
+
 };
 
 }

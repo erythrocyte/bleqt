@@ -7,26 +7,27 @@
 
 #include "uis/ui_shockFrontSettsWidget.hpp"
 
-namespace ble_gui {
-namespace widgets {
-    class ShockFrontSettsWidget : public QWidget, private UI::ShockFrontSetts {
-        Q_OBJECT
-    public:
-        ShockFrontSettsWidget(QWidget* parent = nullptr);
-        ~ShockFrontSettsWidget() { delete ui; }
+namespace ble_gui ::widgets {
 
-        void SetShockFrontValue(std::string value);
+class ShockFrontSettsWidget : public QWidget, private UI::ShockFrontSetts {
+    Q_OBJECT
+public:
+    ShockFrontSettsWidget(QWidget* parent = nullptr);
+    ~ShockFrontSettsWidget() { delete ui; }
 
-    signals:
-        void checkBoxStatusChanged(bool status);
+    void SetShockFrontValue(double value);
+    void set_show_shockfront_status(bool status);
 
-    private:
-        UI::ShockFrontSetts* ui;
+signals:
+    void showShockFrontCurve(bool status);
 
-    private slots:
-        void changeCheckStatus() { emit checkBoxStatusChanged(ui->showCurve->isChecked()); }
-    };
-} // namespace widgets
-} // namespace ble_gui
+private:
+    UI::ShockFrontSetts* ui;
+
+private slots:
+    void changeCheckStatus() { emit showShockFrontCurve(ui->showCurve->isChecked()); }
+};
+
+} // namespace ble_gui::widgets
 
 #endif

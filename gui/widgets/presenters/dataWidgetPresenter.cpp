@@ -13,6 +13,7 @@ DataWidgetPresenter::DataWidgetPresenter(
 {
     resolve_sub_presenters();
     set_widgets_to_view();
+    set_signals();
 }
 
 void DataWidgetPresenter::resolve_sub_presenters()
@@ -26,11 +27,11 @@ void DataWidgetPresenter::resolve_sub_presenters()
 
 void DataWidgetPresenter::set_widgets_to_view()
 {
-    auto gridset_view = std::static_pointer_cast<widgets::GridSettsWidget>(m_gridset_presenter->get_view());
-    auto modeldata_view = std::static_pointer_cast<widgets::ModelDataWidget>(m_modeldata_presenter->get_view());
-    auto relperm_view = std::static_pointer_cast<widgets::RelPermDataWidget>(m_relperm_presenter->get_view());
-    auto satsolverset_view = std::static_pointer_cast<widgets::SatSolverSettsWidget>(m_satsolverset_presenter->get_view());
-    auto shockfront_view = std::static_pointer_cast<widgets::ShockFrontSettsWidget>(m_shockfront_presenter->get_view());
+    auto gridset_view = m_gridset_presenter->get_view();
+    auto modeldata_view = m_modeldata_presenter->get_view();
+    auto relperm_view = m_relperm_presenter->get_view();
+    auto satsolverset_view = m_satsolverset_presenter->get_view();
+    auto shockfront_view = m_shockfront_presenter->get_view();
 
     auto model = std::make_shared<models::DataWidgetComponentsDto>();
     model->gridset_view = gridset_view;
@@ -41,6 +42,57 @@ void DataWidgetPresenter::set_widgets_to_view()
 
     auto view = std::static_pointer_cast<widgets::DataWidget>(m_view);
     view->set_view_objects(model);
+}
+
+void DataWidgetPresenter::set_signals()
+{
+    auto success = QObject::connect(m_shockfront_presenter.get(), SIGNAL(showShockFrontCurve(bool)),
+        this, SLOT(onShowShockFrontCurve(bool)));
+    Q_ASSERT(success);
+    success = QObject::connect(m_relperm_presenter.get(), SIGNAL(valuesChanged()),
+        this, SLOT(onRpValuesChanged()));
+    Q_ASSERT(success);
+}
+
+std::shared_ptr<ble_src::InputData> DataWidgetPresenter::get_input_data()
+{
+    auto result = std::make_shared<ble_src::InputData>();
+    result->grd->type = ble_src::GridType::TypeEnum::kRegular;
+    result->satSetts->type = ble_src::SaturSolverType::kExplicit;
+
+    result->model->period = m_modeldata_presenter->get_modeling_period();
+
+    result->phys->kmu = m_relperm_presenter->get_kmu();
+    result->phys->n_oil = m_relperm_presenter->get_noil();
+    result->phys->n_wat = m_relperm_presenter->get_nwat();
+
+    result->satSetts->cur_val = m_satsolverset_presenter->get_curant_value();
+    result->satSetts->pN = m_satsolverset_presenter->get_press_recalc_n();
+
+    result->grd->l = m_gridset_presenter->get_domain_len();
+    result->grd->n = m_gridset_presenter->get_cell_count();
+
+    return result;
+}
+
+std::shared_ptr<DataWidget> DataWidgetPresenter::get_view()
+{
+    return std::static_pointer_cast<DataWidget>(m_view);
+}
+
+void DataWidgetPresenter::set_show_shockfront_status(bool status)
+{
+    m_shockfront_presenter->set_show_shockfront_status(status);
+}
+
+void DataWidgetPresenter::set_shockfront_value(double value)
+{
+    m_shockfront_presenter->set_shockfront_value(value);
+}
+
+void DataWidgetPresenter::onUpdateShockFrontValue(double value)
+{
+    m_shockfront_presenter->set_shockfront_value(value);
 }
 
 }
