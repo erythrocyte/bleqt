@@ -23,8 +23,15 @@ BleFrame::BleFrame(QWidget* parent)
     connect(ui->quit, &QAction::triggered, qApp, QApplication::quit);
     connect(ui->runAction, SIGNAL(triggered()), this, SLOT(handleRunButton()));
 
-    addDockWidget(Qt::LeftDockWidgetArea, ui->dockSettings);
     addDockWidget(Qt::BottomDockWidgetArea, ui->dockMessages);
+    addDockWidget(Qt::LeftDockWidgetArea, ui->dockSettings);
+    ui->dockMessages->setAllowedAreas(Qt::BottomDockWidgetArea);
+    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
+    setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
+    resizeDocks({ ui->dockMessages }, { 50 }, Qt::Vertical); // This is the hack
 }
 
 void BleFrame::set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget)
