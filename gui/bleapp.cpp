@@ -9,8 +9,8 @@
 #include "fluidParamGraphWidgetPresenter.hpp"
 #include "gridSettsWidgetPresenter.hpp"
 #include "modelDataWidget.hpp"
-#include "resultDataWidgetPresenter.hpp"
 #include "relPermDataWidgetPresenter.hpp"
+#include "resultDataWidgetPresenter.hpp"
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
 

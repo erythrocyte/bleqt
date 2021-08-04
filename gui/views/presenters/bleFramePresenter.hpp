@@ -7,7 +7,6 @@
 #include "Hypodermic/Hypodermic.h"
 
 #include "bleFrame.hpp"
-
 #include "blePresenter.hpp"
 #include "dataWidgetPresenter.hpp"
 #include "fluidParamGraphWidgetPresenter.hpp"
@@ -34,13 +33,14 @@ private:
     void set_signals();
     double get_sc();
     void update_progress(double perc) { get_view()->update_progress(perc); }
-    void set_status(QString str) { get_view()->set_status(str); }
+    void set_status(const QString& str) { get_view()->set_status(str); }
+    void init_log();
 
 private slots:
-    void
-    onShowShockFrontCurve(bool status);
+    void onShowShockFrontCurve(bool status);
     void onRpValuesUpdated();
     void on_run_calc();
+    void handleFileChanged(QString str);
 };
 }
 

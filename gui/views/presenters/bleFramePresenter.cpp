@@ -3,9 +3,13 @@
 #include <chrono>
 #include <iomanip>
 
+#include <QFileSystemWatcher>
+
 #include "bleCalc.hpp"
 #include "dataWidget.hpp"
+#include "file/services/workFile.hpp"
 #include "fluidParamsGraphWidget.hpp"
+#include "logging/logger.hpp"
 #include "makeGrid.hpp"
 #include "shockFront.hpp"
 #include "workString.hpp"
@@ -16,6 +20,8 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     std::shared_ptr<BleFrame> view)
     : BlePresenter(container, view)
 {
+    init_log();
+
     m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
     auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
 
@@ -98,6 +104,26 @@ void BleFramePresenter::on_run_calc()
 std::shared_ptr<BleFrame> BleFramePresenter::get_view()
 {
     return std::static_pointer_cast<BleFrame>(m_view);
+}
+
+void BleFramePresenter::init_log()
+{
+    std::string fn = "app.log";
+    ble_src::logging::init_log(fn);
+    QFileSystemWatcher* watcher = new QFileSystemWatcher();
+    watcher->addPath(QString::fromStdString(fn));
+
+    auto success = QObject::connect(watcher, SIGNAL(fileChanged(QString)), this, SLOT(handleFileChanged(QString)));
+    Q_ASSERT(success);
+
+    ble_src::logging::write_log("test1", ble_src::logging::kError);
+}
+
+void BleFramePresenter::handleFileChanged(QString str)
+{
+    auto mess = ble_src::file::services::get_last_line(str.toStdString());
+    auto level = ble_src::logging::kInfo;
+    get_view()->add_log_message(mess, level);
 }
 
 }

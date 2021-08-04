@@ -81,8 +81,8 @@ private:
 
         messagePlainText = new QPlainTextEdit(widget);
         messagePlainText->setReadOnly(true);
-        messagePlainText->appendHtml("<font color=\"Red\">Error Message</font>");
-        messagePlainText->appendHtml("<font color=\"Orange\">Warning Message</font>");
+        // messagePlainText->appendHtml("<font color=\"Red\">Error Message</font>");
+        // messagePlainText->appendHtml("<font color=\"Orange\">Warning Message</font>");
         dockMessages->setWidget(messagePlainText);
     }
 
@@ -108,6 +108,7 @@ private:
 
         menu = menuBar->addMenu("&Task");
         runAction = new QAction("Run");
+        runAction->setIcon(style->standardIcon(QStyle::SP_MediaPlay));
         menu->addAction(runAction);
     }
 };
