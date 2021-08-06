@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <tuple>
 
 #include "Hypodermic/Hypodermic.h"
 
@@ -11,6 +12,7 @@
 #include "dataWidgetPresenter.hpp"
 #include "fluidParamGraphWidgetPresenter.hpp"
 #include "resultDataWidgetPresenter.hpp"
+#include "logging/logger.hpp"
 
 namespace bwp = ble_gui::widgets::presenters;
 
@@ -35,7 +37,8 @@ private:
     void update_progress(double perc) { get_view()->update_progress(perc); }
     void set_status(const QString& str) { get_view()->set_status(str); }
     void init_log();
-
+    std::tuple<std::string, int> parse_log_mess( std::string mess);
+// ble_src::logging::SeverityLevelEnum
 private slots:
     void onShowShockFrontCurve(bool status);
     void onRpValuesUpdated();
