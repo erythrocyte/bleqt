@@ -124,14 +124,31 @@ void BleFramePresenter::handleFileChanged(QString str)
     auto last_line = ble_src::file::services::get_last_line(str.toStdString());
     std::string mess;
     ble_src::logging::SeverityLevelEnum level;
-    std::tie(mess, level) = parse_log_mess("3");
+    std::tie(mess, level) = parse_log_mess(last_line);
     get_view()->add_log_message(mess, level);
 }
 
 std::tuple<std::string, ble_src::logging::SeverityLevelEnum> BleFramePresenter::parse_log_mess(std::string mess)
 {
-    auto level = ble_src::logging::SeverityLevelEnum::kError;
-    return std::make_tuple<std::string, ble_src::logging::SeverityLevelEnum>(std::move(mess), std::move(level));
+    auto get_time = [](const std::vector<std::string>& a) {
+        std::string v = a[0].substr(1);
+        std::string v2 = a[1].substr(0, a[1].size() - 1);
+        return ble_src::string_format("%s %s", v.c_str(), v2.c_str());
+    };
+
+    auto get_level = [](const std::vector<std::string>& a) {
+        std::string lvl = a[3].substr(1, a[3].size() - 2);
+        if (lvl == "error") {
+            return ble_src::logging::kError;
+        } else {
+            return ble_src::logging::kInfo;
+        }
+    };
+    std::vector<std::string> a = ble_src::split(mess, " ");
+    std::string time = get_time(a);
+    ble_src::logging::SeverityLevelEnum level = get_level(a);
+    std::string pp = ble_src::string_format("%s - %s", time.c_str(), a[4].c_str());
+    return std::make_tuple<std::string, ble_src::logging::SeverityLevelEnum>(std::move(pp), std::move(level));
 }
 
 }
