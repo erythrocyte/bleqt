@@ -123,17 +123,15 @@ void BleFramePresenter::handleFileChanged(QString str)
 {
     auto last_line = ble_src::file::services::get_last_line(str.toStdString());
     std::string mess;
-    // ble_src::logging::SeverityLevelEnum level;
-    int m;
-    std::tie(mess, m) = parse_log_mess("3");
-    // get_view()->add_log_message(mess, level);
+    ble_src::logging::SeverityLevelEnum level;
+    std::tie(mess, level) = parse_log_mess("3");
+    get_view()->add_log_message(mess, level);
 }
 
-std::tuple<std::string, int> BleFramePresenter::parse_log_mess(std::string mess)
+std::tuple<std::string, ble_src::logging::SeverityLevelEnum> BleFramePresenter::parse_log_mess(std::string mess)
 {
-    // auto level  = ble_src::logging::SeverityLevelEnum::kError;
-    return std::make_tuple<std::string, int>(std::move(mess), 4);
-    // ble_src::logging::SeverityLevelEnum
+    auto level = ble_src::logging::SeverityLevelEnum::kError;
+    return std::make_tuple<std::string, ble_src::logging::SeverityLevelEnum>(std::move(mess), std::move(level));
 }
 
 }
