@@ -68,6 +68,9 @@ void BleFrame::add_log_message(std::string str, ble_src::logging::SeverityLevelE
     case ble_src::logging::kError:
         color_name = "Red";
         break;
+    case ble_src::logging::kWarning:
+        color_name = "Orange";
+        break;
     default:
         break;
     }

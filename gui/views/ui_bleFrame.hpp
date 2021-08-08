@@ -1,13 +1,9 @@
 #ifndef GUI_VIEWS_UIBLEFRAME_H_
 #define GUI_VIEWS_UIBLEFRAME_H_
 
-// #include <QChart>
-// #include <QChartView>
-#include <QGridLayout>
-// #include <QLineSeries>
-// #include <QValueAxis>
 #include <QCommonStyle>
 #include <QDockWidget>
+#include <QGridLayout>
 #include <QLabel>
 #include <QMenu>
 #include <QMenuBar>
@@ -81,8 +77,6 @@ private:
 
         messagePlainText = new QPlainTextEdit(widget);
         messagePlainText->setReadOnly(true);
-        // messagePlainText->appendHtml("<font color=\"Red\">Error Message</font>");
-        // messagePlainText->appendHtml("<font color=\"Orange\">Warning Message</font>");
         dockMessages->setWidget(messagePlainText);
     }
 

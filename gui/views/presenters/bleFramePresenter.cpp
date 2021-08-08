@@ -36,6 +36,13 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     set_signals();
     m_dataWidgetPresenter->set_show_shockfront_status(true);
     onRpValuesUpdated();
+
+    ble_src::logging::write_log("test error", ble_src::logging::kError);
+    ble_src::logging::write_log("test info", ble_src::logging::kInfo);
+    ble_src::logging::write_log("test warning", ble_src::logging::kWarning);
+    ble_src::logging::write_log("test debug", ble_src::logging::kDebug);
+    ble_src::logging::write_log("test fatal", ble_src::logging::kFatal);
+    ble_src::logging::write_log("test trace", ble_src::logging::kTrace);
 }
 
 void BleFramePresenter::run()
@@ -111,21 +118,25 @@ void BleFramePresenter::init_log()
     std::string fn = "app.log";
     ble_src::logging::init_log(fn);
     QFileSystemWatcher* watcher = new QFileSystemWatcher();
-    watcher->addPath(QString::fromStdString(fn));
-
     auto success = QObject::connect(watcher, SIGNAL(fileChanged(QString)), this, SLOT(handleFileChanged(QString)));
     Q_ASSERT(success);
-
-    ble_src::logging::write_log("test1", ble_src::logging::kError);
+    watcher->addPath(QString::fromStdString(fn));
 }
 
 void BleFramePresenter::handleFileChanged(QString str)
 {
+    auto is_level_suit = [](ble_src::logging::SeverityLevelEnum lvl) {
+        return lvl == ble_src::logging::kWarning && lvl == ble_src::logging::kInfo && lvl == ble_src::logging::kError
+            ? true
+            : false;
+    };
     auto last_line = ble_src::file::services::get_last_line(str.toStdString());
     std::string mess;
     ble_src::logging::SeverityLevelEnum level;
     std::tie(mess, level) = parse_log_mess(last_line);
-    get_view()->add_log_message(mess, level);
+    if (is_level_suit(level)) {
+        get_view()->add_log_message(mess, level);
+    }
 }
 
 std::tuple<std::string, ble_src::logging::SeverityLevelEnum> BleFramePresenter::parse_log_mess(std::string mess)
@@ -140,10 +151,19 @@ std::tuple<std::string, ble_src::logging::SeverityLevelEnum> BleFramePresenter::
         std::string lvl = a[3].substr(1, a[3].size() - 2);
         if (lvl == "error") {
             return ble_src::logging::kError;
+        } else if (lvl == "warning") {
+            return ble_src::logging::kWarning;
+        } else if (lvl == "fatal") {
+            return ble_src::logging::kFatal;
+        } else if (lvl == "trace") {
+            return ble_src::logging::kTrace;
+        } else if (lvl == "debug") {
+            return ble_src::logging::kDebug;
         } else {
             return ble_src::logging::kInfo;
         }
     };
+
     std::vector<std::string> a = ble_src::split(mess, " ");
     std::string time = get_time(a);
     ble_src::logging::SeverityLevelEnum level = get_level(a);
