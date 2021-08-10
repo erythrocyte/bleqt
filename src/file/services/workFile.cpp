@@ -35,4 +35,24 @@ std::string get_last_line(const std::string fn)
     return result;
 }
 
+std::vector<std::string> read_file_from_line(int start_line, const std::string fn)
+{
+    std::vector<std::string> result;
+
+    std::ifstream file(fn);
+    std::string str;
+    if (file.is_open()) {
+        int index= 0;
+        while (std::getline(file, str)) {
+            // Process str
+            if (index >= start_line){
+                result.push_back(str);
+            }
+            index ++;
+        }
+    }
+
+    return result;
+}
+
 }

@@ -20,6 +20,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     std::shared_ptr<BleFrame> view)
     : BlePresenter(container, view)
 {
+    m_log_line_start_index = 0;
     init_log();
 
     m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
@@ -126,16 +127,19 @@ void BleFramePresenter::init_log()
 void BleFramePresenter::handleFileChanged(QString str)
 {
     auto is_level_suit = [](ble_src::logging::SeverityLevelEnum lvl) {
-        return lvl == ble_src::logging::kWarning && lvl == ble_src::logging::kInfo && lvl == ble_src::logging::kError
+        return lvl == ble_src::logging::kWarning || lvl == ble_src::logging::kInfo || lvl == ble_src::logging::kError
             ? true
             : false;
     };
-    auto last_line = ble_src::file::services::get_last_line(str.toStdString());
+    auto lines = ble_src::file::services::read_file_from_line(m_log_line_start_index, str.toStdString());
+    m_log_line_start_index += lines.size();
     std::string mess;
     ble_src::logging::SeverityLevelEnum level;
-    std::tie(mess, level) = parse_log_mess(last_line);
-    if (is_level_suit(level)) {
-        get_view()->add_log_message(mess, level);
+    for (auto& line : lines) {
+        std::tie(mess, level) = parse_log_mess(line);
+        if (is_level_suit(level)) {
+            get_view()->add_log_message(mess, level);
+        }
     }
 }
 

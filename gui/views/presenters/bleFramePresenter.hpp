@@ -28,6 +28,7 @@ public:
     std::shared_ptr<BleFrame> get_view();
 
 private:
+    int m_log_line_start_index;
     std::shared_ptr<bwp::FluidParamGraphWidgetPresenter> m_fluidWidgetPresenter;
     std::shared_ptr<bwp::DataWidgetPresenter> m_dataWidgetPresenter;
     std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;

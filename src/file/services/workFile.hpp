@@ -3,10 +3,12 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
-namespace ble_src::file::services{
+namespace ble_src::file::services {
 
 std::string get_last_line(const std::string fn);
+std::vector<std::string> read_file_from_line(int start_line, const std::string fn);
 
 }
 
