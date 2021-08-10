@@ -3,6 +3,7 @@
 #include <QApplication>
 
 #include "qVerticalLabel.hpp"
+#include "workString.hpp"
 
 namespace ble_gui::views {
 BleFrame::BleFrame(QWidget* parent)
@@ -58,6 +59,24 @@ void BleFrame::set_widgets(
     this->set_settings_widget(dataWidget);
     ui->tabs->addTab(resultDataWidget.get(), "Results");
     ui->tabs->addTab(fluidParamsWidget.get(), "Fluid params");
+}
+
+void BleFrame::add_log_message(std::string str, ble_src::logging::SeverityLevelEnum level)
+{
+    std::string color_name = "Black";
+    switch (level) {
+    case ble_src::logging::kError:
+        color_name = "Red";
+        break;
+    case ble_src::logging::kWarning:
+        color_name = "Orange";
+        break;
+    default:
+        break;
+    }
+
+    std::string mess = ble_src::string_format("<font color=\"%s\">%s</font>", color_name.c_str(), str.c_str());
+    ui->messagePlainText->appendHtml(QString::fromStdString(mess));
 }
 
 }

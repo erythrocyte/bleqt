@@ -112,5 +112,4 @@ bool str_starts_with(std::string const& ss, std::string const& sub_str)
     else
         return false;
 }
-
 }

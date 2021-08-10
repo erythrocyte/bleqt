@@ -1,6 +1,7 @@
 #include "shockFront.hpp"
 
 #include "workRp.hpp"
+#include "logging/logger.hpp"
 
 namespace ble_src {
 
@@ -37,6 +38,11 @@ double get_shock_front(const std::shared_ptr<PhysData> data)
             minDiff = diff;
             result = sc;
         }
+    }
+
+    if (result == eps)
+    {
+        logging::write_log("sc value not defined", logging::kWarning);
     }
 
     return result;

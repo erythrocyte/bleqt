@@ -8,6 +8,7 @@
 #include "fluidParamsGraphWidget.hpp"
 #include "resultDataWidget.hpp"
 #include "ui_bleFrame.hpp"
+#include "logging/logger.hpp"
 
 #include <QMainWindow>
 
@@ -27,6 +28,7 @@ public:
         std::shared_ptr<widgets::DataWidget> dataWidget);
     void update_progress(double perc) { ui->statusProgressBar->setValue(perc); }
     void set_status(QString str) { ui->statusLabel->setText(str); }
+    void add_log_message(std::string str, ble_src::logging::SeverityLevelEnum level);
 
 signals:
     void sgn_run_calc();

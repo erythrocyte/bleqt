@@ -3,9 +3,13 @@
 #include <chrono>
 #include <iomanip>
 
+#include <QFileSystemWatcher>
+
 #include "bleCalc.hpp"
 #include "dataWidget.hpp"
+#include "file/services/workFile.hpp"
 #include "fluidParamsGraphWidget.hpp"
+#include "logging/logger.hpp"
 #include "makeGrid.hpp"
 #include "shockFront.hpp"
 #include "workString.hpp"
@@ -16,6 +20,9 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     std::shared_ptr<BleFrame> view)
     : BlePresenter(container, view)
 {
+    m_log_line_start_index = 0;
+    init_log();
+
     m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
     auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
 
@@ -98,6 +105,73 @@ void BleFramePresenter::on_run_calc()
 std::shared_ptr<BleFrame> BleFramePresenter::get_view()
 {
     return std::static_pointer_cast<BleFrame>(m_view);
+}
+
+void BleFramePresenter::init_log()
+{
+    std::string fn = "app.log";
+    ble_src::logging::init_log(fn);
+    QFileSystemWatcher* watcher = new QFileSystemWatcher();
+    auto success = QObject::connect(watcher, SIGNAL(fileChanged(QString)), this, SLOT(handleFileChanged(QString)));
+    Q_ASSERT(success);
+    watcher->addPath(QString::fromStdString(fn));
+}
+
+void BleFramePresenter::handleFileChanged(QString str)
+{
+    auto is_level_suit = [](ble_src::logging::SeverityLevelEnum lvl) {
+        return lvl == ble_src::logging::kWarning || lvl == ble_src::logging::kInfo || lvl == ble_src::logging::kError
+            ? true
+            : false;
+    };
+    auto lines = ble_src::file::services::read_file_from_line(m_log_line_start_index, str.toStdString());
+    m_log_line_start_index += lines.size();
+    std::string mess;
+    ble_src::logging::SeverityLevelEnum level;
+    for (auto& line : lines) {
+        std::tie(mess, level) = parse_log_mess(line);
+        if (is_level_suit(level)) {
+            get_view()->add_log_message(mess, level);
+        }
+    }
+}
+
+std::tuple<std::string, ble_src::logging::SeverityLevelEnum> BleFramePresenter::parse_log_mess(std::string mess)
+{
+    auto get_time = [](const std::string mess) {
+        std::vector<std::string> a = ble_src::split(mess, " ");
+        std::string v = a[0].substr(1);
+        std::string v2 = a[1].substr(0, a[1].size() - 1);
+        return ble_src::string_format("%s %s", v.c_str(), v2.c_str());
+    };
+
+    auto get_level = [](const std::string mess) {
+        std::vector<std::string> a = ble_src::split(mess, " ");
+        std::string lvl = a[3].substr(1, a[3].size() - 2);
+        if (lvl == "error") {
+            return ble_src::logging::kError;
+        } else if (lvl == "warning") {
+            return ble_src::logging::kWarning;
+        } else if (lvl == "fatal") {
+            return ble_src::logging::kFatal;
+        } else if (lvl == "trace") {
+            return ble_src::logging::kTrace;
+        } else if (lvl == "debug") {
+            return ble_src::logging::kDebug;
+        } else {
+            return ble_src::logging::kInfo;
+        }
+    };
+    auto get_message = [](const std::string mess) {
+        size_t pos = mess.find_last_of("]");
+        return mess.substr(pos + 1, mess.length() - pos + 1);
+    };
+
+    std::string time = get_time(mess);
+    ble_src::logging::SeverityLevelEnum level = get_level(mess);
+    std::string mm = get_message(mess);
+    std::string pp = ble_src::string_format("%s - %s", time.c_str(), mm.c_str());
+    return std::make_tuple<std::string, ble_src::logging::SeverityLevelEnum>(std::move(pp), std::move(level));
 }
 
 }
