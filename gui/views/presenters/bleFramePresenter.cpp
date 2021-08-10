@@ -6,13 +6,15 @@
 #include <QFileSystemWatcher>
 
 #include "bleCalc.hpp"
+#include "common/services/shockFront.hpp"
 #include "dataWidget.hpp"
 #include "file/services/workFile.hpp"
 #include "fluidParamsGraphWidget.hpp"
 #include "logging/logger.hpp"
 #include "makeGrid.hpp"
-#include "shockFront.hpp"
 #include "workString.hpp"
+
+namespace cs = ble_src::common::services;
 
 namespace ble_gui::views::presenters {
 
@@ -64,7 +66,7 @@ void BleFramePresenter::onShowShockFrontCurve(bool status)
     m_resultDataWidgetPresenter->set_sc_visibility(status);
     if (status) {
         auto data = m_dataWidgetPresenter->get_input_data();
-        double sc = ble_src::get_shock_front(data->phys);
+        double sc = cs::shock_front::get_shock_front(data->phys);
         m_resultDataWidgetPresenter->update_sc(data->grd->l, sc);
     }
 }
@@ -72,7 +74,7 @@ void BleFramePresenter::onShowShockFrontCurve(bool status)
 void BleFramePresenter::onRpValuesUpdated()
 {
     auto data = m_dataWidgetPresenter->get_input_data();
-    double sc = ble_src::get_shock_front(data->phys);
+    double sc = cs::shock_front::get_shock_front(data->phys);
     m_dataWidgetPresenter->set_shockfront_value(sc);
     m_resultDataWidgetPresenter->update_sc(data->grd->l, sc);
     m_fluidWidgetPresenter->update_view(data->phys, sc);

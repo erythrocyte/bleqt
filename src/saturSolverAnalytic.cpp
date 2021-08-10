@@ -1,15 +1,17 @@
 #include "saturSolverAnalytic.hpp"
 
+#include "common/services/workRp.hpp"
 #include "commonVector.hpp"
 #include "physData.hpp"
-#include "workRp.hpp"
+
+namespace cs = ble_src::common::services;
 
 namespace ble_src {
 
 double get_xs(const double s, const double u, const double poro,
     const std::shared_ptr<PhysData> data)
 {
-    return u / poro * get_dfbl(s, data);
+    return u / poro * cs::rp::get_dfbl(s, data);
 }
 
 std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const double u,

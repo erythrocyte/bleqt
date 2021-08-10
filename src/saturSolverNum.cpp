@@ -1,6 +1,8 @@
 #include "saturSolverNum.hpp"
 
-#include "workRp.hpp"
+#include "common/services/workRp.hpp"
+
+namespace cs = ble_src::common::services;
 
 namespace ble_src {
 
@@ -18,7 +20,7 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
 				: init[fc->cl2]
 			: init[fc->cl1];
 		
-		double fbl = get_fbl(s, data->phys);
+		double fbl = cs::rp::get_fbl(s, data->phys);
 		double cf = fc->u * fbl * fc->area;
 		dvs[fc->cl1] += cf;
 		if (fc->cl2 != -1)

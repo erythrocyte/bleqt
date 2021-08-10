@@ -1,23 +1,9 @@
 #include "shockFront.hpp"
 
-#include "workRp.hpp"
 #include "logging/logger.hpp"
+#include "common/services/workRp.hpp"
 
-namespace ble_src {
-
-double get_shock_front_rhs(double sc, const std::shared_ptr<PhysData> data)
-{
-    if (std::abs(sc - 0.) < 1e-6) {
-        return 1e18;
-    }
-
-    double fsc = get_fbl(sc, data);
-
-    double sdown = 0.;
-    double fsdown = get_fbl(sdown, data);
-
-    return (fsc - fsdown) / (sc - sdown);
-}
+namespace ble_src::common::services::shock_front {
 
 double get_shock_front(const std::shared_ptr<PhysData> data)
 {
@@ -28,10 +14,23 @@ double get_shock_front(const std::shared_ptr<PhysData> data)
     double minDiff = 1e16;
     double result = -1.;
 
-    for (int k = 0; k < n; k++) {
+    auto get_shock_front_rhs = [&](double sc) {
+        if (std::abs(sc - 0.) < 1e-6) {
+            return 1e18;
+        }
+
+        double fsc = rp::get_fbl(sc, data);
+        double sdown = 0.;
+        double fsdown = rp::get_fbl(sdown, data);
+
+        return (fsc - fsdown) / (sc - sdown);
+    };
+
+    for (int k = 0; k < n; k++)
+    {
         double sc = eps + k * ds;
-        double f1 = get_dfbl(sc, data);
-        double f2 = get_shock_front_rhs(sc, data);
+        double f1 = rp::get_dfbl(sc, data);
+        double f2 = get_shock_front_rhs(sc);
 
         double diff = std::abs(f1 - f2);
         if (diff < minDiff) {
@@ -40,8 +39,7 @@ double get_shock_front(const std::shared_ptr<PhysData> data)
         }
     }
 
-    if (result == eps)
-    {
+    if (result == eps) {
         logging::write_log("sc value not defined", logging::kWarning);
     }
 

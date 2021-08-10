@@ -1,6 +1,8 @@
 #include "workTimeStep.hpp"
 
-#include "workRp.hpp"
+#include "common/services/workRp.hpp"
+
+namespace cs = ble_src::common::services;
 
 namespace ble_src {
 
@@ -15,9 +17,9 @@ double get_face_dfbl(const std::shared_ptr<Face> fc, const std::vector<double>& 
 
     double dfbl = std::max(
         std::max(
-            get_dfbl(s2, data),
-            get_dfbl(s1, data)),
-        get_dfbl(s_av, data));
+            cs::rp::get_dfbl(s2, data),
+            cs::rp::get_dfbl(s1, data)),
+        cs::rp::get_dfbl(s_av, data));
 
     return dfbl;
 }

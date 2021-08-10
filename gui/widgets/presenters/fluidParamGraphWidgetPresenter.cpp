@@ -2,8 +2,10 @@
 
 #include <memory>
 
+#include "common/services/workRp.hpp"
 #include "commonMath.hpp"
-#include "workRp.hpp"
+
+namespace cs = ble_src::common::services;
 
 namespace ble_gui::widgets::presenters {
 
@@ -30,14 +32,14 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
 
     result->max_dfbl = 1.0;
 
-    double dsc = ble_src::get_fbl(sc, data);
+    double dsc = cs::rp::get_fbl(sc, data);
 
     for (int k = 0; k < n; k++) {
         double s = ds * k; // saturation;
-        double kw = ble_src::get_kw(s, data);
-        double koil = ble_src::get_koil(s, data);
-        double fbl = ble_src::get_fbl(s, data);
-        double dfbl = ble_src::get_dfbl(s, data);
+        double kw = cs::rp::get_kw(s, data);
+        double koil = cs::rp::get_koil(s, data);
+        double fbl = cs::rp::get_fbl(s, data);
+        double dfbl = cs::rp::get_dfbl(s, data);
 
         if (dfbl > result->max_dfbl)
             result->max_dfbl = dfbl;

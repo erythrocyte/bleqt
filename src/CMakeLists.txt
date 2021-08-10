@@ -18,11 +18,9 @@ set(HEADERS
 	makeGrid.hpp
 	workSigma.hpp
 	pressureSolver.hpp
-	faceType.hpp
-	workRp.hpp
+	faceType.hpp	
 	saturSolverNum.hpp
-	workTimeStep.hpp
-	shockFront.hpp
+	workTimeStep.hpp	
 	commonMath.hpp
 	saturSolverAnalytic.hpp
 	commonVector.hpp
@@ -32,16 +30,17 @@ set(HEADERS
 	workString.hpp
 	logging/logger.hpp
 	file/services/workFile.hpp
+
+	common/services/workRp.hpp
+	common/services/shockFront.hpp
 )
 
 set (SOURCES
 	makeGrid.cpp
 	workSigma.cpp
-	pressureSolver.cpp
-	workRp.cpp
+	pressureSolver.cpp	
 	saturSolverNum.cpp
-	workTimeStep.cpp
-	shockFront.cpp
+	workTimeStep.cpp	
 	commonMath.cpp
 	saturSolverAnalytic.cpp
 	commonVector.cpp
@@ -50,6 +49,9 @@ set (SOURCES
 	workString.cpp
 	logging/logger.cpp
 	file/services/workFile.cpp
+
+	common/services/shockFront.cpp
+	common/services/workRp.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})
@@ -65,3 +67,5 @@ install(TARGETS ${LIB_BLE_TARGET}
 )
 
 target_link_libraries(${LIB_BLE_TARGET} ${Boost_LIBRARIES})
+
+include_directories(${CMAKE_SOURCE_DIR}/src)

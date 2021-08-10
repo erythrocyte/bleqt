@@ -2,8 +2,6 @@
 
 #include <sstream>
 
-#include "shockFront.hpp"
-
 ble_gui::widgets::ResultDataWidget::ResultDataWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::ResultData)

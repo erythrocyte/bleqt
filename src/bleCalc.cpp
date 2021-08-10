@@ -3,12 +3,14 @@
 #include <fstream>
 #include <sstream>
 
+#include "common/services/shockFront.hpp"
 #include "pressureSolver.hpp"
 #include "saturSolverAnalytic.hpp"
 #include "saturSolverNum.hpp"
-#include "shockFront.hpp"
 #include "workParam.hpp"
 #include "workTimeStep.hpp"
+
+namespace cs = ble_src::common::services;
 
 ble_src::BleCalc::BleCalc()
 {
@@ -26,7 +28,7 @@ void ble_src::BleCalc::calc(const std::shared_ptr<Grid> grd,
 {
     _results->data.clear();
     set_initial_cond(grd->cells.size());
-    double sc = ble_src::get_shock_front(data->phys);
+    double sc = cs::shock_front::get_shock_front(data->phys);
 
     int index = 0;
     int pressIndex = 0;
@@ -91,8 +93,7 @@ void ble_src::BleCalc::save_press(int index, const std::shared_ptr<Grid> grd,
     ofs << "cind\tpress\tum\tup";
 
     for (auto& cl : grd->cells) {
-        ofs << cl->ind << "\t" << p[cl->ind] << "\t" <<
-        grd->faces[cl->faces[0]]->u << "\t" << grd->faces[cl->faces[1]]->u << std::endl;
+        ofs << cl->ind << "\t" << p[cl->ind] << "\t" << grd->faces[cl->faces[0]]->u << "\t" << grd->faces[cl->faces[1]]->u << std::endl;
     }
 
     ofs.close();
