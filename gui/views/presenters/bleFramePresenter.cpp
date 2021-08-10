@@ -37,13 +37,6 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     set_signals();
     m_dataWidgetPresenter->set_show_shockfront_status(true);
     onRpValuesUpdated();
-
-    ble_src::logging::write_log("test error", ble_src::logging::kError);
-    ble_src::logging::write_log("test info", ble_src::logging::kInfo);
-    ble_src::logging::write_log("test warning", ble_src::logging::kWarning);
-    ble_src::logging::write_log("test debug", ble_src::logging::kDebug);
-    ble_src::logging::write_log("test fatal", ble_src::logging::kFatal);
-    ble_src::logging::write_log("test trace", ble_src::logging::kTrace);
 }
 
 void BleFramePresenter::run()
