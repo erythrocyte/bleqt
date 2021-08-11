@@ -9,6 +9,16 @@ void case2_kw();
 void case1_koil();
 void case2_koil();
 
+void case1_fbl();
+void case2_fbl();
+void case3_fbl();
+
+void case1_sigma();
+void case2_sigma();
+
+void case1_dfbl();
+void case2_dfbl();
+
 }
 
 #endif
