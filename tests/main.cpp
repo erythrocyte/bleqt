@@ -8,7 +8,7 @@ test_suite* init_unit_test_suite(int /*argc*/, char* /*argv*/[])
 {
     test_suite* ts_shock_front = BOOST_TEST_SUITE("ShockFrontTests");
     ts_shock_front->add(BOOST_TEST_CASE(&tests::unit_tests::common::services::shock_front::case1));
-    // ts_shock_front->add(BOOST_TEST_CASE(&common::services::shock_front::case2));
+    ts_shock_front->add(BOOST_TEST_CASE(&tests::unit_tests::common::services::shock_front::case2));
 
     test_suite* ts_work_rp = BOOST_TEST_SUITE("WorkRpTests");
     ts_work_rp->add(BOOST_TEST_CASE(&tests::unit_tests::common::services::work_rp::case1_kw));
