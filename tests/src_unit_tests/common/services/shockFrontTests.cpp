@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "common/services/shockFront.hpp"
-#include "physData.hpp"
+#include "common/models/physData.hpp"
 
 namespace cs = ble_src::common::services;
 
@@ -16,7 +16,7 @@ void case1()
 {
     // arrange
     double expected = 0.6656;
-    auto pd = std::make_shared<ble_src::PhysData>();
+    auto pd = std::make_shared<ble_src::common::models::PhysData>();
     pd->kmu = 0.125; // = mw / moil;
     pd->n_oil = 2.0;
     pd->n_wat = 5.3;
@@ -32,7 +32,7 @@ void case2()
 {
     // arrange
     double expected = 0.81679999999; // wxmaxima gives 0.8164965809277261;
-    auto pd = std::make_shared<ble_src::PhysData>();
+    auto pd = std::make_shared<ble_src::common::models::PhysData>();
     pd->kmu = 2.0; // = mw / moil;
     pd->n_oil = 2.0;
     pd->n_wat = 2.0;

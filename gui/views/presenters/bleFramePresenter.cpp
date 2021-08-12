@@ -11,8 +11,9 @@
 #include "file/services/workFile.hpp"
 #include "fluidParamsGraphWidget.hpp"
 #include "logging/logger.hpp"
-#include "makeGrid.hpp"
+#include "mesh/services/makeGrid.hpp"
 #include "workString.hpp"
+#include "mesh/models/grid.hpp"
 
 namespace cs = ble_src::common::services;
 
@@ -85,7 +86,7 @@ void BleFramePresenter::on_run_calc()
     auto start = std::chrono::high_resolution_clock::now();
 
     auto data = m_dataWidgetPresenter->get_input_data();
-    auto grd = ble_src::make_grid(data);
+    auto grd = ble_src::mesh::services::make_grid(data);
 
     set_status(tr("calculation running"));
 

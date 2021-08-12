@@ -32,7 +32,7 @@ private:
     std::shared_ptr<ble_src::BleResultData> _data;
 
     void update_time_info(int index);
-    void fill_time_series(bool init, const std::shared_ptr<ble_src::DynamicData> d);
+    void fill_time_series(bool init, const std::shared_ptr<ble_src::common::models::DynamicData> d);
 
 private slots:
     void handleSliderValueChange();

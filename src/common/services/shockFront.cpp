@@ -1,11 +1,11 @@
 #include "shockFront.hpp"
 
-#include "logging/logger.hpp"
 #include "common/services/workRp.hpp"
+#include "logging/logger.hpp"
 
 namespace ble_src::common::services::shock_front {
 
-double get_shock_front(const std::shared_ptr<PhysData> data)
+double get_shock_front(const std::shared_ptr<common::models::PhysData> data)
 {
     double eps = 1e-1;
     double n = 1000;
@@ -26,8 +26,7 @@ double get_shock_front(const std::shared_ptr<PhysData> data)
         return (fsc - fsdown) / (sc - sdown);
     };
 
-    for (int k = 0; k < n; k++)
-    {
+    for (int k = 0; k < n; k++) {
         double sc = eps + k * ds;
         double f1 = rp::get_dfbl(sc, data);
         double f2 = get_shock_front_rhs(sc);

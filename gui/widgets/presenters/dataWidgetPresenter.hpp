@@ -7,9 +7,9 @@
 #include "Hypodermic/Hypodermic.h"
 
 #include "blePresenter.hpp"
+#include "common/models/inputData.hpp"
 #include "dataWidget.hpp"
 #include "gridSettsWidgetPresenter.hpp"
-#include "inputData.hpp"
 #include "modelDataWidgetPresenter.hpp"
 #include "relPermDataWidgetPresenter.hpp"
 #include "satSolverSettsWidgetPresenter.hpp"
@@ -23,7 +23,7 @@ public:
     DataWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<DataWidget> view);
 
-    std::shared_ptr<ble_src::InputData> get_input_data();    
+    std::shared_ptr<ble_src::common::models::InputData> get_input_data();
     std::shared_ptr<DataWidget> get_view();
 
     void set_show_shockfront_status(bool status);
@@ -42,7 +42,7 @@ private:
 
     void set_widgets_to_view();
     void resolve_sub_presenters();
-    void set_signals();    
+    void set_signals();
 
 private slots:
     void onShowShockFrontCurve(bool status) { emit showShockFrontCurve(status); }
