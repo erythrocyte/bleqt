@@ -3,12 +3,12 @@
 #include <fstream>
 #include <sstream>
 
+#include "calc/services/pressureSolver.hpp"
+#include "calc/services/saturSolverAnalytic.hpp"
+#include "calc/services/saturSolverNum.hpp"
+#include "calc/services/workParam.hpp"
+#include "calc/services/workTimeStep.hpp"
 #include "common/services/shockFront.hpp"
-#include "pressureSolver.hpp"
-#include "saturSolverAnalytic.hpp"
-#include "saturSolverNum.hpp"
-#include "workParam.hpp"
-#include "workTimeStep.hpp"
 
 namespace cs = ble_src::common::services;
 

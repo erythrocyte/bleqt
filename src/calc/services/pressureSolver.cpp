@@ -1,9 +1,9 @@
 #include "pressureSolver.hpp"
 
-#include "diagMatrix.hpp"
-#include "workSigma.hpp"
+#include "calc/models/diagMatrix.hpp"
+#include "calc/services/workSigma.hpp"
 
-namespace ble_src {
+namespace ble_src::calc::services {
 
 double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid> grd)
 {
@@ -15,7 +15,7 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
 std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::vector<double>& s,
     const std::shared_ptr<common::models::PhysData> data)
 {
-    DiagMat ret;
+    models::DiagMat ret;
     ret.resize(grd->cells.size());
 
     std::vector<double> rhs(grd->cells.size(), 0.0);

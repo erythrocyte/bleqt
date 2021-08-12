@@ -4,10 +4,10 @@
 #include <iostream>
 #include <memory>
 
+#include "calc/models/saturSolverSettings.hpp"
 #include "gridData.hpp"
 #include "modelData.hpp"
 #include "physData.hpp"
-#include "saturSolverSettings.hpp"
 
 namespace ble_src::common::models {
 
@@ -16,7 +16,7 @@ public:
     std::shared_ptr<PhysData> phys = std::make_shared<PhysData>();
     std::shared_ptr<ModelData> model = std::make_shared<ModelData>();
     std::shared_ptr<GridData> grd = std::make_shared<GridData>();
-    std::shared_ptr<SaturSolverSetts> satSetts = std::make_shared<SaturSolverSetts>();
+    std::shared_ptr<calc::models::SaturSolverSetts> satSetts = std::make_shared<calc::models::SaturSolverSetts>();
 };
 
 }
