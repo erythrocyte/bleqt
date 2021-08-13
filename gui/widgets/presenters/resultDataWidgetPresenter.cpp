@@ -24,7 +24,7 @@ void ResultDataWidgetPresenter::set_sc_visibility(bool state)
     get_view()->set_sc_visible(state);
 }
 
-void ResultDataWidgetPresenter::set_data(const std::shared_ptr<ble_src::BleResultData> data,
+void ResultDataWidgetPresenter::set_data(const std::shared_ptr<ble_src::calc::models::BleResultData> data,
     std::function<void(double)> progress)
 {
     get_view()->setData(data, progress);

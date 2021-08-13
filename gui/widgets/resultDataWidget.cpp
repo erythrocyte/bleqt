@@ -2,8 +2,6 @@
 
 #include <sstream>
 
-#include "shockFront.hpp"
-
 ble_gui::widgets::ResultDataWidget::ResultDataWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::ResultData)
@@ -14,7 +12,7 @@ ble_gui::widgets::ResultDataWidget::ResultDataWidget(QWidget* parent)
 }
 
 void ble_gui::widgets::ResultDataWidget::setData(
-    const std::shared_ptr<ble_src::BleResultData> data,
+    const std::shared_ptr<ble_src::calc::models::BleResultData> data,
     std::function<void(double)> progress)
 {
     _data = data;
@@ -29,14 +27,14 @@ void ble_gui::widgets::ResultDataWidget::setData(
 void ble_gui::widgets::ResultDataWidget::handleSliderValueChange()
 {
     int value = ui->Slider->value() - 1;
-    if (value < _data->data.size()) {
+    if (value < static_cast<int>(_data->data.size())) {
         update_time_info(value);
         fill_time_series(false, _data->data[value]);
     }
 }
 
 void ble_gui::widgets::ResultDataWidget::fill_time_series(bool init,
-    const std::shared_ptr<ble_src::DynamicData> d)
+    const std::shared_ptr<ble_src::common::models::DynamicData> d)
 {
     std::ostringstream oss;
     oss.str("");

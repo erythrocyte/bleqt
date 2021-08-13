@@ -2,8 +2,8 @@
 
 #include <QApplication>
 
+#include "common/services/workString.hpp"
 #include "qVerticalLabel.hpp"
-#include "workString.hpp"
 
 namespace ble_gui::views {
 BleFrame::BleFrame(QWidget* parent)
@@ -75,7 +75,7 @@ void BleFrame::add_log_message(std::string str, ble_src::logging::SeverityLevelE
         break;
     }
 
-    std::string mess = ble_src::string_format("<font color=\"%s\">%s</font>", color_name.c_str(), str.c_str());
+    std::string mess = ble_src::common::services::string_format("<font color=\"%s\">%s</font>", color_name.c_str(), str.c_str());
     ui->messagePlainText->appendHtml(QString::fromStdString(mess));
 }
 

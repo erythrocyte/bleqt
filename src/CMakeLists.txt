@@ -2,54 +2,69 @@ find_package(Boost COMPONENTS log log_setup REQUIRED)
 find_package(Threads REQUIRED)
 add_definitions(-DBOOST_LOG_DYN_LINK)
 
-set(HEADERS 
-	inputData.hpp
-	physData.hpp
-	modelData.hpp
-	gridData.hpp
-	gridType.hpp
-	saturSolverSettings.hpp
-	saturSolverType.hpp
-	outputSettings.hpp
-	dynamicData.hpp
-	diagMatrix.hpp
-	cell.hpp
-	grid.hpp
-	makeGrid.hpp
-	workSigma.hpp
-	pressureSolver.hpp
-	faceType.hpp
-	workRp.hpp
-	saturSolverNum.hpp
-	workTimeStep.hpp
-	shockFront.hpp
-	commonMath.hpp
-	saturSolverAnalytic.hpp
-	commonVector.hpp
-	workParam.hpp
-	mapInit.hpp
-	bleCalc.hpp
-	workString.hpp
+set(HEADERS
+	calc/models/saturSolverSettings.hpp
+	calc/models/saturSolverType.hpp	
+	calc/models/diagMatrix.hpp
+	calc/models/bleCalc.hpp
+
+	calc/services/workSigma.hpp
+	calc/services/pressureSolver.hpp	
+	calc/services/saturSolverNum.hpp
+	calc/services/workTimeStep.hpp
+	calc/services/saturSolverAnalytic.hpp
+	calc/services/workParam.hpp
+	
 	logging/logger.hpp
+
 	file/services/workFile.hpp
+
+	common/services/workRp.hpp
+	common/services/shockFront.hpp
+	common/services/commonVector.hpp
+	common/services/commonMath.hpp
+	common/services/workString.hpp
+
+	common/utils/mapInit.hpp
+
+	common/models/inputData.hpp
+	common/models/physData.hpp
+	common/models/modelData.hpp
+	common/models/gridData.hpp
+	common/models/gridType.hpp
+	common/models/dynamicData.hpp
+	common/models/outputSettings.hpp
+
+	mesh/models/cell.hpp
+	mesh/models/face.hpp
+	mesh/models/faceType.hpp
+	mesh/models/grid.hpp
+	mesh/models/node.hpp
+
+	mesh/services/makeGrid.hpp
 )
 
 set (SOURCES
-	makeGrid.cpp
-	workSigma.cpp
-	pressureSolver.cpp
-	workRp.cpp
-	saturSolverNum.cpp
-	workTimeStep.cpp
-	shockFront.cpp
-	commonMath.cpp
-	saturSolverAnalytic.cpp
-	commonVector.cpp
-	workParam.cpp
-	bleCalc.cpp
-	workString.cpp
+	calc/services/workSigma.cpp
+	calc/services/pressureSolver.cpp	
+	calc/services/saturSolverNum.cpp
+	calc/services/workTimeStep.cpp		
+	calc/services/saturSolverAnalytic.cpp	
+	calc/services/workParam.cpp
+	
+	calc/models/bleCalc.cpp
+	
 	logging/logger.cpp
+
 	file/services/workFile.cpp
+
+	common/services/shockFront.cpp
+	common/services/workRp.cpp
+	common/services/commonVector.cpp
+	common/services/commonMath.cpp
+	common/services/workString.cpp
+
+	mesh/services/makeGrid.cpp
 )
 
 source_group ("Header Files" FILES ${HEADERS})
@@ -65,3 +80,5 @@ install(TARGETS ${LIB_BLE_TARGET}
 )
 
 target_link_libraries(${LIB_BLE_TARGET} ${Boost_LIBRARIES})
+
+include_directories(${CMAKE_SOURCE_DIR}/src)
