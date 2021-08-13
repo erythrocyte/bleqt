@@ -4,7 +4,7 @@
 
 namespace cs = ble_src::common::services;
 
-namespace ble_src {
+namespace ble_src::calc::services {
 
 double get_face_dfbl(const std::shared_ptr<mesh::models::Face> fc,
     const std::vector<double>& init, std::shared_ptr<common::models::PhysData> data)

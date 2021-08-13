@@ -5,7 +5,7 @@
 namespace cs = ble_src::common::services;
 namespace mm = ble_src::mesh::models;
 
-namespace ble_src {
+namespace ble_src::calc::services {
 
 double get_face_sigma(const std::shared_ptr<mm::Face> fc, const std::vector<double> sats,
     const std::shared_ptr<common::models::PhysData> data, const std::shared_ptr<mm::Grid> grd)

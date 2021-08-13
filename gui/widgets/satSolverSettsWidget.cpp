@@ -1,6 +1,6 @@
 #include "satSolverSettsWidget.hpp"
 
-#include "saturSolverType.hpp"
+#include "calc/models/saturSolverType.hpp"
 
 namespace ble_gui::widgets {
 
@@ -9,9 +9,9 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
     , ui(new UI::SatSolverSetts)
 {
     ui->setupUi(this);
-    for (ble_src::SaturSolverType::TypeEnum v : ble_src::SaturSolverTypeEnumIterator()) {
+    for (ble_src::calc::models::SaturSolverType::TypeEnum v : ble_src::calc::models::SaturSolverTypeEnumIterator()) {
         ui->SolverType->addItem(
-            QString::fromStdString(ble_src::SaturSolverType::get_description(v)));
+            QString::fromStdString(ble_src::calc::models::SaturSolverType::get_description(v)));
     }
 }
 

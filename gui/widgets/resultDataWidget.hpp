@@ -5,7 +5,7 @@
 #include <iostream>
 #include <memory>
 
-#include "bleResultData.hpp"
+#include "calc/models/bleResultData.hpp"
 
 #include "uis/ui_resultDataWidget.hpp"
 
@@ -19,7 +19,7 @@ public:
     ResultDataWidget(QWidget* parent = nullptr);
     ~ResultDataWidget() { delete ui; }
 
-    void setData(const std::shared_ptr<ble_src::BleResultData> data,
+    void setData(const std::shared_ptr<ble_src::calc::models::BleResultData> data,
         std::function<void(double)> progress);
     void update_sc_series(double l, double sc);
     void set_sc_visible(bool visible) { ui->SeriesSc->setVisible(visible); }
@@ -29,7 +29,7 @@ private:
 
     bool _firstInit = true;
 
-    std::shared_ptr<ble_src::BleResultData> _data;
+    std::shared_ptr<ble_src::calc::models::BleResultData> _data;
 
     void update_time_info(int index);
     void fill_time_series(bool init, const std::shared_ptr<ble_src::common::models::DynamicData> d);

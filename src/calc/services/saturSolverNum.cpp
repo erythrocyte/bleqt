@@ -4,7 +4,7 @@
 
 namespace cs = ble_src::common::services;
 
-namespace ble_src {
+namespace ble_src::calc::services {
 
 std::vector<double> solve_explicit(const double tau, const std::vector<double>& init,
     const std::shared_ptr<common::models::InputData> data, const std::shared_ptr<mesh::models::Grid> grd)
@@ -38,9 +38,9 @@ std::vector<double> solve_satur(const double tau, const std::vector<double>& ini
     const std::shared_ptr<common::models::InputData> data, const std::shared_ptr<mesh::models::Grid> grd)
 {
     switch (data->satSetts->type) {
-    case SaturSolverType::TypeEnum::kExplicit:
+    case calc::models::SaturSolverType::TypeEnum::kExplicit:
         return solve_explicit(tau, init, data, grd);
-    case SaturSolverType::TypeEnum::kImplicit:
+    case calc::models::SaturSolverType::TypeEnum::kImplicit:
     default:
         return solve_explicit(tau, init, data, grd);
     }

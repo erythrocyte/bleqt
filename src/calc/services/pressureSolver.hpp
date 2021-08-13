@@ -9,7 +9,7 @@
 
 namespace mm = ble_src::mesh::models;
 
-namespace ble_src {
+namespace ble_src::calc::services {
 
 std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::vector<double>& s,
     const std::shared_ptr<common::models::PhysData> data);

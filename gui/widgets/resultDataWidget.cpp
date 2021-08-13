@@ -12,7 +12,7 @@ ble_gui::widgets::ResultDataWidget::ResultDataWidget(QWidget* parent)
 }
 
 void ble_gui::widgets::ResultDataWidget::setData(
-    const std::shared_ptr<ble_src::BleResultData> data,
+    const std::shared_ptr<ble_src::calc::models::BleResultData> data,
     std::function<void(double)> progress)
 {
     _data = data;

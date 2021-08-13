@@ -41,19 +41,19 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
         std::vector<double> p = _results->data[index]->p;
         if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
-            p = solve_press(grd, s_prev, data->phys);
-            calc_u(p, s_prev, data->phys, grd);
+            p = services::solve_press(grd, s_prev, data->phys);
+            services::calc_u(p, s_prev, data->phys, grd);
             //save_press(index, grd, p);
             pressIndex = 0;
         }
         pressIndex++;
 
-        double t = ble_src::get_time_step(grd, s_prev, data);
+        double t = services::get_time_step(grd, s_prev, data);
 
-        sumU += ble_src::getULiqInject(grd) * t;
-        std::vector<std::tuple<double, double>> xs_an = ble_src::get_satur_exact(sc, sumU, data);
+        sumU += services::getULiqInject(grd) * t;
+        std::vector<std::tuple<double, double>> xs_an = services::get_satur_exact(sc, sumU, data);
 
-        std::vector<double> s = solve_satur(t, s_prev, data, grd);
+        std::vector<double> s = services::solve_satur(t, s_prev, data, grd);
         sumT += t;
 
         std::shared_ptr<ble_src::common::models::DynamicData> d(new ble_src::common::models::DynamicData());

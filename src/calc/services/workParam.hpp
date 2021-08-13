@@ -6,7 +6,7 @@
 
 #include "mesh/models/grid.hpp"
 
-namespace ble_src {
+namespace ble_src::calc::services {
 double getULiqInject(const std::shared_ptr<mesh::models::Grid> grd);
 }
 

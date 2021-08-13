@@ -51,7 +51,7 @@ std::shared_ptr<ble_src::common::models::InputData> DataWidgetPresenter::get_inp
 {
     auto result = std::make_shared<ble_src::common::models::InputData>();
     result->grd->type = ble_src::common::models::GridType::TypeEnum::kRegular;
-    result->satSetts->type = ble_src::SaturSolverType::kExplicit;
+    result->satSetts->type = ble_src::calc::models::SaturSolverType::kExplicit;
 
     result->model->period = m_modeldata_presenter->get_modeling_period();
 

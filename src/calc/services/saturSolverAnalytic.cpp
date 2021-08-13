@@ -6,7 +6,7 @@
 
 namespace cs = ble_src::common::services;
 
-namespace ble_src {
+namespace ble_src::calc::services {
 
 double get_xs(const double s, const double u, const double poro,
     const std::shared_ptr<common::models::PhysData> data)
