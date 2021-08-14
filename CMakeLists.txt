@@ -26,9 +26,6 @@ enable_testing()
 
 find_package(Boost REQUIRED)
 
-message("boost include = ${Boost_INCLUDE_DIRS}")
-message("boost library = ${Boost_LIBRARY_DIRS}")
-
 # adding sub directories which have own CMake files
 add_subdirectory(src)
 add_subdirectory(gui)
