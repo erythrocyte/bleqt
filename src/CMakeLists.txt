@@ -1,4 +1,4 @@
-find_package(Boost COMPONENTS log log_setup REQUIRED)
+find_package(Boost COMPONENTS log REQUIRED)
 find_package(Threads REQUIRED)
 add_definitions(-DBOOST_LOG_DYN_LINK)
 
