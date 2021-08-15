@@ -16,12 +16,10 @@ namespace UI {
     class RelPermData {
     public:
         QDoubleSpinBox* Kmu;
-        QDoubleSpinBox* Nwat;
-        QDoubleSpinBox* Noil;
+        QDoubleSpinBox* N;
         QGridLayout* Layout;
         QLabel* LabelKmu;
-        QLabel* LabelNwat;
-        QLabel* LabelNoil;
+        QLabel* LabelN;
 
         void setupUi(QWidget* widget)
         {
@@ -34,12 +32,10 @@ namespace UI {
             Layout->setMargin(5);
 
             Kmu = new QDoubleSpinBox();
-            Nwat = new QDoubleSpinBox();
-            Noil = new QDoubleSpinBox();
+            N = new QDoubleSpinBox();
 
             LabelKmu = new QLabel();
-            LabelNwat = new QLabel();
-            LabelNoil = new QLabel();
+            LabelN = new QLabel();
 
             retranslateUi(widget);
         }
@@ -52,11 +48,8 @@ namespace UI {
             LabelKmu->setText("Kmu");
             LabelKmu->setToolTip("Kmu");
 
-            LabelNwat->setText("Nwat");
-            LabelNwat->setToolTip("Nwat");
-
-            LabelNoil->setText("Noil");
-            LabelNoil->setToolTip("Noil");
+            LabelN->setText("N");
+            LabelN->setToolTip("N");
         }
 
     private:

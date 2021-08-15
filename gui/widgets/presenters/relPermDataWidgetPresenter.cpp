@@ -15,14 +15,9 @@ double RelPermDataWidgetPresenter::get_kmu()
     return get_view()->getKmu();
 }
 
-double RelPermDataWidgetPresenter::get_nwat()
+double RelPermDataWidgetPresenter::get_n()
 {
-    return get_view()->getNwat();
-}
-
-double RelPermDataWidgetPresenter::get_noil()
-{
-    return get_view()->getNoil();
+    return get_view()->getN();
 }
 
 std::shared_ptr<RelPermDataWidget> RelPermDataWidgetPresenter::get_view()

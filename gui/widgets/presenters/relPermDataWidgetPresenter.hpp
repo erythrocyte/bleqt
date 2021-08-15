@@ -19,8 +19,7 @@ public:
     ~RelPermDataWidgetPresenter() { }
 
     double get_kmu();
-    double get_nwat();
-    double get_noil();
+    double get_n();
 
     std::shared_ptr<RelPermDataWidget> get_view();
 
