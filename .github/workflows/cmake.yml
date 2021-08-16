@@ -76,7 +76,9 @@ jobs:
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run:
         cmake -S . -B build -DBoost_INCLUDE_DIR=$BOOST_ROOT/include
-        cmake --build build -j2
+      env:
+        MAKEFLAGS: "-j2"
+        # cmake --build build -j2
 
     - name: Test
       working-directory: ${{runner.workspace}}/build
