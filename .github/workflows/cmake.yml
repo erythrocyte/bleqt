@@ -63,8 +63,8 @@ jobs:
 
     - name: build and install Hypodermic
       run: |
-            mkdir build
-            cd build
+            mkdir ./Hypodermic/build
+            cd ./Hypodermic/build
             cmake ..
             make -j3
             sudo make install
