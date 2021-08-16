@@ -23,31 +23,34 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    # install and cache dependencies
-    - name: Restore Boost cache
-      uses: actions/cache@v2
-      id: cache-boost
-      with:
-        path: ${{env.BOOST_ROOT}}
-        key: boost
+    # # install and cache dependencies
+    # - name: Restore Boost cache
+    #   uses: actions/cache@v2
+    #   id: cache-boost
+    #   with:
+    #     path: ${{env.BOOST_ROOT}}
+    #     key: boost
 
-    - name: Install Boost
-      if: steps.cache-boost.outputs.cache-hit != 'true'
-      run: |
-        if [ "$OS" == "Windows_NT" ]; then
-          # fix up paths to be forward slashes consistently
-          BOOST_ROOT=$(echo $BOOST_ROOT | sed 's/\\/\//g')
-        fi
-        mkdir -p $BOOST_ROOT
-        curl --progress-bar --location --output $BOOST_ROOT/download.tar.bz2 $BOOST_URL
-        7z -o$BOOST_ROOT x $BOOST_ROOT/download.tar.bz2 -y -bd
-        7z -o$BOOST_ROOT x $BOOST_ROOT/download.tar -y -bd
-        cd $BOOST_ROOT && cp -r boost_*/* .
-        rm -rf boost_*/* download.tar.bz2 download.tar
-      shell: bash
+    # - name: Install Boost
+    #   if: steps.cache-boost.outputs.cache-hit != 'true'
+    #   run: |
+    #     if [ "$OS" == "Windows_NT" ]; then
+    #       # fix up paths to be forward slashes consistently
+    #       BOOST_ROOT=$(echo $BOOST_ROOT | sed 's/\\/\//g')
+    #     fi
+    #     mkdir -p $BOOST_ROOT
+    #     curl --progress-bar --location --output $BOOST_ROOT/download.tar.bz2 $BOOST_URL
+    #     7z -o$BOOST_ROOT x $BOOST_ROOT/download.tar.bz2 -y -bd
+    #     7z -o$BOOST_ROOT x $BOOST_ROOT/download.tar -y -bd
+    #     cd $BOOST_ROOT && cp -r boost_*/* .
+    #     rm -rf boost_*/* download.tar.bz2 download.tar
+    #   shell: bash
 
-    - name: run libboost
+    - name: install boost
       run: sudo apt install libboost-all-dev
+
+    - name: install qt5
+      uses: jurplel/install-qt-action@v2
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
