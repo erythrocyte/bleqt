@@ -44,7 +44,10 @@ jobs:
         7z -o$BOOST_ROOT x $BOOST_ROOT/download.tar -y -bd
         cd $BOOST_ROOT && cp -r boost_*/* .
         rm -rf boost_*/* download.tar.bz2 download.tar
-      shell: bash  
+      shell: bash
+
+    - name: run libboost
+      run: sudo apt install libboost-all-dev
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
@@ -52,7 +55,7 @@ jobs:
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
-      # Use a bash shell so we can use the same syntax for environment variable
+      # Use a bash shell so we can use the same syntax for environment svariable
       # access regardless of the host operating system
       shell: bash
       working-directory: ${{runner.workspace}}/build
