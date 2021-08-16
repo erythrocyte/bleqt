@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <QList>
+#include <QPointF>
 
 namespace ble_gui::widgets::models {
 
