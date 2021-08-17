@@ -23,4 +23,4 @@ target_link_libraries(${EXE_TARGET} ${LIB_BLE_TARGET})
 
 target_link_libraries(${EXE_TARGET} ${Boost_LIBRARIES})
 
-add_test(NAME TestBle COMMAND ${EXE_TARGET})
+add_test(NAME TestBle COMMAND $<TARGET_FILE:${EXE_TARGET}>)
