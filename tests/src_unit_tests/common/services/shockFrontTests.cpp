@@ -15,7 +15,7 @@ namespace tests::unit_tests::common::services::shock_front {
 void case1()
 {
     // arrange
-    double expected = 0.6656;
+    double expected = 0.66559999999999997;
     auto pd = std::make_shared<ble_src::common::models::PhysData>();
     pd->kmu = 0.125; // = mw / moil;
     pd->n_oil = 2.0;
