@@ -1,10 +1,12 @@
 name: build and run tests
 
-on:
-  push:
-    branches: [ development ]
-  pull_request:
-    branches: [ ${GITHUB_REF##*/} ]
+# on:
+#   push:
+#     branches: [ development ]
+#   pull_request:
+#     branches: [ ${GITHUB_REF##*/} ]
+
+on: [push, pull_request]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
