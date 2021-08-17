@@ -56,8 +56,8 @@ std::shared_ptr<ble_src::common::models::InputData> DataWidgetPresenter::get_inp
     result->model->period = m_modeldata_presenter->get_modeling_period();
 
     result->phys->kmu = m_relperm_presenter->get_kmu();
-    result->phys->n_oil = m_relperm_presenter->get_noil();
-    result->phys->n_wat = m_relperm_presenter->get_nwat();
+    result->phys->n_oil = m_relperm_presenter->get_n();
+    result->phys->n_wat = m_relperm_presenter->get_n();
 
     result->satSetts->cur_val = m_satsolverset_presenter->get_curant_value();
     result->satSetts->pN = m_satsolverset_presenter->get_press_recalc_n();

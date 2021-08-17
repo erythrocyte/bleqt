@@ -14,8 +14,7 @@ public:
     ~RelPermDataWidget() { delete ui; }
 
     double getKmu() const { return ui->Kmu->value(); }
-    double getNwat() const { return ui->Nwat->value(); }
-    double getNoil() const { return ui->Noil->value(); }
+    double getN() const { return ui->N->value(); }
 
 signals:
     void valuesUpdated();
