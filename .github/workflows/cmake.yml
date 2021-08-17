@@ -19,8 +19,6 @@ jobs:
     # cross-platform coverage.
     # See: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#configuring-a-build-matrix
     runs-on: ubuntu-latest
-    compiler: gcc
-    gcc: 7
 
     steps:
     - uses: actions/checkout@v2
@@ -77,6 +75,9 @@ jobs:
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: configure cmake
+      env:
+        CC: gcc-7
+        CXX: g++-7
       # Use a bash shell so we can use the same syntax for environment svariable
       # access regardless of the host operating system
       shell: bash
