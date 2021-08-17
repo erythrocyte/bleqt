@@ -95,7 +95,6 @@ jobs:
     #     # cmake --build build -j2
     # build project
     - name: cmake build
-      working-directory: ${{runner.workspace}}/build
       run: |
             mkdir build
             cd build
@@ -108,9 +107,10 @@ jobs:
     #   env:
     #     MAKEFLAGS: "-j2"
     - name: run tests
-      working-directory: ${{runner.workspace}}/build
       shell: bash
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -j3 -C $BUILD_TYPE -T test --output-on-failure
+      run: |
+            cd build
+            ctest -j3 -C $BUILD_TYPE -T test --output-on-failure
       #  --test-dir ${{runner.workspace}}/build
