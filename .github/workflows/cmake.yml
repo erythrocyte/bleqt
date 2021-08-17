@@ -95,6 +95,7 @@ jobs:
     #     # cmake --build build -j2
     # build project
     - name: cmake build
+      working-directory: ${{runner.workspace}}/build
       run: |
             mkdir build
             cd build
