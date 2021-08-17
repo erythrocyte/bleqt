@@ -1,12 +1,10 @@
 name: build and run tests
 
-# on:
-#   push:
-#     branches: [ development ]
-#   pull_request:
-#     branches: [ ${GITHUB_REF##*/} ]
-
-on: [push, pull_request]
+on:
+  push:
+    branches: [ development ]
+  pull_request:
+    branches: [ development ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -77,9 +75,6 @@ jobs:
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: configure cmake
-      env:
-        CC: gcc-8
-        CXX: g++-8
       # Use a bash shell so we can use the same syntax for environment svariable
       # access regardless of the host operating system
       shell: bash
@@ -104,7 +99,7 @@ jobs:
             mkdir build
             cd build
             cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-            make -j3            
+            make -j3
     # - name: cmake build
     #   run: cmake -Bbuild -H.
     # - name: cmake make
