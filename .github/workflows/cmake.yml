@@ -65,16 +65,16 @@ jobs:
       run: |
             mkdir ./Hypodermic/build
             cd ./Hypodermic/build
-            cmake ..
+            cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
             make -j3
             sudo make install
 
-    - name: Create Build Environment
+    - name: create build environment
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
       run: cmake -E make_directory ${{runner.workspace}}/build
 
-    - name: Configure CMake
+    - name: configure cmake
       # Use a bash shell so we can use the same syntax for environment svariable
       # access regardless of the host operating system
       shell: bash
@@ -94,16 +94,19 @@ jobs:
     #     MAKEFLAGS: "-j2"
     #     # cmake --build build -j2
     # build project
-    - name: mkdir
-      run: mkdir build
     - name: cmake build
-      run: cmake -Bbuild -H.
-    - name: cmake make
-      run: cmake --build build/ --target all
-      env:
-        MAKEFLAGS: "-j2"
-
-    - name: Test
+      run: |
+            mkdir build
+            cd build
+            cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+            make -j3            
+    # - name: cmake build
+    #   run: cmake -Bbuild -H.
+    # - name: cmake make
+    #   run: cmake --build build/ --target all
+    #   env:
+    #     MAKEFLAGS: "-j2"
+    - name: run tests
       working-directory: ${{runner.workspace}}/build
       shell: bash
       # Execute tests defined by the CMake configuration.  
