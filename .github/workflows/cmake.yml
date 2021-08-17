@@ -97,8 +97,6 @@ jobs:
     - name: cmake build
       working-directory: ${{runner.workspace}}/build
       run: |
-            mkdir build
-            cd build
             cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
             make -j3            
     # - name: cmake build
