@@ -7,9 +7,9 @@ namespace ble_src::common::services::shock_front {
 
 double get_shock_front(const std::shared_ptr<common::models::PhysData> data)
 {
-    double eps = 2e-1;
+    double eps = 0.1; //2e-1;
     double n = 2000;
-    double ds = (0.9 - 2. * eps) / n;
+    double ds = (1.0 - eps) / n;
 
     double minDiff = 1e16;
     double result = -1.;

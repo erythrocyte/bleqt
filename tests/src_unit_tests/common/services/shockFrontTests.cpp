@@ -15,7 +15,7 @@ namespace tests::unit_tests::common::services::shock_front {
 void case1()
 {
     // arrange
-    double expected = 0.6656;
+    double expected = 0.66564999999999996;
     auto pd = std::make_shared<ble_src::common::models::PhysData>();
     pd->kmu = 0.125; // = mw / moil;
     pd->n_oil = 2.0;
@@ -31,7 +31,7 @@ void case1()
 void case2()
 {
     // arrange
-    double expected = 0.81679999999; // wxmaxima gives 0.8164965809277261;
+    double expected = 0.8163999999999999; // wxmaxima gives 0.8164965809277261;
     auto pd = std::make_shared<ble_src::common::models::PhysData>();
     pd->kmu = 2.0; // = mw / moil;
     pd->n_oil = 2.0;
