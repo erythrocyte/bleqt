@@ -18,6 +18,7 @@ public:
     ~ModelDataWidgetPresenter() { }
 
     double get_modeling_period();
+    double get_save_fields_step();
 
     std::shared_ptr<ModelDataWidget> get_view();
 

@@ -6,6 +6,7 @@ namespace ble_src::common::models {
 class ModelData {
 public:
     double period;
+    double save_field_step;
 };
 
 }

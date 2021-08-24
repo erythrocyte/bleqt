@@ -36,10 +36,11 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     int pressIndex = 0;
     double sumT = 0.;
     double sumU = 0.;
+    double saveT = 0.;
+    bool need_save_fiels = false;
+    std::vector<double> s_cur, s_prev = _results->data[0]->s;
+    std::vector<double> p = _results->data[0]->p;
     while (sumT < data->model->period) {
-        std::vector<double> s_prev = _results->data[index]->s;
-
-        std::vector<double> p = _results->data[index]->p;
         if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
             p = services::solve_press(grd, s_prev, data->phys);
             services::calc_u(p, s_prev, data->phys, grd);
@@ -49,21 +50,31 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         pressIndex++;
 
         double t = services::get_time_step(grd, s_prev, data);
+        if (saveT + t >= data->model->save_field_step) {
+            t = data->model->save_field_step - saveT;
+            saveT = 0.;
+            need_save_fiels = true;
+        } else {
+            saveT += t;
+            need_save_fiels = false;
+        }
 
         sumU += services::getULiqInject(grd) * t;
-        std::vector<std::tuple<double, double>> xs_an = services::get_satur_exact(sc, sumU, data);
-
-        std::vector<double> s = services::solve_satur(t, s_prev, data, grd);
+        s_cur = services::solve_satur(t, s_prev, data, grd);
+        s_prev = s_cur;
         sumT += t;
 
-        std::shared_ptr<ble_src::common::models::DynamicData> d(new ble_src::common::models::DynamicData());
-        d->t = sumT;
-        d->p = p;
-        d->s = s;
-        d->s_an = xs_an;
+        if (need_save_fiels) {
+            std::vector<std::tuple<double, double>> xs_an = services::get_satur_exact(sc, sumU, data);
+            auto d = std::make_shared<ble_src::common::models::DynamicData>();
+            d->t = sumT;
+            d->p = p;
+            d->s = s_cur;
+            d->s_an = xs_an;
 
-        _results->data.push_back(d);
-        index++;
+            _results->data.push_back(d);
+            index++;
+        }
 
         double perc = std::min(100.0, (sumT / data->model->period * 100.0));
         set_progress(perc);
