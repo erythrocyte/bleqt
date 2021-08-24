@@ -54,6 +54,7 @@ std::shared_ptr<ble_src::common::models::InputData> DataWidgetPresenter::get_inp
     result->satSetts->type = ble_src::calc::models::SaturSolverType::kExplicit;
 
     result->model->period = m_modeldata_presenter->get_modeling_period();
+    result->model->save_field_step = m_modeldata_presenter->get_save_fields_step();
 
     result->phys->kmu = m_relperm_presenter->get_kmu();
     result->phys->n_oil = m_relperm_presenter->get_n();
