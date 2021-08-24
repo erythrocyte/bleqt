@@ -32,11 +32,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     set_initial_cond(grd->cells.size());
     double sc = cs::shock_front::get_shock_front(data->phys);
 
-    int index = 0;
-    int pressIndex = 0;
-    double sumT = 0.;
-    double sumU = 0.;
-    double saveT = 0.;
+    int index = 0, pressIndex = 0;
+    double sumT = 0.0, sumU = 0.0, saveT = 0.0;
     bool need_save_fiels = false;
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
     std::vector<double> p = _results->data[0]->p;
@@ -52,7 +49,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         double t = services::get_time_step(grd, s_prev, data);
         if (saveT + t >= data->model->save_field_step) {
             t = data->model->save_field_step - saveT;
-            saveT = 0.;
+            saveT = 0.0;
             need_save_fiels = true;
         } else {
             saveT += t;
