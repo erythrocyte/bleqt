@@ -26,6 +26,7 @@ set (SOURCES
 	widgets/shockFrontSettsWidget.cpp
 	widgets/resultDataWidget.cpp
 	widgets/fluidParamsGraphWidget.cpp
+	widgets/wellWorkDataWidget.cpp
 
 	widgets/presenters/fluidParamGraphWidgetPresenter.cpp
 	widgets/presenters/dataWidgetPresenter.cpp
@@ -35,6 +36,7 @@ set (SOURCES
 	widgets/presenters/relPermDataWidgetPresenter.cpp
 	widgets/presenters/satSolverSettsWidgetPresenter.cpp
 	widgets/presenters/shockFrontSettsWidgetPresenter.cpp
+	widgets/presenters/wellWorkDataWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	

@@ -35,7 +35,10 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_dataWidgetPresenter = m_container->resolve<bwp::DataWidgetPresenter>();
     auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
 
-    std::static_pointer_cast<BleFrame>(m_view)->set_widgets(fluidParamsWidget, resultDataWidget, dataWidgetView);
+    m_wellWorkDataWidgetPresenter = m_container->resolve<bwp::WellWorkDataWidgetPresenter>();
+    auto wellWorkDataView = std::static_pointer_cast<widgets::WellWorkDataWidget>(m_wellWorkDataWidgetPresenter->get_view());
+
+    std::static_pointer_cast<BleFrame>(m_view)->set_widgets(fluidParamsWidget, resultDataWidget, dataWidgetView, wellWorkDataView);
 
     set_signals();
     m_dataWidgetPresenter->set_show_shockfront_status(true);
