@@ -64,6 +64,18 @@ namespace UI {
             Chart->addAxis(_axisQ, Qt::AlignLeft);
             Chart->addAxis(_axisFw, Qt::AlignRight);
 
+            SeriesQliq->attachAxis(_axisX);
+            SeriesQliq->attachAxis(_axisQ);
+
+            SeriesQoil->attachAxis(_axisX);
+            SeriesQoil->attachAxis(_axisQ);
+
+            SeriesQwat->attachAxis(_axisX);
+            SeriesQwat->attachAxis(_axisQ);
+
+            SeriesFw->attachAxis(_axisX);
+            SeriesFw->attachAxis(_axisFw);
+
             retranslateUi();
         }
 
