@@ -34,6 +34,7 @@ set(HEADERS
 	common/models/gridType.hpp
 	common/models/dynamicData.hpp
 	common/models/outputSettings.hpp
+	common/models/wellWorkParams.hpp
 
 	mesh/models/cell.hpp
 	mesh/models/face.hpp

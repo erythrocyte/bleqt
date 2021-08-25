@@ -6,8 +6,9 @@
 
 #include "Hypodermic/Hypodermic.h"
 
-#include "wellWorkDataWidget.hpp"
 #include "blePresenter.hpp"
+#include "common/models/wellWorkParams.hpp"
+#include "wellWorkDataWidget.hpp"
 
 namespace ble_gui::widgets::presenters {
 
@@ -15,10 +16,10 @@ class WellWorkDataWidgetPresenter : public mvp::BlePresenter {
 public:
     WellWorkDataWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<WellWorkDataWidget> view);
-    ~WellWorkDataWidgetPresenter() {}
+    ~WellWorkDataWidgetPresenter() { }
 
-    void set_data(const std::shared_ptr<ble_src::calc::models::BleResultData> data);
-    
+    void set_data(const std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>>& data);
+
     std::shared_ptr<WellWorkDataWidget> get_view();
 };
 

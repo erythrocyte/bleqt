@@ -105,6 +105,7 @@ void BleFramePresenter::on_run_calc()
     set_status(QString::fromStdString(mess));
 
     m_resultDataWidgetPresenter->set_data(results, a);
+    m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
     update_progress(100);
 }
 
