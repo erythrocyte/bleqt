@@ -29,8 +29,8 @@ namespace widgets {
             void retranslateUi(QWidget* widget)
             {
                 _axisS->setTitleText("s");
-                _axis_kY->setTitleText("k, fbl");
-                axis_dfY->setTitleText("dfdbl");
+                _axis_kY->setTitleText("k, f");
+                axis_dfY->setTitleText("f'");
             }
 
             void setupUI(QWidget* widget)
@@ -68,17 +68,17 @@ namespace widgets {
                 series_kw->setPen(pen);
 
                 series_koil = new QLineSeries();
-                series_koil->setName("koil");
+                series_koil->setName("ko");
                 pen.setBrush(Qt::GlobalColor::red);
                 series_koil->setPen(pen);
 
                 series_fbl = new QLineSeries();
-                series_fbl->setName("fbl");
+                series_fbl->setName("f");
                 pen.setBrush(Qt::GlobalColor::green);
                 series_fbl->setPen(pen);
 
                 series_dfbl = new QLineSeries();
-                series_dfbl->setName("dfbl");
+                series_dfbl->setName("f'");
                 pen.setBrush(Qt::GlobalColor::magenta);
                 series_dfbl->setPen(pen);
 

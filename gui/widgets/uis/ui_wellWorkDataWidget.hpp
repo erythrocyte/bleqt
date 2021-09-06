@@ -90,6 +90,11 @@ namespace UI {
             SeriesFw->setName("fw");
         }
 
+        void setup_xaxis_max(double value)
+        {
+            _axisX->setRange(0.0, value);
+        }
+
     private:
         QGridLayout* _layout;
         QChartView* _chartView;

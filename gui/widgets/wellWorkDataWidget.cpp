@@ -29,3 +29,8 @@ void ble_gui::widgets::WellWorkDataWidget::setData(
 
     ble_src::logging::write_log("well work data set ends", ble_src::logging::kDebug);
 }
+
+void ble_gui::widgets::WellWorkDataWidget::set_xrange(double max_value)
+{
+    ui->setup_xaxis_max(max_value);
+}

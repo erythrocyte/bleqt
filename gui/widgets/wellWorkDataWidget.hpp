@@ -20,6 +20,7 @@ public:
     ~WellWorkDataWidget() { delete ui; }
 
     void setData(const std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>>& data);
+    void set_xrange(double max_value);
 
 private:
     UI::WellWorkData* ui;

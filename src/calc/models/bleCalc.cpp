@@ -38,7 +38,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     bool need_save_fiels = false;
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
     std::vector<double> p = _results->data[0]->p;
-    _wellWorkParams.push_back(std::make_shared<common::models::WellWorkParams>());
+    // _wellWorkParams.push_back(std::make_shared<common::models::WellWorkParams>());
 
     while (sumT < data->model->period) {
         if (pressIndex == 0 || pressIndex == data->satSetts->pN) {

@@ -19,6 +19,7 @@ public:
     ~WellWorkDataWidgetPresenter() { }
 
     void set_data(const std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>>& data);
+    void set_time_period(double value);
 
     std::shared_ptr<WellWorkDataWidget> get_view();
 };

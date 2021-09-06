@@ -106,6 +106,7 @@ void BleFramePresenter::on_run_calc()
 
     m_resultDataWidgetPresenter->set_data(results, a);
     m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
+    m_wellWorkDataWidgetPresenter->set_time_period(data->model->period);
     update_progress(100);
 }
 

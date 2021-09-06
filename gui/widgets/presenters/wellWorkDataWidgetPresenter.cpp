@@ -19,4 +19,9 @@ std::shared_ptr<WellWorkDataWidget> WellWorkDataWidgetPresenter::get_view()
     return std::static_pointer_cast<WellWorkDataWidget>(m_view);
 }
 
+void WellWorkDataWidgetPresenter::set_time_period(double value)
+{
+    get_view()->set_xrange(value);
+}
+
 }
