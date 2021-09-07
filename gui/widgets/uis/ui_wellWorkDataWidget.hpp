@@ -39,7 +39,7 @@ namespace UI {
 
             _axisQ = new QValueAxis();
             _axisQ->setLabelFormat("%g");
-            _axisQ->setTickCount(5);
+            _axisQ->setTickCount(5);            
             // _axisYSat->setRange(0., 1.);
 
             _axisFw = new QValueAxis();
@@ -55,26 +55,9 @@ namespace UI {
             SeriesQwat = new QLineSeries();
             SeriesFw = new QLineSeries();
 
-            Chart->addSeries(SeriesQliq);
-            Chart->addSeries(SeriesQoil);
-            Chart->addSeries(SeriesQwat);
-            Chart->addSeries(SeriesFw);
-
             Chart->addAxis(_axisX, Qt::AlignBottom);
             Chart->addAxis(_axisQ, Qt::AlignLeft);
             Chart->addAxis(_axisFw, Qt::AlignRight);
-
-            SeriesQliq->attachAxis(_axisX);
-            SeriesQliq->attachAxis(_axisQ);
-
-            SeriesQoil->attachAxis(_axisX);
-            SeriesQoil->attachAxis(_axisQ);
-
-            SeriesQwat->attachAxis(_axisX);
-            SeriesQwat->attachAxis(_axisQ);
-
-            SeriesFw->attachAxis(_axisX);
-            SeriesFw->attachAxis(_axisFw);
 
             retranslateUi();
         }
@@ -93,6 +76,25 @@ namespace UI {
         void setup_xaxis_max(double value)
         {
             _axisX->setRange(0.0, value);
+        }
+
+        void add_series()
+        {
+            Chart->addSeries(SeriesQliq);
+            Chart->addSeries(SeriesQoil);
+            Chart->addSeries(SeriesQwat);
+            Chart->addSeries(SeriesFw);
+
+            SeriesQliq->attachAxis(_axisX);
+            SeriesQliq->attachAxis(_axisQ);
+            SeriesQoil->attachAxis(_axisX);
+            SeriesQoil->attachAxis(_axisQ);
+            SeriesQwat->attachAxis(_axisX);
+            SeriesQwat->attachAxis(_axisQ);
+            SeriesFw->attachAxis(_axisX);
+            SeriesFw->attachAxis(_axisFw);
+
+            _axisQ->setMin(0.0);
         }
 
     private:
