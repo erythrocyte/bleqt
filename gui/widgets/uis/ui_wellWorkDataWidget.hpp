@@ -48,12 +48,7 @@ namespace UI {
             _axisFw->setRange(0.0, 100.0);
 
             _chartView = new QChartView(Chart);
-            _layout->addWidget(_chartView, 0, 0, 1, 11);
-
-            SeriesQliq = new QLineSeries();
-            SeriesQoil = new QLineSeries();
-            SeriesQwat = new QLineSeries();
-            SeriesFw = new QLineSeries();
+            _layout->addWidget(_chartView, 0, 0, 1, 11);            
 
             Chart->addAxis(_axisX, Qt::AlignBottom);
             Chart->addAxis(_axisQ, Qt::AlignLeft);
@@ -66,11 +61,7 @@ namespace UI {
         {
             _axisX->setTitleText("t");
             _axisQ->setTitleText("q");
-            _axisFw->setTitleText("fw, %");
-            SeriesQliq->setName("qliq");
-            SeriesQoil->setName("qoil");
-            SeriesQwat->setName("qwat");
-            SeriesFw->setName("fw");
+            _axisFw->setTitleText("fw, %");            
         }
 
         void setup_xaxis_max(double value)
@@ -95,6 +86,21 @@ namespace UI {
             SeriesFw->attachAxis(_axisFw);
 
             _axisQ->setMin(0.0);
+        }
+
+        void create_series()
+        {
+            Chart->removeAllSeries();
+
+            SeriesQliq = new QLineSeries();
+            SeriesQoil = new QLineSeries();
+            SeriesQwat = new QLineSeries();
+            SeriesFw = new QLineSeries();
+
+            SeriesQliq->setName("qliq");
+            SeriesQoil->setName("qoil");
+            SeriesQwat->setName("qwat");
+            SeriesFw->setName("fw");
         }
 
     private:

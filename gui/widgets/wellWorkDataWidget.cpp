@@ -14,14 +14,9 @@ ble_gui::widgets::WellWorkDataWidget::WellWorkDataWidget(QWidget* parent)
 void ble_gui::widgets::WellWorkDataWidget::setData(
     const std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>>& data)
 {
-    ble_src::logging::write_log("well work data set begins", ble_src::logging::kDebug);
+    ble_src::logging::write_log("well work data set begins", ble_src::logging::kDebug);   
 
-    ui->Chart->removeAllSeries();
-
-    ui->SeriesQliq->clear();
-    ui->SeriesQwat->clear();
-    ui->SeriesQoil->clear();
-    ui->SeriesFw->clear();
+    ui->create_series();
 
     for (auto& d : data) {
         ui->SeriesFw->append(d->t, d->fw);
