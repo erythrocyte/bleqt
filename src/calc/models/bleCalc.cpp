@@ -22,6 +22,7 @@ BleCalc::BleCalc()
 BleCalc::~BleCalc()
 {
     _results.reset();
+    _wellWorkParams.clear();
 }
 
 void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
@@ -37,6 +38,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     bool need_save_fiels = false;
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
     std::vector<double> p = _results->data[0]->p;
+    // _wellWorkParams.push_back(std::make_shared<common::models::WellWorkParams>());
+
     while (sumT < data->model->period) {
         if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
             p = services::solve_press(grd, s_prev, data->phys);
@@ -72,6 +75,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             _results->data.push_back(d);
             index++;
         }
+
+        auto wwp = services::calc_well_work_param(grd, s_cur, data->phys, sumT);
+        _wellWorkParams.push_back(wwp);
 
         double perc = std::min(100.0, (sumT / data->model->period * 100.0));
         set_progress(perc);

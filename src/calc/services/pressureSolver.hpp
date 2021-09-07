@@ -1,5 +1,5 @@
 #ifndef BLE_SRC_PRESSURE_SOLVER_H_
-#define BLE_SRC_INPUTDATA_H_
+#define BLE_SRC_PRESSURE_SOLVER_H_
 
 #include <iostream>
 #include <vector>
