@@ -5,11 +5,14 @@
 #include <iostream>
 #include <memory>
 
+#include <QBoxLayout>
 #include <QChart>
 #include <QChartView>
+#include <QCommonStyle>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineSeries>
+#include <QToolBar>
 #include <QValueAxis>
 
 using namespace QtCharts;
@@ -22,11 +25,23 @@ namespace UI {
         QLineSeries* SeriesQliq;
         QLineSeries* SeriesQoil;
         QLineSeries* SeriesQwat;
-        QLineSeries* SeriesFw;
+        QLineSeries* SeriesFw;        
+        QAction* ShowTable;
 
         void setupUi(QWidget* widget)
         {
-            _layout = new QGridLayout(widget);
+            QBoxLayout* toolLayout = new QBoxLayout(QBoxLayout::TopToBottom, widget);
+            //set margins to zero so the toolbar touches the widget's edges
+            toolLayout->setContentsMargins(0, 0, 0, 0);
+
+            QCommonStyle* style = new QCommonStyle();
+            _toolbar = new QToolBar(widget);
+            ShowTable = new QAction("&Show Table", widget);
+            ShowTable->setIcon(style->standardIcon(QStyle::SP_FileDialogListView));
+            Toolbar->addAction(showTable);
+            toolLayout->addWidget(Toolbar);
+
+            _layout = new QGridLayout();
 
             Chart = new QChart();
             Chart->legend()->setVisible(true);
@@ -39,7 +54,7 @@ namespace UI {
 
             _axisQ = new QValueAxis();
             _axisQ->setLabelFormat("%g");
-            _axisQ->setTickCount(5);            
+            _axisQ->setTickCount(5);
             // _axisYSat->setRange(0., 1.);
 
             _axisFw = new QValueAxis();
@@ -48,11 +63,13 @@ namespace UI {
             _axisFw->setRange(0.0, 100.0);
 
             _chartView = new QChartView(Chart);
-            _layout->addWidget(_chartView, 0, 0, 1, 11);            
+            _layout->addWidget(_chartView, 0, 0, 1, 11);
 
             Chart->addAxis(_axisX, Qt::AlignBottom);
             Chart->addAxis(_axisQ, Qt::AlignLeft);
             Chart->addAxis(_axisFw, Qt::AlignRight);
+
+            toolLayout->addLayout(_layout);
 
             retranslateUi();
         }
@@ -61,7 +78,7 @@ namespace UI {
         {
             _axisX->setTitleText("t");
             _axisQ->setTitleText("q");
-            _axisFw->setTitleText("fw, %");            
+            _axisFw->setTitleText("fw, %");
         }
 
         void setup_xaxis_max(double value)
@@ -109,6 +126,7 @@ namespace UI {
         QValueAxis* _axisX;
         QValueAxis* _axisQ;
         QValueAxis* _axisFw;
+        QToolBar* _toolbar;
     };
 }
 
