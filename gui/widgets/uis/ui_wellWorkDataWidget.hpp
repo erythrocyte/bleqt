@@ -12,6 +12,8 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineSeries>
+#include <QSplitter>
+#include <QTableView>
 #include <QToolBar>
 #include <QValueAxis>
 
@@ -25,51 +27,20 @@ namespace UI {
         QLineSeries* SeriesQliq;
         QLineSeries* SeriesQoil;
         QLineSeries* SeriesQwat;
-        QLineSeries* SeriesFw;        
+        QLineSeries* SeriesFw;
         QAction* ShowTable;
+        QTableView* Table;
 
         void setupUi(QWidget* widget)
         {
-            QBoxLayout* toolLayout = new QBoxLayout(QBoxLayout::TopToBottom, widget);
-            //set margins to zero so the toolbar touches the widget's edges
-            toolLayout->setContentsMargins(0, 0, 0, 0);
+            add_toolbar(widget);
+            add_chartview();
+            add_tableview();
+            add_splitter();
 
-            QCommonStyle* style = new QCommonStyle();
-            _toolbar = new QToolBar(widget);
-            ShowTable = new QAction("&Show Table", widget);
-            ShowTable->setIcon(style->standardIcon(QStyle::SP_FileDialogListView));
-            Toolbar->addAction(showTable);
-            toolLayout->addWidget(Toolbar);
-
-            _layout = new QGridLayout();
-
-            Chart = new QChart();
-            Chart->legend()->setVisible(true);
-
-            // Настройка осей графика
-            _axisX = new QValueAxis();
-            _axisX->setLabelFormat("%g");
-            _axisX->setTickCount(5);
-            // _axisX->setRange(0., 1.);
-
-            _axisQ = new QValueAxis();
-            _axisQ->setLabelFormat("%g");
-            _axisQ->setTickCount(5);
-            // _axisYSat->setRange(0., 1.);
-
-            _axisFw = new QValueAxis();
-            _axisFw->setLabelFormat("%g");
-            _axisFw->setTickCount(5);
-            _axisFw->setRange(0.0, 100.0);
-
-            _chartView = new QChartView(Chart);
-            _layout->addWidget(_chartView, 0, 0, 1, 11);
-
-            Chart->addAxis(_axisX, Qt::AlignBottom);
-            Chart->addAxis(_axisQ, Qt::AlignLeft);
-            Chart->addAxis(_axisFw, Qt::AlignRight);
-
-            toolLayout->addLayout(_layout);
+            _chartTableLayout = new QGridLayout();
+            _chartTableLayout->addWidget(_splitter, 0, 0, 1, 11);
+            _toolLayout->addLayout(_chartTableLayout);
 
             retranslateUi();
         }
@@ -121,12 +92,70 @@ namespace UI {
         }
 
     private:
-        QGridLayout* _layout;
+        QGridLayout* _chartTableLayout;
         QChartView* _chartView;
         QValueAxis* _axisX;
         QValueAxis* _axisQ;
         QValueAxis* _axisFw;
         QToolBar* _toolbar;
+        QSplitter* _splitter;
+        QBoxLayout* _toolLayout;
+
+        void add_chartview()
+        {
+            Chart = new QChart();
+            Chart->legend()->setVisible(true);
+
+            // Настройка осей графика
+            _axisX = new QValueAxis();
+            _axisX->setLabelFormat("%g");
+            _axisX->setTickCount(5);
+
+            _axisQ = new QValueAxis();
+            _axisQ->setLabelFormat("%g");
+            _axisQ->setTickCount(5);
+
+            _axisFw = new QValueAxis();
+            _axisFw->setLabelFormat("%g");
+            _axisFw->setTickCount(5);
+            _axisFw->setRange(0.0, 100.0);
+
+            Chart->addAxis(_axisX, Qt::AlignBottom);
+            Chart->addAxis(_axisQ, Qt::AlignLeft);
+            Chart->addAxis(_axisFw, Qt::AlignRight);
+
+            _chartView = new QChartView(Chart);
+        }
+
+        void add_tableview()
+        {
+            Table = new QTableView();
+            Table->hide();
+        }
+
+        void add_splitter()
+        {
+            _splitter = new QSplitter();
+            _splitter->addWidget(_chartView);
+            _splitter->addWidget(Table);
+            _splitter->setOrientation(Qt::Orientation::Vertical);
+            _splitter->setStretchFactor(0, 4);
+            _splitter->setStretchFactor(1, 1);
+        }
+
+        void add_toolbar(QWidget* widget)
+        {
+            _toolLayout = new QBoxLayout(QBoxLayout::TopToBottom, widget);
+            //set margins to zero so the toolbar touches the widget's edges
+            _toolLayout->setContentsMargins(0, 0, 0, 0);
+
+            QCommonStyle* style = new QCommonStyle();
+            _toolbar = new QToolBar(widget);
+            ShowTable = new QAction("&Show Table", widget);
+            ShowTable->setIcon(style->standardIcon(QStyle::SP_FileDialogListView));
+            _toolbar->addAction(ShowTable);
+            _toolLayout->addWidget(_toolbar);
+        }
     };
 }
 
