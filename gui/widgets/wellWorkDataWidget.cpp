@@ -57,8 +57,10 @@ void WellWorkDataWidget::handleShowHideTable()
 {
     if (ui->Table->isHidden()) {
         ui->Table->show();
+        ui->ShowTable->setText("&Hide table");
     } else {
         ui->Table->hide();
+        ui->ShowTable->setText("&Show table");
     }
 }
 
