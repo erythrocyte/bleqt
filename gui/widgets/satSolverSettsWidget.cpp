@@ -2,7 +2,7 @@
 
 #include "calc/models/saturSolverType.hpp"
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 
 SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
     : QWidget(parent)

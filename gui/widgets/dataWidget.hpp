@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_DATAWIDGET_H_
-#define BLEGUI_WIDGETS_DATAWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_DATAWIDGET_H_
+#define BLE_GUI_WIDGETS_DATAWIDGET_H_
 
 #include <iostream>
 #include <memory>
@@ -12,7 +12,7 @@
 #include "satSolverSettsWidget.hpp"
 #include "shockFrontSettsWidget.hpp"
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 class DataWidget : public QWidget {
     Q_OBJECT
 

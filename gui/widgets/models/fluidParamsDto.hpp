@@ -1,12 +1,12 @@
-#ifndef BLEGUI_WIDGETS_MODELS_FLUIDPARAMSMODEL_H_
-#define BLEGUI_WIDGETS_MODELS_FLUIDPARAMSMODEL_H_
+#ifndef BLE_GUI_WIDGETS_MODELS_FLUIDPARAMSMODEL_H_
+#define BLE_GUI_WIDGETS_MODELS_FLUIDPARAMSMODEL_H_
 
 #include <iostream>
 
 #include <QList>
 #include <QPointF>
 
-namespace ble_gui::widgets::models {
+namespace ble::gui::widgets::models {
 
 struct FluidParamsDto {
     double max_dfbl;

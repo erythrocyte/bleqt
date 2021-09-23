@@ -2,7 +2,7 @@
 
 #include <QLabel>
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 
 RelPermDataWidget::RelPermDataWidget(QWidget* parent)
     : QWidget(parent)

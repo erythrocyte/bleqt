@@ -1,5 +1,5 @@
-#ifndef GUI_VIEWS_UIBLEFRAME_H_
-#define GUI_VIEWS_UIBLEFRAME_H_
+#ifndef BLE_GUI_VIEWS_UIBLEFRAME_H_
+#define BLE_GUI_VIEWS_UIBLEFRAME_H_
 
 #include <QCommonStyle>
 #include <QDockWidget>
@@ -13,7 +13,7 @@
 #include <QStatusBar>
 #include <QWidget>
 
-namespace ble_gui::views::UI {
+namespace ble::gui::views::UI {
 
 class UI_BleFrame {
 public:

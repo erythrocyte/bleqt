@@ -1,6 +1,6 @@
 #include "modelDataWidget.hpp"
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 ModelDataWidget::ModelDataWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::ModelData)

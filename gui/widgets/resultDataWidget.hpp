@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_DATAVISUALWIDGET_H_
-#define BLEGUI_WIDGETS_DATAVISUALWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_DATAVISUALWIDGET_H_
+#define BLE_GUI_WIDGETS_DATAVISUALWIDGET_H_
 
 #include <functional>
 #include <iostream>
@@ -11,7 +11,7 @@
 
 using namespace QtCharts;
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 class ResultDataWidget : public QWidget, private UI::ResultData {
     Q_OBJECT
 

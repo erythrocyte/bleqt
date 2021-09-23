@@ -1,12 +1,12 @@
-#ifndef BLEGUI_WIDGETS_MODELDATAWIDGET_H_
-#define BLEGUI_WIDGETS_MODELDATAWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_MODELDATAWIDGET_H_
+#define BLE_GUI_WIDGETS_MODELDATAWIDGET_H_
 
 #include <iostream>
 #include <memory>
 
 #include "uis/ui_modelDataWidget.hpp"
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 class ModelDataWidget : public QWidget, private UI::ModelData {
     Q_OBJECT
 public:

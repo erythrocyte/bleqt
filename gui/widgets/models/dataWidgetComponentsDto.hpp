@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_MODELS_DATAWIDGETCOMPONENTDTO_H_
-#define BLEGUI_WIDGETS_MODELS_DATAWIDGETCOMPONENTDTO_H_
+#ifndef BLE_GUI_WIDGETS_MODELS_DATAWIDGETCOMPONENTDTO_H_
+#define BLE_GUI_WIDGETS_MODELS_DATAWIDGETCOMPONENTDTO_H_
 
 #include <iostream>
 #include <memory>
@@ -10,7 +10,7 @@
 #include "satSolverSettsWidget.hpp"
 #include "shockFrontSettsWidget.hpp"
 
-namespace ble_gui::widgets::models {
+namespace ble::gui::widgets::models {
 
 struct DataWidgetComponentsDto {
     std::shared_ptr<GridSettsWidget> gridset_view;

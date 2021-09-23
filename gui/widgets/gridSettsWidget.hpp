@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_GRIDSETTSWIDGET_H_
-#define BLEGUI_WIDGETS_GRIDSETTSWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_GRIDSETTSWIDGET_H_
+#define BLE_GUI_WIDGETS_GRIDSETTSWIDGET_H_
 
 #include <iostream>
 #include <memory>
@@ -11,7 +11,7 @@
 
 #include "uis/ui_gridSettsWidget.hpp"
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 
 class GridSettsWidget : public QWidget, private UI::GridSetts {
     Q_OBJECT

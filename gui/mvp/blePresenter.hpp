@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_PRESENTERS_BLEPRESENTER_H_
-#define BLEGUI_WIDGETS_PRESENTERS_BLEPRESENTER_H_
+#ifndef BLE_GUI_WIDGETS_PRESENTERS_BLEPRESENTER_H_
+#define BLE_GUI_WIDGETS_PRESENTERS_BLEPRESENTER_H_
 
 #include <iostream>
 #include <memory>
@@ -9,7 +9,7 @@
 #include "Hypodermic/Hypodermic.h"
 
 
-namespace ble_gui::mvp {
+namespace ble::gui::mvp {
 
 class BlePresenter : public QObject {
     Q_OBJECT

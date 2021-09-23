@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_SHOCKFRONTSETTSWIDGET_H_
-#define BLEGUI_WIDGETS_SHOCKFRONTSETTSWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_SHOCKFRONTSETTSWIDGET_H_
+#define BLE_GUI_WIDGETS_SHOCKFRONTSETTSWIDGET_H_
 
 #include <iostream>
 #include <memory>
@@ -7,7 +7,7 @@
 
 #include "uis/ui_shockFrontSettsWidget.hpp"
 
-namespace ble_gui ::widgets {
+namespace ble::gui::widgets {
 
 class ShockFrontSettsWidget : public QWidget, private UI::ShockFrontSetts {
     Q_OBJECT

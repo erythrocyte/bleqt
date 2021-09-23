@@ -2,17 +2,18 @@
 
 #include <QPainter>
 
-ble_gui::frames::QVerticalLabel::QVerticalLabel(QWidget *parent)
+namespace ble::gui::frames {
+QVerticalLabel::QVerticalLabel(QWidget* parent)
     : QLabel(parent)
 {
 }
 
-ble_gui::frames::QVerticalLabel::QVerticalLabel(const QString &text, QWidget *parent)
+QVerticalLabel::QVerticalLabel(const QString& text, QWidget* parent)
     : QLabel(text, parent)
 {
 }
 
-void ble_gui::frames::QVerticalLabel::paintEvent(QPaintEvent *)
+void QVerticalLabel::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
     painter.setPen(_textColor);
@@ -24,19 +25,21 @@ void ble_gui::frames::QVerticalLabel::paintEvent(QPaintEvent *)
     painter.drawText(0, 0, text());
 }
 
-QSize ble_gui::frames::QVerticalLabel::minimumSizeHint() const
+QSize QVerticalLabel::minimumSizeHint() const
 {
     QSize s = QLabel::minimumSizeHint();
     return QSize(s.height(), s.width());
 }
 
-QSize ble_gui::frames::QVerticalLabel::sizeHint() const
+QSize QVerticalLabel::sizeHint() const
 {
     QSize s = QLabel::sizeHint();
     return QSize(s.height(), s.width());
 }
 
-void ble_gui::frames::QVerticalLabel::setTextColor(QColor color) 
+void QVerticalLabel::setTextColor(QColor color)
 {
     _textColor = color;
+}
+
 }

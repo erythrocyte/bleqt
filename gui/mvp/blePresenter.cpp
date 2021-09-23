@@ -1,6 +1,6 @@
 #include "blePresenter.hpp"
 
-namespace ble_gui::mvp {
+namespace ble::gui::mvp {
 
 BlePresenter::BlePresenter(std::shared_ptr<Hypodermic::Container> container,
     std::shared_ptr<QWidget> view)

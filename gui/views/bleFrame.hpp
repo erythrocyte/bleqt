@@ -1,5 +1,5 @@
-#ifndef BLEGUI_BLEFRAME_H_
-#define BLEGUI_BLEFRAME_H_
+#ifndef BLE_GUI_BLEFRAME_H_
+#define BLE_GUI_BLEFRAME_H_
 
 #include <iostream>
 #include <memory>
@@ -13,7 +13,7 @@
 
 #include <QMainWindow>
 
-namespace ble_gui::views {
+namespace ble::gui::views {
 
 class BleFrame : public QMainWindow, private UI::UI_BleFrame {
     Q_OBJECT

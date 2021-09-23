@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_FLUIDPARAMSGRAPHWIDGET_H_
-#define BLEGUI_WIDGETS_FLUIDPARAMSGRAPHWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_FLUIDPARAMSGRAPHWIDGET_H_
+#define BLE_GUI_WIDGETS_FLUIDPARAMSGRAPHWIDGET_H_
 
 #include <functional>
 #include <iostream>
@@ -9,9 +9,9 @@
 #include "models/fluidParamsDto.hpp"
 #include "uis/ui_fluidParamsWidget.hpp"
 
-namespace wmf = ble_gui::widgets::models;
+namespace wmf = ble::gui::widgets::models;
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 
 class FluidParamsGraphWidget : public QWidget, private UI::FluidParams {
     Q_OBJECT

@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_PRESENTERS_FLUIDPARAMGRAPHWIDGETPRESENTER_H_
-#define BLEGUI_WIDGETS_PRESENTERS_FLUIDPARAMGRAPHWIDGETPRESENTER_H_
+#ifndef BLE_GUI_WIDGETS_PRESENTERS_FLUIDPARAMGRAPHWIDGETPRESENTER_H_
+#define BLE_GUI_WIDGETS_PRESENTERS_FLUIDPARAMGRAPHWIDGETPRESENTER_H_
 
 #include <iostream>
 #include <memory>
@@ -11,7 +11,7 @@
 #include "models/fluidParamsDto.hpp"
 #include "common/models/physData.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 class FluidParamGraphWidgetPresenter : public mvp::BlePresenter {
     Q_OBJECT

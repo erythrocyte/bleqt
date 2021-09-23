@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_PRESENTERS_SATURSOLVERSETTSWIDGETPRESENTER_H_
-#define BLEGUI_WIDGETS_PRESENTERS_SATURSOLVERSETTSWIDGETPRESENTER_H_
+#ifndef BLE_GUI_WIDGETS_PRESENTERS_SATURSOLVERSETTSWIDGETPRESENTER_H_
+#define BLE_GUI_WIDGETS_PRESENTERS_SATURSOLVERSETTSWIDGETPRESENTER_H_
 
 #include <iostream>
 #include <memory>
@@ -9,7 +9,7 @@
 #include "blePresenter.hpp"
 #include "satSolverSettsWidget.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 class SatSolverSettsWidgetPresenter : public mvp::BlePresenter {
 public:

@@ -4,7 +4,7 @@
 
 #include "models/dataWidgetComponentsDto.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 DataWidgetPresenter::DataWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,

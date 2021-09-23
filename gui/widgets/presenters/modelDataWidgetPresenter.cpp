@@ -1,6 +1,6 @@
 #include "modelDataWidgetPresenter.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 ModelDataWidgetPresenter::ModelDataWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,

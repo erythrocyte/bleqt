@@ -28,6 +28,8 @@ set (SOURCES
 	widgets/fluidParamsGraphWidget.cpp
 	widgets/wellWorkDataWidget.cpp
 
+	widgets/models/wellWorkParamsModel.cpp
+
 	widgets/presenters/fluidParamGraphWidgetPresenter.cpp
 	widgets/presenters/dataWidgetPresenter.cpp
 	widgets/presenters/gridSettsWidgetPresenter.cpp

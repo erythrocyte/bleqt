@@ -1,6 +1,6 @@
 #include "shockFrontSettsWidgetPresenter.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 ShockFrontSettsWidgetPresenter::ShockFrontSettsWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,
