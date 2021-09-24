@@ -8,7 +8,7 @@
 #include "face.hpp"
 #include "cell.hpp"
 
-namespace ble_src::mesh::models {
+namespace ble::src::mesh::models {
 
 class Grid {
 	public:

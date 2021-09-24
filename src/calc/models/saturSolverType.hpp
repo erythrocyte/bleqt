@@ -3,7 +3,7 @@
 
 #include "common/utils/mapInit.hpp"
 
-namespace ble_src::calc::models {
+namespace ble::src::calc::models {
 
 struct SaturSolverType {
 public:
@@ -38,6 +38,6 @@ typedef common::utils::Iterator<SaturSolverType::TypeEnum,
     SaturSolverType::TypeEnum::kImplicit>
     SaturSolverTypeEnumIterator;
 
-} // namespace ble_src
+} // namespace ble::src
 
 #endif

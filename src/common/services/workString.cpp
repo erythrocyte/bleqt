@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace ble_src::common::services {
+namespace ble::src::common::services {
 
 //trim from start
 std::string ltrim(const std::string s)

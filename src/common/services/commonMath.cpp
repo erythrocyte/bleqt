@@ -1,6 +1,6 @@
 #include "commonMath.hpp"
 
-namespace ble_src::common::services {
+namespace ble::src::common::services {
 
 double get_value_lin_approx(const double x0, const double y0, const double x1,
     const double y1, const double val)
@@ -11,4 +11,4 @@ double get_value_lin_approx(const double x0, const double y0, const double x1,
     return a * val + b;
 }
 
-} // namespace ble_src::common_math
+} // namespace ble::src::common_math

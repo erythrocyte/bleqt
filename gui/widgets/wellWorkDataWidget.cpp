@@ -35,13 +35,13 @@ WellWorkDataWidget::~WellWorkDataWidget()
 
 void WellWorkDataWidget::set_data(models::WellWorkParamsModel* model)
 {
-    ble_src::logging::write_log("well work data set begins", ble_src::logging::kDebug);
+    ble::src::logging::write_log("well work data set begins", ble::src::logging::kDebug);
     m_model = model;
 
     fill_table();
     fill_chart();
 
-    ble_src::logging::write_log("well work data set ends", ble_src::logging::kDebug);
+    ble::src::logging::write_log("well work data set ends", ble::src::logging::kDebug);
 }
 
 void WellWorkDataWidget::set_xrange(double max_value)

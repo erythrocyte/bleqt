@@ -10,9 +10,9 @@
 #include "calc/services/workTimeStep.hpp"
 #include "common/services/shockFront.hpp"
 
-namespace cs = ble_src::common::services;
+namespace cs = ble::src::common::services;
 
-namespace ble_src::calc::models {
+namespace ble::src::calc::models {
 
 BleCalc::BleCalc()
 {
@@ -66,7 +66,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
         if (need_save_fiels) {
             std::vector<std::tuple<double, double>> xs_an = services::get_satur_exact(sc, sumU, data);
-            auto d = std::make_shared<ble_src::common::models::DynamicData>();
+            auto d = std::make_shared<ble::src::common::models::DynamicData>();
             d->t = sumT;
             d->p = p;
             d->s = s_cur;
@@ -91,7 +91,7 @@ void BleCalc::set_initial_cond(size_t n)
     std::vector<double> s(n, 0.);
     std::vector<double> p(n, 1.);
 
-    auto d = std::make_shared<ble_src::common::models::DynamicData>();
+    auto d = std::make_shared<ble::src::common::models::DynamicData>();
     d->t = 0;
     d->p = p;
     d->s = s;

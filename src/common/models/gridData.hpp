@@ -3,7 +3,7 @@
 
 #include "gridType.hpp"
 
-namespace ble_src::common::models {
+namespace ble::src::common::models {
 
 class GridData {
 public:

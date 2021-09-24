@@ -1,7 +1,7 @@
 #ifndef BLE_SRC_COMMON_MODELS_OUTPUTSETTINGS_H_
 #define BLE_SRC_COMMON_MODELS_OUTPUTSETTINGS_H_
 
-namespace ble_src::common::models {
+namespace ble::src::common::models {
 
 class OutputSetts {
 public:

@@ -5,7 +5,7 @@
 #include "common/services/commonMath.hpp"
 #include "common/services/workRp.hpp"
 
-namespace cs = ble_src::common::services;
+namespace cs = ble::src::common::services;
 
 namespace ble::gui::widgets::presenters {
 
@@ -16,14 +16,14 @@ FluidParamGraphWidgetPresenter::FluidParamGraphWidgetPresenter(
 {
     QObject* view_obj = dynamic_cast<QObject*>(view.get());
     const bool connected = connect(view_obj,
-        SIGNAL(get_data(const std::shared_ptr<ble_src::common::models::PhysData>, double)),
+        SIGNAL(get_data(const std::shared_ptr<ble::src::common::models::PhysData>, double)),
         this,
-        SLOT(send_data(const std::shared_ptr<ble_src::common::models::PhysData>, double)));
+        SLOT(send_data(const std::shared_ptr<ble::src::common::models::PhysData>, double)));
     Q_ASSERT(connected);
 }
 
 std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_data(
-    const std::shared_ptr<ble_src::common::models::PhysData> data, double sc)
+    const std::shared_ptr<ble::src::common::models::PhysData> data, double sc)
 {
     auto result = std::make_shared<models::FluidParamsDto>();
 
@@ -50,7 +50,7 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
         result->dfbls.append(QPointF(s, dfbl));
     }
 
-    double x_up = ble_src::common::services::get_value_lin_approx(0, 0, dsc, sc, 1.0);
+    double x_up = ble::src::common::services::get_value_lin_approx(0, 0, dsc, sc, 1.0);
     result->scs.append(QPointF(sc, dsc));
     result->scs.append(QPointF(x_up, 1.));
     result->scs.append(QPointF(0., 0.));
@@ -61,7 +61,7 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
 }
 
 void FluidParamGraphWidgetPresenter::update_view(
-    const std::shared_ptr<ble_src::common::models::PhysData> physData, double sc)
+    const std::shared_ptr<ble::src::common::models::PhysData> physData, double sc)
 {
     std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_view)->update_view(physData, sc);
 }

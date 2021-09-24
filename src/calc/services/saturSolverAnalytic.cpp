@@ -4,9 +4,9 @@
 #include "common/services/commonVector.hpp"
 #include "common/services/workRp.hpp"
 
-namespace cs = ble_src::common::services;
+namespace cs = ble::src::common::services;
 
-namespace ble_src::calc::services {
+namespace ble::src::calc::services {
 
 double get_xs(const double s, const double u, const double poro,
     const std::shared_ptr<common::models::PhysData> data)
@@ -34,4 +34,4 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
     return result;
 }
 
-} // namespace ble_src
+} // namespace ble::src

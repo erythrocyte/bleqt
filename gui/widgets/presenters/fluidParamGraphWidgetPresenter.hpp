@@ -20,12 +20,12 @@ public:
         std::shared_ptr<FluidParamsGraphWidget> view);
     ~FluidParamGraphWidgetPresenter() { }
 
-    void update_view(const std::shared_ptr<ble_src::common::models::PhysData> physData, double sc);
+    void update_view(const std::shared_ptr<ble::src::common::models::PhysData> physData, double sc);
     std::shared_ptr<FluidParamsGraphWidget> get_view();
 
 private slots:
     std::shared_ptr<models::FluidParamsDto>
-    send_data(const std::shared_ptr<ble_src::common::models::PhysData> data, double sc);
+    send_data(const std::shared_ptr<ble::src::common::models::PhysData> data, double sc);
 };
 
 }

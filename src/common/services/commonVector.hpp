@@ -4,7 +4,8 @@
 #include <iostream>
 #include <vector>
 
-namespace ble_src::common::services {
+namespace ble::src::common::services {
+
 std::vector<double> make_vector(double begin, double end, int n);
 
 }

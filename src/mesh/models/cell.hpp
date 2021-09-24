@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-namespace ble_src::mesh::models {
+namespace ble::src::mesh::models {
 
 class Cell {
 	public:

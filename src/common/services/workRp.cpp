@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-namespace ble_src::common::services::rp {
+namespace ble::src::common::services::rp {
 
 double get_kw(double s, const std::shared_ptr<common::models::PhysData> data)
 {
