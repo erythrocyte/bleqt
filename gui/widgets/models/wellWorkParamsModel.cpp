@@ -37,9 +37,11 @@ QVariant WellWorkParamsModel::data(const QModelIndex& index, int role) const
             return m_data[row_index]->qo;
         case 3:
             return m_data[row_index]->qw;
-        default:
+        case 4:
             return m_data[row_index]->fw;
         }
+
+        return -99999.0;
     };
 
     if (role == Qt::DisplayRole) {
@@ -60,11 +62,11 @@ QVariant WellWorkParamsModel::headerData(int section, Qt::Orientation orientatio
         case 0:
             return QString("%1").arg("t");
         case 1:
-            return QString("%1").arg("qw");
-        case 2:
             return QString("%1").arg("ql");
-        case 3:
+        case 2:
             return QString("%1").arg("qo");
+        case 3:
+            return QString("%1").arg("qw");
         case 4:
             return QString("%1").arg("fw");
         default:
@@ -79,11 +81,11 @@ bool WellWorkParamsModel::is_yaxis_left(int section)
 {
     switch (section) {
     case 1:
-        return true; // qw;
-    case 2:
         return true; // ql;
-    case 3:
+    case 2:
         return true; // qo;
+    case 3:
+        return true; // qw;
     case 4:
         return false; // fw;
     default:

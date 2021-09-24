@@ -57,42 +57,26 @@ public:
         _axisX->setRange(0.0, value);
     }
 
-    void add_series(std::shared_ptr<QLineSeries> series, bool is_left)
+    void add_series(QLineSeries* series, bool is_left)
     {
-        Chart->addSeries(series.get());        
+        Chart->addSeries(series);
 
         auto y_axis = is_left ? _axisQ : _axisFw;
 
         series->attachAxis(_axisX);
         series->attachAxis(y_axis);
-
-        // SeriesQliq->attachAxis(_axisQ);
-        // SeriesQoil->attachAxis(_axisX);
-        // SeriesQoil->attachAxis(_axisQ);
-        // SeriesQwat->attachAxis(_axisX);
-        // SeriesQwat->attachAxis(_axisQ);
-        // SeriesFw->attachAxis(_axisX);
-        // SeriesFw->attachAxis(_axisFw);
-        
-        // _axisQ->setMin(0.0);
     }
 
-    std::shared_ptr<QLineSeries> create_series(QString name)
+    QLineSeries* create_series(QString name)
     {
-        auto result = std::make_shared<QLineSeries>();
+        auto result = new QLineSeries();
         result->setName(name);
         return result;
-        // Chart->removeAllSeries();
+    }
 
-        // SeriesQliq = new QLineSeries();
-        // SeriesQoil = new QLineSeries();
-        // SeriesQwat = new QLineSeries();
-        // SeriesFw = new QLineSeries();
-
-        // SeriesQliq->setName("qliq");
-        // SeriesQoil->setName("qoil");
-        // SeriesQwat->setName("qwat");
-        // SeriesFw->setName("fw");
+    void set_min_q(double min_value)
+    {
+        _axisQ->setMin(min_value);
     }
 
 private:
