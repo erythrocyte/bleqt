@@ -1,6 +1,6 @@
 #include "makeGrid.hpp"
 
-namespace ble_src::mesh::services {
+namespace ble::src::mesh::services {
 
 std::shared_ptr<mesh::models::Grid> make_regular_grid(const std::shared_ptr<common::models::InputData> data)
 {

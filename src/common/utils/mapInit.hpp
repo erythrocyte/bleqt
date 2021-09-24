@@ -3,7 +3,7 @@
 
 #include <type_traits>
 
-namespace ble_src::common::utils {
+namespace ble::src::common::utils {
 
 template <typename T>
 struct map_init_helper {
@@ -54,6 +54,6 @@ public:
     bool operator!=(const Iterator& i) { return val != i.val; }
 };
 
-} // namespace ble_src
+} // namespace ble::src
 
 #endif

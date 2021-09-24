@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace ble_src::common::models {
+namespace ble::src::common::models {
 
 class WellWorkParams {
 public:
@@ -14,6 +14,6 @@ public:
     double fw = 0.0;
 };
 
-} // namespace ble_src
+} // namespace ble::src
 
 #endif

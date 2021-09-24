@@ -14,7 +14,7 @@ ResultDataWidget::ResultDataWidget(QWidget* parent)
 }
 
 void ResultDataWidget::setData(
-    const std::shared_ptr<ble_src::calc::models::BleResultData> data,
+    const std::shared_ptr<ble::src::calc::models::BleResultData> data,
     std::function<void(double)> progress)
 {
     _data = data;
@@ -36,7 +36,7 @@ void ResultDataWidget::handleSliderValueChange()
 }
 
 void ResultDataWidget::fill_time_series(bool init,
-    const std::shared_ptr<ble_src::common::models::DynamicData> d)
+    const std::shared_ptr<ble::src::common::models::DynamicData> d)
 {
     std::ostringstream oss;
     oss.str("");

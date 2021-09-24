@@ -6,7 +6,7 @@
 
 #include "common/utils/mapInit.hpp"
 
-namespace ble_src::common::models {
+namespace ble::src::common::models {
 
 struct GridType {
 
@@ -44,6 +44,6 @@ public:
 
 typedef common::utils::Iterator<GridType::TypeEnum, GridType::TypeEnum::kRegular, GridType::TypeEnum::kSpheric> GridTypeEnumIterator;
 
-} // namespace ble_src
+} // namespace ble::src
 
 #endif

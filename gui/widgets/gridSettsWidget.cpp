@@ -2,6 +2,8 @@
 
 #include "common/models/gridType.hpp"
 
+namespace scm = ble::src::common::models;
+
 namespace ble::gui::widgets {
 
 GridSettsWidget::GridSettsWidget(QWidget* parent)
@@ -9,8 +11,8 @@ GridSettsWidget::GridSettsWidget(QWidget* parent)
     , ui(new UI::GridSetts)
 {
     ui->setupUI(this);
-    for (ble_src::common::models::GridType::TypeEnum v : ble_src::common::models::GridTypeEnumIterator()) {
-        ui->GridType->addItem(QString::fromStdString(ble_src::common::models::GridType::get_description(v)));
+    for (scm::GridType::TypeEnum v : scm::GridTypeEnumIterator()) {
+        ui->GridType->addItem(QString::fromStdString(scm::GridType::get_description(v)));
     }
 }
 

@@ -19,10 +19,10 @@ public:
     FluidParamsGraphWidget(QWidget* parent = nullptr);
     ~FluidParamsGraphWidget() { delete ui; }
 
-    void update_view(const std::shared_ptr<ble_src::common::models::PhysData> physData, double sc);
+    void update_view(const std::shared_ptr<ble::src::common::models::PhysData> physData, double sc);
 
 signals:
-    std::shared_ptr<wmf::FluidParamsDto> get_data(const std::shared_ptr<ble_src::common::models::PhysData> physData, double sc);
+    std::shared_ptr<wmf::FluidParamsDto> get_data(const std::shared_ptr<ble::src::common::models::PhysData> physData, double sc);
 
 private:
     UI::FluidParams* ui;

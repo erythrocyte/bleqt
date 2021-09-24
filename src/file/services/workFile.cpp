@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-namespace ble_src::file::services {
+namespace ble::src::file::services {
 
 std::string get_last_line(const std::string fn)
 {

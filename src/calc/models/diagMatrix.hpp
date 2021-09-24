@@ -10,7 +10,7 @@
 #include <sstream>
 #include <vector>
 
-namespace ble_src::calc::models {
+namespace ble::src::calc::models {
 
 struct DiagMat {
     std::vector<double> A, B, C;

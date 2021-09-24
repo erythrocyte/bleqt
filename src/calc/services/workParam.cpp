@@ -3,7 +3,7 @@
 #include "common/services/workRp.hpp"
 #include "mesh/models/faceType.hpp"
 
-namespace ble_src::calc::services {
+namespace ble::src::calc::services {
 
 double getULiqInject(const std::shared_ptr<mm::Grid> grd)
 {
@@ -38,4 +38,4 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     return result;
 }
 
-} // namespace ble_src
+} // namespace ble::src

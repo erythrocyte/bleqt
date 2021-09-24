@@ -23,7 +23,7 @@ class WellWorkParamsModel : public QAbstractTableModel {
     Q_OBJECT
 
 public:
-    WellWorkParamsModel(const std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>> data, QObject* parent = nullptr);
+    WellWorkParamsModel(const std::vector<std::shared_ptr<ble::src::common::models::WellWorkParams>> data, QObject* parent = nullptr);
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -34,7 +34,7 @@ public:
     bool is_yaxis_left(int section);
 
 private:
-    std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>> m_data;
+    std::vector<std::shared_ptr<ble::src::common::models::WellWorkParams>> m_data;
     const double EMPTY_VAL = -99999.0;
 
     bool is_empty(double value) const;

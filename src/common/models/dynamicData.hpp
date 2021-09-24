@@ -5,7 +5,7 @@
 #include <tuple>
 #include <vector>
 
-namespace ble_src::common::models {
+namespace ble::src::common::models {
 
 class DynamicData {
 public:
@@ -16,6 +16,6 @@ public:
     std::vector<std::tuple<double, double>> s_an;
 };
 
-} // namespace ble_src
+} // namespace ble::src
 
 #endif

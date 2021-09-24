@@ -1,7 +1,7 @@
-#ifndef TESTS_UNITTESTS_COMMON_SERVICES_WORKPRTESTS
-#define TESTS_UNITTESTS_COMMON_SERVICES_WORKPRTESTS
+#ifndef BLE_TESTS_UNITTESTS_COMMON_SERVICES_WORKPRTESTS
+#define BLE_TESTS_UNITTESTS_COMMON_SERVICES_WORKPRTESTS
 
-namespace tests::unit_tests::common::services::work_rp {
+namespace ble::tests::unit_tests::common::services::work_rp {
 
 void case1_kw();
 void case2_kw();

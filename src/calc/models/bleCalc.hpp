@@ -1,5 +1,5 @@
-#ifndef BLESRC_CALC_MODELS_BLECALC_H_
-#define BLESRC_CALC_MODELS_BLECALC_H_
+#ifndef BLE_SRC_CALC_MODELS_BLECALC_H_
+#define BLE_SRC_CALC_MODELS_BLECALC_H_
 
 #include <functional>
 #include <iostream>
@@ -11,7 +11,7 @@
 #include "common/models/wellWorkParams.hpp"
 #include "mesh/models/grid.hpp"
 
-namespace ble_src::calc::models {
+namespace ble::src::calc::models {
 class BleCalc {
 public:
     BleCalc();
@@ -33,6 +33,6 @@ private:
     void save_press(int index, const std::shared_ptr<mesh::models::Grid> grd,
         const std::vector<double> p);
 };
-} // namespace ble_src
+} // namespace ble::src
 
 #endif

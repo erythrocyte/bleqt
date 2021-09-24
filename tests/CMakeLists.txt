@@ -3,14 +3,14 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC -g") 
 
 set (HEADERS
-	src_unit_tests/common/services/shockFrontTests.hpp
-	src_unit_tests/common/services/workRpTests.hpp
+	unit_tests/common/services/shockFrontTests.hpp
+	unit_tests/common/services/workRpTests.hpp
 )
 
 set (SOURCE
 	# bleTests.cpp
-	src_unit_tests/common/services/shockFrontTests.cpp
-	src_unit_tests/common/services/workRpTests.cpp
+	unit_tests/common/services/shockFrontTests.cpp
+	unit_tests/common/services/workRpTests.cpp
 	main.cpp
 )
 

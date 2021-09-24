@@ -2,6 +2,8 @@
 
 #include "calc/models/saturSolverType.hpp"
 
+namespace sclcm = ble::src::calc::models;
+
 namespace ble::gui::widgets {
 
 SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
@@ -9,9 +11,9 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
     , ui(new UI::SatSolverSetts)
 {
     ui->setupUi(this);
-    for (ble_src::calc::models::SaturSolverType::TypeEnum v : ble_src::calc::models::SaturSolverTypeEnumIterator()) {
+    for (sclcm::SaturSolverType::TypeEnum v : sclcm::SaturSolverTypeEnumIterator()) {
         ui->SolverType->addItem(
-            QString::fromStdString(ble_src::calc::models::SaturSolverType::get_description(v)));
+            QString::fromStdString(sclcm::SaturSolverType::get_description(v)));
     }
 }
 

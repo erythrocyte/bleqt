@@ -11,7 +11,7 @@ FluidParamsGraphWidget::FluidParamsGraphWidget(QWidget* parent)
 }
 
 void FluidParamsGraphWidget::update_view(
-    const std::shared_ptr<ble_src::common::models::PhysData> physData, double sc)
+    const std::shared_ptr<ble::src::common::models::PhysData> physData, double sc)
 {
     ui->series_kw->clear();
     ui->series_koil->clear();

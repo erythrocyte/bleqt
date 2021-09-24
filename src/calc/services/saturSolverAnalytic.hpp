@@ -8,7 +8,7 @@
 
 #include "common/models/inputData.hpp"
 
-namespace ble_src::calc::services {
+namespace ble::src::calc::services {
 std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const double u,
     const std::shared_ptr<common::models::InputData> data);
 }

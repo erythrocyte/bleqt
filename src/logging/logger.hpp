@@ -1,9 +1,9 @@
-#ifndef BLESRC_LOGGING_LOGGER_H_
-#define BLESRC_LOGGING_LOGGER_H_
+#ifndef BLE_SRC_LOGGING_LOGGER_H_
+#define BLE_SRC_LOGGING_LOGGER_H_
 
 #include <string>
 
-namespace ble_src::logging {
+namespace ble::src::logging {
 
 enum SeverityLevelEnum {
     kTrace,

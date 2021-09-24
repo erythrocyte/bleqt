@@ -7,9 +7,9 @@
 #include "common/models/physData.hpp"
 #include "mesh/models/grid.hpp"
 
-namespace mm = ble_src::mesh::models;
+namespace mm = ble::src::mesh::models;
 
-namespace ble_src::calc::services {
+namespace ble::src::calc::services {
 
 std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::vector<double>& s,
     const std::shared_ptr<common::models::PhysData> data);

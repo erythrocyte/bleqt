@@ -63,21 +63,21 @@ void BleFrame::set_widgets(
     ui->tabs->addTab(wellWorkDataWidget.get(), "Well work");
 }
 
-void BleFrame::add_log_message(std::string str, ble_src::logging::SeverityLevelEnum level)
+void BleFrame::add_log_message(std::string str, ble::src::logging::SeverityLevelEnum level)
 {
     std::string color_name = "Black";
     switch (level) {
-    case ble_src::logging::kError:
+    case ble::src::logging::kError:
         color_name = "Red";
         break;
-    case ble_src::logging::kWarning:
+    case ble::src::logging::kWarning:
         color_name = "Orange";
         break;
     default:
         break;
     }
 
-    std::string mess = ble_src::common::services::string_format("<font color=\"%s\">%s</font>", color_name.c_str(), str.c_str());
+    std::string mess = ble::src::common::services::string_format("<font color=\"%s\">%s</font>", color_name.c_str(), str.c_str());
     ui->messagePlainText->appendHtml(QString::fromStdString(mess));
 }
 

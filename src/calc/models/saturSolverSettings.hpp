@@ -3,7 +3,7 @@
 
 #include "saturSolverType.hpp"
 
-namespace ble_src::calc::models {
+namespace ble::src::calc::models {
 
 class SaturSolverSetts {
 public:

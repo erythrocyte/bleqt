@@ -11,7 +11,7 @@
 
 namespace ble::gui::widgets::models {
 
-WellWorkParamsModel::WellWorkParamsModel(const std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>> data,
+WellWorkParamsModel::WellWorkParamsModel(const std::vector<std::shared_ptr<ble::src::common::models::WellWorkParams>> data,
     QObject* parent)
     : QAbstractTableModel(parent)
 {

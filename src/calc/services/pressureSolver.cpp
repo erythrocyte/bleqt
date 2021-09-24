@@ -3,7 +3,7 @@
 #include "calc/models/diagMatrix.hpp"
 #include "calc/services/workSigma.hpp"
 
-namespace ble_src::calc::services {
+namespace ble::src::calc::services {
 
 double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid> grd)
 {

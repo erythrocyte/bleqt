@@ -21,7 +21,7 @@ namespace sinks = boost::log::sinks;
 namespace expr = boost::log::expressions;
 namespace keywords = boost::log::keywords;
 
-namespace ble_src::logging {
+namespace ble::src::logging {
 
 typedef sinks::synchronous_sink<sinks::text_ostream_backend> text_sink;
 

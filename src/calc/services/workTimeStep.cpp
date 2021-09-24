@@ -2,9 +2,9 @@
 
 #include "common/services/workRp.hpp"
 
-namespace cs = ble_src::common::services;
+namespace cs = ble::src::common::services;
 
-namespace ble_src::calc::services {
+namespace ble::src::calc::services {
 
 double get_face_dfbl(const std::shared_ptr<mesh::models::Face> fc,
     const std::vector<double>& init, std::shared_ptr<common::models::PhysData> data)
@@ -56,4 +56,4 @@ double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
     return result;
 }
 
-} // namespace ble_src
+} // namespace ble::src

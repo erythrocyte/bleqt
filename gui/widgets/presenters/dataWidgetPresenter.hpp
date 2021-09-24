@@ -23,7 +23,7 @@ public:
     DataWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<DataWidget> view);
 
-    std::shared_ptr<ble_src::common::models::InputData> get_input_data();
+    std::shared_ptr<ble::src::common::models::InputData> get_input_data();
     std::shared_ptr<DataWidget> get_view();
 
     void set_show_shockfront_status(bool status);

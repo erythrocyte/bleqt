@@ -40,7 +40,7 @@ private:
     void update_progress(double perc) { get_view()->update_progress(perc); }
     void set_status(const QString& str) { get_view()->set_status(str); }
     void init_log();
-    std::tuple<std::string, ble_src::logging::SeverityLevelEnum> parse_log_mess(std::string mess);
+    std::tuple<std::string, ble::src::logging::SeverityLevelEnum> parse_log_mess(std::string mess);
 private slots:
     void onShowShockFrontCurve(bool status);
     void onRpValuesUpdated();

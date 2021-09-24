@@ -2,9 +2,9 @@
 
 #include "common/services/workRp.hpp"
 
-namespace cs = ble_src::common::services;
+namespace cs = ble::src::common::services;
 
-namespace ble_src::calc::services {
+namespace ble::src::calc::services {
 
 std::vector<double> solve_explicit(const double tau, const std::vector<double>& init,
     const std::shared_ptr<common::models::InputData> data, const std::shared_ptr<mesh::models::Grid> grd)
