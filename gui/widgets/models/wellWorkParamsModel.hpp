@@ -35,6 +35,9 @@ public:
 
 private:
     std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>> m_data;
+    const double EMPTY_VAL = -99999.0;
+
+    bool is_empty(double value) const;
 };
 
 }

@@ -15,7 +15,6 @@ namespace ble::gui::widgets {
 
 class FluidParamsGraphWidget : public QWidget, private UI::FluidParams {
     Q_OBJECT
-
 public:
     FluidParamsGraphWidget(QWidget* parent = nullptr);
     ~FluidParamsGraphWidget() { delete ui; }

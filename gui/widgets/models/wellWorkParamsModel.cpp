@@ -21,6 +21,9 @@ WellWorkParamsModel::WellWorkParamsModel(const std::vector<std::shared_ptr<ble_s
 QVariant WellWorkParamsModel::data(const QModelIndex& index, int role) const
 {
     auto get_value = [&]() {
+        if (m_data.empty())
+            return EMPTY_VAL;
+
         int row_index = index.row(), column_index = index.column();
 
         switch (column_index) {
@@ -36,12 +39,16 @@ QVariant WellWorkParamsModel::data(const QModelIndex& index, int role) const
             return m_data[row_index]->fw;
         }
 
-        return -99999.0;
+        return EMPTY_VAL;
     };
 
     if (role == Qt::DisplayRole) {
+        double value = get_value();
+        if (is_empty(value))
+            return QVariant();
+
         return QString("%1")
-            .arg(get_value());
+            .arg(value);
     }
 
     return QVariant();
@@ -86,6 +93,11 @@ bool WellWorkParamsModel::is_yaxis_left(int section)
     default:
         return true;
     }
+}
+
+bool WellWorkParamsModel::is_empty(double value) const
+{
+    return std::abs(value - EMPTY_VAL) < 1e-8;
 }
 
 }
