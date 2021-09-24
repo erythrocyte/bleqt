@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include <QVXYModelMapper>
+#include <QHeaderView>
 
 #include "logging/logger.hpp"
 
@@ -36,6 +37,9 @@ void WellWorkDataWidget::set_data(models::WellWorkParamsModel* model)
 {
     ble_src::logging::write_log("well work data set begins", ble_src::logging::kDebug);
     m_model = model;
+
+    fill_table();
+    fill_chart();
 
     // ui->create_series();
 
@@ -75,35 +79,27 @@ void WellWorkDataWidget::handleShowHideTable()
 
 void WellWorkDataWidget::fill_table()
 {
+    ui->Table->setModel(m_model);
+    ui->Table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->Table->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 void WellWorkDataWidget::fill_chart()
 {
-    // ui->create_series();
-
     ui->Chart->removeAllSeries();
 
     QVXYModelMapper* mapper = new QVXYModelMapper(this);
 
-    for (int k = 1; k < m_model->columnCount(m_model->index(0, 0)); k++) {
-        mapper->setXColumn(0);
+    for (int k = 1; k < m_model->columnCount(); k++) { //k = 0 is x axis;
+        mapper->setXColumn(0); // x axis;
         mapper->setYColumn(k);
         QString name = m_model->headerData(k, Qt::Horizontal, Qt::DisplayRole).toString();
         auto series = ui->create_series(name);
         mapper->setSeries(series.get());
         mapper->setModel(m_model);
-        bool is_left = true;
+        bool is_left = m_model->is_yaxis_left(k);
         ui->add_series(series, is_left);
     }
-
-    // for (auto& d : data) {
-    //     ui->SeriesFw->append(d->t, d->fw);
-    //     ui->SeriesQliq->append(d->t, d->ql);
-    //     ui->SeriesQoil->append(d->t, d->qo);
-    //     ui->SeriesQwat->append(d->t, d->qw);
-    // }
-
-    // ui->add_series();
 }
 
 }

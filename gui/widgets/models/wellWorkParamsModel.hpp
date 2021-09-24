@@ -10,8 +10,8 @@
 #ifndef BLE_GUI_WIDGETS_MODELS_WELLWORKPARAMSMODEL_H_
 #define BLE_GUI_WIDGETS_MODELS_WELLWORKPARAMSMODEL_H_
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include <QAbstractTableModel>
 
@@ -32,9 +32,9 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-private:
-    int row_count;
+    bool is_yaxis_left(int section);
 
+private:
     std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>> m_data;
 };
 

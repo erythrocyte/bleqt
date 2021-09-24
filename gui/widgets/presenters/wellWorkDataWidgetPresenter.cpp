@@ -10,9 +10,9 @@ WellWorkDataWidgetPresenter::WellWorkDataWidgetPresenter(
 }
 
 void WellWorkDataWidgetPresenter::set_data(const std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>>& data)
-{    
-    models::WellWorkParamsModel model { data };
-    get_view()->set_data(&model);
+{
+    models::WellWorkParamsModel* model = new models::WellWorkParamsModel(data);
+    get_view()->set_data(model);
 }
 
 std::shared_ptr<WellWorkDataWidget> WellWorkDataWidgetPresenter::get_view()

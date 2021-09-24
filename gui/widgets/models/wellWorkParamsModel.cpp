@@ -43,20 +43,52 @@ QVariant WellWorkParamsModel::data(const QModelIndex& index, int role) const
     };
 
     if (role == Qt::DisplayRole) {
-
-        auto value = get_value();
-        return QString("%.4f").arg(value);
+        return QString("%1")
+            .arg(get_value());
     }
 
     return QVariant();
 }
 
-int WellWorkParamsModel::rowCount(const QModelIndex& parent) const { return row_count; }
+int WellWorkParamsModel::rowCount(const QModelIndex& parent) const { return m_data.size(); }
 int WellWorkParamsModel::columnCount(const QModelIndex& parent) const { return 5; }
 
 QVariant WellWorkParamsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+        switch (section) {
+        case 0:
+            return QString("%1").arg("t");
+        case 1:
+            return QString("%1").arg("qw");
+        case 2:
+            return QString("%1").arg("ql");
+        case 3:
+            return QString("%1").arg("qo");
+        case 4:
+            return QString("%1").arg("fw");
+        default:
+            return QVariant();
+        }
+    }
+
     return QVariant();
+}
+
+bool WellWorkParamsModel::is_yaxis_left(int section)
+{
+    switch (section) {
+    case 1:
+        return true; // qw;
+    case 2:
+        return true; // ql;
+    case 3:
+        return true; // qo;
+    case 4:
+        return false; // fw;
+    default:
+        return true;
+    }
 }
 
 }
