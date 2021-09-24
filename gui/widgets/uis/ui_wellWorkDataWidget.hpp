@@ -24,10 +24,6 @@ namespace ble::gui::widgets::UI {
 class WellWorkData {
 public:
     QChart* Chart;
-    QLineSeries* SeriesQliq;
-    QLineSeries* SeriesQoil;
-    QLineSeries* SeriesQwat;
-    QLineSeries* SeriesFw;
     QAction* ShowTable;
     QTableView* Table;
 
