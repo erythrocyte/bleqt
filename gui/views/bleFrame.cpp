@@ -5,7 +5,7 @@
 #include "common/services/workString.hpp"
 #include "qVerticalLabel.hpp"
 
-namespace ble_gui::views {
+namespace ble::gui::views {
 BleFrame::BleFrame(QWidget* parent)
     : QMainWindow(parent)
     , ui(new UI::UI_BleFrame)

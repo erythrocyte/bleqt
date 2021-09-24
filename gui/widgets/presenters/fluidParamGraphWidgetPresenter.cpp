@@ -7,7 +7,7 @@
 
 namespace cs = ble_src::common::services;
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 FluidParamGraphWidgetPresenter::FluidParamGraphWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,

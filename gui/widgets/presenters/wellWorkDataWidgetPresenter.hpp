@@ -1,5 +1,5 @@
-#ifndef BLEGUI_WIDGETS_PRESENTERS_WELLWORKDATAWIDGETPRESENTER_H_
-#define BLEGUI_WIDGETS_PRESENTERS_WELLWORKDATAWIDGETPRESENTER_H_
+#ifndef BLE_GUI_WIDGETS_PRESENTERS_WELLWORKDATAWIDGETPRESENTER_H_
+#define BLE_GUI_WIDGETS_PRESENTERS_WELLWORKDATAWIDGETPRESENTER_H_
 
 #include <iostream>
 #include <memory>
@@ -8,9 +8,10 @@
 
 #include "blePresenter.hpp"
 #include "common/models/wellWorkParams.hpp"
+#include "models/wellWorkParamsModel.hpp"
 #include "wellWorkDataWidget.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 class WellWorkDataWidgetPresenter : public mvp::BlePresenter {
 public:

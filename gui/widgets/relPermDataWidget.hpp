@@ -1,12 +1,12 @@
-#ifndef BLEGUI_WIDGETS_RELPERMDATAWIDGET_H_
-#define BLEGUI_WIDGETS_RELPERMDATAWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_RELPERMDATAWIDGET_H_
+#define BLE_GUI_WIDGETS_RELPERMDATAWIDGET_H_
 
 #include <iostream>
 #include <memory>
 
 #include "uis/ui_relPermDataWidget.hpp"
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 class RelPermDataWidget : public QWidget, private UI::RelPermData {
     Q_OBJECT
 public:

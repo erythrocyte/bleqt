@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv)
 {
-    std::shared_ptr<ble::BleApplication> app(new ble::BleApplication());
+    std::shared_ptr<ble::gui::BleApplication> app(new ble::gui::BleApplication());
     app->run(argc, argv);
 
     return 1;

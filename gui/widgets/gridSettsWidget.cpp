@@ -2,7 +2,7 @@
 
 #include "common/models/gridType.hpp"
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 
 GridSettsWidget::GridSettsWidget(QWidget* parent)
     : QWidget(parent)

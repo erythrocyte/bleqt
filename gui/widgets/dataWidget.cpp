@@ -2,14 +2,14 @@
 
 #include <QVBoxLayout>
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 
 DataWidget::DataWidget(QWidget* parent)
     : QWidget(parent)
 {
 }
 
-void ble_gui::widgets::DataWidget::set_view_objects(std::shared_ptr<models::DataWidgetComponentsDto> components)
+void DataWidget::set_view_objects(std::shared_ptr<models::DataWidgetComponentsDto> components)
 {
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setMargin(0);

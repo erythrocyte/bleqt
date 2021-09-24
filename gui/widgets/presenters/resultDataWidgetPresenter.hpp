@@ -9,7 +9,7 @@
 #include "resultDataWidget.hpp"
 #include "blePresenter.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 class ResultDataWidgetPresenter : public mvp::BlePresenter {
 public:

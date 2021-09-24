@@ -14,25 +14,25 @@
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
 
-namespace ble {
+namespace ble::gui {
 
 BleApplication::BleApplication()
 {
     Hypodermic::ContainerBuilder builder;
 
-    builder.registerType<ble_gui::views::BleFrame>();
-    builder.registerType<ble_gui::views::presenters::BleFramePresenter>();
-    builder.registerType<ble_gui::widgets::FluidParamsGraphWidget>();
-    builder.registerType<ble_gui::widgets::presenters::FluidParamGraphWidgetPresenter>();
-    builder.registerType<ble_gui::widgets::DataWidget>();
-    builder.registerType<ble_gui::widgets::presenters::DataWidgetPresenter>();
-    builder.registerType<ble_gui::widgets::ResultDataWidget>();
-    builder.registerType<ble_gui::widgets::presenters::ResultDataWidgetPresenter>();
-    builder.registerType<ble_gui::widgets::presenters::GridSettsWidgetPresenter>();
-    builder.registerType<ble_gui::widgets::presenters::ModelDataWidgetPresenter>();
-    builder.registerType<ble_gui::widgets::presenters::RelPermDataWidgetPresenter>();
-    builder.registerType<ble_gui::widgets::presenters::SatSolverSettsWidgetPresenter>();
-    builder.registerType<ble_gui::widgets::presenters::ShockFrontSettsWidgetPresenter>();
+    builder.registerType<views::BleFrame>();
+    builder.registerType<views::presenters::BleFramePresenter>();
+    builder.registerType<widgets::FluidParamsGraphWidget>();
+    builder.registerType<widgets::presenters::FluidParamGraphWidgetPresenter>();
+    builder.registerType<widgets::DataWidget>();
+    builder.registerType<widgets::presenters::DataWidgetPresenter>();
+    builder.registerType<widgets::ResultDataWidget>();
+    builder.registerType<widgets::presenters::ResultDataWidgetPresenter>();
+    builder.registerType<widgets::presenters::GridSettsWidgetPresenter>();
+    builder.registerType<widgets::presenters::ModelDataWidgetPresenter>();
+    builder.registerType<widgets::presenters::RelPermDataWidgetPresenter>();
+    builder.registerType<widgets::presenters::SatSolverSettsWidgetPresenter>();
+    builder.registerType<widgets::presenters::ShockFrontSettsWidgetPresenter>();
 
     m_container = builder.build();
 }
@@ -45,7 +45,7 @@ void BleApplication::run(int argc, char** argv)
 {
     QApplication qapp(argc, argv);
 
-    auto mainPresenter = m_container->resolve<ble_gui::views::presenters::BleFramePresenter>();
+    auto mainPresenter = m_container->resolve<views::presenters::BleFramePresenter>();
     mainPresenter->run();
 
     qapp.exec();

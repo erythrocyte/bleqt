@@ -1,6 +1,6 @@
 #include "shockFrontSettsWidget.hpp"
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 ShockFrontSettsWidget::ShockFrontSettsWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::ShockFrontSetts)

@@ -1,12 +1,12 @@
-#ifndef BLEGUI_WIDGETS_SATSOLVERSETTSWIDGET_H_
-#define BLEGUI_WIDGETS_SATSOLVERSETTSWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_SATSOLVERSETTSWIDGET_H_
+#define BLE_GUI_WIDGETS_SATSOLVERSETTSWIDGET_H_
 
 #include <iostream>
 #include <memory>
 
 #include "uis/ui_satSolverSettsWidget.hpp"
 
-namespace ble_gui::widgets {
+namespace ble::gui::widgets {
 
 class SatSolverSettsWidget : public QWidget, private UI::SatSolverSetts {
     Q_OBJECT

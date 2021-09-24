@@ -1,6 +1,6 @@
 #include "wellWorkDataWidgetPresenter.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 WellWorkDataWidgetPresenter::WellWorkDataWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,
@@ -11,7 +11,8 @@ WellWorkDataWidgetPresenter::WellWorkDataWidgetPresenter(
 
 void WellWorkDataWidgetPresenter::set_data(const std::vector<std::shared_ptr<ble_src::common::models::WellWorkParams>>& data)
 {
-    get_view()->setData(data);
+    models::WellWorkParamsModel* model = new models::WellWorkParamsModel(data);
+    get_view()->set_data(model);
 }
 
 std::shared_ptr<WellWorkDataWidget> WellWorkDataWidgetPresenter::get_view()

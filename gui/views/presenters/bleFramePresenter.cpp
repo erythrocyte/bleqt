@@ -17,7 +17,7 @@
 
 namespace cs = ble_src::common::services;
 
-namespace ble_gui::views::presenters {
+namespace ble::gui::views::presenters {
 
 BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> container,
     std::shared_ptr<BleFrame> view)

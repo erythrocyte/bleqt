@@ -1,6 +1,6 @@
 #include "resultDataWidgetPresenter.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 ResultDataWidgetPresenter::ResultDataWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,

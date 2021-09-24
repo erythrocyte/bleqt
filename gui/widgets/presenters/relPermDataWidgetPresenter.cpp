@@ -1,6 +1,6 @@
 #include "relPermDataWidgetPresenter.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 RelPermDataWidgetPresenter ::RelPermDataWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,

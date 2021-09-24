@@ -1,5 +1,5 @@
-#ifndef BLEGUI_VIEWS_PRESENTERS_BLEFRAMEPRESENTER_H_
-#define BLEGUI_VIEWS_PRESENTERS_BLEFRAMEPRESENTER_H_
+#ifndef BLE_GUI_VIEWS_PRESENTERS_BLEFRAMEPRESENTER_H_
+#define BLE_GUI_VIEWS_PRESENTERS_BLEFRAMEPRESENTER_H_
 
 #include <iostream>
 #include <memory>
@@ -15,9 +15,9 @@
 #include "resultDataWidgetPresenter.hpp"
 #include "wellWorkDataWidgetPresenter.hpp"
 
-namespace bwp = ble_gui::widgets::presenters;
+namespace bwp = ble::gui::widgets::presenters;
 
-namespace ble_gui::views::presenters {
+namespace ble::gui::views::presenters {
 
 class BleFramePresenter : public mvp::BlePresenter {
     Q_OBJECT

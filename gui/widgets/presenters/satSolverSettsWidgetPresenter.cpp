@@ -1,6 +1,6 @@
 #include "satSolverSettsWidgetPresenter.hpp"
 
-namespace ble_gui::widgets::presenters {
+namespace ble::gui::widgets::presenters {
 
 SatSolverSettsWidgetPresenter ::SatSolverSettsWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,

@@ -6,7 +6,7 @@
 
 #include "Hypodermic/Hypodermic.h"
 
-namespace ble {
+namespace ble::gui {
 
 class BleApplication {
 private:
@@ -16,7 +16,7 @@ public:
     BleApplication();
     ~BleApplication();
 
-    void run(int argc, char **argv);
+    void run(int argc, char** argv);
 };
 
 }

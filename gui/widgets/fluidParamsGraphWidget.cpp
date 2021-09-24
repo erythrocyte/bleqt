@@ -1,6 +1,8 @@
 #include "fluidParamsGraphWidget.hpp"
 
-ble_gui::widgets::FluidParamsGraphWidget::FluidParamsGraphWidget(QWidget* parent)
+namespace ble::gui::widgets {
+
+FluidParamsGraphWidget::FluidParamsGraphWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::FluidParams)
 
@@ -8,7 +10,7 @@ ble_gui::widgets::FluidParamsGraphWidget::FluidParamsGraphWidget(QWidget* parent
     ui->setupUI(this);
 }
 
-void ble_gui::widgets::FluidParamsGraphWidget::update_view(
+void FluidParamsGraphWidget::update_view(
     const std::shared_ptr<ble_src::common::models::PhysData> physData, double sc)
 {
     ui->series_kw->clear();
@@ -29,4 +31,6 @@ void ble_gui::widgets::FluidParamsGraphWidget::update_view(
 
         ui->axis_dfY->setMax(data->max_dfbl);
     }
+}
+
 }
