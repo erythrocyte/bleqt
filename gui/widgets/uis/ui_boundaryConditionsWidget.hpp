@@ -53,13 +53,17 @@ public:
         layout->addWidget(ContourBondType, 0, 1, 1, 10);
 
         RHSType = new QComboBox();
+        RHSType->setEnabled(false);
         m_RHSTypeLabel = new QLabel("RHS Type");
         layout->addWidget(m_RHSTypeLabel, 1, 0, 1, 1);
         layout->addWidget(RHSType, 1, 1, 1, 10);
 
         m_RHSFileLabel = new QLabel("RHS File");
         RHSFile = new QLineEdit();
+        RHSFile->setEnabled(false);
+        RHSFile->setReadOnly(true);
         RHSFileChooseButton = new QPushButton("...");
+        RHSFileChooseButton->setEnabled(false);
         RHSFileChooseButton->setStyleSheet("padding: 0px 5px 0px 5px;");
         layout->addWidget(m_RHSFileLabel, 2, 0, 1, 1);
         layout->addWidget(RHSFile, 2, 1, 1, 9);

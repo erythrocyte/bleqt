@@ -65,7 +65,8 @@ std::shared_ptr<ble::src::common::models::InputData> DataWidgetPresenter::get_in
     result->satSetts->cur_val = m_satsolverset_presenter->get_curant_value();
     result->satSetts->pN = m_satsolverset_presenter->get_press_recalc_n();
 
-    result->grd->l = m_gridset_presenter->get_domain_len();
+    result->grd->rw = m_gridset_presenter->get_well_radius();
+    result->grd->rc = 1.0;
     result->grd->n = m_gridset_presenter->get_cell_count();
 
     return result;

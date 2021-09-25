@@ -22,12 +22,12 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
     std::vector<std::tuple<double, double>> result;
 
     result.push_back(std::make_tuple(0.0, 0.0));
-    result.push_back(std::make_tuple(data->grd->l - xsc, 0.0));
+    result.push_back(std::make_tuple(data->grd->rc - xsc, 0.0));
 
     std::vector<double> ss = common::services::make_vector(sc, 1.0, 100);
 
     for (auto& s : ss) {
-        double x = data->grd->l - get_xs(s, u, data->phys->poro, data->phys);
+        double x = data->grd->rc - get_xs(s, u, data->phys->poro, data->phys);
         result.push_back(std::make_tuple(x, s));
     }
 

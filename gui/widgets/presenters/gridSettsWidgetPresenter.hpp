@@ -6,8 +6,8 @@
 
 #include "Hypodermic/Hypodermic.h"
 
-#include "gridSettsWidget.hpp"
 #include "blePresenter.hpp"
+#include "gridSettsWidget.hpp"
 
 namespace ble::gui::widgets::presenters {
 
@@ -15,12 +15,12 @@ class GridSettsWidgetPresenter : public mvp::BlePresenter {
 public:
     GridSettsWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<GridSettsWidget> view);
-    ~GridSettsWidgetPresenter() {}
+    ~GridSettsWidgetPresenter() { }
 
     std::shared_ptr<GridSettsWidget> get_view();
 
-    double get_domain_len();
-        int get_cell_count();
+    double get_well_radius();
+    int get_cell_count();
 };
 
 }

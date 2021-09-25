@@ -31,10 +31,10 @@ public:
         }
     }
 
-    TypeEnum get_enum(std::string val)
+    static TypeEnum get_enum(std::string val)
     {
         if (val == "Radial")
-            return TypeEnum::kRegular;
+            return TypeEnum::kRadial;
         else if (val == "Spheric")
             return TypeEnum::kSpheric;
         else

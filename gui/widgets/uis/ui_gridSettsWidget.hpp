@@ -47,12 +47,15 @@ public:
         layout->setMargin(5);
 
         WellRadius = new QDoubleSpinBox();
-        WellRadius->setMinimum(1e-3);
+        WellRadius->setMinimum(0.0);
         WellRadius->setMaximum(0.1);
         WellRadius->setSingleStep(1e-3);
-        WellRadius->setValue(1e-3);
+        WellRadius->setValue(0.0);
+        WellRadius->setDecimals(3);
+        layout->addWidget(WellRadius, 0, 1);
 
         wellRadiusLabel = new QLabel("Well radius");
+        layout->addWidget(wellRadiusLabel, 0, 0);
 
         CellCount = new QSpinBox();
         CellCount->setMinimum(1);
@@ -64,7 +67,6 @@ public:
         layout->addWidget(cellCountLabel, 1, 0);
 
         GridType = new QComboBox();
-        GridType->setEnabled(false);
         layout->addWidget(GridType, 2, 1);
 
         gridTypeLabel = new QLabel("Grid type");

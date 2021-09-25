@@ -21,6 +21,13 @@ public:
 
 private:
     UI::BoundaryConditions* ui;
+
+    void set_items();
+    void subscribe();
+
+private slots:
+    void contourTypeChanged(const QString&);
+    void rhsTypeChanged(const QString&);
 };
 
 } // namespace ble_gui::widgets

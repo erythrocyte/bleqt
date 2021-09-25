@@ -71,7 +71,7 @@ void BleFramePresenter::onShowShockFrontCurve(bool status)
     if (status) {
         auto data = m_dataWidgetPresenter->get_input_data();
         double sc = cs::shock_front::get_shock_front(data->phys);
-        m_resultDataWidgetPresenter->update_sc(data->grd->l, sc);
+        m_resultDataWidgetPresenter->update_sc(data->grd->rc, sc);
     }
 }
 
@@ -80,7 +80,7 @@ void BleFramePresenter::onRpValuesUpdated()
     auto data = m_dataWidgetPresenter->get_input_data();
     double sc = cs::shock_front::get_shock_front(data->phys);
     m_dataWidgetPresenter->set_shockfront_value(sc);
-    m_resultDataWidgetPresenter->update_sc(data->grd->l, sc);
+    m_resultDataWidgetPresenter->update_sc(data->grd->rc, sc);
     m_fluidWidgetPresenter->update_view(data->phys, sc);
 }
 
