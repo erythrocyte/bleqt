@@ -94,14 +94,14 @@ void BleFramePresenter::on_run_calc()
     set_status(tr("calculation running"));
 
     std::function<void(int)> a = std::bind(&BleFramePresenter::update_progress, this, std::placeholders::_1);
-    auto solver = std::make_shared<ble::src::calc::models::BleCalc>();
+    auto solver = std::make_shared<src::calc::models::BleCalc>();
     solver->calc(grd, data, a);
     auto results = solver->get_result();
     results->grd = grd;
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end - start;
-    std::string mess = ble::src::common::services::string_format("calculation completed in %.2f sec.", diff.count());
+    std::string mess = cs::string_format("calculation completed in %.2f sec.", diff.count());
     set_status(QString::fromStdString(mess));
 
     m_resultDataWidgetPresenter->set_data(results, a);
