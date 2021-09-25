@@ -8,9 +8,9 @@
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QLabel>
-#include <QWidget>
-#include <QTextEdit>
+#include <QLineEdit>
 #include <QPushButton>
+#include <QWidget>
 
 namespace ble::gui::widgets::UI {
 
@@ -19,7 +19,7 @@ class BoundaryConditions {
 public:
     QComboBox* ContourBondType;
     QComboBox* RHSType;
-    QTextEdit* RHSFile;
+    QLineEdit* RHSFile;
     QPushButton* RHSFileChooseButton;
 
     void retranslateUi(QWidget* widget)
@@ -50,19 +50,20 @@ public:
         ContourBondType = new QComboBox();
         m_contourBoundTypeLabel = new QLabel("CB Type");
         layout->addWidget(m_contourBoundTypeLabel, 0, 0, 1, 1);
-        layout->addWidget(ContourBondType, 0, 1, 1, 5);
-        
-        RHSType = new QComboBox();        
+        layout->addWidget(ContourBondType, 0, 1, 1, 10);
+
+        RHSType = new QComboBox();
         m_RHSTypeLabel = new QLabel("RHS Type");
-        // layout->addWidget(m_RHSTypeLabel, 1, 0, 1 ,1);
-        // layout->addWidget(RHSType, 1, 1, 2, 5);
+        layout->addWidget(m_RHSTypeLabel, 1, 0, 1, 1);
+        layout->addWidget(RHSType, 1, 1, 1, 10);
 
         m_RHSFileLabel = new QLabel("RHS File");
-        RHSFile = new QTextEdit();
-        RHSFileChooseButton = new QPushButton();
-        // layout->addWidget(RHSFile, 2, 1, 2, 4);        
-        // layout->addWidget(m_RHSFileLabel, 2, 0, 1, 1);
-        // layout->addWidget(RHSFileChooseButton, 2, 5, 1, 1);
+        RHSFile = new QLineEdit();
+        RHSFileChooseButton = new QPushButton("...");
+        RHSFileChooseButton->setStyleSheet("padding: 0px 5px 0px 5px;");
+        layout->addWidget(m_RHSFileLabel, 2, 0, 1, 1);
+        layout->addWidget(RHSFile, 2, 1, 1, 9);
+        layout->addWidget(RHSFileChooseButton, 2, 10, 1, 1);
 
         retranslateUi(widget);
     }
