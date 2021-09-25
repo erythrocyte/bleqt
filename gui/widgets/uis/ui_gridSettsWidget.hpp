@@ -17,7 +17,7 @@ namespace ble::gui::widgets::UI {
 class GridSetts {
 
 public:
-    QDoubleSpinBox* Length;
+    QDoubleSpinBox* WellRadius;
     QSpinBox* CellCount;
     QComboBox* GridType;
 
@@ -26,8 +26,8 @@ public:
         groupBox->setTitle("Grid/Domain");
         groupBox->setToolTip("Grid/Domain");
 
-        lengthLabel->setText("Length");
-        lengthLabel->setToolTip("Length");
+        wellRadiusLabel->setText("Well radius");
+        wellRadiusLabel->setToolTip("Well radius");
 
         cellCountLabel->setText("Cell count");
         cellCountLabel->setToolTip("Cell count");
@@ -46,13 +46,13 @@ public:
 
         layout->setMargin(5);
 
-        Length = new QDoubleSpinBox();
-        Length->setMinimum(1);
-        Length->setMaximum(1000);
-        Length->setSingleStep(1.0);
-        Length->setValue(1.0);
+        WellRadius = new QDoubleSpinBox();
+        WellRadius->setMinimum(1e-3);
+        WellRadius->setMaximum(0.1);
+        WellRadius->setSingleStep(1e-3);
+        WellRadius->setValue(1e-3);
 
-        lengthLabel = new QLabel("Length");
+        wellRadiusLabel = new QLabel("Well radius");
 
         CellCount = new QSpinBox();
         CellCount->setMinimum(1);
@@ -77,7 +77,7 @@ private:
     QGroupBox* groupBox;
     QVBoxLayout* mainLayout;
     QGridLayout* layout;
-    QLabel* lengthLabel;
+    QLabel* wellRadiusLabel;
     QLabel* cellCountLabel;
     QLabel* gridTypeLabel;
 };

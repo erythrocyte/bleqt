@@ -13,6 +13,7 @@
 #include "resultDataWidgetPresenter.hpp"
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
+#include "boundaryConditionsWidgetPresenter.hpp"
 
 namespace ble::gui {
 
@@ -33,6 +34,7 @@ BleApplication::BleApplication()
     builder.registerType<widgets::presenters::RelPermDataWidgetPresenter>();
     builder.registerType<widgets::presenters::SatSolverSettsWidgetPresenter>();
     builder.registerType<widgets::presenters::ShockFrontSettsWidgetPresenter>();
+    builder.registerType<widgets::presenters::BoundaryConditionsWidgetPresenter>();
 
     m_container = builder.build();
 }

@@ -23,16 +23,18 @@ void DataWidgetPresenter::resolve_sub_presenters()
     m_relperm_presenter = m_container->resolve<RelPermDataWidgetPresenter>();
     m_satsolverset_presenter = m_container->resolve<SatSolverSettsWidgetPresenter>();
     m_shockfront_presenter = m_container->resolve<ShockFrontSettsWidgetPresenter>();
+    m_boundarycond_presenter = m_container->resolve<BoundaryConditionsWidgetPresenter>();
 }
 
 void DataWidgetPresenter::set_widgets_to_view()
 {
     auto model = std::make_shared<models::DataWidgetComponentsDto>();
-    model->gridset_view = m_gridset_presenter->get_view();
-    model->modeldata_view = m_modeldata_presenter->get_view();
-    model->relperm_view = m_relperm_presenter->get_view();
+    model->gridset_widget = m_gridset_presenter->get_view();
+    model->modeldata_widget = m_modeldata_presenter->get_view();
+    model->relperm_widget = m_relperm_presenter->get_view();
     model->satsolverset_view = m_satsolverset_presenter->get_view();
-    model->shockfront_view = m_shockfront_presenter->get_view();
+    model->shockfront_widget = m_shockfront_presenter->get_view();
+    model->boundarycond_widget = m_boundarycond_presenter->get_view();
 
     get_view()->set_view_objects(model);
 }

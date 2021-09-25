@@ -7,20 +7,20 @@
 #include <QWidget>
 
 #include "models/dataWidgetComponentsDto.hpp"
-#include "modelDataWidget.hpp"
-#include "relPermDataWidget.hpp"
-#include "satSolverSettsWidget.hpp"
-#include "shockFrontSettsWidget.hpp"
+#include "uis/ui_dataWidget.hpp"
 
 namespace ble::gui::widgets {
-class DataWidget : public QWidget {
+class DataWidget : public QWidget, private UI::Data {
     Q_OBJECT
 
 public:
     DataWidget(QWidget* parent = nullptr);
-    ~DataWidget() { }
+    ~DataWidget();
 
     void set_view_objects(std::shared_ptr<models::DataWidgetComponentsDto> components);
+
+private:
+    UI::Data* ui;
 };
 
 } // namespace ble_gui::widgets

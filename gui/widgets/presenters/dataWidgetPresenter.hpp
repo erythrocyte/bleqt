@@ -14,6 +14,7 @@
 #include "relPermDataWidgetPresenter.hpp"
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
+#include "boundaryConditionsWidgetPresenter.hpp"
 
 namespace ble::gui::widgets::presenters {
 
@@ -39,6 +40,8 @@ private:
     std::shared_ptr<RelPermDataWidgetPresenter> m_relperm_presenter;
     std::shared_ptr<SatSolverSettsWidgetPresenter> m_satsolverset_presenter;
     std::shared_ptr<ShockFrontSettsWidgetPresenter> m_shockfront_presenter;
+    std::shared_ptr<BoundaryConditionsWidgetPresenter> m_boundarycond_presenter;
+
 
     void set_widgets_to_view();
     void resolve_sub_presenters();
