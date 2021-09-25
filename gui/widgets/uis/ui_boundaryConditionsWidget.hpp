@@ -27,7 +27,7 @@ public:
         groupBox->setTitle("Boundary Conditions");
         groupBox->setToolTip("Boundary Conditions");
 
-        m_contourBoundTypeLabel->setText("Contour Bound Type");
+        m_contourBoundTypeLabel->setText("CB Type");
         m_contourBoundTypeLabel->setToolTip("Contour Bound Type");
 
         m_RHSTypeLabel->setText("RHS Type");
@@ -39,7 +39,7 @@ public:
 
     void setupUI(QWidget* widget)
     {
-        groupBox = new QGroupBox("Grid/Domain");
+        groupBox = new QGroupBox("Boundary Conditions");
         mainLayout = new QVBoxLayout(widget);
         mainLayout->addWidget(groupBox);
         layout = new QGridLayout(groupBox);
@@ -48,21 +48,21 @@ public:
         layout->setMargin(5);
 
         ContourBondType = new QComboBox();
-        m_contourBoundTypeLabel = new QLabel("Contour Bound Type");
+        m_contourBoundTypeLabel = new QLabel("CB Type");
         layout->addWidget(m_contourBoundTypeLabel, 0, 0, 1, 1);
-        layout->addWidget(ContourBondType, 0, 1, 2, 5);
+        layout->addWidget(ContourBondType, 0, 1, 1, 5);
         
         RHSType = new QComboBox();        
         m_RHSTypeLabel = new QLabel("RHS Type");
-        layout->addWidget(m_RHSTypeLabel, 1, 0, 1 ,1);
-        layout->addWidget(RHSType, 1, 1, 2, 5);
+        // layout->addWidget(m_RHSTypeLabel, 1, 0, 1 ,1);
+        // layout->addWidget(RHSType, 1, 1, 2, 5);
 
         m_RHSFileLabel = new QLabel("RHS File");
         RHSFile = new QTextEdit();
         RHSFileChooseButton = new QPushButton();
-        layout->addWidget(RHSFile, 2, 1, 2, 4);        
-        layout->addWidget(m_RHSFileLabel, 2, 0, 1, 1);
-        layout->addWidget(RHSFileChooseButton, 2, 5, 1, 1);
+        // layout->addWidget(RHSFile, 2, 1, 2, 4);        
+        // layout->addWidget(m_RHSFileLabel, 2, 0, 1, 1);
+        // layout->addWidget(RHSFileChooseButton, 2, 5, 1, 1);
 
         retranslateUi(widget);
     }

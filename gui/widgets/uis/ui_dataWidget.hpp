@@ -26,6 +26,8 @@ public:
 
         m_scrollArea = new QScrollArea(widget);
         m_scrollArea->setWidget(m_window);
+        m_scrollArea->setMinimumWidth(100);
+        m_scrollArea->setWidgetResizable(false);
         m_scrollArea->show();
 
         m_layout = new QVBoxLayout(widget);

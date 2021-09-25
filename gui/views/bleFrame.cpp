@@ -24,8 +24,9 @@ BleFrame::BleFrame(QWidget* parent)
     connect(ui->quit, &QAction::triggered, qApp, QApplication::quit);
     connect(ui->runAction, SIGNAL(triggered()), this, SLOT(handleRunButton()));
 
-    addDockWidget(Qt::BottomDockWidgetArea, ui->dockMessages);
     addDockWidget(Qt::LeftDockWidgetArea, ui->dockSettings);
+
+    addDockWidget(Qt::BottomDockWidgetArea, ui->dockMessages);
     ui->dockMessages->setAllowedAreas(Qt::BottomDockWidgetArea);
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
@@ -33,6 +34,7 @@ BleFrame::BleFrame(QWidget* parent)
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
     resizeDocks({ ui->dockMessages }, { 50 }, Qt::Vertical); // This is the hack
+    resizeDocks({ ui->dockSettings }, { 100 }, Qt::Horizontal); // This is the hack
 }
 
 void BleFrame::set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget)
@@ -40,6 +42,7 @@ void BleFrame::set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidg
     QTabWidget* tabSettings = new QTabWidget();
     tabSettings->setTabPosition(QTabWidget::TabPosition::West);
     tabSettings->addTab(dataWidget.get(), "");
+    tabSettings->setMinimumWidth(325);
 
     frames::QVerticalLabel* tabSettingsLabel1 = new frames::QVerticalLabel("Main");
     tabSettingsLabel1->setStyleSheet("QLabel { color : #C0BBFE }");

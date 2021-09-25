@@ -72,7 +72,7 @@ private:
 
     void setupDock(QWidget* widget)
     {
-        dockSettings = new QDockWidget("Settings", widget);
+        dockSettings = new QDockWidget("Settings", widget);        
         dockMessages = new QDockWidget("Messages", widget);
 
         messagePlainText = new QPlainTextEdit(widget);
