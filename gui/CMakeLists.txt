@@ -27,6 +27,7 @@ set (SOURCES
 	widgets/resultDataWidget.cpp
 	widgets/fluidParamsGraphWidget.cpp
 	widgets/wellWorkDataWidget.cpp
+	widgets/boundaryConditionsWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
 
@@ -39,6 +40,7 @@ set (SOURCES
 	widgets/presenters/satSolverSettsWidgetPresenter.cpp
 	widgets/presenters/shockFrontSettsWidgetPresenter.cpp
 	widgets/presenters/wellWorkDataWidgetPresenter.cpp
+	widgets/presenters/boundaryConditionsWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	

@@ -14,9 +14,9 @@ std::shared_ptr<GridSettsWidget> GridSettsWidgetPresenter::get_view()
     return std::static_pointer_cast<GridSettsWidget>(m_view);
 }
 
-double GridSettsWidgetPresenter::get_domain_len()
+double GridSettsWidgetPresenter::get_well_radius()
 {
-    return get_view()->getLenght();
+    return get_view()->getWellRadius();
 }
 
 int GridSettsWidgetPresenter::get_cell_count()

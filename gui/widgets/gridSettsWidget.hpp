@@ -4,9 +4,6 @@
 #include <iostream>
 #include <memory>
 
-#include <QComboBox>
-#include <QDoubleSpinBox>
-#include <QSpinBox>
 #include <QWidget>
 
 #include "uis/ui_gridSettsWidget.hpp"
@@ -19,11 +16,17 @@ public:
     GridSettsWidget(QWidget* parent = nullptr);
     ~GridSettsWidget() { delete ui; }
 
-    double getLenght() const { return ui->Length->value(); }
+    double getWellRadius() const { return ui->WellRadius->value(); }
     int getCellCount() const { return ui->CellCount->value(); }
 
 private:
     UI::GridSetts* ui;
+
+    void subscribe();
+    void fix_well_radius(const QString&);
+
+private slots:
+    void gridTypeChanged(int index);
 };
 
 } // namespace ble_gui::widgets

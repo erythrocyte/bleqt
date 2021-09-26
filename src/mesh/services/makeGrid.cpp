@@ -5,7 +5,7 @@ namespace ble::src::mesh::services {
 std::shared_ptr<mesh::models::Grid> make_regular_grid(const std::shared_ptr<common::models::InputData> data)
 {
     std::shared_ptr<mesh::models::Grid> result(new mesh::models::Grid());
-    double step = data->grd->l / data->grd->n;
+    double step = data->grd->get_lenght() / data->grd->n;
 
     for (int k = 0; k < data->grd->n; k++) { // cells
         std::shared_ptr<mesh::models::Face> fc(new mesh::models::Face());
@@ -34,7 +34,7 @@ std::shared_ptr<mesh::models::Grid> make_regular_grid(const std::shared_ptr<comm
     // last face;
     std::shared_ptr<mesh::models::Face> fc(new mesh::models::Face());
     fc->ind = data->grd->n;
-    fc->x = data->grd->l;
+    fc->x = data->grd->rc;
     fc->cl1 = data->grd->n - 1;
     fc->type = mesh::models::FaceType::kContour;
     fc->bound_press = 1.;
@@ -50,7 +50,7 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
     case common::models::GridType::TypeEnum::kRegular:
         return make_regular_grid(data);
     case common::models::GridType::TypeEnum::kRadial:
-    case common::models::GridType::TypeEnum::kSpheric:
+    // case common::models::GridType::TypeEnum::kSpheric:
     default:
         return std::make_shared<mesh::models::Grid>();
     }

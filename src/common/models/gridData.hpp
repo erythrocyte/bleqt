@@ -7,10 +7,13 @@ namespace ble::src::common::models {
 
 class GridData {
 public:
-    double l;
+    double rw;
+    double rc;
     double n;
 
     GridType::TypeEnum type;
+
+    double get_lenght() { return rc - rw; }
 };
 
 }

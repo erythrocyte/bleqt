@@ -23,16 +23,18 @@ void DataWidgetPresenter::resolve_sub_presenters()
     m_relperm_presenter = m_container->resolve<RelPermDataWidgetPresenter>();
     m_satsolverset_presenter = m_container->resolve<SatSolverSettsWidgetPresenter>();
     m_shockfront_presenter = m_container->resolve<ShockFrontSettsWidgetPresenter>();
+    m_boundarycond_presenter = m_container->resolve<BoundaryConditionsWidgetPresenter>();
 }
 
 void DataWidgetPresenter::set_widgets_to_view()
 {
     auto model = std::make_shared<models::DataWidgetComponentsDto>();
-    model->gridset_view = m_gridset_presenter->get_view();
-    model->modeldata_view = m_modeldata_presenter->get_view();
-    model->relperm_view = m_relperm_presenter->get_view();
+    model->gridset_widget = m_gridset_presenter->get_view();
+    model->modeldata_widget = m_modeldata_presenter->get_view();
+    model->relperm_widget = m_relperm_presenter->get_view();
     model->satsolverset_view = m_satsolverset_presenter->get_view();
-    model->shockfront_view = m_shockfront_presenter->get_view();
+    model->shockfront_widget = m_shockfront_presenter->get_view();
+    model->boundarycond_widget = m_boundarycond_presenter->get_view();
 
     get_view()->set_view_objects(model);
 }
@@ -63,7 +65,8 @@ std::shared_ptr<ble::src::common::models::InputData> DataWidgetPresenter::get_in
     result->satSetts->cur_val = m_satsolverset_presenter->get_curant_value();
     result->satSetts->pN = m_satsolverset_presenter->get_press_recalc_n();
 
-    result->grd->l = m_gridset_presenter->get_domain_len();
+    result->grd->rw = m_gridset_presenter->get_well_radius();
+    result->grd->rc = 1.0;
     result->grd->n = m_gridset_presenter->get_cell_count();
 
     return result;

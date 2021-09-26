@@ -14,7 +14,7 @@ public:
     enum TypeEnum {
         kRegular,
         kRadial,
-        kSpheric
+        // kSpheric
     };
 
     static std::string get_description(TypeEnum enumVal)
@@ -24,25 +24,27 @@ public:
             return "Radial";
         case TypeEnum::kRegular:
             return "Regular";
-        case TypeEnum::kSpheric:
-            return "Spheric";
+        // case TypeEnum::kSpheric:
+        //     return "Spheric";
         default:
             return "Undefined";
         }
     }
 
-    TypeEnum get_enum(std::string val)
+    static TypeEnum get_enum(std::string val)
     {
         if (val == "Radial")
-            return TypeEnum::kRegular;
-        else if (val == "Spheric")
-            return TypeEnum::kSpheric;
+            return TypeEnum::kRadial;
+        // else if (val == "Spheric")
+        //     return TypeEnum::kSpheric;
         else
             return TypeEnum::kRegular;
     }
 };
 
-typedef common::utils::Iterator<GridType::TypeEnum, GridType::TypeEnum::kRegular, GridType::TypeEnum::kSpheric> GridTypeEnumIterator;
+typedef common::utils::Iterator<GridType::TypeEnum, 
+GridType::TypeEnum::kRegular, 
+GridType::TypeEnum::kRadial> GridTypeEnumIterator;
 
 } // namespace ble::src
 
