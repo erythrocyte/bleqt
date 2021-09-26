@@ -5,12 +5,14 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC -g")
 set (HEADERS
 	unit_tests/common/services/shockFrontTests.hpp
 	unit_tests/common/services/workRpTests.hpp
+	unit_tests/common/services/boundSourceServiceTests.hpp
 )
 
 set (SOURCE
 	# bleTests.cpp
 	unit_tests/common/services/shockFrontTests.cpp
 	unit_tests/common/services/workRpTests.cpp
+	unit_tests/common/services/boundSourceServiceTests.cpp
 	main.cpp
 )
 

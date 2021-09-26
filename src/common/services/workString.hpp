@@ -8,16 +8,16 @@
 
 namespace ble::src::common::services {
 
-std::string ltrim(const std::string s);
-std::string rtrim(const std::string s);
-std::string trim(const std::string s);
+std::string ltrim(const std::string& s);
+std::string rtrim(const std::string& s);
+std::string trim(const std::string& s);
 std::string trim_erase_end(std::string& ss);
-std::vector<std::string> split(const std::string value, const std::string delim);
-int to_int(const std::string ss);
-double to_dbl(const std::string ss);
-std::string replace_symbol(const std::string ss, const std::string searchable,
-    const std::string replacable);
-bool str_starts_with(std::string const ss, std::string const sub_str);
+std::vector<std::string> split(const std::string& value, const std::string& delim);
+int to_int(const std::string& ss);
+double to_dbl(const std::string& ss);
+std::string replace_symbol(const std::string& ss, const std::string& searchable,
+    const std::string& replacable);
+bool str_starts_with(const std::string& ss, const std::string& sub_str);
 template <typename... Args>
 std::string string_format(const std::string& format, Args... args)
 {

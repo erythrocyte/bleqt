@@ -1,6 +1,11 @@
 #include "workFile.hpp"
 
+#include "sys/stat.h"
 #include <fstream>
+#include <sstream>
+
+#include "common/services/workString.hpp"
+#include "logging/logger.hpp"
 
 namespace ble::src::file::services {
 
@@ -42,15 +47,43 @@ std::vector<std::string> read_file_from_line(int start_line, const std::string f
     std::ifstream file(fn);
     std::string str;
     if (file.is_open()) {
-        int index= 0;
+        int index = 0;
         while (std::getline(file, str)) {
             // Process str
-            if (index >= start_line){
+            if (index >= start_line) {
                 result.push_back(str);
             }
-            index ++;
+            index++;
         }
     }
+
+    return result;
+}
+
+bool file_exists(const std::string& name)
+{
+    struct stat buffer;
+    return (stat(name.c_str(), &buffer) == 0);
+}
+
+std::vector<std::string> read_file_to_vector(const std::string& fileName)
+{
+    std::vector<std::string> result;
+
+    std::string mess = common::services::string_format("file to be open = %s", fileName.c_str());
+    logging::write_log(mess, logging::SeverityLevelEnum::kDebug);
+
+    bool isExFile = file_exists(fileName);
+    mess = common::services::string_format("file %s%s exists", fileName.c_str(),
+        isExFile ? "" : " does not");
+    logging::write_log(mess, logging::SeverityLevelEnum::kDebug);
+
+    std::ifstream ifs(fileName.c_str());
+    std::string line;
+    while (std::getline(ifs, line)) {
+        result.push_back(line);
+    }
+    ifs.close();
 
     return result;
 }
