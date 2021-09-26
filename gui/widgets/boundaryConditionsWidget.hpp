@@ -28,6 +28,7 @@ private:
 private slots:
     void contourTypeChanged(const QString&);
     void rhsTypeChanged(const QString&);
+    void fileChooseClicked();
 };
 
 } // namespace ble_gui::widgets

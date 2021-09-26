@@ -9,6 +9,8 @@
 
 #include "boundaryConditionsWidget.hpp"
 
+#include <QFileDialog>
+
 #include "common/models/boundCondType.hpp"
 #include "common/models/rhsType.hpp"
 
@@ -44,6 +46,8 @@ void BoundaryConditionsWidget::subscribe()
     success = QObject::connect(ui->RHSType, SIGNAL(currentIndexChanged(const QString&)),
         this, SLOT(rhsTypeChanged(const QString&)));
     Q_ASSERT(success);
+    success = QObject::connect(ui->RHSFileChooseButton, SIGNAL(clicked()), this, SLOT(fileChooseClicked()));
+    Q_ASSERT(success);
 }
 
 void BoundaryConditionsWidget::contourTypeChanged(const QString& value)
@@ -53,9 +57,7 @@ void BoundaryConditionsWidget::contourTypeChanged(const QString& value)
         ui->RHSType->setEnabled(false);
         ui->RHSFile->setEnabled(false);
         ui->RHSFileChooseButton->setEnabled(false);
-    }
-    else if (m == scmm::BoundCondType::kImpermeable)
-    {
+    } else if (m == scmm::BoundCondType::kImpermeable) {
         ui->RHSType->setEnabled(true);
         ui->RHSFile->setEnabled(true);
         ui->RHSFileChooseButton->setEnabled(true);
@@ -64,6 +66,15 @@ void BoundaryConditionsWidget::contourTypeChanged(const QString& value)
 
 void BoundaryConditionsWidget::rhsTypeChanged(const QString& value)
 {
+}
+
+void BoundaryConditionsWidget::fileChooseClicked()
+{
+    QString str = QFileDialog::getOpenFileName(0, "Open RHS file", "", "*.blerhs");
+    if (!str.trimmed().isEmpty())
+    {
+        ui->RHSFile->setText(str);
+    }
 }
 
 }
