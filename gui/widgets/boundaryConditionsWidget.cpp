@@ -70,10 +70,16 @@ void BoundaryConditionsWidget::rhsTypeChanged(const QString& value)
 
 void BoundaryConditionsWidget::fileChooseClicked()
 {
-    QString str = QFileDialog::getOpenFileName(0, "Open RHS file", "", "*.blerhs");
-    if (!str.trimmed().isEmpty())
-    {
-        ui->RHSFile->setText(str);
+    QString filter = tr("BLERHS (*.blerhs)");    
+    QString file_name = QFileDialog::getOpenFileName(
+        this,
+        "Open RHS file",
+        "",
+        tr("BLERHS (*.blerhs)"),
+        &filter);
+
+    if (!file_name.trimmed().isEmpty()) {
+        ui->RHSFile->setText(file_name);
     }
 }
 
