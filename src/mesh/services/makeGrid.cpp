@@ -50,7 +50,7 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
     case common::models::GridType::TypeEnum::kRegular:
         return make_regular_grid(data);
     case common::models::GridType::TypeEnum::kRadial:
-    case common::models::GridType::TypeEnum::kSpheric:
+    // case common::models::GridType::TypeEnum::kSpheric:
     default:
         return std::make_shared<mesh::models::Grid>();
     }
