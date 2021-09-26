@@ -17,7 +17,7 @@ namespace ble::gui::widgets::UI {
 class BoundaryConditions {
 
 public:
-    QComboBox* ContourBondType;
+    QComboBox* ContourBoundType;
     QComboBox* RHSType;
     QLineEdit* RHSFile;
     QPushButton* RHSFileChooseButton;
@@ -47,10 +47,10 @@ public:
 
         layout->setMargin(5);
 
-        ContourBondType = new QComboBox();
+        ContourBoundType = new QComboBox();
         m_contourBoundTypeLabel = new QLabel("CB Type");
         layout->addWidget(m_contourBoundTypeLabel, 0, 0, 1, 1);
-        layout->addWidget(ContourBondType, 0, 1, 1, 10);
+        layout->addWidget(ContourBoundType, 0, 1, 1, 10);
 
         RHSType = new QComboBox();
         RHSType->setEnabled(false);

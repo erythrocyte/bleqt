@@ -6,6 +6,7 @@
 
 #include <QWidget>
 
+#include "common/models/boundCondData.hpp"
 #include "uis/ui_boundaryConditionsWidget.hpp"
 
 namespace ble::gui::widgets {
@@ -16,14 +17,15 @@ public:
     BoundaryConditionsWidget(QWidget* parent = nullptr);
     ~BoundaryConditionsWidget() { delete ui; }
 
-    // double getLenght() const { return ui->WellRadius->value(); }
-    // int getCellCount() const { return ui->CellCount->value(); }
+signals:
+    void get_bound_data(const std::shared_ptr<src::common::models::BoundCondData> bound_data);
 
 private:
     UI::BoundaryConditions* ui;
 
     void set_items();
     void subscribe();
+    std::shared_ptr<src::common::models::BoundCondData> prepare_data(bool is_file);
 
 private slots:
     void contourTypeChanged(const QString&);

@@ -24,6 +24,7 @@ set(HEADERS
 	common/services/commonVector.hpp
 	common/services/commonMath.hpp
 	common/services/workString.hpp
+	common/services/boundSourceService.hpp
 
 	common/utils/mapInit.hpp
 
@@ -64,6 +65,7 @@ set (SOURCES
 	common/services/commonVector.cpp
 	common/services/commonMath.cpp
 	common/services/workString.cpp
+	common/services/boundSourceService.cpp
 
 	mesh/services/makeGrid.cpp
 )

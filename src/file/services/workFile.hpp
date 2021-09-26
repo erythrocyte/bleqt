@@ -9,6 +9,8 @@ namespace ble::src::file::services {
 
 std::string get_last_line(const std::string fn);
 std::vector<std::string> read_file_from_line(int start_line, const std::string fn);
+std::vector<std::string> read_file_to_vector(const std::string& fileName);
+bool file_exists(const std::string& name);
 
 }
 

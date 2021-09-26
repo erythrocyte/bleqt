@@ -13,7 +13,7 @@
 namespace ble::src::common::services {
 
 //trim from start
-std::string ltrim(const std::string s)
+std::string ltrim(const std::string& s)
 {
     auto result = s;
     result.erase(
@@ -26,7 +26,7 @@ std::string ltrim(const std::string s)
 };
 
 // trim from end
-std::string rtrim(const std::string s)
+std::string rtrim(const std::string& s)
 {
     auto result = s;
     result.erase(
@@ -40,7 +40,7 @@ std::string rtrim(const std::string s)
 };
 
 // trim from both ends
-std::string trim(const std::string s)
+std::string trim(const std::string& s)
 {
     return ltrim(rtrim(s));
 };
@@ -54,7 +54,7 @@ std::string trim_erase_end(std::string& ss)
     return s;
 };
 
-std::vector<std::string> split(const std::string value, const std::string delim)
+std::vector<std::string> split(const std::string& value, const std::string& delim)
 {
     std::vector<std::string> result;
     size_t pos = 0;
@@ -72,7 +72,7 @@ std::vector<std::string> split(const std::string value, const std::string delim)
     return result;
 };
 
-int to_int(const std::string ss)
+int to_int(const std::string& ss)
 {
     std::istringstream iss(ss);
     int result;
@@ -80,7 +80,7 @@ int to_int(const std::string ss)
     return result;
 };
 
-double to_dbl(const std::string ss)
+double to_dbl(const std::string& ss)
 {
     std::istringstream iss(ss);
     double result;
@@ -88,8 +88,8 @@ double to_dbl(const std::string ss)
     return result;
 };
 
-std::string replace_symbol(const std::string ss, const std::string searchable,
-    const std::string replacable)
+std::string replace_symbol(const std::string& ss, const std::string& searchable,
+    const std::string& replacable)
 {
     const size_t mm1 = std::string::npos;
     size_t m = -1;
@@ -105,7 +105,7 @@ std::string replace_symbol(const std::string ss, const std::string searchable,
     return result;
 };
 
-bool str_starts_with(std::string const& ss, std::string const& sub_str)
+bool str_starts_with(const std::string& ss, const std::string& sub_str)
 {
     if (ss.rfind(sub_str, 0) == 0)
         return true;
