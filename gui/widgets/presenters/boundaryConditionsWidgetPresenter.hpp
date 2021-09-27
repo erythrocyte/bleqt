@@ -19,6 +19,15 @@ public:
     ~BoundaryConditionsWidgetPresenter() { }
 
     std::shared_ptr<BoundaryConditionsWidget> get_view();
+
+signals:
+    void rhsUpdate();
+
+private:
+    void subscribe();
+
+private slots:
+    void onRhsUpdate() { emit rhsUpdate(); }
 };
 
 }

@@ -69,6 +69,7 @@ void BoundaryConditionsWidget::contourTypeChanged(const QString& value)
 
 void BoundaryConditionsWidget::rhsTypeChanged(const QString& value)
 {
+    emit rhs_updated();
 }
 
 void BoundaryConditionsWidget::fileChooseClicked()
@@ -84,6 +85,7 @@ void BoundaryConditionsWidget::fileChooseClicked()
     if (!file_name.trimmed().isEmpty()) {
         ui->RHSFile->setText(file_name);
         get_bound_data(prepare_data(true));
+        emit rhs_updated();
     }
 }
 

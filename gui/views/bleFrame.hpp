@@ -35,7 +35,7 @@ public:
     void add_log_message(std::string str, ble::src::logging::SeverityLevelEnum level);
 
 signals:
-    void sgn_run_calc();
+    void sgn_run_calc();    
 
 private:
     UI::UI_BleFrame* ui;

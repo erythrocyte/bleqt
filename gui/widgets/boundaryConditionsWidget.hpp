@@ -19,6 +19,7 @@ public:
 
 signals:
     void get_bound_data(const std::shared_ptr<src::common::models::BoundCondData> bound_data);
+    void rhs_updated();
 
 private:
     UI::BoundaryConditions* ui;
