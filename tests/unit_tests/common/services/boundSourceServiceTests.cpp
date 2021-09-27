@@ -35,8 +35,8 @@ void case_two_part()
 {
     std::string file_name = "../../samples/rhs/const_two_part.blerhs";
     auto expected = 2;
-    double x1_0 = 50.0;
-    double x1_1 = 100.0;
+    double x1_0 = 0.5;
+    double x1_1 = 1.0;
 
     // act
     auto v = cs::BoundSourceService::get_data(file_name);

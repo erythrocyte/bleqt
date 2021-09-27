@@ -47,6 +47,12 @@ void DataWidgetPresenter::set_signals()
     success = QObject::connect(m_relperm_presenter.get(), SIGNAL(valuesChanged()),
         this, SLOT(onRpValuesChanged()));
     Q_ASSERT(success);
+    success = QObject::connect(m_boundarycond_presenter.get(), SIGNAL(rhsUpdate()), 
+    this , SLOT(onUpdateRhs()));
+    Q_ASSERT(success);
+    success = QObject::connect(m_gridset_presenter.get(), SIGNAL(cellCountChanged()), 
+    this , SLOT(onCellCountChanged()));
+    Q_ASSERT(success);
 }
 
 std::shared_ptr<ble::src::common::models::InputData> DataWidgetPresenter::get_input_data()
@@ -68,6 +74,8 @@ std::shared_ptr<ble::src::common::models::InputData> DataWidgetPresenter::get_in
     result->grd->rw = m_gridset_presenter->get_well_radius();
     result->grd->rc = 1.0;
     result->grd->n = m_gridset_presenter->get_cell_count();
+
+    result->bound = m_boundarycond_presenter->get_bound_data();
 
     return result;
 }

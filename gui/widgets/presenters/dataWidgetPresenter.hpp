@@ -7,6 +7,8 @@
 #include "Hypodermic/Hypodermic.h"
 
 #include "blePresenter.hpp"
+#include "boundaryConditionsWidgetPresenter.hpp"
+#include "common/models/boundCondData.hpp"
 #include "common/models/inputData.hpp"
 #include "dataWidget.hpp"
 #include "gridSettsWidgetPresenter.hpp"
@@ -14,7 +16,6 @@
 #include "relPermDataWidgetPresenter.hpp"
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
-#include "boundaryConditionsWidgetPresenter.hpp"
 
 namespace ble::gui::widgets::presenters {
 
@@ -33,6 +34,8 @@ public:
 signals:
     void showShockFrontCurve(bool status);
     void rpValuesUpdated();
+    void update_rhs();
+    void cellCountChanged();
 
 private:
     std::shared_ptr<GridSettsWidgetPresenter> m_gridset_presenter;
@@ -42,7 +45,6 @@ private:
     std::shared_ptr<ShockFrontSettsWidgetPresenter> m_shockfront_presenter;
     std::shared_ptr<BoundaryConditionsWidgetPresenter> m_boundarycond_presenter;
 
-
     void set_widgets_to_view();
     void resolve_sub_presenters();
     void set_signals();
@@ -51,6 +53,8 @@ private slots:
     void onShowShockFrontCurve(bool status) { emit showShockFrontCurve(status); }
     void onUpdateShockFrontValue(double value);
     void onRpValuesChanged() { emit rpValuesUpdated(); }
+    void onUpdateRhs() { emit update_rhs(); }
+    void onCellCountChanged() { emit cellCountChanged(); }
 };
 
 }

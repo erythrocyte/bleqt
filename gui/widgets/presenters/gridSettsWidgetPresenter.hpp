@@ -12,6 +12,7 @@
 namespace ble::gui::widgets::presenters {
 
 class GridSettsWidgetPresenter : public mvp::BlePresenter {
+    Q_OBJECT
 public:
     GridSettsWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<GridSettsWidget> view);
@@ -21,6 +22,15 @@ public:
 
     double get_well_radius();
     int get_cell_count();
+
+signals:
+    void cellCountChanged();
+
+private:
+    void subscribe();
+
+private slots:
+    void onCellCountChanged() { emit cellCountChanged(); }
 };
 
 }

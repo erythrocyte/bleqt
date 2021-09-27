@@ -7,6 +7,7 @@ GridSettsWidgetPresenter::GridSettsWidgetPresenter(
     std::shared_ptr<GridSettsWidget> view)
     : BlePresenter(container, view)
 {
+    subscribe();
 }
 
 std::shared_ptr<GridSettsWidget> GridSettsWidgetPresenter::get_view()
@@ -22,6 +23,13 @@ double GridSettsWidgetPresenter::get_well_radius()
 int GridSettsWidgetPresenter::get_cell_count()
 {
     return get_view()->getCellCount();
+}
+
+void GridSettsWidgetPresenter::subscribe()
+{
+    QObject* view_obj = dynamic_cast<QObject*>(m_view.get());
+    auto success = QObject::connect(view_obj, SIGNAL(cell_count_changed()), this, SLOT(onCellCountChanged()));
+    Q_ASSERT(success);
 }
 
 }

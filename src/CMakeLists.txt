@@ -67,6 +67,8 @@ set (SOURCES
 	common/services/workString.cpp
 	common/services/boundSourceService.cpp
 
+	mesh/models/grid.cpp
+
 	mesh/services/makeGrid.cpp
 )
 

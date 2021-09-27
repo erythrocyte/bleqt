@@ -14,6 +14,7 @@
 #include "logging/logger.hpp"
 #include "resultDataWidgetPresenter.hpp"
 #include "wellWorkDataWidgetPresenter.hpp"
+#include "boundaryCondResultWidgetPresenter.hpp"
 
 namespace bwp = ble::gui::widgets::presenters;
 
@@ -34,18 +35,21 @@ private:
     std::shared_ptr<bwp::DataWidgetPresenter> m_dataWidgetPresenter;
     std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;
     std::shared_ptr<bwp::WellWorkDataWidgetPresenter> m_wellWorkDataWidgetPresenter;
+    std::shared_ptr<bwp::BoundaryCondResultWidgetPresenter> m_boundCondResultPresenter;
 
     void set_signals();
     double get_sc();
     void update_progress(double perc) { get_view()->update_progress(perc); }
     void set_status(const QString& str) { get_view()->set_status(str); }
-    void init_log();
+    void init_log();    
     std::tuple<std::string, ble::src::logging::SeverityLevelEnum> parse_log_mess(std::string mess);
+
 private slots:
     void onShowShockFrontCurve(bool status);
     void onRpValuesUpdated();
     void on_run_calc();
     void handleFileChanged(QString str);
+    void on_update_rhs_tab();
 };
 }
 

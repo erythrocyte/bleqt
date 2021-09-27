@@ -38,7 +38,15 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_wellWorkDataWidgetPresenter = m_container->resolve<bwp::WellWorkDataWidgetPresenter>();
     auto wellWorkDataView = std::static_pointer_cast<widgets::WellWorkDataWidget>(m_wellWorkDataWidgetPresenter->get_view());
 
-    std::static_pointer_cast<BleFrame>(m_view)->set_widgets(fluidParamsWidget, resultDataWidget, dataWidgetView, wellWorkDataView);
+    m_boundCondResultPresenter = m_container->resolve<bwp::BoundaryCondResultWidgetPresenter>();
+    auto boundCondResultView = std::static_pointer_cast<widgets::BoundaryCondResultWidget>(m_boundCondResultPresenter->get_view());
+
+    std::static_pointer_cast<BleFrame>(m_view)->set_widgets(
+        fluidParamsWidget,
+        resultDataWidget,
+        dataWidgetView,
+        wellWorkDataView,
+        boundCondResultView);
 
     set_signals();
     m_dataWidgetPresenter->set_show_shockfront_status(true);
@@ -55,9 +63,12 @@ void BleFramePresenter::set_signals()
     auto success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(showShockFrontCurve(bool)),
         this, SLOT(onShowShockFrontCurve(bool)));
     Q_ASSERT(success);
-
     success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(rpValuesUpdated()),
         this, SLOT(onRpValuesUpdated()));
+    Q_ASSERT(success);
+    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
+    Q_ASSERT(success);
+    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(cellCountChanged()), this, SLOT(on_update_rhs_tab()));
     Q_ASSERT(success);
 
     QObject* view_obj = dynamic_cast<QObject*>(m_view.get());
@@ -180,6 +191,14 @@ std::tuple<std::string, ble::src::logging::SeverityLevelEnum> BleFramePresenter:
     std::string mm = get_message(mess);
     std::string pp = ble::src::common::services::string_format("%s - %s", time.c_str(), mm.c_str());
     return std::make_tuple<std::string, ble::src::logging::SeverityLevelEnum>(std::move(pp), std::move(level));
+}
+
+void BleFramePresenter::on_update_rhs_tab()
+{
+    auto data = m_dataWidgetPresenter->get_input_data();
+    auto grd = ble::src::mesh::services::make_grid(data); // TODO: mesh every time!
+
+    m_boundCondResultPresenter->set_data(grd, data->bound->bound_sources);
 }
 
 }
