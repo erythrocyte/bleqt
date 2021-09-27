@@ -42,8 +42,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     while (sumT < data->model->period) {
         if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
-            p = services::solve_press(grd, s_prev, data->phys);
-            services::calc_u(p, s_prev, data->phys, grd);
+            p = services::solve_press(grd, s_prev, data);
+            services::calc_u(p, s_prev, data, grd);
             //save_press(index, grd, p);
             pressIndex = 0;
         }

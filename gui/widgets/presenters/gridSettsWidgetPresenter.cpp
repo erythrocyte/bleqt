@@ -32,4 +32,9 @@ void GridSettsWidgetPresenter::subscribe()
     Q_ASSERT(success);
 }
 
+src::common::models::GridType::TypeEnum GridSettsWidgetPresenter::get_grid_type()
+{
+    return get_view()->get_grid_type();
+}
+
 }

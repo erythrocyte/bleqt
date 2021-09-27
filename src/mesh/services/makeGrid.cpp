@@ -56,7 +56,7 @@ std::shared_ptr<mesh::models::Grid> make_radial_grid(const std::shared_ptr<commo
     for (int k = 0; k < data->grd->n; k++) { // cells
         std::shared_ptr<mesh::models::Face> fc(new mesh::models::Face());
         fc->ind = k;
-        fc->x = step * k;
+        fc->x = data->grd->rw + step * k;
         fc->cl1 = k;
         fc->cl2 = k - 1;
         fc->area = 2.0 * M_PI * fc->x;

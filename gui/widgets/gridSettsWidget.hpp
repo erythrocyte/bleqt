@@ -8,6 +8,10 @@
 
 #include "uis/ui_gridSettsWidget.hpp"
 
+#include "common/models/gridType.hpp"
+
+namespace scm = ble::src::common::models;
+
 namespace ble::gui::widgets {
 
 class GridSettsWidget : public QWidget, private UI::GridSetts {
@@ -18,6 +22,7 @@ public:
 
     double getWellRadius() const { return ui->WellRadius->value(); }
     int getCellCount() const { return ui->CellCount->value(); }
+    scm::GridType::TypeEnum get_grid_type();
 
 signals:
     void cell_count_changed();

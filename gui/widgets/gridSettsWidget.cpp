@@ -2,8 +2,6 @@
 
 #include "common/models/gridType.hpp"
 
-namespace scm = ble::src::common::models;
-
 namespace ble::gui::widgets {
 
 GridSettsWidget::GridSettsWidget(QWidget* parent)
@@ -41,6 +39,12 @@ void GridSettsWidget::fix_well_radius(const QString& txt)
     } else {
         ui->WellRadius->setValue(1e-3);
     }
+}
+
+scm::GridType::TypeEnum GridSettsWidget::get_grid_type()
+{
+    auto txt = ui->GridType->currentText();
+    return scm::GridType::get_enum(txt.toStdString());
 }
 
 }

@@ -7,6 +7,7 @@
 #include "Hypodermic/Hypodermic.h"
 
 #include "blePresenter.hpp"
+#include "common/models/gridType.hpp"
 #include "gridSettsWidget.hpp"
 
 namespace ble::gui::widgets::presenters {
@@ -22,6 +23,7 @@ public:
 
     double get_well_radius();
     int get_cell_count();
+    src::common::models::GridType::TypeEnum get_grid_type();
 
 signals:
     void cellCountChanged();
