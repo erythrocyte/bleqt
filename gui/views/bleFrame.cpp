@@ -58,12 +58,14 @@ void BleFrame::set_widgets(
     std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
     std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
     std::shared_ptr<widgets::DataWidget> dataWidget,
-    std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget)
+    std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget,
+    std::shared_ptr<widgets::BoundaryCondResultWidget> boundCondResultWidget)
 {
     this->set_settings_widget(dataWidget);
     ui->tabs->addTab(resultDataWidget.get(), "Results");
     ui->tabs->addTab(fluidParamsWidget.get(), "Fluid params");
     ui->tabs->addTab(wellWorkDataWidget.get(), "Well work");
+    ui->tabs->addTab(boundCondResultWidget.get(), "RHS");
 }
 
 void BleFrame::add_log_message(std::string str, ble::src::logging::SeverityLevelEnum level)

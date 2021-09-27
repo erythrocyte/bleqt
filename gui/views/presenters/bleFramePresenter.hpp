@@ -14,6 +14,7 @@
 #include "logging/logger.hpp"
 #include "resultDataWidgetPresenter.hpp"
 #include "wellWorkDataWidgetPresenter.hpp"
+#include "boundaryCondResultWidgetPresenter.hpp"
 
 namespace bwp = ble::gui::widgets::presenters;
 
@@ -34,6 +35,7 @@ private:
     std::shared_ptr<bwp::DataWidgetPresenter> m_dataWidgetPresenter;
     std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;
     std::shared_ptr<bwp::WellWorkDataWidgetPresenter> m_wellWorkDataWidgetPresenter;
+    std::shared_ptr<bwp::BoundaryCondResultWidgetPresenter> m_boundCondResultPresenter;
 
     void set_signals();
     double get_sc();

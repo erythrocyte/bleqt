@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 
+#include "boundaryCondResultWidget.hpp"
 #include "dataWidget.hpp"
 #include "fluidParamsGraphWidget.hpp"
 #include "logging/logger.hpp"
@@ -27,7 +28,8 @@ public:
     void set_widgets(std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
         std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
         std::shared_ptr<widgets::DataWidget> dataWidget,
-        std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget);
+        std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget,
+        std::shared_ptr<widgets::BoundaryCondResultWidget> boundCondResultWidget);
     void update_progress(double perc) { ui->statusProgressBar->setValue(perc); }
     void set_status(QString str) { ui->statusLabel->setText(str); }
     void add_log_message(std::string str, ble::src::logging::SeverityLevelEnum level);
