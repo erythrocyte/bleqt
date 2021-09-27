@@ -15,7 +15,7 @@ class Face {
 
 		double u;
 
-		double area = 1.;
+		double area = 0.0;
 
 		double bound_press = 0.;
 		double bound_satur = 0.;
