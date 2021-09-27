@@ -29,6 +29,8 @@ void GridSettsWidget::subscribe()
     auto success = QObject::connect(ui->GridType, SIGNAL(currentIndexChanged(int)),
         this, SLOT(gridTypeChanged(int)));
     Q_ASSERT(success);
+    success = QObject::connect(ui->CellCount, SIGNAL(valueChanged(int)), this, SLOT(onCellCountChanged(int)));
+    Q_ASSERT(success);
 }
 
 void GridSettsWidget::fix_well_radius(const QString& txt)

@@ -50,6 +50,9 @@ void DataWidgetPresenter::set_signals()
     success = QObject::connect(m_boundarycond_presenter.get(), SIGNAL(rhsUpdate()), 
     this , SLOT(onUpdateRhs()));
     Q_ASSERT(success);
+    success = QObject::connect(m_gridset_presenter.get(), SIGNAL(cellCountChanged()), 
+    this , SLOT(onCellCountChanged()));
+    Q_ASSERT(success);
 }
 
 std::shared_ptr<ble::src::common::models::InputData> DataWidgetPresenter::get_input_data()

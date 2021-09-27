@@ -19,6 +19,9 @@ public:
     double getWellRadius() const { return ui->WellRadius->value(); }
     int getCellCount() const { return ui->CellCount->value(); }
 
+signals:
+    void cell_count_changed();
+
 private:
     UI::GridSetts* ui;
 
@@ -27,6 +30,7 @@ private:
 
 private slots:
     void gridTypeChanged(int index);
+    void onCellCountChanged(int index) { emit cell_count_changed(); }
 };
 
 } // namespace ble_gui::widgets

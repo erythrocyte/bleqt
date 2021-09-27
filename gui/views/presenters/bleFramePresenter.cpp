@@ -68,6 +68,8 @@ void BleFramePresenter::set_signals()
     Q_ASSERT(success);
     success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
     Q_ASSERT(success);
+    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(cellCountChanged()), this, SLOT(on_update_rhs_tab()));
+    Q_ASSERT(success);
 
     QObject* view_obj = dynamic_cast<QObject*>(m_view.get());
     success = QObject::connect(view_obj, SIGNAL(sgn_run_calc()), this, SLOT(on_run_calc()));
