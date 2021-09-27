@@ -37,7 +37,7 @@ QVariant BoundaryCondResultModel::data(const QModelIndex& index, int role) const
         case 1: {
             double x = m_grd->cells[row_index]->cntr;
             for (auto& d : m_data) {
-                if ((d->x0 >= x) && (x <= d->x1)) {
+                if ((d->x0 <= x) && (x <= d->x1)) {
                     return src::common::services::get_value_lin_approx(d, x);
                 }
             }
@@ -81,6 +81,33 @@ QVariant BoundaryCondResultModel::headerData(int section, Qt::Orientation orient
 bool BoundaryCondResultModel::is_empty(double value) const
 {
     return std::abs(value - EMPTY_VAL) < 1e-8;
+}
+
+std::tuple<double, double> BoundaryCondResultModel::getValueRange()
+{
+    if (m_data.size() == 0)
+        return std::make_tuple(EMPTY_VAL, EMPTY_VAL);
+
+    double minx_grd, maxx_grd;
+    std::tie(minx_grd, maxx_grd) = m_grd->get_min_max();
+
+    double result_min = 1e20;
+    double result_max = -1e20;
+    for (auto& d : m_data) {
+        if (!(maxx_grd >= d->x0 && minx_grd <= d->x1))
+            continue;
+        if (d->v0 < result_min)
+            result_min = d->v0;
+        if (d->v1 < result_min)
+            result_min = d->v1;
+
+        if (d->v0 > result_max)
+            result_max = d->v0;
+        if (d->v1 > result_max)
+            result_max = d->v1;
+    }
+
+    return std::make_tuple(result_min, result_max);
 }
 
 }

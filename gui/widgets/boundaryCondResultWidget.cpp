@@ -85,6 +85,15 @@ void BoundaryCondResultWidget::fill_chart()
         mapper->setModel(m_model);
         ui->add_series(series);
     }
+
+    double min_value, max_value;
+    std::tie(min_value, max_value) = m_model->getValueRange();
+    if (std::abs(min_value - max_value) < 1e-6)
+    {
+        min_value = min_value * 0.95;
+        max_value = max_value * 1.05;
+    }
+    ui->setup_yaxis_range(min_value, max_value);
 }
 
 } // namespace ble_gui::widgets

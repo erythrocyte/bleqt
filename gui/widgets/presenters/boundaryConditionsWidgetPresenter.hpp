@@ -8,6 +8,7 @@
 
 #include "blePresenter.hpp"
 #include "boundaryConditionsWidget.hpp"
+#include "common/models/boundCondData.hpp"
 
 namespace ble::gui::widgets::presenters {
 
@@ -19,6 +20,7 @@ public:
     ~BoundaryConditionsWidgetPresenter() { }
 
     std::shared_ptr<BoundaryConditionsWidget> get_view();
+    std::shared_ptr<src::common::models::BoundCondData> get_bound_data();
 
 signals:
     void rhsUpdate();

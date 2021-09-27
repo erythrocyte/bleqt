@@ -3,17 +3,20 @@
 
 #include <iostream>
 #include <memory>
+#include <tuple>
 #include <vector>
 
-#include "face.hpp"
 #include "cell.hpp"
+#include "face.hpp"
 
 namespace ble::src::mesh::models {
 
 class Grid {
-	public:
-		std::vector<std::shared_ptr<Face>> faces;
-		std::vector<std::shared_ptr<Cell>> cells;
+public:
+    std::vector<std::shared_ptr<Face>> faces;
+    std::vector<std::shared_ptr<Cell>> cells;
+
+    std::tuple<double, double> get_min_max();
 };
 
 }

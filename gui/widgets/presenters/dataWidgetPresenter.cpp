@@ -72,6 +72,8 @@ std::shared_ptr<ble::src::common::models::InputData> DataWidgetPresenter::get_in
     result->grd->rc = 1.0;
     result->grd->n = m_gridset_presenter->get_cell_count();
 
+    result->bound = m_boundarycond_presenter->get_bound_data();
+
     return result;
 }
 

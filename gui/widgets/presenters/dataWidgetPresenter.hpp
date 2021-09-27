@@ -15,6 +15,7 @@
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
 #include "boundaryConditionsWidgetPresenter.hpp"
+#include "common/models/boundCondData.hpp"
 
 namespace ble::gui::widgets::presenters {
 
@@ -28,12 +29,13 @@ public:
     std::shared_ptr<DataWidget> get_view();
 
     void set_show_shockfront_status(bool status);
-    void set_shockfront_value(double value);
+    void set_shockfront_value(double value);    
 
 signals:
     void showShockFrontCurve(bool status);
     void rpValuesUpdated();
     void update_rhs();
+    
 
 private:
     std::shared_ptr<GridSettsWidgetPresenter> m_gridset_presenter;

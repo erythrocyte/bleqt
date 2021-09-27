@@ -1,4 +1,4 @@
 # constant source u = 1
 # format: x0 x1 v0 v1;
-0 50 1 1
-50 100 2 2
+0 0.5 1 1
+0.5 1 2 2

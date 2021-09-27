@@ -59,7 +59,6 @@ void BoundaryConditionsWidget::contourTypeChanged(const QString& value)
         ui->RHSType->setEnabled(false);
         ui->RHSFile->setEnabled(false);
         ui->RHSFileChooseButton->setEnabled(false);
-        get_bound_data(prepare_data(false));
     } else if (m == scmm::BoundCondType::kImpermeable) {
         ui->RHSType->setEnabled(true);
         ui->RHSFile->setEnabled(true);
@@ -84,20 +83,17 @@ void BoundaryConditionsWidget::fileChooseClicked()
 
     if (!file_name.trimmed().isEmpty()) {
         ui->RHSFile->setText(file_name);
-        get_bound_data(prepare_data(true));
         emit rhs_updated();
     }
 }
 
-std::shared_ptr<src::common::models::BoundCondData> BoundaryConditionsWidget::prepare_data(bool is_file)
+std::shared_ptr<src::common::models::BoundCondData> BoundaryConditionsWidget::get_bound_data()
 {
     std::shared_ptr<src::common::models::BoundCondData> result = std::make_shared<src::common::models::BoundCondData>();
     std::string file_name = ui->RHSFile->text().toStdString();
     auto tp = src::common::models::BoundCondType::get_enum(ui->RHSType->currentText().toStdString());
     result->bound_type = tp;
-    if (is_file) {
-        result->bound_sources = scms::BoundSourceService::get_data(file_name);
-    }
+    result->bound_sources = scms::BoundSourceService::get_data(file_name);
     return result;
 }
 

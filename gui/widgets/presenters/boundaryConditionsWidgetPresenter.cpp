@@ -22,4 +22,9 @@ void BoundaryConditionsWidgetPresenter::subscribe()
     Q_ASSERT(success);
 }
 
+std::shared_ptr<src::common::models::BoundCondData> BoundaryConditionsWidgetPresenter::get_bound_data()
+{
+    return get_view()->get_bound_data();
+}
+
 }

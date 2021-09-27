@@ -67,6 +67,11 @@ public:
         return result;
     }
 
+    void setup_yaxis_range(double minVal, double maxVal)
+    {
+        _axisY->setRange(minVal, maxVal);
+    }
+
 private:
     QGridLayout* _chartTableLayout;
     QChartView* _chartView;
