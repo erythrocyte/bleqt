@@ -89,6 +89,13 @@ std::shared_ptr<mesh::models::Grid> make_radial_grid(const std::shared_ptr<commo
     fc->area = 2.0 * M_PI * fc->x;
     result->faces.push_back(fc);
 
+    // double rc = data->grd->rc, rw = data->grd->rw;
+    // double an_area = M_PI * (rc * rc - rw * rw);
+    // double num_area = 0.0;
+    // for (auto &cl: result->cells) {
+    //     num_area += cl->volume;
+    // }
+
     return result;
 }
 

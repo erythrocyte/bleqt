@@ -18,8 +18,14 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
 
     if (fc->type == mm::FaceType::kWell) {
         switch (data->grd->type) {
-        case common::models::GridType::kRadial:
+        case common::models::GridType::kRadial: {
+            // double r = data->grd->rc, rw = data->grd->rw;
+            // double a = (r - 1.0) * (r + 1.0) * (r + 1.0) * (r - rw) * (r + rw);
+            // double a2 = 2.0 * r * (r - rw) * (r + rw) * std::log(rw);
+            // double a3 = 2.0 * r * r * r * (rw * rw - 1.0) * std::log(rw / r);
+            // return a / (a2 + a3);
             return log(data->grd->rc / data->grd->rw) * data->grd->rw; // regular(); //
+        }
         default:
             return regular();
         }
