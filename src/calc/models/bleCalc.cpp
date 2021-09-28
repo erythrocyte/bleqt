@@ -30,7 +30,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     std::function<void(double)> set_progress)
 {
     _results->data.clear();
-    set_initial_cond(grd->cells.size());
+    set_initial_cond(grd, data);
     double sc = cs::shock_front::get_shock_front(data->phys);
 
     int index = 0, pressIndex = 0;
@@ -59,7 +59,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             need_save_fiels = false;
         }
 
-        sumU += services::getULiqInject(grd) * t;
+        sumU += services::getULiqInject(grd, data->grd->type) * t;
         s_cur = services::solve_satur(t, s_prev, data, grd);
         s_prev = s_cur;
         sumT += t;
@@ -71,6 +71,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             d->p = p;
             d->s = s_cur;
             d->s_an = xs_an;
+            d->p_ex = _results->data[0]->p_ex;
 
             _results->data.push_back(d);
             index++;
@@ -86,15 +87,20 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     set_progress(100); // completed;
 }
 
-void BleCalc::set_initial_cond(size_t n)
+void BleCalc::set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
+    const std::shared_ptr<common::models::InputData> data)
 {
+    size_t n = grd->cells.size();
+
     std::vector<double> s(n, 0.);
-    std::vector<double> p(n, 1.);
+    std::vector<double> p = services::solve_press(grd, s, data);
+    std::vector<double> p_ex = services::calc_press_exact(grd, data);
 
     auto d = std::make_shared<ble::src::common::models::DynamicData>();
     d->t = 0;
     d->p = p;
     d->s = s;
+    d->p_ex = p_ex;
 
     _results->data.push_back(d);
 }

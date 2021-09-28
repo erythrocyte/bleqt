@@ -20,6 +20,7 @@ class ResultData {
 public:
     QChart* Chart;
     QLineSeries* SeriesPress;
+    QLineSeries* SeriesPressAn;
     QLineSeries* SeriesSatNum;
     QLineSeries* SeriesSatAn;
     QLineSeries* SeriesSc;
@@ -63,10 +64,12 @@ public:
         _layout->addWidget(_chartView, 0, 0, 1, 11);
 
         SeriesPress = new QLineSeries();
+        SeriesPressAn = new QLineSeries();
         SeriesSatNum = new QLineSeries();
         SeriesSatAn = new QLineSeries();
 
         Chart->addSeries(SeriesPress);
+        Chart->addSeries(SeriesPressAn);
         Chart->addSeries(SeriesSatNum);
         Chart->addSeries(SeriesSatAn);
 
@@ -90,6 +93,7 @@ public:
         _axisYSat->setTitleText("s");
         _axisYPress->setTitleText("p");
         SeriesPress->setName("p");
+        SeriesPressAn->setName("p_an");
         SeriesSatNum->setName("s_num");
         SeriesSatAn->setName("s_an");
         SeriesSc->setName("sc");

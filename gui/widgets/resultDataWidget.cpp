@@ -47,10 +47,12 @@ void ResultDataWidget::fill_time_series(bool init,
     ui->SeriesPress->clear();
     ui->SeriesSatNum->clear();
     ui->SeriesSatAn->clear();
+    ui->SeriesPressAn->clear();
 
     for (auto& cl : _data->grd->cells) {
         ui->SeriesPress->append(cl->cntr, d->p[cl->ind]);
         ui->SeriesSatNum->append(cl->cntr, d->s[cl->ind]);
+        ui->SeriesPressAn->append(cl->cntr, d->p_ex[cl->ind]);
     }
 
     for (auto& v : d->s_an) {

@@ -29,7 +29,8 @@ private:
     std::shared_ptr<BleResultData> _results;
     std::vector<std::shared_ptr<common::models::WellWorkParams>> _wellWorkParams;
 
-    void set_initial_cond(size_t n);
+    void set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
+        const std::shared_ptr<common::models::InputData> data);
     void save_press(int index, const std::shared_ptr<mesh::models::Grid> grd,
         const std::vector<double> p);
 };

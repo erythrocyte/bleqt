@@ -67,8 +67,8 @@ std::shared_ptr<mesh::models::Grid> make_radial_grid(const std::shared_ptr<commo
 
         std::shared_ptr<mesh::models::Cell> cl(new mesh::models::Cell());
         cl->ind = k;
-        cl->xl = k * step;
-        cl->xr = (k + 1) * step;
+        cl->xl = data->grd->rw + k * step;
+        cl->xr = data->grd->rw + (k + 1) * step;
         cl->cntr = (cl->xr + cl->xl) / 2.0;
         cl->faces.push_back(k);
         cl->faces.push_back(k + 1);

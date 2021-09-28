@@ -19,7 +19,7 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
     if (fc->type == mm::FaceType::kWell) {
         switch (data->grd->type) {
         case common::models::GridType::kRadial:
-            return regular(); // log(data->grd->rc / data->grd->rw) * data->grd->rw;
+            return log(data->grd->rc / data->grd->rw) * data->grd->rw; // regular(); //
         default:
             return regular();
         }
@@ -78,17 +78,24 @@ std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
     double pw = 0.0, pc = 1.0;
     double rw = data->grd->rw, rc = data->grd->rc;
 
+    auto calc_p_aver_radial = [&](const std::shared_ptr<mm::Cell> cl) {
+        auto m = [](double r) { return (r * r / 2.0) * (std::log(r) - 0.5); };
 
-    for (auto &cl: grd->cells) {
+        double alp = (pc - pw) / std::log(rc / rw);
+        double v = cl->volume;
+        double gam = pw - alp * std::log(rw);
+        double d = alp * 2.0 * M_PI / v;
+        return gam + d * (m(cl->xr) - m(cl->xl));
+    };
+
+    for (auto& cl : grd->cells) {
         double p = 0.0;
-        switch (data->grd->type)
-        {
+        switch (data->grd->type) {
         case common::models::GridType::kRadial:
-            
-            /* code */
+            p = calc_p_aver_radial(cl);
             break;
-        
         default:
+            p = 1.0;
             break;
         }
         result.push_back(p);
