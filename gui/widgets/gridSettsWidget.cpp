@@ -13,6 +13,8 @@ GridSettsWidget::GridSettsWidget(QWidget* parent)
         ui->GridType->addItem(QString::fromStdString(scm::GridType::get_description(v)));
     }
 
+    ui->GridType->setCurrentIndex(1);
+
     subscribe();
     fix_well_radius(ui->GridType->currentText());
 }

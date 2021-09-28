@@ -16,15 +16,33 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
             : std::abs(grd->cells[fc->cl1]->cntr - grd->cells[fc->cl2]->cntr);
     };
 
+    auto correct_radial = [&](double r, double rw) {
+        double a = (r - 1.0) * (r + 1.0) * (r + 1.0) * (r - rw) * (r + rw);
+        double a2 = 2.0 * r * (r - rw) * (r + rw) * std::log(rw);
+        double a3 = 2.0 * r * r * r * (rw * rw - 1.0) * std::log(rw / r);
+        double b1 = a / (a2 + a3);
+        return b1;
+    };
+
+    auto correct_radial2 = [&](double d, double rw) {
+        double a = 16.0 * (d * d - 4.0 * rw * rw);
+        double a2 = -9.0 * (d * d - 4.0 * rw * rw) * std::log(2.0 * rw / 3.0 / d);
+        double a3 = (9.0 * d * d - 4.0 * rw * rw) * std::log(2.0 * rw / d);
+        double b1 = a / (a2 + a3);
+        return b1;
+    };
+
+    double aa = correct_radial(2e-3, 1e-3);
+
     if (fc->type == mm::FaceType::kWell) {
         switch (data->grd->type) {
         case common::models::GridType::kRadial: {
-            // double r = data->grd->rc, rw = data->grd->rw;
-            // double a = (r - 1.0) * (r + 1.0) * (r + 1.0) * (r - rw) * (r + rw);
-            // double a2 = 2.0 * r * (r - rw) * (r + rw) * std::log(rw);
-            // double a3 = 2.0 * r * r * r * (rw * rw - 1.0) * std::log(rw / r);
-            // return a / (a2 + a3);
-            return log(data->grd->rc / data->grd->rw) * data->grd->rw; // regular(); //
+            double r = grd->cells[fc->cl1]->xr, rw = data->grd->rw, d = grd->cells[fc->cl1]->cntr;
+            double b1 = correct_radial(r, rw);
+            double b2 = regular();
+            double b3 = correct_radial2(d, rw);
+            return b3;
+            // return regular(); // log(data->grd->rc / data->grd->rw) * data->grd->rw; //
         }
         default:
             return regular();
