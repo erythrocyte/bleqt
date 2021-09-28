@@ -14,6 +14,8 @@ namespace ble::src::calc::services {
 
 std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::vector<double>& s,
     const std::shared_ptr<common::models::InputData> data);
+std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
+    const std::shared_ptr<common::models::InputData> data);
 void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     const std::shared_ptr<common::models::InputData> data,
     std::shared_ptr<mm::Grid> grd);
