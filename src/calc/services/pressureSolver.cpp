@@ -71,4 +71,30 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     }
 }
 
+std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
+    const std::shared_ptr<common::models::InputData> data)
+{
+    std::vector<double> result;
+    double pw = 0.0, pc = 1.0;
+    double rw = data->grd->rw, rc = data->grd->rc;
+
+
+    for (auto &cl: grd->cells) {
+        double p = 0.0;
+        switch (data->grd->type)
+        {
+        case common::models::GridType::kRadial:
+            
+            /* code */
+            break;
+        
+        default:
+            break;
+        }
+        result.push_back(p);
+    }
+
+    return result;
+}
+
 }
