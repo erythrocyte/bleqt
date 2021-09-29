@@ -32,17 +32,16 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
         return b1;
     };
 
-    double aa = correct_radial(2e-3, 1e-3);
-
     if (fc->type == mm::FaceType::kWell) {
         switch (data->grd->type) {
         case common::models::GridType::kRadial: {
-            double r = grd->cells[fc->cl1]->xr, rw = data->grd->rw, d = grd->cells[fc->cl1]->cntr;
-            double b1 = correct_radial(r, rw);
+            // double r = grd->cells[fc->cl1]->xr;
+            double rw = data->grd->rw;
+            double d = grd->cells[fc->cl1]->cntr;
+            // double b1 = correct_radial(r, rw);
             double b2 = regular();
             double b3 = correct_radial2(d, rw);
-            return b3;
-            // return regular(); // log(data->grd->rc / data->grd->rw) * data->grd->rw; //
+            return b2 / b3;
         }
         default:
             return regular();

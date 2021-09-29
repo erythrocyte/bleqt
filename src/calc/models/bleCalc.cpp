@@ -53,7 +53,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         }
     }
 
-    std::string mess = common::services::string_format("qan = %.5f, qnum = %.5f", qan, qnum);
+    double perc = std::abs(qan - qnum) / qan * 100.0;
+
+    std::string mess = common::services::string_format("qan = %.5f, qnum = %.5f, r = %.3f", qan, qnum, perc);
     logging::write_log(mess, logging::kInfo);
 
     // _wellWorkParams.push_back(std::make_shared<common::models::WellWorkParams>());
