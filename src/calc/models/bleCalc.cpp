@@ -44,21 +44,20 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     services::calc_u(p, s_prev, data, grd);
 
-    double qan = 2 * M_PI / std::log(data->grd->rc / data->grd->rw);
-    double qnum = 0.0;
-    for (auto& fc : grd->faces) {
-        if (fc->type == mm::FaceType::kWell) {
-            double q = -fc->u * fc->area;
-            qnum += q;
-        }
-    }
+    // double qan = 2 * M_PI / std::log(data->grd->rc / data->grd->rw);
+    // double qnum = 0.0;
+    // for (auto& fc : grd->faces) {
+    //     if (fc->type == mm::FaceType::kWell) {
+    //         double q = -fc->u * fc->area;
+    //         qnum += q;
+    //     }
+    // }
+    // double perc = std::abs(qan - qnum) / qan * 100.0;
 
-    double perc = std::abs(qan - qnum) / qan * 100.0;
+    // std::string mess = common::services::string_format("qan = %.5f, qnum = %.5f, r = %.3f", qan, qnum, perc);
+    // logging::write_log(mess, logging::kInfo);
 
-    std::string mess = common::services::string_format("qan = %.5f, qnum = %.5f, r = %.3f", qan, qnum, perc);
-    logging::write_log(mess, logging::kInfo);
-
-    _wellWorkParams.push_back(std::make_shared<common::models::WellWorkParams>());
+    // save_faces_val(grd, data);
 
     while (sumT < data->model->period) {
         if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
@@ -70,8 +69,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         pressIndex++;
 
         double t = services::get_time_step(grd, s_prev, data);
-        std::string mess = common::services::string_format("tau = %.8f", t);
-        logging::write_log(mess, logging::kInfo);
+        // std::string mess = common::services::string_format("tau = %.8f", t);
+        // logging::write_log(mess, logging::kInfo);
         if (saveT + t >= data->model->save_field_step) {
             t = data->model->save_field_step - saveT;
             saveT = 0.0;
@@ -81,7 +80,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             need_save_fiels = false;
         }
 
-        sumU += services::getULiqInject(grd, data->grd->type) * t;
+        double u = services::getULiqInject(grd, data->grd->type);
+        // std::string mess = common::services::string_format("uw = %.8f", u);
+        // logging::write_log(mess, logging::kInfo);
+        sumU += u * t;
         s_cur = services::solve_satur(t, s_prev, data, grd);
         s_prev = s_cur;
         sumT += t;
@@ -142,4 +144,30 @@ void BleCalc::save_press(int index, const std::shared_ptr<mesh::models::Grid> gr
 
     ofs.close();
 }
+
+void BleCalc::save_faces_val(const std::shared_ptr<mesh::models::Grid> grd,
+    const std::shared_ptr<common::models::InputData> data)
+{
+    auto uan = [&](double x) {
+        return (1.0 - 0.0) / std::log(data->grd->rc / data->grd->rw) / x;
+    };
+
+    std::ofstream f("faces_val.dat");
+    for (auto& fc : grd->faces) {
+        f << fc->x << "\t" << fc->u << "\t" << fc->area << "\t" << uan(fc->x) << std::endl;
+    }
+    f.close();
+}
+
+void BleCalc::save_any_vector(const std::vector<std::tuple<double, double>>& v, const std::string& fn)
+{
+    std::ofstream f(fn.c_str());
+    double x, y;
+    for (auto& item : v) {
+        std::tie(x, y) = item;
+        f << x << "\t" << y << std::endl;
+    }
+    f.close();
+}
+
 }
