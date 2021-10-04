@@ -29,9 +29,13 @@ private:
     std::shared_ptr<BleResultData> _results;
     std::vector<std::shared_ptr<common::models::WellWorkParams>> _wellWorkParams;
 
-    void set_initial_cond(size_t n);
+    void set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
+        const std::shared_ptr<common::models::InputData> data);
     void save_press(int index, const std::shared_ptr<mesh::models::Grid> grd,
         const std::vector<double> p);
+    void save_any_vector(const std::vector<std::tuple<double, double>>& v, const std::string& fn);
+    void save_faces_val(const std::shared_ptr<mesh::models::Grid> grd,
+        const std::shared_ptr<common::models::InputData> data);
 };
 } // namespace ble::src
 

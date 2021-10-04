@@ -1,18 +1,39 @@
 #include "workParam.hpp"
 
+#include <math.h>
+
 #include "common/services/workRp.hpp"
 #include "mesh/models/faceType.hpp"
 
 namespace ble::src::calc::services {
 
-double getULiqInject(const std::shared_ptr<mm::Grid> grd)
+double getULiqInject(const std::shared_ptr<mm::Grid> grd, common::models::GridType::TypeEnum grid_type)
 {
     double result = 0.;
+    double result2 = 0.;
 
-    for (auto& fc : grd->faces) {
-        if (fc->type == mesh::models::FaceType::kContour) {
-            result += fc->u;
+    switch (grid_type) {
+    case common::models::GridType::kRegular:
+        for (auto& fc : grd->faces) {
+            if (fc->type == mesh::models::FaceType::kContour) {
+                result += fc->u;
+            }
         }
+        break;
+    case common::models::GridType::kRadial:
+        for (auto& fc : grd->faces) {
+            if (fc->type == mesh::models::FaceType::kContour) {
+                result += fc->u;
+            }
+        }
+        for (auto& fc : grd->faces) {
+            if (fc->type == mesh::models::FaceType::kWell) {
+                result2 += fc->area * std::abs(fc->u);
+            }
+        }
+        result2 /= 2.0 * M_PI;
+    default:
+        break;
     }
 
     return result;
@@ -25,7 +46,7 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     result->t = t;
     for (auto& fc : grd->faces) {
         if (fc->type == mm::FaceType::kWell) {
-            double ql = - fc->u * fc->area;
+            double ql = -fc->u * fc->area;
             double f = common::services::rp::get_fbl(s[fc->cl1], data);
             result->ql += ql;
             result->qw += ql * f;
