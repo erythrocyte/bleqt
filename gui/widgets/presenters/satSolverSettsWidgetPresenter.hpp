@@ -17,10 +17,10 @@ public:
         std::shared_ptr<SatSolverSettsWidget> view);
     ~SatSolverSettsWidgetPresenter() { }
 
-
     std::shared_ptr<SatSolverSettsWidget> get_view();
     double get_curant_value();
-        double get_press_recalc_n();
+    double get_press_recalc_n();
+    bool need_satur_solve();
 };
 
 }

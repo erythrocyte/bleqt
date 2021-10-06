@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 
+#include <QCheckBox>
 #include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
@@ -18,6 +19,7 @@ public:
     QDoubleSpinBox* Curant;
     QSpinBox* RecalcPressN;
     QComboBox* SolverType;
+    QCheckBox* NeedSaturSolve;
 
     void setupUi(QWidget* widget)
     {
@@ -56,6 +58,10 @@ public:
         _solverTypeLabel = new QLabel();
         _layout->addWidget(_solverTypeLabel, 2, 0);
 
+        NeedSaturSolve = new QCheckBox("Solve saturation");
+        NeedSaturSolve->setChecked(true);
+        _layout->addWidget(NeedSaturSolve, 3, 0, 1, 2);
+
         retranslateUi(widget);
     }
 
@@ -72,6 +78,9 @@ public:
 
         _solverTypeLabel->setText("Solver type");
         _solverTypeLabel->setToolTip("Solver type");
+
+        NeedSaturSolve->setText("Solve saturation");
+        NeedSaturSolve->setToolTip("Solve saturation");
     }
 
 private:

@@ -44,68 +44,67 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     services::calc_u(p, s_prev, data, grd);
 
-    // double qan = 2 * M_PI / std::log(data->grd->rc / data->grd->rw);
-    // double qnum = 0.0;
-    // for (auto& fc : grd->faces) {
-    //     if (fc->type == mm::FaceType::kWell) {
-    //         double q = -fc->u * fc->area;
-    //         qnum += q;
-    //     }
-    // }
-    // double perc = std::abs(qan - qnum) / qan * 100.0;
+    if (!data->satSetts->need_satur_solve) {
+        auto well_params = services::calc_well_work_param(grd, s_prev, data->phys, sumT);
+        double qan = services::calc_q_analytic(grd, data);
+        double qnum = well_params->ql;
+        double perc = std::abs(qan - qnum) / qan * 100.0;
 
-    // std::string mess = common::services::string_format("qan = %.5f, qnum = %.5f, r = %.3f", qan, qnum, perc);
-    // logging::write_log(mess, logging::kInfo);
+        std::string mess = common::services::string_format("qan = %.5f, qnum = %.5f, r = %.3f", qan, qnum, perc);
+        logging::write_log(mess, logging::kInfo);
 
-    // save_faces_val(grd, data);
+        save_faces_val(grd, data);
+    } else {
+        while (sumT < data->model->period) {
+            if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
+                p = services::solve_press(grd, s_prev, data);
+                services::calc_u(p, s_prev, data, grd);
+                //save_press(index, grd, p);
+                pressIndex = 0;
+            }
+            pressIndex++;
 
-    while (sumT < data->model->period) {
-        if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
-            p = services::solve_press(grd, s_prev, data);
-            services::calc_u(p, s_prev, data, grd);
-            //save_press(index, grd, p);
-            pressIndex = 0;
+            double t = services::get_time_step(grd, s_prev, data);
+            // std::string mess = common::services::string_format("tau = %.8f", t);
+            // logging::write_log(mess, logging::kInfo);
+            if (saveT + t >= data->model->save_field_step) {
+                t = data->model->save_field_step - saveT;
+                saveT = 0.0;
+                need_save_fiels = true;
+            } else {
+                saveT += t;
+                need_save_fiels = false;
+            }
+
+            double u = services::getULiqInject(grd, data->grd->type);
+            // std::string mess = common::services::string_format("uw = %.8f", u);
+            // logging::write_log(mess, logging::kInfo);
+            sumU += u * t;
+            s_cur = services::solve_satur(t, s_prev, data, grd);
+            s_prev = s_cur;
+            sumT += t;
+
+            if (need_save_fiels) {
+                std::vector<std::tuple<double, double>> xs_an = services::get_satur_exact(sc, sumU, data);
+                auto d = std::make_shared<ble::src::common::models::DynamicData>();
+                d->t = sumT;
+                d->p = p;
+                d->s = s_cur;
+                d->s_an = xs_an;
+                d->p_ex = _results->data[0]->p_ex;
+
+                _results->data.push_back(d);
+                index++;
+            }
+
+            auto wwp = services::calc_well_work_param(grd, s_cur, data->phys, sumT);
+            _wellWorkParams.push_back(wwp);
+
+            double perc = std::min(100.0, (sumT / data->model->period * 100.0));
+            set_progress(perc);
         }
-        pressIndex++;
 
-        double t = services::get_time_step(grd, s_prev, data);
-        // std::string mess = common::services::string_format("tau = %.8f", t);
-        // logging::write_log(mess, logging::kInfo);
-        if (saveT + t >= data->model->save_field_step) {
-            t = data->model->save_field_step - saveT;
-            saveT = 0.0;
-            need_save_fiels = true;
-        } else {
-            saveT += t;
-            need_save_fiels = false;
-        }
-
-        double u = services::getULiqInject(grd, data->grd->type);
-        // std::string mess = common::services::string_format("uw = %.8f", u);
-        // logging::write_log(mess, logging::kInfo);
-        sumU += u * t;
-        s_cur = services::solve_satur(t, s_prev, data, grd);
-        s_prev = s_cur;
-        sumT += t;
-
-        if (need_save_fiels) {
-            std::vector<std::tuple<double, double>> xs_an = services::get_satur_exact(sc, sumU, data);
-            auto d = std::make_shared<ble::src::common::models::DynamicData>();
-            d->t = sumT;
-            d->p = p;
-            d->s = s_cur;
-            d->s_an = xs_an;
-            d->p_ex = _results->data[0]->p_ex;
-
-            _results->data.push_back(d);
-            index++;
-        }
-
-        auto wwp = services::calc_well_work_param(grd, s_cur, data->phys, sumT);
-        _wellWorkParams.push_back(wwp);
-
-        double perc = std::min(100.0, (sumT / data->model->period * 100.0));
-        set_progress(perc);
+        logging::write_log("saturation solve completed", logging::kInfo);
     }
 
     set_progress(100); // completed;

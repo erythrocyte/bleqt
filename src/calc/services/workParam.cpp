@@ -59,4 +59,16 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     return result;
 }
 
+double calc_q_analytic(const std::shared_ptr<mm::Grid> grd, const std::shared_ptr<cm::InputData> data)
+{
+    switch (data->grd->type) {
+    case cm::GridType::kRadial:
+        return 2 * M_PI / std::log(data->grd->rc / data->grd->rw);
+    case cm::GridType::kRegular:
+        return (1.0 - 0.0) / data->grd->get_lenght(); // pc - pw / l
+    default:
+        return 0.0;
+    }
+}
+
 } // namespace ble::src

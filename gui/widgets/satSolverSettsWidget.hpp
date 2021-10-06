@@ -16,6 +16,7 @@ public:
 
     double getCurantVal() const { return ui->Curant->value(); }
     int getPressRecalcN() const { return ui->RecalcPressN->value(); }
+    bool need_satur_solver() const { return ui->NeedSaturSolve->isChecked(); }
 
 private:
     UI::SatSolverSetts* ui;
