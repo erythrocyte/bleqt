@@ -10,6 +10,7 @@ public:
     double cur_val;
     int pN; // pressUpdateTimeStepCount;
     SaturSolverType::TypeEnum type;
+    bool need_satur_solve;
 };
 
 }
