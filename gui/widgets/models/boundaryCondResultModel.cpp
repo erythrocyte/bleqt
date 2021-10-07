@@ -9,13 +9,11 @@
 
 #include "boundaryCondResultModel.hpp"
 
-#include "common/services/commonMath.hpp"
-
 namespace ble::gui::widgets::models {
 
 BoundaryCondResultModel::BoundaryCondResultModel(
     const std::shared_ptr<src::mesh::models::Grid> grd,
-    const std::vector<std::shared_ptr<src::common::models::BoundSourceCond>> data,
+    const std::shared_ptr<src::common::models::BoundCondData> data,
     QObject* parent)
     : QAbstractTableModel(parent)
 {
@@ -26,7 +24,7 @@ BoundaryCondResultModel::BoundaryCondResultModel(
 QVariant BoundaryCondResultModel::data(const QModelIndex& index, int role) const
 {
     auto get_value = [&]() {
-        if (m_data.empty())
+        if (m_data == nullptr)
             return EMPTY_VAL;
 
         int row_index = index.row(), column_index = index.column();
@@ -36,11 +34,7 @@ QVariant BoundaryCondResultModel::data(const QModelIndex& index, int role) const
             return m_grd->cells[row_index]->cntr;
         case 1: {
             double x = m_grd->cells[row_index]->cntr;
-            for (auto& d : m_data) {
-                if ((d->x0 <= x) && (x <= d->x1)) {
-                    return src::common::services::get_value_lin_approx(d, x);
-                }
-            }
+            return m_data->get_value(x, EMPTY_VAL);
         }
         }
 
@@ -85,29 +79,13 @@ bool BoundaryCondResultModel::is_empty(double value) const
 
 std::tuple<double, double> BoundaryCondResultModel::getValueRange()
 {
-    if (m_data.size() == 0)
+    if (m_data->bound_sources.size() == 0)
         return std::make_tuple(EMPTY_VAL, EMPTY_VAL);
 
     double minx_grd, maxx_grd;
     std::tie(minx_grd, maxx_grd) = m_grd->get_min_max();
 
-    double result_min = 1e20;
-    double result_max = -1e20;
-    for (auto& d : m_data) {
-        if (!(maxx_grd >= d->x0 && minx_grd <= d->x1))
-            continue;
-        if (d->v0 < result_min)
-            result_min = d->v0;
-        if (d->v1 < result_min)
-            result_min = d->v1;
-
-        if (d->v0 > result_max)
-            result_max = d->v0;
-        if (d->v1 > result_max)
-            result_max = d->v1;
-    }
-
-    return std::make_tuple(result_min, result_max);
+    return m_data->get_range(minx_grd, maxx_grd);
 }
 
 }

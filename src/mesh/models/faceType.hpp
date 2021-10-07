@@ -4,9 +4,11 @@
 namespace ble::src::mesh::models {
 
 enum FaceType {
-	kWell,
-	kContour,
-	kInner
+    kWell,
+    kContour,
+    kInner,
+    kTop,
+    kBot,
 };
 
 }

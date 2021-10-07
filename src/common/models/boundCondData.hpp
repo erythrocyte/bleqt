@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <tuple>
 
 #include "boundCondType.hpp"
 #include "boundSourceCond.hpp"
@@ -19,6 +20,10 @@ public:
 
     std::vector<std::shared_ptr<BoundSourceCond>> bound_sources;
     BoundCondType::TypeEnum bound_type;
+
+    double get_value(double x, double def_val = -99999.0);
+
+    std::tuple<double, double> get_range(double minx_grd, double maxx_grd);
 };
 }
 

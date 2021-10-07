@@ -16,7 +16,7 @@
 
 #include <QAbstractTableModel>
 
-#include "common/models/boundSourceCond.hpp"
+#include "common/models/boundCondData.hpp"
 #include "mesh/models/grid.hpp"
 
 namespace ble::gui::widgets::models {
@@ -27,7 +27,7 @@ class BoundaryCondResultModel : public QAbstractTableModel {
 public:
     BoundaryCondResultModel(
         const std::shared_ptr<src::mesh::models::Grid> grd,
-        const std::vector<std::shared_ptr<src::common::models::BoundSourceCond>> data,
+        const std::shared_ptr<src::common::models::BoundCondData> data,
         QObject* parent = nullptr);
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -39,7 +39,7 @@ public:
     std::tuple<double, double> getValueRange();
 
 private:
-    std::vector<std::shared_ptr<src::common::models::BoundSourceCond>> m_data;
+    std::shared_ptr<src::common::models::BoundCondData> m_data;
     std::shared_ptr<src::mesh::models::Grid> m_grd;
     const double EMPTY_VAL = -99999.0;
 

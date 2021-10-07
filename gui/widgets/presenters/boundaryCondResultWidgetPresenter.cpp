@@ -11,7 +11,7 @@ BoundaryCondResultWidgetPresenter::BoundaryCondResultWidgetPresenter(
 
 void BoundaryCondResultWidgetPresenter::set_data(
     const std::shared_ptr<src::mesh::models::Grid> grd,
-    const std::vector<std::shared_ptr<ble::src::common::models::BoundSourceCond>>& data)
+    const std::shared_ptr<ble::src::common::models::BoundCondData>& data)
 {
     models::BoundaryCondResultModel* model = new models::BoundaryCondResultModel(grd, data);
     get_view()->set_data(model);
