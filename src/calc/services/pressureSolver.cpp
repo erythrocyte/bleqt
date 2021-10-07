@@ -109,11 +109,20 @@ std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
         return gam + d * (m(cl->xr) - m(cl->xl));
     };
 
+    auto calc_p_regular = [&](double x) {
+        double a = (pc - pw) / (rc - rw);
+        double b = (rc * pw - rw * pc) / (rc - rw);
+        return a * x + b;
+    };
+
     for (auto& cl : grd->cells) {
         double p = 0.0;
         switch (data->grd->type) {
         case common::models::GridType::kRadial:
             p = calc_p_aver_radial(cl);
+            break;
+        case common::models::GridType::kRegular:
+            p = calc_p_regular(cl->cntr);
             break;
         default:
             p = 1.0;
