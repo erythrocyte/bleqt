@@ -46,10 +46,27 @@ std::shared_ptr<mesh::models::Grid> make_regular_grid(const std::shared_ptr<comm
         result->cells.push_back(cl);
     }
 
+    bool isolated_top_bot = data->bound->bound_type == common::models::BoundCondType::kConst;
+
     // last face;
+    double bound_p = isolated_top_bot ? 1.0 : -1.0;
     auto fc = make_face(data->grd->n, data->grd->rc, data->grd->n - 1, -1,
-        1.0, mesh::models::FaceType::kContour, 1.0, 1.0, 0.0);
+        1.0, mesh::models::FaceType::kContour, bound_p, 1.0, 0.0);
     result->faces.push_back(fc);
+
+    // up and bottom faces;
+    size_t ind = result->faces.size();
+    for (auto& cl : result->cells) {
+        double area = cl->xr - cl->xl;
+        double bound_u = isolated_top_bot ? 0.0 : data->bound->get_value(cl->cntr);
+        auto top = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop, 0.0, 1.0, bound_u);
+        ind++;
+        result->faces.push_back(top);
+
+        auto bot = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kBot, 0.0, 1.0, bound_u);
+        ind++;
+        result->faces.push_back(bot);
+    }
 
     return result;
 }
@@ -80,14 +97,16 @@ std::shared_ptr<mesh::models::Grid> make_radial_grid(const std::shared_ptr<commo
         result->cells.push_back(cl);
     }
 
+    bool isolated_top_bot = data->bound->bound_type == common::models::BoundCondType::kConst;
+
     // last face;
+    double bound_p = isolated_top_bot ? 1.0 : -1.0;
     double x = data->grd->rc;
     auto fc = make_face(data->grd->n, x, data->grd->n - 1, -1, 2.0 * M_PI * x,
-        mesh::models::FaceType::kContour, 1.0, 1.0, 0.0);
+        mesh::models::FaceType::kContour, bound_p, 1.0, 0.0);
     result->faces.push_back(fc);
 
     // up and bottom faces;
-    bool isolated_top_bot = data->bound->bound_type == common::models::BoundCondType::kImpermeable;
     size_t ind = result->faces.size();
     for (auto& cl : result->cells) {
         double area = M_PI * (cl->xr * cl->xr - cl->xl * cl->xl);

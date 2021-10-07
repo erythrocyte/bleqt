@@ -91,7 +91,8 @@ std::shared_ptr<src::common::models::BoundCondData> BoundaryConditionsWidget::ge
 {
     std::shared_ptr<src::common::models::BoundCondData> result = std::make_shared<src::common::models::BoundCondData>();
     std::string file_name = ui->RHSFile->text().toStdString();
-    auto tp = src::common::models::BoundCondType::get_enum(ui->RHSType->currentText().toStdString());
+    std::string rhs_type_name = ui->ContourBoundType->currentText().toStdString();
+    auto tp = src::common::models::BoundCondType::get_enum(rhs_type_name);
     result->bound_type = tp;
     result->bound_sources = scms::BoundSourceService::get_data(file_name);
     return result;
