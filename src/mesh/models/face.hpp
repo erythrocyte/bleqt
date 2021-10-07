@@ -19,6 +19,7 @@ class Face {
 
 		double bound_press = 0.;
 		double bound_satur = 0.;
+		bool isolated = false;
 
 		FaceType type;
 };

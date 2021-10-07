@@ -63,6 +63,7 @@ std::shared_ptr<mesh::models::Grid> make_radial_grid(const std::shared_ptr<commo
         fc->type = (k == 0)
             ? mesh::models::FaceType::kWell
             : mesh::models::FaceType::kInner;
+        fc->isolated = false;
         result->faces.push_back(fc);
 
         std::shared_ptr<mesh::models::Cell> cl(new mesh::models::Cell());
@@ -87,6 +88,7 @@ std::shared_ptr<mesh::models::Grid> make_radial_grid(const std::shared_ptr<commo
     fc->bound_press = 1.;
     fc->bound_satur = 1.;
     fc->area = 2.0 * M_PI * fc->x;
+    fc->isolated = false;
     result->faces.push_back(fc);
 
     // double rc = data->grd->rc, rw = data->grd->rw;
