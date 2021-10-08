@@ -51,6 +51,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     set_signals();
     m_dataWidgetPresenter->set_show_shockfront_status(true);
     onRpValuesUpdated();
+    on_update_rhs_tab();
 }
 
 void BleFramePresenter::run()
@@ -198,7 +199,7 @@ void BleFramePresenter::on_update_rhs_tab()
     auto data = m_dataWidgetPresenter->get_input_data();
     auto grd = ble::src::mesh::services::make_grid(data); // TODO: mesh every time!
 
-    m_boundCondResultPresenter->set_data(grd, data->bound->bound_sources);
+    m_boundCondResultPresenter->set_data(grd, data->bound);
 }
 
 }

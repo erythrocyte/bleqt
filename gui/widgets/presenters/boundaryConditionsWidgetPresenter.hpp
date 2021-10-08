@@ -20,7 +20,7 @@ public:
     ~BoundaryConditionsWidgetPresenter() { }
 
     std::shared_ptr<BoundaryConditionsWidget> get_view();
-    std::shared_ptr<src::common::models::BoundCondData> get_bound_data();
+    std::shared_ptr<src::common::models::BoundCondData> get_bound_data(double x0, double x1);
 
 signals:
     void rhsUpdate();

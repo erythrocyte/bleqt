@@ -6,7 +6,7 @@
 
 namespace ble::src::common::services {
 
-std::vector<std::shared_ptr<models::BoundSourceCond>> BoundSourceService::get_data(std::string& file_name)
+std::vector<std::shared_ptr<models::BoundSourceCond>> BoundSourceService::get_data_from_file(std::string& file_name)
 {
     std::vector<std::shared_ptr<models::BoundSourceCond>> result;
     if (!file::services::file_exists(file_name))
@@ -27,10 +27,9 @@ std::vector<std::shared_ptr<models::BoundSourceCond>> BoundSourceService::get_da
         bsc->v0 = to_dbl(dd[2]);
         bsc->v1 = to_dbl(dd[3]);
 
-        if (result.size() > 0){
+        if (result.size() > 0) {
             double x1 = result[result.size() - 1]->x1;
-            if (std::abs(x1 - bsc->x0) > 1e-8)
-            {
+            if (std::abs(x1 - bsc->x0) > 1e-8) {
                 result.clear();
                 std::string mess = services::string_format("bad line with rhs: %i", line_index);
                 logging::write_log(mess, logging::kWarning);
@@ -40,6 +39,31 @@ std::vector<std::shared_ptr<models::BoundSourceCond>> BoundSourceService::get_da
 
         line_index++;
 
+        result.push_back(bsc);
+    }
+
+    return result;
+}
+
+std::vector<std::shared_ptr<models::BoundSourceCond>> BoundSourceService::get_data_from_const(
+    double const_val, int len_right_prec, double x0, double x1)
+{
+    std::vector<std::shared_ptr<models::BoundSourceCond>> result;
+    double len = x1 - x0;
+
+    auto bsc = std::make_shared<models::BoundSourceCond>();
+    bsc->x1 = x1;
+    bsc->x0 = len * (1.0 - (double)len_right_prec / 100.0);
+    bsc->v0 = const_val;
+    bsc->v1 = const_val;
+    result.push_back(bsc);
+
+    if (len_right_prec < 100) {
+        bsc = std::make_shared<models::BoundSourceCond>();
+        bsc->x1 = len * (1.0 - (double)len_right_prec / 100.0);
+        bsc->x0 = x0;
+        bsc->v0 = 0.0;
+        bsc->v1 = 0.0;
         result.push_back(bsc);
     }
 

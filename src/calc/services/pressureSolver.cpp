@@ -62,14 +62,29 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         double h = get_h(fc, grd, data);
         double cf = fc->area * sigma / h;
 
-        if (fc->type != mm::FaceType::kInner) {
-            rhs[fc->cl1] += cf * fc->bound_press;
-            ret.C[fc->cl1] += cf;
-        } else {
+        switch (fc->type) {
+        case mm::FaceType::kInner: {
             ret.C[fc->cl1] += cf;
             ret.A[fc->cl1] -= cf;
             ret.B[fc->cl2] -= cf;
             ret.C[fc->cl2] += cf;
+            break;
+        }
+        case mm::FaceType::kWell:
+        case mm::FaceType::kContour: {
+            if (std::abs(fc->bound_press + 1.0) < 1e-6) // no flow;
+                break;
+            rhs[fc->cl1] += cf * fc->bound_press;
+            ret.C[fc->cl1] += cf;
+            break;
+        }
+        case mm::FaceType::kTop:
+        case mm::FaceType::kBot: {
+            rhs[fc->cl1] += fc->area * fc->bound_u;
+            break;
+        }
+        default:
+            break;
         }
     }
 

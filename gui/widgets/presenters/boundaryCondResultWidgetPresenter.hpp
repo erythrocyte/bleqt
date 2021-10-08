@@ -7,10 +7,10 @@
 #include "Hypodermic/Hypodermic.h"
 
 #include "blePresenter.hpp"
-#include "common/models/boundSourceCond.hpp"
-#include "models/boundaryCondResultModel.hpp"
 #include "boundaryCondResultWidget.hpp"
+#include "common/models/boundCondData.hpp"
 #include "mesh/models/grid.hpp"
+#include "models/boundaryCondResultModel.hpp"
 
 namespace ble::gui::widgets::presenters {
 
@@ -22,7 +22,7 @@ public:
 
     void set_data(
         const std::shared_ptr<src::mesh::models::Grid> grd,
-        const std::vector<std::shared_ptr<src::common::models::BoundSourceCond>>& data);
+        const std::shared_ptr<src::common::models::BoundCondData>& data);
 
     std::shared_ptr<BoundaryCondResultWidget> get_view();
 };
