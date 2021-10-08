@@ -21,7 +21,7 @@ void case_one_part()
     expected->v1 = 1.0;
 
     // act
-    auto v = cs::BoundSourceService::get_data(file_name);
+    auto v = cs::BoundSourceService::get_data_from_file(file_name);
     auto actual = v[0];
 
     // assert
@@ -39,7 +39,7 @@ void case_two_part()
     double x1_1 = 1.0;
 
     // act
-    auto v = cs::BoundSourceService::get_data(file_name);
+    auto v = cs::BoundSourceService::get_data_from_file(file_name);
 
     // assert
     BOOST_CHECK_EQUAL(expected, v.size());
@@ -52,7 +52,7 @@ void case_two_part_bad()
     std::string file_name = "../../samples/rhs/const_two_part_bad.blerhs";
 
     // act
-    auto v = cs::BoundSourceService::get_data(file_name);
+    auto v = cs::BoundSourceService::get_data_from_file(file_name);
 
     // assert
     BOOST_CHECK_EQUAL(0, v.size());

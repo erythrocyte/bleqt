@@ -12,7 +12,9 @@ namespace ble::src::common::services {
 
 class BoundSourceService {
 public:
-    static std::vector<std::shared_ptr<models::BoundSourceCond>> get_data(std::string& file_name);
+    static std::vector<std::shared_ptr<models::BoundSourceCond>> get_data_from_file(std::string& file_name);
+    static std::vector<std::shared_ptr<models::BoundSourceCond>> get_data_from_const(
+        double const_val, int len_right_prec, double x0, double x1);
 };
 
 }

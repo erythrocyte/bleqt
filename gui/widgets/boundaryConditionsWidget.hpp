@@ -17,9 +17,9 @@ public:
     BoundaryConditionsWidget(QWidget* parent = nullptr);
     ~BoundaryConditionsWidget() { delete ui; }
 
-    std::shared_ptr<src::common::models::BoundCondData> get_bound_data();
+    std::shared_ptr<src::common::models::BoundCondData> get_bound_data(double x0, double x1);
 
-signals:    
+signals:
     void rhs_updated();
 
 private:
@@ -32,6 +32,8 @@ private slots:
     void contourTypeChanged(const QString&);
     void rhsTypeChanged(const QString&);
     void fileChooseClicked();
+    void onRhsConstValueChanged(double);
+    void onRhsConstLenghtChanged(int);
 };
 
 } // namespace ble_gui::widgets

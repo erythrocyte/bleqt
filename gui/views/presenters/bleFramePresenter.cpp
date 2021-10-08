@@ -51,6 +51,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     set_signals();
     m_dataWidgetPresenter->set_show_shockfront_status(true);
     onRpValuesUpdated();
+    on_update_rhs_tab();
 }
 
 void BleFramePresenter::run()

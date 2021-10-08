@@ -25,8 +25,11 @@ BoundaryConditionsWidget::BoundaryConditionsWidget(QWidget* parent)
     , ui(new UI::BoundaryConditions)
 {
     ui->setupUI(this);
-    set_items();
+    set_items();    
+
     subscribe();
+
+    ui->ContourBoundType->setCurrentIndex(1);
 }
 
 void BoundaryConditionsWidget::set_items()
@@ -50,6 +53,10 @@ void BoundaryConditionsWidget::subscribe()
     Q_ASSERT(success);
     success = QObject::connect(ui->RHSFileChooseButton, SIGNAL(clicked()), this, SLOT(fileChooseClicked()));
     Q_ASSERT(success);
+    success = QObject::connect(ui->RHSConstValue, SIGNAL(valueChanged(double)), this, SLOT(onRhsConstValueChanged(double)));
+    Q_ASSERT(success);
+    success = QObject::connect(ui->RHSConstLenght, SIGNAL(valueChanged(int)), this, SLOT(onRhsConstLenghtChanged(int)));
+    Q_ASSERT(success);
 }
 
 void BoundaryConditionsWidget::contourTypeChanged(const QString& value)
@@ -57,17 +64,30 @@ void BoundaryConditionsWidget::contourTypeChanged(const QString& value)
     auto m = scmm::BoundCondType::get_enum(value.toStdString());
     if (m == scmm::BoundCondType::kConst) {
         ui->RHSType->setEnabled(false);
+        ui->RHSConstValue->setEnabled(false);
         ui->RHSFile->setEnabled(false);
         ui->RHSFileChooseButton->setEnabled(false);
+        ui->RHSConstLenght->setEnabled(false);
     } else if (m == scmm::BoundCondType::kImpermeable) {
         ui->RHSType->setEnabled(true);
-        ui->RHSFile->setEnabled(true);
-        ui->RHSFileChooseButton->setEnabled(true);
+        rhsTypeChanged(ui->RHSType->currentText());
     }
 }
 
 void BoundaryConditionsWidget::rhsTypeChanged(const QString& value)
 {
+    auto m = scmm::RHSType::get_enum(value.toStdString());
+    if (m == scmm::RHSType::kConst) {
+        ui->RHSConstValue->setEnabled(true);
+        ui->RHSConstLenght->setEnabled(true);
+        ui->RHSFile->setEnabled(false);
+        ui->RHSFileChooseButton->setEnabled(false);
+    } else if (m == scmm::RHSType::kFile) {
+        ui->RHSConstValue->setEnabled(false);
+        ui->RHSConstLenght->setEnabled(false);
+        ui->RHSFile->setEnabled(true);
+        ui->RHSFileChooseButton->setEnabled(true);
+    }
     emit rhs_updated();
 }
 
@@ -87,15 +107,45 @@ void BoundaryConditionsWidget::fileChooseClicked()
     }
 }
 
-std::shared_ptr<src::common::models::BoundCondData> BoundaryConditionsWidget::get_bound_data()
+std::shared_ptr<src::common::models::BoundCondData> BoundaryConditionsWidget::get_bound_data(double x0, double x1)
 {
     std::shared_ptr<src::common::models::BoundCondData> result = std::make_shared<src::common::models::BoundCondData>();
-    std::string file_name = ui->RHSFile->text().toStdString();
-    std::string rhs_type_name = ui->ContourBoundType->currentText().toStdString();
-    auto tp = src::common::models::BoundCondType::get_enum(rhs_type_name);
-    result->bound_type = tp;
-    result->bound_sources = scms::BoundSourceService::get_data(file_name);
+
+    std::string bound_type_name = ui->ContourBoundType->currentText().toStdString();
+    auto bound_type = src::common::models::BoundCondType::get_enum(bound_type_name);
+    result->bound_type = bound_type;
+
+    std::string rhs_type_name = ui->RHSType->currentText().toStdString();
+    auto rhs_type = src::common::models::RHSType::get_enum(rhs_type_name);
+    result->rhs_type = rhs_type;
+
+    switch (result->rhs_type) {
+    case src::common::models::RHSType::kConst:{
+        double val = ui->RHSConstValue->value();
+        int len_right_perc = ui->RHSConstLenght->value();
+        result->bound_sources = scms::BoundSourceService::get_data_from_const(val, len_right_perc, x0, x1);
+        break;
+    }
+    case src::common::models::RHSType::kFile: {
+        std::string file_name = ui->RHSFile->text().toStdString();
+        result->bound_sources = scms::BoundSourceService::get_data_from_file(file_name);
+        break;
+    }
+    default:
+        break;
+    }
+
     return result;
+}
+
+void BoundaryConditionsWidget::onRhsConstLenghtChanged(int value)
+{
+    emit rhs_updated();
+}
+
+void BoundaryConditionsWidget::onRhsConstValueChanged(double value)
+{
+    emit rhs_updated();
 }
 
 }

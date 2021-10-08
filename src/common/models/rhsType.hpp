@@ -8,15 +8,15 @@ namespace ble::src::common::models {
 struct RHSType {
 public:
     enum TypeEnum {
-        // kConst,
+        kConst,
         kFile,
     };
 
     static std::string get_description(TypeEnum enumVal)
     {
         switch (enumVal) {
-        // case TypeEnum::kConst:
-        //     return "Const(p=1)";
+        case TypeEnum::kConst:
+            return "Const u";
         case TypeEnum::kFile:
             return "File";
         default:
@@ -24,20 +24,18 @@ public:
         }
     }
 
-    TypeEnum get_enum(std::string val)
+    static TypeEnum get_enum(std::string val)
     {
-        return TypeEnum::kFile;
-        // if (val == "Const")
-        //     return TypeEnum::kImpermeable;
-        // else
-        //     return TypeEnum::kConst;
+        if (val == "File")
+            return TypeEnum::kFile;
+        else
+            return TypeEnum::kConst;
     }
 };
 
 typedef common::utils::Iterator<RHSType::TypeEnum,
-    RHSType::TypeEnum::kFile,
+    RHSType::TypeEnum::kConst,
     RHSType::TypeEnum::kFile>
-    // RHSType::TypeEnum::kConst>
     RHSTypeEnumIterator;
 
 } // namespace ble::src

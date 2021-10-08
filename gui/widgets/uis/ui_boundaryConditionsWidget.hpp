@@ -5,11 +5,13 @@
 #include <memory>
 
 #include <QComboBox>
+#include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QSpinBox>
 #include <QWidget>
 
 namespace ble::gui::widgets::UI {
@@ -21,6 +23,8 @@ public:
     QComboBox* RHSType;
     QLineEdit* RHSFile;
     QPushButton* RHSFileChooseButton;
+    QDoubleSpinBox* RHSConstValue;
+    QSpinBox* RHSConstLenght;
 
     void retranslateUi(QWidget* widget)
     {
@@ -35,6 +39,12 @@ public:
 
         m_RHSFileLabel->setText("RHS File");
         m_RHSFileLabel->setToolTip("RHS File");
+
+        m_RHSConstValueLabel->setText("Const value");
+        m_RHSConstValueLabel->setToolTip("Const value");
+
+        m_RHSConstLenghtLabel->setText("Const value");
+        m_RHSConstLenghtLabel->setToolTip("Const value lenght in \% from right bound");
     }
 
     void setupUI(QWidget* widget)
@@ -69,6 +79,27 @@ public:
         layout->addWidget(RHSFile, 2, 1, 1, 9);
         layout->addWidget(RHSFileChooseButton, 2, 10, 1, 1);
 
+        RHSConstValue = new QDoubleSpinBox();
+        RHSConstValue->setMinimum(-10.0);
+        RHSConstValue->setMaximum(10);
+        RHSConstValue->setSingleStep(1e-3);
+        RHSConstValue->setValue(0.01);
+        RHSConstValue->setDecimals(3);
+        RHSConstValue->setEnabled(false);
+        m_RHSConstValueLabel = new QLabel("Const value");
+        layout->addWidget(m_RHSConstValueLabel, 3, 0, 1, 1);
+        layout->addWidget(RHSConstValue, 3, 1, 1, 10);
+
+        RHSConstLenght = new QSpinBox();
+        RHSConstLenght->setMinimum(0);
+        RHSConstLenght->setMaximum(100);
+        RHSConstLenght->setSingleStep(1);
+        RHSConstLenght->setValue(100);
+        RHSConstLenght->setEnabled(false);
+        m_RHSConstLenghtLabel = new QLabel("Const lenght");
+        layout->addWidget(m_RHSConstLenghtLabel, 4, 0, 1, 1);
+        layout->addWidget(RHSConstLenght, 4, 1, 1, 10);
+
         retranslateUi(widget);
     }
 
@@ -79,6 +110,8 @@ private:
     QLabel* m_contourBoundTypeLabel;
     QLabel* m_RHSTypeLabel;
     QLabel* m_RHSFileLabel;
+    QLabel* m_RHSConstValueLabel;
+    QLabel* m_RHSConstLenghtLabel;
 };
 
 }
