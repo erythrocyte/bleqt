@@ -17,8 +17,8 @@ void case_one_part()
     auto expected = std::make_shared<src::common::models::BoundSourceCond>();
     expected->x0 = 0.0;
     expected->x1 = 100.0;
-    expected->v0 = 1.0;
-    expected->v1 = 1.0;
+    expected->v0 = 0.01;
+    expected->v1 = 0.01;
 
     // act
     auto v = cs::BoundSourceService::get_data_from_file(file_name);
