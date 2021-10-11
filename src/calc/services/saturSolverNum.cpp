@@ -9,19 +9,32 @@ namespace ble::src::calc::services {
 std::vector<double> solve_explicit(const double tau, const std::vector<double>& init,
     const std::shared_ptr<common::models::InputData> data, const std::shared_ptr<mesh::models::Grid> grd)
 {
+    auto get_u = [&](const std::shared_ptr<mesh::models::Face> fc) {
+        switch (fc->type) {
+        case mesh::models::FaceType::kBot:
+        case mesh::models::FaceType::kTop:
+            return fc->bound_u;
+        default:
+            return fc->u;
+        }
+    };
+    auto get_s = [&](const std::shared_ptr<mesh::models::Face> fc, double u) {
+        return (u > 0.)
+            ? (fc->cl2 == -1)
+                ? fc->bound_satur
+                : init[fc->cl2]
+            : init[fc->cl1];
+    };
+
     std::vector<double> result(init.size(), 0.);
 
     std::vector<double> dvs(grd->cells.size(), 0.);
 
     for (auto& fc : grd->faces) {
-        double s = (fc->u > 0.)
-            ? (fc->cl2 == -1)
-                ? fc->bound_satur
-                : init[fc->cl2]
-            : init[fc->cl1];
-
+        double u = get_u(fc);
+        double s = get_s(fc, u);        
         double fbl = cs::rp::get_fbl(s, data->phys);
-        double cf = fc->u * fbl * fc->area;
+        double cf = u * fbl * fc->area;
         dvs[fc->cl1] += cf;
         if (fc->cl2 != -1)
             dvs[fc->cl2] -= cf;
