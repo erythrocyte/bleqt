@@ -24,7 +24,7 @@ public:
         }
     }
 
-    TypeEnum get_enum(std::string val)
+    static TypeEnum get_enum(std::string val)
     {
         if (val == "Implicit")
             return TypeEnum::kImplicit;

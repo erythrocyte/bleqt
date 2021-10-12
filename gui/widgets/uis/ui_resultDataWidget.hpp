@@ -87,6 +87,11 @@ public:
         retranslateUi();
     }
 
+    void set_press_axis_range(double min, double max)
+    {
+        _axisYPress->setRange(min, max);
+    }
+
     void retranslateUi()
     {
         _axisX->setTitleText("x");

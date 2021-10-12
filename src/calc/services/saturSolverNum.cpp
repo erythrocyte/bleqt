@@ -38,11 +38,16 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
         dvs[fc->cl1] += cf;
         if (fc->cl2 != -1)
             dvs[fc->cl2] -= cf;
+        // if (fc->cl1 == 99) {
+        //     std::cout << "u = " << u << ", s = " << s << ", tp = " << mesh::models::FaceType::get_description(fc->type) << std::endl;
+        // }
     }
 
     for (auto& cl : grd->cells) {
         result[cl->ind] = init[cl->ind] + tau / (data->phys->poro * cl->volume) * dvs[cl->ind];
     }
+
+    // std::cout << dvs[99] << std::endl;
 
     return result;
 }
