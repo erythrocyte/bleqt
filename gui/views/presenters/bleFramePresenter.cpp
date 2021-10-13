@@ -116,7 +116,7 @@ void BleFramePresenter::on_run_calc()
     std::string mess = cs::string_format("calculation completed in %.2f sec.", diff.count());
     set_status(QString::fromStdString(mess));
 
-    m_resultDataWidgetPresenter->set_data(results, a);
+    m_resultDataWidgetPresenter->set_data(results, data->bound->bound_type, a);
     m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
     m_wellWorkDataWidgetPresenter->set_time_period(data->model->period);
     update_progress(100);

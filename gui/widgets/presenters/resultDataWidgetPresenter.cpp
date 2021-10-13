@@ -25,9 +25,10 @@ void ResultDataWidgetPresenter::set_sc_visibility(bool state)
 }
 
 void ResultDataWidgetPresenter::set_data(const std::shared_ptr<ble::src::calc::models::BleResultData> data,
+    src::common::models::BoundCondType::TypeEnum bound_type,
     std::function<void(double)> progress)
 {
-    get_view()->setData(data, progress);
+    get_view()->setData(data, bound_type, progress);
 }
 
 }
