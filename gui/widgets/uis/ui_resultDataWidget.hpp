@@ -84,7 +84,27 @@ public:
         SeriesSc->setPen(_pen);
         Chart->addSeries(SeriesSc);
 
+        SeriesPress->attachAxis(_axisX);
+        SeriesPress->attachAxis(_axisYPress);
+
+        SeriesPressAn->attachAxis(_axisX);
+        SeriesPressAn->attachAxis(_axisYPress);
+
+        SeriesSatAn->attachAxis(_axisX);
+        SeriesSatAn->attachAxis(_axisYSat);
+
+        SeriesSatNum->attachAxis(_axisX);
+        SeriesSatNum->attachAxis(_axisYSat);
+
+        SeriesSc->attachAxis(_axisX);
+        SeriesSc->attachAxis(_axisYSat);
+
         retranslateUi();
+    }
+
+    void set_press_axis_range(double min, double max)
+    {
+        _axisYPress->setRange(min, max);
     }
 
     void retranslateUi()

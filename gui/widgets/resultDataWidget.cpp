@@ -15,9 +15,12 @@ ResultDataWidget::ResultDataWidget(QWidget* parent)
 
 void ResultDataWidget::setData(
     const std::shared_ptr<ble::src::calc::models::BleResultData> data,
+    src::common::models::BoundCondType::TypeEnum bound_type,
     std::function<void(double)> progress)
 {
     _data = data;
+    m_bound_type = bound_type;
+
     // clear all;
     ui->Slider->setValue(1);
     ui->Label->setText("");
@@ -52,14 +55,20 @@ void ResultDataWidget::fill_time_series(bool init,
     for (auto& cl : _data->grd->cells) {
         ui->SeriesPress->append(cl->cntr, d->p[cl->ind]);
         ui->SeriesSatNum->append(cl->cntr, d->s[cl->ind]);
-        ui->SeriesPressAn->append(cl->cntr, d->p_ex[cl->ind]);
+        if (m_bound_type == src::common::models::BoundCondType::kConst) {
+            ui->SeriesPressAn->append(cl->cntr, d->p_ex[cl->ind]);
+        }
     }
 
-    for (auto& v : d->s_an) {
-        double x1, s1;
-        std::tie(x1, s1) = v;
-        ui->SeriesSatAn->append(x1, s1);
+    if (m_bound_type == src::common::models::BoundCondType::kConst) {
+        for (auto& v : d->s_an) {
+            double x1, s1;
+            std::tie(x1, s1) = v;
+            ui->SeriesSatAn->append(x1, s1);
+        }
     }
+
+    ui->set_press_axis_range(0.0, d->p[_data->grd->cells.size()-1]);
 }
 
 void ResultDataWidget::update_sc_series(double l, double sc)

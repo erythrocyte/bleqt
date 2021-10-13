@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "calc/models/bleResultData.hpp"
+#include "common/models/boundCondType.hpp"
 
 #include "uis/ui_resultDataWidget.hpp"
 
@@ -20,6 +21,7 @@ public:
     ~ResultDataWidget() { delete ui; }
 
     void setData(const std::shared_ptr<ble::src::calc::models::BleResultData> data,
+        src::common::models::BoundCondType::TypeEnum bound_type,
         std::function<void(double)> progress);
     void update_sc_series(double l, double sc);
     void set_sc_visible(bool visible) { ui->SeriesSc->setVisible(visible); }
@@ -28,6 +30,7 @@ private:
     UI::ResultData* ui;
 
     bool _firstInit = true;
+    src::common::models::BoundCondType::TypeEnum m_bound_type;
 
     std::shared_ptr<ble::src::calc::models::BleResultData> _data;
 

@@ -58,6 +58,10 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
     std::vector<double> rhs(grd->cells.size(), 0.0);
 
     for (auto& fc : grd->faces) {
+        if (fc->isolated) {
+            continue;
+        }
+        
         double sigma = get_face_sigma(fc, s, data->phys, grd);
         double h = get_h(fc, grd, data);
         double cf = fc->area * sigma / h;
@@ -72,8 +76,6 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         }
         case mm::FaceType::kWell:
         case mm::FaceType::kContour: {
-            if (std::abs(fc->bound_press + 1.0) < 1e-6) // no flow;
-                break;
             rhs[fc->cl1] += cf * fc->bound_press;
             ret.C[fc->cl1] += cf;
             break;
@@ -95,6 +97,10 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     const std::shared_ptr<common::models::InputData> data, std::shared_ptr<mm::Grid> grd)
 {
     for (auto& fc : grd->faces) {
+        if (fc->isolated) {
+            continue;
+        }
+
         double sigma = get_face_sigma(fc, s, data->phys, grd);
         double h = get_h(fc, grd, data);
 
