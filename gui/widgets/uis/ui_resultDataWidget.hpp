@@ -5,13 +5,19 @@
 #include <iostream>
 #include <memory>
 
+#include <QAction>
 #include <QChart>
 #include <QChartView>
+#include <QCommonStyle>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineSeries>
 #include <QSlider>
+#include <QTimer>
+#include <QToolBar>
+#include <QToolButton>
 #include <QValueAxis>
+#include <QFont>
 
 using namespace QtCharts;
 
@@ -26,13 +32,67 @@ public:
     QLineSeries* SeriesSc;
     QSlider* Slider;
     QLabel* Label;
+    QAction* BtnSeekBack;
+    QAction* BtnStepBack;
+    QAction* BtnPlayPause;
+    QAction* BtnStop;
+    QAction* BtnStepForward;
+    QAction* BtnSeekForward;
+    QTimer* Timer;
+    QToolButton* TlBtnSpeed;
+    QAction* SpeedLowQuarter;
+    QAction* SpeedLowHalf;
+    QAction* SpeedLowHalfQuarter;
+    QAction* SpeedNormal;
+    QAction* SpeedHighQuarter;
+    QAction* SpeedHighHalf;
+    QAction* SpeedHighTwice;
 
     void setupUi(QWidget* widget)
     {
+        Timer = new QTimer(widget);
+
         _layout = new QGridLayout(widget);
+        QCommonStyle* style = new QCommonStyle();
+
+        m_toolbar = new QToolBar(widget);
+        BtnSeekBack = new QAction("&Seek Back", widget);
+        BtnSeekBack->setIcon(style->standardIcon(QStyle::SP_MediaSkipBackward));
+        m_toolbar->addAction(BtnSeekBack);
+        BtnStepBack = new QAction("&Step Back", widget);
+        BtnStepBack->setIcon(style->standardIcon(QStyle::SP_MediaSeekBackward));
+        m_toolbar->addAction(BtnStepBack);
+        BtnPlayPause = new QAction("&Play", widget);
+        BtnPlayPause->setIcon(style->standardIcon(QStyle::SP_MediaPlay));
+        m_toolbar->addAction(BtnPlayPause);
+        BtnStop = new QAction("&Stop", widget);
+        BtnStop->setIcon(style->standardIcon(QStyle::SP_MediaStop));
+        m_toolbar->addAction(BtnStop);
+        BtnStepForward = new QAction("&Step Forward", widget);
+        BtnStepForward->setIcon(style->standardIcon(QStyle::SP_MediaSeekForward));
+        m_toolbar->addAction(BtnStepForward);
+        BtnSeekForward = new QAction("&Seek Forward", widget);
+        BtnSeekForward->setIcon(style->standardIcon(QStyle::SP_MediaSkipForward));
+        m_toolbar->addAction(BtnSeekForward);
+
+        QAction* speedAction = new QAction("&Speed", widget);
+        speedAction->setIcon(style->standardIcon(QStyle::SP_DesktopIcon));
+        m_toolbar->addAction(speedAction);
+        TlBtnSpeed = dynamic_cast<QToolButton*>(m_toolbar->widgetForAction(speedAction));
+        TlBtnSpeed->setPopupMode(QToolButton::InstantPopup);
+        TlBtnSpeed->addAction(SpeedLowQuarter = new QAction("0.25", widget));
+        TlBtnSpeed->addAction(SpeedLowHalf = new QAction("0.5", widget));
+        TlBtnSpeed->addAction(SpeedLowHalfQuarter = new QAction("0.75", widget));
+        TlBtnSpeed->addAction(SpeedNormal = new QAction("Normal", widget));
+        TlBtnSpeed->addAction(SpeedHighQuarter = new QAction("1.25", widget));
+        TlBtnSpeed->addAction(SpeedHighHalf = new QAction("1.5", widget));
+        TlBtnSpeed->addAction(SpeedHighTwice = new QAction("2.0", widget));
+        TlBtnSpeed->removeAction(speedAction);
+
+        _layout->addWidget(m_toolbar, 1, 0, 1, 3);
 
         Slider = new QSlider(Qt::Orientation::Horizontal);
-        _layout->addWidget(Slider, 1, 0, 1, 10);
+        _layout->addWidget(Slider, 1, 3, 1, 7);
         Slider->setTickInterval(1.);
         Slider->setMinimum(1);
         Slider->setMaximum(1);
@@ -119,6 +179,31 @@ public:
         SeriesSc->setName("sc");
     }
 
+    void set_play_icon(bool playing)
+    {
+        QCommonStyle* style = new QCommonStyle();
+        if (playing) {
+            BtnPlayPause->setIcon(style->standardIcon(QStyle::SP_MediaPause));
+        } else {
+            BtnPlayPause->setIcon(style->standardIcon(QStyle::SP_MediaPlay));
+        }
+    }
+
+    void tool_bar_enabled(bool status)
+    {
+        m_toolbar->setEnabled(status);
+    }
+
+    double update_selected_speed(QObject* sender)
+    {
+        QAction* action = qobject_cast<QAction*>(sender);
+        Q_ASSERT(action);
+
+        QFont font = action->font();
+        font.setBold(true);
+        action->setFont(font);
+    }
+
 private:
     QGridLayout* _layout;
     QPen _pen;
@@ -126,6 +211,7 @@ private:
     QValueAxis* _axisX;
     QValueAxis* _axisYPress;
     QValueAxis* _axisYSat;
+    QToolBar* m_toolbar;
 };
 
 }
