@@ -9,6 +9,7 @@
 #include <QChart>
 #include <QChartView>
 #include <QCommonStyle>
+#include <QFont>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineSeries>
@@ -17,7 +18,6 @@
 #include <QToolBar>
 #include <QToolButton>
 #include <QValueAxis>
-#include <QFont>
 
 using namespace QtCharts;
 
@@ -88,6 +88,9 @@ public:
         TlBtnSpeed->addAction(SpeedHighHalf = new QAction("1.5", widget));
         TlBtnSpeed->addAction(SpeedHighTwice = new QAction("2.0", widget));
         TlBtnSpeed->removeAction(speedAction);
+
+        m_currentSpeed = SpeedNormal;
+        update_selected_speed(m_currentSpeed);
 
         _layout->addWidget(m_toolbar, 1, 0, 1, 3);
 
@@ -196,12 +199,24 @@ public:
 
     double update_selected_speed(QObject* sender)
     {
-        QAction* action = qobject_cast<QAction*>(sender);
-        Q_ASSERT(action);
+        QFont font;
+        font = m_currentSpeed->font();
+        font.setBold(false);
+        m_currentSpeed->setFont(font);
 
-        QFont font = action->font();
+        m_currentSpeed = qobject_cast<QAction*>(sender);
+        Q_ASSERT(m_currentSpeed);
+
+        font = m_currentSpeed->font();
         font.setBold(true);
-        action->setFont(font);
+        m_currentSpeed->setFont(font);
+
+        return get_current_speed();
+    }
+
+    double get_current_speed()
+    {
+        return get_speed(m_currentSpeed);
     }
 
 private:
@@ -212,6 +227,29 @@ private:
     QValueAxis* _axisYPress;
     QValueAxis* _axisYSat;
     QToolBar* m_toolbar;
+    QAction* m_currentSpeed;
+
+    double get_speed(QAction* action)
+    {
+        double norm_speed = 1000; // ms;
+        double cf = 1.0;
+        if (action == SpeedLowQuarter)
+            cf = 0.25;
+        else if (action == SpeedLowHalf)
+            cf = 0.5;
+        else if (action == SpeedLowHalfQuarter)
+            cf = 0.75;
+        else if (action == SpeedNormal)
+            cf = 1.0;
+        else if (action == SpeedHighQuarter)
+            cf = 1.25;
+        else if (action == SpeedHighHalf)
+            cf = 1.5;
+        else if (action == SpeedHighTwice)
+            cf = 2.0;
+
+        return norm_speed * (1.0 / cf);
+    }
 };
 
 }

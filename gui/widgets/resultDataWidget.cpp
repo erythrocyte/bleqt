@@ -9,8 +9,9 @@ ResultDataWidget::ResultDataWidget(QWidget* parent)
     , ui(new UI::ResultData)
 {
     ui->setupUi(this);
-    // ui->tool_bar_enabled(false);
+    ui->tool_bar_enabled(false);
 
+    m_interval = ui->get_current_speed();
     subscribe();
 }
 
