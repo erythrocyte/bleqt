@@ -50,6 +50,9 @@ void ResultDataWidget::subscribe()
     Q_ASSERT(success);
     success = connect(ui->SpeedHighTwice, &QAction::triggered, this, &ResultDataWidget::speedChanged);
     Q_ASSERT(success);
+
+    success = connect(ui->PressGlobalLimit, &QCheckBox::stateChanged, this, &ResultDataWidget::pressLimitsChanged);
+    Q_ASSERT(success);
 }
 
 void ResultDataWidget::setData(
@@ -60,6 +63,8 @@ void ResultDataWidget::setData(
     _data = data;
     m_bound_type = bound_type;
     ui->tool_bar_enabled(true);
+
+    pressLimitsChanged();
 
     // clear all;
     set_slider_value(1);
@@ -108,7 +113,8 @@ void ResultDataWidget::fill_time_series(bool init,
         }
     }
 
-    ui->set_press_axis_range(0.0, d->p[_data->grd->cells.size() - 1]);
+    if (!m_press_global_lim)
+        ui->set_press_axis_range(0.0, d->p[_data->grd->cells.size() - 1]);
 }
 
 void ResultDataWidget::update_sc_series(double l, double sc)
@@ -193,6 +199,37 @@ void ResultDataWidget::stop_timer()
 {
     m_playing = false;
     ui->set_play_icon(m_playing);
+}
+
+void ResultDataWidget::pressLimitsChanged()
+{
+    m_press_global_lim = ui->PressGlobalLimit->isChecked();
+    update_press_axis();
+}
+
+void ResultDataWidget::update_press_axis()
+{
+    if (_data == nullptr)
+        return;
+
+    if (m_press_global_lim)
+        ui->set_press_axis_range(0.0, get_press_max());
+
+    handleSliderValueChange();
+}
+
+double ResultDataWidget::get_press_max()
+{
+    double result = 0.0;
+    size_t cind = _data->grd->cells.size() - 1;
+    if (_data == nullptr)
+        return 1.0;
+
+    for (auto& d : _data->data)
+        if (d->p[cind] > result)
+            result = d->p[cind];
+
+    return result;
 }
 
 }

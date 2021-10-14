@@ -18,6 +18,7 @@
 #include <QToolBar>
 #include <QToolButton>
 #include <QValueAxis>
+#include <QCheckBox>
 
 using namespace QtCharts;
 
@@ -47,14 +48,19 @@ public:
     QAction* SpeedHighQuarter;
     QAction* SpeedHighHalf;
     QAction* SpeedHighTwice;
+    QCheckBox* PressGlobalLimit;
 
     void setupUi(QWidget* widget)
     {
         Timer = new QTimer(widget);
 
         _layout = new QGridLayout(widget);
-        QCommonStyle* style = new QCommonStyle();
 
+        PressGlobalLimit = new QCheckBox("Global limit for press", widget);
+        PressGlobalLimit->setChecked(true);
+        _layout->addWidget(PressGlobalLimit, 2, 0, 1, 10);
+
+        QCommonStyle* style = new QCommonStyle();
         m_toolbar = new QToolBar(widget);
         BtnSeekBack = new QAction("&Seek Back", widget);
         BtnSeekBack->setIcon(style->standardIcon(QStyle::SP_MediaSkipBackward));
