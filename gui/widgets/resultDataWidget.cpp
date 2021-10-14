@@ -9,8 +9,50 @@ ResultDataWidget::ResultDataWidget(QWidget* parent)
     , ui(new UI::ResultData)
 {
     ui->setupUi(this);
+    ui->tool_bar_enabled(false);
 
-    connect(ui->Slider, SIGNAL(valueChanged(int)), this, SLOT(handleSliderValueChange()));
+    m_interval = ui->get_current_speed();
+    subscribe();
+}
+
+void ResultDataWidget::subscribe()
+{
+    auto success = connect(ui->Slider, SIGNAL(valueChanged(int)), this, SLOT(handleSliderValueChange()));
+    Q_ASSERT(success);
+    success = QObject::connect(ui->BtnSeekBack, SIGNAL(triggered()), this, SLOT(handleBtnSeekBackClick()));
+    Q_ASSERT(success);
+    success = QObject::connect(ui->BtnStepBack, SIGNAL(triggered()), this, SLOT(handleBtnStepBackClick()));
+    Q_ASSERT(success);
+    success = QObject::connect(ui->BtnPlayPause, SIGNAL(triggered()), this, SLOT(handleBtnPlayPauseClick()));
+    Q_ASSERT(success);
+    success = QObject::connect(ui->BtnStop, SIGNAL(triggered()), this, SLOT(handleBtnStopClick()));
+    Q_ASSERT(success);
+    success = QObject::connect(ui->BtnStepForward, SIGNAL(triggered()), this, SLOT(handleBtnStepForwardClick()));
+    Q_ASSERT(success);
+    success = QObject::connect(ui->BtnSeekForward, SIGNAL(triggered()), this, SLOT(handleBtnSeekForwardClick()));
+    Q_ASSERT(success);
+
+    success = connect(ui->Timer, &QTimer::timeout, this, &ResultDataWidget::PlayDynamicData);
+    Q_ASSERT(success);
+    ui->Timer->start(m_interval);
+
+    success = connect(ui->SpeedLowQuarter, &QAction::triggered, this, &ResultDataWidget::speedChanged);
+    Q_ASSERT(success);
+    success = connect(ui->SpeedLowHalf, &QAction::triggered, this, &ResultDataWidget::speedChanged);
+    Q_ASSERT(success);
+    success = connect(ui->SpeedLowHalfQuarter, &QAction::triggered, this, &ResultDataWidget::speedChanged);
+    Q_ASSERT(success);
+    success = connect(ui->SpeedNormal, &QAction::triggered, this, &ResultDataWidget::speedChanged);
+    Q_ASSERT(success);
+    success = connect(ui->SpeedHighQuarter, &QAction::triggered, this, &ResultDataWidget::speedChanged);
+    Q_ASSERT(success);
+    success = connect(ui->SpeedHighHalf, &QAction::triggered, this, &ResultDataWidget::speedChanged);
+    Q_ASSERT(success);
+    success = connect(ui->SpeedHighTwice, &QAction::triggered, this, &ResultDataWidget::speedChanged);
+    Q_ASSERT(success);
+
+    success = connect(ui->PressGlobalLimit, &QCheckBox::stateChanged, this, &ResultDataWidget::pressLimitsChanged);
+    Q_ASSERT(success);
 }
 
 void ResultDataWidget::setData(
@@ -20,9 +62,12 @@ void ResultDataWidget::setData(
 {
     _data = data;
     m_bound_type = bound_type;
+    ui->tool_bar_enabled(true);
+
+    pressLimitsChanged();
 
     // clear all;
-    ui->Slider->setValue(1);
+    set_slider_value(1);
     ui->Label->setText("");
 
     ui->Slider->setMaximum(_data->data.size());
@@ -68,7 +113,8 @@ void ResultDataWidget::fill_time_series(bool init,
         }
     }
 
-    ui->set_press_axis_range(0.0, d->p[_data->grd->cells.size()-1]);
+    if (!m_press_global_lim)
+        ui->set_press_axis_range(0.0, d->p[_data->grd->cells.size() - 1]);
 }
 
 void ResultDataWidget::update_sc_series(double l, double sc)
@@ -85,6 +131,105 @@ void ResultDataWidget::update_time_info(int index)
     std::ostringstream oss;
     oss << index + 1 << "/" << count;
     ui->Label->setText(QString::fromStdString(oss.str()));
+}
+
+void ResultDataWidget::handleBtnSeekBackClick()
+{
+    stop_timer();
+    set_slider_value(1);
+}
+
+void ResultDataWidget::handleBtnStepBackClick()
+{
+    stop_timer();
+    set_slider_value(ui->Slider->value() - 1);
+}
+
+void ResultDataWidget::handleBtnPlayPauseClick()
+{
+    m_playing = !m_playing;
+    ui->set_play_icon(m_playing);
+}
+
+void ResultDataWidget::handleBtnStopClick()
+{
+    stop_timer();
+    set_slider_value(1);
+}
+
+void ResultDataWidget::handleBtnStepForwardClick()
+{
+    stop_timer();
+    set_slider_value(ui->Slider->value() + 1);
+}
+
+void ResultDataWidget::handleBtnSeekForwardClick()
+{
+    stop_timer();
+    set_slider_value(ui->Slider->maximum());
+}
+
+void ResultDataWidget::set_slider_value(int value)
+{
+    if (value > ui->Slider->maximum()) {
+        m_playing = false;
+        return;
+    }
+
+    ui->Slider->setValue(value);
+}
+
+void ResultDataWidget::PlayDynamicData()
+{
+    if (m_playing) {
+        int value = ui->Slider->value();
+        if (value == ui->Slider->maximum())
+            value = 1;
+        set_slider_value(value + 1);
+    }
+}
+
+void ResultDataWidget::speedChanged()
+{
+    m_interval = ui->update_selected_speed(sender());
+    ui->Timer->start(m_interval);
+}
+
+void ResultDataWidget::stop_timer()
+{
+    m_playing = false;
+    ui->set_play_icon(m_playing);
+}
+
+void ResultDataWidget::pressLimitsChanged()
+{
+    m_press_global_lim = ui->PressGlobalLimit->isChecked();
+    update_press_axis();
+}
+
+void ResultDataWidget::update_press_axis()
+{
+    if (_data == nullptr)
+        return;
+
+    if (m_press_global_lim)
+        ui->set_press_axis_range(0.0, get_press_max());
+
+    handleSliderValueChange();
+}
+
+double ResultDataWidget::get_press_max()
+{
+    double result = 0.0;
+    size_t cind = _data->grd->cells.size() - 1;
+    if (_data == nullptr)
+        return 1.0;
+
+    for (auto& d : _data->data)
+        if (d->p[cind] > result)
+            result = d->p[cind];
+
+    return result;
 }
 
 }
