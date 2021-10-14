@@ -27,7 +27,7 @@ public:
     void set_sc_visible(bool visible) { ui->SeriesSc->setVisible(visible); }
 
 private:
-    UI::ResultData* ui;    
+    UI::ResultData* ui;
 
     bool _firstInit = true;
     bool m_playing = false;
