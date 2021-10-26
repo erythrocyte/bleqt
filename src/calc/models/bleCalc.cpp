@@ -126,6 +126,8 @@ void BleCalc::set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
     d->p_ex = p_ex;
 
     _results->data.push_back(d);
+
+    save_press(0, grd, p);
 }
 
 void BleCalc::save_press(int index, const std::shared_ptr<mesh::models::Grid> grd,
@@ -135,10 +137,10 @@ void BleCalc::save_press(int index, const std::shared_ptr<mesh::models::Grid> gr
     oss << "press_" << index << ".dat";
     std::ofstream ofs(oss.str().c_str());
 
-    ofs << "cind\tpress\tum\tup";
+    ofs << "r\tpress\tum\tup";
 
     for (auto& cl : grd->cells) {
-        ofs << cl->ind << "\t" << p[cl->ind] << "\t" << grd->faces[cl->faces[0]]->u << "\t" << grd->faces[cl->faces[1]]->u << std::endl;
+        ofs << cl->cntr << "\t" << p[cl->ind] << "\t" << grd->faces[cl->faces[0]]->u << "\t" << grd->faces[cl->faces[1]]->u << std::endl;
     }
 
     ofs.close();

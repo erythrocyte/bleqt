@@ -4,6 +4,7 @@
 
 #include "calc/models/diagMatrix.hpp"
 #include "calc/services/workSigma.hpp"
+#include "logging/logger.hpp"
 
 namespace ble::src::calc::services {
 
@@ -38,7 +39,7 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
             double rw = data->grd->rw;
             double d = grd->cells[fc->cl1]->cntr;
             double b2 = regular();
-            double b3 = correct_radial2(d, rw);
+            double b3 = 1.0; //correct_radial2(d, rw);
             return b2 / b3;
         }
         default:
@@ -57,6 +58,7 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
 
     std::vector<double> rhs(grd->cells.size(), 0.0);
 
+    double sum_q_in = 0.0;
     for (auto& fc : grd->faces) {
         if (fc->isolated) {
             continue;
@@ -82,13 +84,17 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         }
         case mm::FaceType::kTop:
         case mm::FaceType::kBot: {
-            rhs[fc->cl1] += fc->area * fc->bound_u;
+            double q = fc->area * fc->bound_u;
+            sum_q_in += q;
+            rhs[fc->cl1] += q;
             break;
         }
         default:
             break;
         }
     }
+
+    std::cout << "sum_q_in = " << sum_q_in << std::endl;
 
     return ret.solve(rhs);
 }
