@@ -137,7 +137,7 @@ void BleCalc::save_press(int index, const std::shared_ptr<mesh::models::Grid> gr
     oss << "press_" << index << ".dat";
     std::ofstream ofs(oss.str().c_str());
 
-    ofs << "r\tpress\tum\tup";
+    ofs << "r\tpress\tum\tup" << std::endl;
 
     for (auto& cl : grd->cells) {
         ofs << cl->cntr << "\t" << p[cl->ind] << "\t" << grd->faces[cl->faces[0]]->u << "\t" << grd->faces[cl->faces[1]]->u << std::endl;
