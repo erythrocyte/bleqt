@@ -4,6 +4,7 @@
 
 #include "calc/models/diagMatrix.hpp"
 #include "calc/services/workSigma.hpp"
+#include "common/services/workString.hpp"
 #include "logging/logger.hpp"
 
 namespace ble::src::calc::services {
@@ -39,7 +40,7 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
             double rw = data->grd->rw;
             double d = grd->cells[fc->cl1]->cntr;
             double b2 = regular();
-            double b3 = 1.0; //correct_radial2(d, rw);
+            double b3 = 1.0; // correct_radial2(d, rw);
             return b2 / b3;
         }
         default:
@@ -59,11 +60,12 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
     std::vector<double> rhs(grd->cells.size(), 0.0);
 
     double sum_q_in = 0.0;
+    double sum_area = 0.0;
     for (auto& fc : grd->faces) {
         if (fc->isolated) {
             continue;
         }
-        
+
         double sigma = get_face_sigma(fc, s, data->phys, grd);
         double h = get_h(fc, grd, data);
         double cf = fc->area * sigma / h;
@@ -86,6 +88,8 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         case mm::FaceType::kBot: {
             double q = fc->area * fc->bound_u;
             sum_q_in += q;
+            if (fc->bound_u > 0.0)
+                sum_area += fc->area;
             rhs[fc->cl1] += q;
             break;
         }
@@ -94,7 +98,11 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         }
     }
 
-    std::cout << "sum_q_in = " << sum_q_in << std::endl;
+    // std::string mess = common::services::string_format("sum_q_in = %.8f", sum_q_in);
+    // logging::write_log(mess, logging::kInfo);
+
+    // mess = common::services::string_format("sum_area = %.8f", sum_area);
+    // logging::write_log(mess, logging::kInfo);
 
     return ret.solve(rhs);
 }

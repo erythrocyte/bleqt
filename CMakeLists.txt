@@ -15,7 +15,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -fPIC")
 
 # targets
 set(EXE_TARGET ble)
-set(LIB_BLE_TARGET libBle)
+set(LIB_BLE_TARGET Ble)
 
 # "make" output
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

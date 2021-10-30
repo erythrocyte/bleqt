@@ -31,8 +31,8 @@ private:
 
     void set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
         const std::shared_ptr<common::models::InputData> data);
-    void save_press(int index, const std::shared_ptr<mesh::models::Grid> grd,
-        const std::vector<double> p);
+    void save_vals(double t, const std::shared_ptr<mesh::models::Grid> grd,
+        const std::vector<std::string>&caps, const std::vector<std::vector<double>>& vals);
     void save_any_vector(const std::vector<std::tuple<double, double>>& v, const std::string& fn);
     void save_faces_val(const std::shared_ptr<mesh::models::Grid> grd,
         const std::shared_ptr<common::models::InputData> data);

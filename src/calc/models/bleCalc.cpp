@@ -44,6 +44,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     services::calc_u(p, s_prev, data, grd);
 
+    double local_time = 0.0;
+
     if (!data->satSetts->need_satur_solve) {
         auto well_params = services::calc_well_work_param(grd, s_prev, data->phys, sumT);
         double qan = services::calc_q_analytic(grd, data);
@@ -59,12 +61,17 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
                 p = services::solve_press(grd, s_prev, data);
                 services::calc_u(p, s_prev, data, grd);
-                //save_press(index, grd, p);
                 pressIndex = 0;
             }
             pressIndex++;
 
-            double t = services::get_time_step(grd, s_prev, data);
+            if (local_time > 5.0) {
+                save_vals(sumT, grd, {"p", "s"}, {p, s_prev});
+                std::cout << "lt = " << local_time << ", sumt = " << sumT << std::endl;
+                local_time  = 0.0;
+            }
+
+            double t = services::get_time_step(grd, s_prev, data);            
             // std::string mess = common::services::string_format("tau = %.8f", t);
             // logging::write_log(mess, logging::kInfo);
             if (saveT + t >= data->model->save_field_step) {
@@ -83,6 +90,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             s_cur = services::solve_satur(t, s_prev, data, grd);
             s_prev = s_cur;
             sumT += t;
+            local_time += t;
 
             if (need_save_fiels) {
                 std::vector<std::tuple<double, double>> xs_an = services::get_satur_exact(sc, sumU, data);
@@ -97,8 +105,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 index++;
             }
 
-            auto wwp = services::calc_well_work_param(grd, s_cur, data->phys, sumT);
-            _wellWorkParams.push_back(wwp);
+            // auto wwp = services::calc_well_work_param(grd, s_cur, data->phys, sumT);
+            // _wellWorkParams.push_back(wwp);
 
             double perc = std::min(100.0, (sumT / data->model->period * 100.0));
             set_progress(perc);
@@ -127,20 +135,33 @@ void BleCalc::set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
 
     _results->data.push_back(d);
 
-    save_press(0, grd, p);
+    // save_press(0, grd, p);
 }
 
-void BleCalc::save_press(int index, const std::shared_ptr<mesh::models::Grid> grd,
-    const std::vector<double> p)
+void BleCalc::save_vals(double t, const std::shared_ptr<mesh::models::Grid> grd,
+    const std::vector<std::string>& caps, const std::vector<std::vector<double>>& vals)
 {
     std::ostringstream oss;
-    oss << "press_" << index << ".dat";
+    oss << "vals_t_" << t << ".dat";
     std::ofstream ofs(oss.str().c_str());
 
-    ofs << "r\tpress\tum\tup" << std::endl;
+    oss.clear();
+    oss.str("");
+    std::string val_caps;
+    for (auto& c : caps) {
+        oss << c << "\t";
+    }
+    val_caps = oss.str();
+
+    ofs << "r\t" << val_caps << "um\tup" << std::endl;
 
     for (auto& cl : grd->cells) {
-        ofs << cl->cntr << "\t" << p[cl->ind] << "\t" << grd->faces[cl->faces[0]]->u << "\t" << grd->faces[cl->faces[1]]->u << std::endl;
+        ofs << cl->cntr << "\t";
+        for (auto& v : vals) {
+            ofs << v[cl->ind] << "\t";
+        }
+        ofs << grd->faces[cl->faces[0]]->u << "\t"
+            << grd->faces[cl->faces[1]]->u << std::endl;
     }
 
     ofs.close();

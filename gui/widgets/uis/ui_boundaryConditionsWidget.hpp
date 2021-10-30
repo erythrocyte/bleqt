@@ -83,7 +83,7 @@ public:
         RHSConstValue->setMinimum(-10.0);
         RHSConstValue->setMaximum(10);
         RHSConstValue->setSingleStep(1e-3);
-        RHSConstValue->setValue(0.01);
+        RHSConstValue->setValue(0.1);
         RHSConstValue->setDecimals(3);
         RHSConstValue->setEnabled(false);
         m_RHSConstValueLabel = new QLabel("Const value");
@@ -94,7 +94,7 @@ public:
         RHSConstLenght->setMinimum(0);
         RHSConstLenght->setMaximum(100);
         RHSConstLenght->setSingleStep(1);
-        RHSConstLenght->setValue(100);
+        RHSConstLenght->setValue(10);
         RHSConstLenght->setEnabled(false);
         m_RHSConstLenghtLabel = new QLabel("Const lenght");
         layout->addWidget(m_RHSConstLenghtLabel, 4, 0, 1, 1);

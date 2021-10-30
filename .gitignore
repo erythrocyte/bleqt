@@ -45,3 +45,6 @@ gdb_script/
 .vscode/launch.json
 .vscode/tasks.json
 
+
+.fake
+.ionide

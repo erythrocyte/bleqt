@@ -59,7 +59,7 @@ public:
         _layout->addWidget(_solverTypeLabel, 2, 0);
 
         NeedSaturSolve = new QCheckBox("Solve saturation");
-        NeedSaturSolve->setChecked(true);
+        NeedSaturSolve->setChecked(false);
         _layout->addWidget(NeedSaturSolve, 3, 0, 1, 2);
 
         retranslateUi(widget);
