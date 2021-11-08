@@ -9,6 +9,9 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QWidget>
+#include <QPushButton>
+#include <QComboBox>
+#include <QLineEdit>
 
 namespace ble::gui::widgets::UI {
 
@@ -17,10 +20,19 @@ private:
     QGroupBox* m_groupBox;
     QLabel* m_periodLabel;
     QLabel* m_saveFieldStepsLabel;
+    QLabel* m_boundSaturLabel;
+    QLabel* m_initialSaturTypeLabel;
+    QLabel* m_initialsSaturConstLabel;
+    QLabel* m_initialSaturFileLabel;
 
 public:
     QDoubleSpinBox* Period;
     QDoubleSpinBox* SaveFieldSteps;
+    QDoubleSpinBox* BoundSatur;
+    QDoubleSpinBox* InitialConstSatur;
+    QPushButton* InitialSaturFileChooseButton;
+    QComboBox* InitialSaturType;
+    QLineEdit* InitialSaturFile;
 
     void retranslateUi(QWidget* widget)
     {
