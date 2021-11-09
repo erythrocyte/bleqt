@@ -1,4 +1,4 @@
-#include "boundSourceService.hpp"
+#include "dataDistributionService.hpp"
 
 #include "common/services/workString.hpp"
 #include "file/services/workFile.hpp"
@@ -6,9 +6,9 @@
 
 namespace ble::src::common::services {
 
-std::vector<std::shared_ptr<models::BoundSourceCond>> BoundSourceService::get_data_from_file(std::string& file_name)
+std::vector<std::shared_ptr<models::DataDistribution>> DataDistributionService::get_data_from_file(std::string& file_name)
 {
-    std::vector<std::shared_ptr<models::BoundSourceCond>> result;
+    std::vector<std::shared_ptr<models::DataDistribution>> result;
     if (!file::services::file_exists(file_name))
         return result;
 
@@ -21,7 +21,7 @@ std::vector<std::shared_ptr<models::BoundSourceCond>> BoundSourceService::get_da
         if (dd.size() != 4)
             continue;
 
-        auto bsc = std::make_shared<models::BoundSourceCond>();
+        auto bsc = std::make_shared<models::DataDistribution>();
         bsc->x0 = to_dbl(dd[0]);
         bsc->x1 = to_dbl(dd[1]);
         bsc->v0 = to_dbl(dd[2]);
@@ -45,13 +45,13 @@ std::vector<std::shared_ptr<models::BoundSourceCond>> BoundSourceService::get_da
     return result;
 }
 
-std::vector<std::shared_ptr<models::BoundSourceCond>> BoundSourceService::get_data_from_const(
+std::vector<std::shared_ptr<models::DataDistribution>> DataDistributionService::get_data_from_const(
     double const_val, int len_right_prec, double x0, double x1)
 {
-    std::vector<std::shared_ptr<models::BoundSourceCond>> result;
+    std::vector<std::shared_ptr<models::DataDistribution>> result;
     double len = x1 - x0;
 
-    auto bsc = std::make_shared<models::BoundSourceCond>();
+    auto bsc = std::make_shared<models::DataDistribution>();
     bsc->x1 = x1;
     bsc->x0 = len * (1.0 - (double)len_right_prec / 100.0);
     bsc->v0 = const_val;
@@ -59,7 +59,7 @@ std::vector<std::shared_ptr<models::BoundSourceCond>> BoundSourceService::get_da
     result.push_back(bsc);
 
     if (len_right_prec < 100) {
-        bsc = std::make_shared<models::BoundSourceCond>();
+        bsc = std::make_shared<models::DataDistribution>();
         bsc->x1 = len * (1.0 - (double)len_right_prec / 100.0);
         bsc->x0 = x0;
         bsc->v0 = 0.0;

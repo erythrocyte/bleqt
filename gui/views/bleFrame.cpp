@@ -42,7 +42,7 @@ void BleFrame::set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidg
     QTabWidget* tabSettings = new QTabWidget();
     tabSettings->setTabPosition(QTabWidget::TabPosition::West);
     tabSettings->addTab(dataWidget.get(), "");
-    tabSettings->setMinimumWidth(325);
+    tabSettings->setMinimumWidth(330);
 
     frames::QVerticalLabel* tabSettingsLabel1 = new frames::QVerticalLabel("Main");
     tabSettingsLabel1->setStyleSheet("QLabel { color : #C0BBFE }");

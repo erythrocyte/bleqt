@@ -47,7 +47,7 @@ std::shared_ptr<mesh::models::Grid> make_regular_grid(const std::shared_ptr<comm
         result->cells.push_back(cl);
     }
 
-    bool isolated_top_bot = data->bound->bound_type == common::models::BoundCondType::kConst;
+    // bool isolated_top_bot = data->bound->bound_type == common::models::BoundCondType::kConst;
 
     // last face;    
     auto fc = make_face(data->grd->n, data->grd->rc, data->grd->n - 1, -1,
@@ -58,7 +58,7 @@ std::shared_ptr<mesh::models::Grid> make_regular_grid(const std::shared_ptr<comm
     size_t ind = result->faces.size();
     for (auto& cl : result->cells) {
         double area = cl->xr - cl->xl;
-        double bound_u = isolated_top_bot ? 0.0 : data->bound->get_value(cl->cntr);
+        double bound_u = data->bound->get_value(cl->cntr);
         auto top = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop, 0.0, 1.0, bound_u, isolated_top_bot);
         ind++;
         result->faces.push_back(top);

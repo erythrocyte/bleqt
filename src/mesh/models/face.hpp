@@ -21,8 +21,6 @@ class Face {
 		double bound_satur = 0.;
 		double bound_u = 0.0;
 
-		bool isolated = false;
-
 		FaceType::TypeEnum type;
 };
 

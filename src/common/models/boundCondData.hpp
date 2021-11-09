@@ -7,7 +7,7 @@
 #include <tuple>
 
 #include "boundCondType.hpp"
-#include "boundSourceCond.hpp"
+#include "dataDistribution.hpp"
 #include "rhsType.hpp"
 
 namespace ble::src::common::models {
@@ -19,8 +19,8 @@ public:
         bound_sources.clear();
     }
 
-    std::vector<std::shared_ptr<BoundSourceCond>> bound_sources;
-    BoundCondType::TypeEnum bound_type;
+    std::vector<std::shared_ptr<DataDistribution>> bound_sources;
+    // BoundCondType::TypeEnum bound_type;
     RHSType::TypeEnum rhs_type;
 
     double get_value(double x, double def_val = -99999.0);
