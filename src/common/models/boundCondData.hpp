@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <memory>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 #include "boundCondType.hpp"
 #include "dataDistribution.hpp"
@@ -16,16 +16,20 @@ public:
     BoundCondData() { }
     ~BoundCondData()
     {
-        bound_sources.clear();
+        top_bot_bound_u.clear();
+        top_bot_bound_s.clear();
+        initial_s.clear();
     }
 
-    std::vector<std::shared_ptr<DataDistribution>> bound_sources;
-    // BoundCondType::TypeEnum bound_type;
-    RHSType::TypeEnum rhs_type;
+    std::vector<std::shared_ptr<DataDistribution>> top_bot_bound_u;
+    std::vector<std::shared_ptr<DataDistribution>> top_bot_bound_s;
+    std::vector<std::shared_ptr<DataDistribution>> initial_s;
+    BoundCondType::TypeEnum contour_press_bound_type;
+    RHSType::TypeEnum top_bot_bound_u_type;
+    RHSType::TypeEnum top_bot_bound_s_type;
+    RHSType::TypeEnum initial_satur_type;
 
-    double get_value(double x, double def_val = -99999.0);
 
-    std::tuple<double, double> get_range(double minx_grd, double maxx_grd);
 };
 }
 

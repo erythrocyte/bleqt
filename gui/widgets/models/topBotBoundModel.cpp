@@ -7,11 +7,13 @@
  * Copyright (c) 2021 Your Company
  */
 
-#include "boundaryCondResultModel.hpp"
+#include "topBotBoundModel.hpp"
+#include "common/models/commonVals.hpp"
+#include "common/services/dataDistributionService.hpp"
 
 namespace ble::gui::widgets::models {
 
-BoundaryCondResultModel::BoundaryCondResultModel(
+TopBotBoundUModel::TopBotBoundUModel(
     const std::shared_ptr<src::mesh::models::Grid> grd,
     const std::shared_ptr<src::common::models::BoundCondData> data,
     QObject* parent)
@@ -21,7 +23,7 @@ BoundaryCondResultModel::BoundaryCondResultModel(
     m_grd = grd;
 }
 
-QVariant BoundaryCondResultModel::data(const QModelIndex& index, int role) const
+QVariant TopBotBoundUModel::data(const QModelIndex& index, int role) const
 {
     auto get_value = [&]() {
         if (m_data == nullptr)
@@ -34,7 +36,7 @@ QVariant BoundaryCondResultModel::data(const QModelIndex& index, int role) const
             return m_grd->cells[row_index]->cntr;
         case 1: {
             double x = m_grd->cells[row_index]->cntr;
-            return m_data->get_value(x, EMPTY_VAL);
+            return src::common::services::DataDistributionService::get_value(x, m_data->top_bot_bound_u, EMPTY_VAL);
         }
         }
 
@@ -53,10 +55,10 @@ QVariant BoundaryCondResultModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-int BoundaryCondResultModel::rowCount(const QModelIndex& parent) const { return m_grd->cells.size(); }
-int BoundaryCondResultModel::columnCount(const QModelIndex& parent) const { return 2; }
+int TopBotBoundUModel::rowCount(const QModelIndex& parent) const { return m_grd->cells.size(); }
+int TopBotBoundUModel::columnCount(const QModelIndex& parent) const { return 2; }
 
-QVariant BoundaryCondResultModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant TopBotBoundUModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
@@ -72,12 +74,12 @@ QVariant BoundaryCondResultModel::headerData(int section, Qt::Orientation orient
     return QVariant();
 }
 
-bool BoundaryCondResultModel::is_empty(double value) const
+bool TopBotBoundUModel::is_empty(double value) const
 {
     return std::abs(value - EMPTY_VAL) < 1e-8;
 }
 
-std::tuple<double, double> BoundaryCondResultModel::getValueRange()
+std::tuple<double, double> TopBotBoundUModel::getValueRange()
 {
     if (m_data->bound_sources.size() == 0)
         return std::make_tuple(EMPTY_VAL, EMPTY_VAL);

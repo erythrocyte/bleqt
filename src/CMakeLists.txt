@@ -38,6 +38,7 @@ set(HEADERS
 	common/models/wellWorkParams.hpp
 	common/models/boundCondData.hpp
 	common/models/dataDistribution.hpp
+	common/models/commonVals.hpp
 
 	mesh/models/cell.hpp
 	mesh/models/face.hpp
@@ -68,8 +69,6 @@ set (SOURCES
 	common/services/commonMath.cpp
 	common/services/workString.cpp
 	common/services/dataDistributionService.cpp
-
-	common/models/boundCondData.cpp
 
 	mesh/models/grid.cpp
 

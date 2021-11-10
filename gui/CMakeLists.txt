@@ -31,7 +31,7 @@ set (SOURCES
 	widgets/boundaryCondResultWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
-	widgets/models/boundaryCondResultModel.cpp
+	widgets/models/topBotBoundModel.cpp
 
 	widgets/presenters/fluidParamGraphWidgetPresenter.cpp
 	widgets/presenters/dataWidgetPresenter.cpp
@@ -43,7 +43,7 @@ set (SOURCES
 	widgets/presenters/shockFrontSettsWidgetPresenter.cpp
 	widgets/presenters/wellWorkDataWidgetPresenter.cpp
 	widgets/presenters/boundaryConditionsWidgetPresenter.cpp
-	widgets/presenters/boundaryCondResultWidgetPresenter.cpp
+	widgets/presenters/topBotBoundWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	

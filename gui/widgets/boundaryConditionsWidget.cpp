@@ -13,7 +13,7 @@
 
 #include "common/models/boundCondType.hpp"
 #include "common/models/rhsType.hpp"
-#include "common/services/boundSourceService.hpp"
+#include "common/services/dataDistributionService.hpp"
 
 namespace scmm = ble::src::common::models;
 namespace scms = ble::src::common::services;
@@ -25,7 +25,7 @@ BoundaryConditionsWidget::BoundaryConditionsWidget(QWidget* parent)
     , ui(new UI::BoundaryConditions)
 {
     ui->setupUI(this);
-    set_items();    
+    set_items();
 
     subscribe();
 
@@ -111,24 +111,22 @@ std::shared_ptr<src::common::models::BoundCondData> BoundaryConditionsWidget::ge
 {
     std::shared_ptr<src::common::models::BoundCondData> result = std::make_shared<src::common::models::BoundCondData>();
 
-    std::string bound_type_name = ui->ContourBoundType->currentText().toStdString();
-    auto bound_type = src::common::models::BoundCondType::get_enum(bound_type_name);
-    result->bound_type = bound_type;
+    std::string str = ui->ContourBoundType->currentText().toStdString();
+    result->contour_press_bound_type = src::common::models::BoundCondType::get_enum(str);
 
-    std::string rhs_type_name = ui->RHSType->currentText().toStdString();
-    auto rhs_type = src::common::models::RHSType::get_enum(rhs_type_name);
-    result->rhs_type = rhs_type;
+    str = ui->RHSType->currentText().toStdString();
+    result->top_bot_bound_u_type = src::common::models::RHSType::get_enum(str);
 
-    switch (result->rhs_type) {
-    case src::common::models::RHSType::kConst:{
+    switch (result->top_bot_bound_u_type) {
+    case src::common::models::RHSType::kConst: {
         double val = ui->RHSConstValue->value();
         int len_right_perc = ui->RHSConstLenght->value();
-        result->bound_sources = scms::BoundSourceService::get_data_from_const(val, len_right_perc, x0, x1);
+        result->top_bot_bound_u = scms::DataDistributionService::get_data_from_const(val, len_right_perc, x0, x1);
         break;
     }
     case src::common::models::RHSType::kFile: {
         std::string file_name = ui->RHSFile->text().toStdString();
-        result->bound_sources = scms::BoundSourceService::get_data_from_file(file_name);
+        result->top_bot_bound_u = scms::DataDistributionService::get_data_from_file(file_name);
         break;
     }
     default:

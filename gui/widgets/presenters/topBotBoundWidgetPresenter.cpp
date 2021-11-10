@@ -13,7 +13,7 @@ void BoundaryCondResultWidgetPresenter::set_data(
     const std::shared_ptr<src::mesh::models::Grid> grd,
     const std::shared_ptr<ble::src::common::models::BoundCondData>& data)
 {
-    models::BoundaryCondResultModel* model = new models::BoundaryCondResultModel(grd, data);
+    models::TopBotBoundUModel* model = new models::TopBotBoundUModel(grd, data);
     get_view()->set_data(model);
 }
 

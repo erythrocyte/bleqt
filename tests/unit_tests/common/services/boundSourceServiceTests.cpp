@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 
-#include "common/models/boundSourceCond.hpp"
-#include "common/services/boundSourceService.hpp"
+#include "common/models/dataDistribution.hpp"
+#include "common/services/dataDistributionService.hpp"
 
 namespace cs = ble::src::common::services;
 
@@ -14,14 +14,14 @@ namespace ble::tests::unit_tests::common::services::bound_source_service {
 void case_one_part()
 {
     std::string file_name = "../../samples/rhs/const.blerhs";
-    auto expected = std::make_shared<src::common::models::BoundSourceCond>();
+    auto expected = std::make_shared<src::common::models::DataDistribution>();
     expected->x0 = 0.0;
     expected->x1 = 100.0;
     expected->v0 = 0.01;
     expected->v1 = 0.01;
 
     // act
-    auto v = cs::BoundSourceService::get_data_from_file(file_name);
+    auto v = cs::DataDistributionService::get_data_from_file(file_name);
     auto actual = v[0];
 
     // assert
@@ -39,7 +39,7 @@ void case_two_part()
     double x1_1 = 1.0;
 
     // act
-    auto v = cs::BoundSourceService::get_data_from_file(file_name);
+    auto v = cs::DataDistributionService::get_data_from_file(file_name);
 
     // assert
     BOOST_CHECK_EQUAL(expected, v.size());
@@ -52,7 +52,7 @@ void case_two_part_bad()
     std::string file_name = "../../samples/rhs/const_two_part_bad.blerhs";
 
     // act
-    auto v = cs::BoundSourceService::get_data_from_file(file_name);
+    auto v = cs::DataDistributionService::get_data_from_file(file_name);
 
     // assert
     BOOST_CHECK_EQUAL(0, v.size());

@@ -7,12 +7,12 @@
  * Copyright (c) 2021 Your Company
  */
 
-#ifndef BLE_GUI_WIDGETS_MODELS_BOUNDARYCONDRESULTMODEL_H_
-#define BLE_GUI_WIDGETS_MODELS_BOUNDARYCONDRESULTMODEL_H_
+#ifndef BLE_GUI_WIDGETS_MODELS_TOPBOTBOUNDMODEL_H_
+#define BLE_GUI_WIDGETS_MODELS_TOPBOTBOUNDMODEL_H_
 
 #include <memory>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 #include <QAbstractTableModel>
 
@@ -21,11 +21,11 @@
 
 namespace ble::gui::widgets::models {
 
-class BoundaryCondResultModel : public QAbstractTableModel {
+class TopBotBoundModel : public QAbstractTableModel {
     Q_OBJECT
 
 public:
-    BoundaryCondResultModel(
+    TopBotBoundModel(
         const std::shared_ptr<src::mesh::models::Grid> grd,
         const std::shared_ptr<src::common::models::BoundCondData> data,
         QObject* parent = nullptr);
@@ -41,9 +41,6 @@ public:
 private:
     std::shared_ptr<src::common::models::BoundCondData> m_data;
     std::shared_ptr<src::mesh::models::Grid> m_grd;
-    const double EMPTY_VAL = -99999.0;
-
-    bool is_empty(double value) const;
 };
 
 }

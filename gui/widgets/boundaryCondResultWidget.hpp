@@ -15,25 +15,25 @@
 #include <memory>
 #include <vector>
 
-#include "models/boundaryCondResultModel.hpp"
+#include "models/topBotBoundModel.hpp"
 #include "uis/ui_boundaryCondResultWidget.hpp"
 
 using namespace QtCharts;
 
 namespace ble::gui::widgets {
-class BoundaryCondResultWidget : public QWidget, private UI::BoundaryCondResult {
+class TopBotBoundWidget : public QWidget, private UI::BoundaryCondResult {
     Q_OBJECT
 
 public:
-    BoundaryCondResultWidget(QWidget* parent = nullptr);
-    ~BoundaryCondResultWidget();
+    TopBotBoundWidget(QWidget* parent = nullptr);
+    ~TopBotBoundWidget();
 
-    void set_data(models::BoundaryCondResultModel* model);
+    void set_data(models::TopBotBoundModel* model);
     void set_xrange(double max_value);
 
 private:
     UI::BoundaryCondResult* ui;
-    models::BoundaryCondResultModel* m_model;
+    models::TopBotBoundModel* m_model;
 
     void subsribe();
     void fill_table();

@@ -1,5 +1,6 @@
 #include "dataDistributionService.hpp"
 
+#include "common/services/commonMath.hpp"
 #include "common/services/workString.hpp"
 #include "file/services/workFile.hpp"
 #include "logging/logger.hpp"
@@ -68,6 +69,40 @@ std::vector<std::shared_ptr<models::DataDistribution>> DataDistributionService::
     }
 
     return result;
+}
+
+double DataDistributionService::get_value(double x,
+    const std::vector<std::shared_ptr<models::DataDistribution>>& data,
+    double def_val)
+{
+    for (auto& d : data) {
+        if ((d->x0 <= x) && (x <= d->x1)) {
+            return src::common::services::get_value_lin_approx(d, x);
+        }
+    }
+
+    return def_val;
+}
+
+std::tuple<double, double> DataDistributionService::get_range(double minx_grd, double maxx_grd,
+    const std::vector<std::shared_ptr<models::DataDistribution>>& data)
+{
+    double result_min = 1e20, result_max = -1e20;
+    for (auto& d : data) {
+        if (!(maxx_grd >= d->x0 && minx_grd <= d->x1))
+            continue;
+        if (d->v0 < result_min)
+            result_min = d->v0;
+        if (d->v1 < result_min)
+            result_min = d->v1;
+
+        if (d->v0 > result_max)
+            result_max = d->v0;
+        if (d->v1 > result_max)
+            result_max = d->v1;
+    }
+
+    return std::make_tuple(result_min, result_max);
 }
 
 }

@@ -52,6 +52,11 @@ public:
     {
         return enumVal == TypeEnum::kWell || enumVal == TypeEnum::kContour;
     }
+
+    static bool is_top_bot(const TypeEnum& enumval)
+    {
+        return enumval == TypeEnum::kTop || enumval == TypeEnum::kBot;
+    }
 };
 
 }

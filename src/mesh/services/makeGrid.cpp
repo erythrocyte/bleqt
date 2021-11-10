@@ -2,10 +2,13 @@
 
 #include <math.h>
 
+#include "common/models/commonVals.hpp"
+#include "common/services/dataDistributionService.hpp"
+
 namespace ble::src::mesh::services {
 
 std::shared_ptr<mesh::models::Face> make_face(int ind, double x, int cl1, int cl2, double area,
-    mesh::models::FaceType::TypeEnum face_type, double bound_p, double bound_s, double bound_u, bool isolated)
+    mesh::models::FaceType::TypeEnum face_type, double bound_p, double bound_s, double bound_u)
 {
     auto fc = std::make_shared<mesh::models::Face>();
     fc->ind = ind;
@@ -17,7 +20,6 @@ std::shared_ptr<mesh::models::Face> make_face(int ind, double x, int cl1, int cl
     fc->bound_press = bound_p;
     fc->bound_satur = bound_s;
     fc->bound_u = bound_u;
-    fc->isolated = isolated;
 
     return fc;
 };
@@ -31,7 +33,7 @@ std::shared_ptr<mesh::models::Grid> make_regular_grid(const std::shared_ptr<comm
         auto tp = (k == 0)
             ? mesh::models::FaceType::kWell
             : mesh::models::FaceType::kInner;
-        auto fc = make_face(k, step * k, k, k - 1, 1.0, tp, 0.0, 0.0, 0.0, false);
+        auto fc = make_face(k, step * k, k, k - 1, 1.0, tp, 0.0, 0.0, 0.0);
         result->faces.push_back(fc);
 
         std::shared_ptr<mesh::models::Cell> cl(new mesh::models::Cell());
@@ -47,23 +49,26 @@ std::shared_ptr<mesh::models::Grid> make_regular_grid(const std::shared_ptr<comm
         result->cells.push_back(cl);
     }
 
-    // bool isolated_top_bot = data->bound->bound_type == common::models::BoundCondType::kConst;
+    bool isolated_contour = data->bound->contour_press_bound_type == common::models::BoundCondType::kImpermeable;
+    double contour_bound_press = isolated_contour
+        ? common::models::CommonVals::EMPTY_VAL
+        : 1.0;
 
-    // last face;    
+    // last face;
     auto fc = make_face(data->grd->n, data->grd->rc, data->grd->n - 1, -1,
-        1.0, mesh::models::FaceType::kContour, 1.0, 1.0, 0.0, !isolated_top_bot);
+        1.0, mesh::models::FaceType::kContour, contour_bound_press, 1.0, 0.0);
     result->faces.push_back(fc);
 
     // up and bottom faces;
     size_t ind = result->faces.size();
     for (auto& cl : result->cells) {
         double area = cl->xr - cl->xl;
-        double bound_u = data->bound->get_value(cl->cntr);
-        auto top = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop, 0.0, 1.0, bound_u, isolated_top_bot);
+        double bound_u = common::services::DataDistributionService::get_value(cl->cntr, data->bound->top_bot_bound_u, 0.0);
+        auto top = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop, common::models::CommonVals::EMPTY_VAL, 1.0, bound_u);
         ind++;
         result->faces.push_back(top);
 
-        auto bot = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kBot, 0.0, 1.0, bound_u, isolated_top_bot);
+        auto bot = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kBot, common::models::CommonVals::EMPTY_VAL, 1.0, bound_u);
         ind++;
         result->faces.push_back(bot);
     }
@@ -81,7 +86,7 @@ std::shared_ptr<mesh::models::Grid> make_radial_grid(const std::shared_ptr<commo
             ? mesh::models::FaceType::kWell
             : mesh::models::FaceType::kInner;
         double x = data->grd->rw + step * k;
-        auto fc = make_face(k, x, k, k - 1, 2.0 * M_PI * x, tp, 0.0, 0.0, 0.0, false);
+        auto fc = make_face(k, x, k, k - 1, 2.0 * M_PI * x, tp, 0.0, 0.0, 0.0);
         result->faces.push_back(fc);
 
         std::shared_ptr<mesh::models::Cell> cl(new mesh::models::Cell());
@@ -97,24 +102,27 @@ std::shared_ptr<mesh::models::Grid> make_radial_grid(const std::shared_ptr<commo
         result->cells.push_back(cl);
     }
 
-    bool isolated_top_bot = data->bound->bound_type == common::models::BoundCondType::kConst;
+    bool isolated_contour = data->bound->contour_press_bound_type == common::models::BoundCondType::kImpermeable;
+    double contour_bound_press = isolated_contour
+        ? common::models::CommonVals::EMPTY_VAL
+        : 1.0;
 
     // last face;
     double x = data->grd->rc;
     auto fc = make_face(data->grd->n, x, data->grd->n - 1, -1, 2.0 * M_PI * x,
-        mesh::models::FaceType::kContour, 1.0, 1.0, 0.0, !isolated_top_bot);
+        mesh::models::FaceType::kContour, contour_bound_press, 1.0, 0.0);
     result->faces.push_back(fc);
 
     // up and bottom faces;
     size_t ind = result->faces.size();
     for (auto& cl : result->cells) {
         double area = M_PI * (cl->xr * cl->xr - cl->xl * cl->xl);
-        double bound_u = isolated_top_bot ? 0.0 : data->bound->get_value(cl->cntr);
-        auto top = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop, 0.0, 1.0, bound_u, isolated_top_bot);
+        double bound_u = common::services::DataDistributionService::get_value(cl->cntr, data->bound->top_bot_bound_u, 0.0);
+        auto top = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop, common::models::CommonVals::EMPTY_VAL, 1.0, bound_u);
         ind++;
         result->faces.push_back(top);
 
-        auto bot = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kBot, 0.0, 1.0, bound_u, isolated_top_bot);
+        auto bot = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kBot, common::models::CommonVals::EMPTY_VAL, 1.0, bound_u);
         ind++;
         result->faces.push_back(bot);
     }
