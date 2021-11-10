@@ -59,7 +59,7 @@ void BleFrame::set_widgets(
     std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
     std::shared_ptr<widgets::DataWidget> dataWidget,
     std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget,
-    std::shared_ptr<widgets::BoundaryCondResultWidget> boundCondResultWidget)
+    std::shared_ptr<widgets::TopBotBoundWidget> boundCondResultWidget)
 {
     this->set_settings_widget(dataWidget);
     ui->tabs->addTab(resultDataWidget.get(), "Results");

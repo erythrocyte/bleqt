@@ -16,7 +16,7 @@
 
 namespace ble::gui::widgets {
 
-BoundaryCondResultWidget::BoundaryCondResultWidget(QWidget* parent)
+TopBotBoundWidget::TopBotBoundWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new UI::BoundaryCondResult)
 {
@@ -25,13 +25,13 @@ BoundaryCondResultWidget::BoundaryCondResultWidget(QWidget* parent)
     subsribe();
 }
 
-BoundaryCondResultWidget::~BoundaryCondResultWidget()
+TopBotBoundWidget::~TopBotBoundWidget()
 {
     delete ui;
     delete m_model;
 }
 
-void BoundaryCondResultWidget::set_data(models::BoundaryCondResultModel* model)
+void TopBotBoundWidget::set_data(models::TopBotBoundUModel* model)
 {
     src::logging::write_log("rhs data set begins", ble::src::logging::kDebug);
     m_model = model;
@@ -42,18 +42,18 @@ void BoundaryCondResultWidget::set_data(models::BoundaryCondResultModel* model)
     src::logging::write_log("rhs data set ends", ble::src::logging::kDebug);
 }
 
-void BoundaryCondResultWidget::set_xrange(double max_value)
+void TopBotBoundWidget::set_xrange(double max_value)
 {
     ui->setup_xaxis_max(max_value);
 }
 
-void BoundaryCondResultWidget::subsribe()
+void TopBotBoundWidget::subsribe()
 {
     auto success = QObject::connect(ui->ShowTable, SIGNAL(triggered()), this, SLOT(handleShowHideTable()));
     Q_ASSERT(success);
 }
 
-void BoundaryCondResultWidget::handleShowHideTable()
+void TopBotBoundWidget::handleShowHideTable()
 {
     if (ui->Table->isHidden()) {
         ui->Table->show();
@@ -64,14 +64,14 @@ void BoundaryCondResultWidget::handleShowHideTable()
     }
 }
 
-void BoundaryCondResultWidget::fill_table()
+void TopBotBoundWidget::fill_table()
 {
     ui->Table->setModel(m_model);
     ui->Table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->Table->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-void BoundaryCondResultWidget::fill_chart()
+void TopBotBoundWidget::fill_chart()
 {
     ui->Chart->removeAllSeries();
 
