@@ -3,7 +3,7 @@
  * Path: bleqt/gui/widgets/models
  * Created Date: Monday, September 27th 2021, 7:53:34 am
  * Author: erythrocyte
- * 
+ *
  * Copyright (c) 2021 Your Company
  */
 
@@ -13,7 +13,7 @@
 
 namespace ble::gui::widgets::models {
 
-TopBotBoundUModel::TopBotBoundUModel(
+TopBotBoundModel::TopBotBoundModel(
     const std::shared_ptr<src::mesh::models::Grid> grd,
     const std::shared_ptr<src::common::models::BoundCondData> data,
     QObject* parent)
@@ -21,13 +21,14 @@ TopBotBoundUModel::TopBotBoundUModel(
 {
     m_data = data;
     m_grd = grd;
+    empty_val = src::common::models::CommonVals::EMPTY_VAL;
 }
 
-QVariant TopBotBoundUModel::data(const QModelIndex& index, int role) const
+QVariant TopBotBoundModel::data(const QModelIndex& index, int role) const
 {
     auto get_value = [&]() {
         if (m_data == nullptr)
-            return EMPTY_VAL;
+            return empty_val;
 
         int row_index = index.row(), column_index = index.column();
 
@@ -36,16 +37,16 @@ QVariant TopBotBoundUModel::data(const QModelIndex& index, int role) const
             return m_grd->cells[row_index]->cntr;
         case 1: {
             double x = m_grd->cells[row_index]->cntr;
-            return src::common::services::DataDistributionService::get_value(x, m_data->top_bot_bound_u, EMPTY_VAL);
+            return src::common::services::DataDistributionService::get_value(x, m_data->top_bot_bound_u, empty_val);
         }
         }
 
-        return EMPTY_VAL;
+        return src::common::models::CommonVals::EMPTY_VAL;
     };
 
     if (role == Qt::DisplayRole) {
         double value = get_value();
-        if (is_empty(value))
+        if (src::common::models::CommonVals::is_empty(value))
             return QVariant();
 
         return QString("%1")
@@ -55,10 +56,10 @@ QVariant TopBotBoundUModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-int TopBotBoundUModel::rowCount(const QModelIndex& parent) const { return m_grd->cells.size(); }
-int TopBotBoundUModel::columnCount(const QModelIndex& parent) const { return 2; }
+int TopBotBoundModel::rowCount(const QModelIndex& parent) const { return m_grd->cells.size(); }
+int TopBotBoundModel::columnCount(const QModelIndex& parent) const { return 2; }
 
-QVariant TopBotBoundUModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant TopBotBoundModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
@@ -74,20 +75,22 @@ QVariant TopBotBoundUModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-bool TopBotBoundUModel::is_empty(double value) const
+std::tuple<double, double> TopBotBoundModel::getValueRange(int column_index)
 {
-    return std::abs(value - EMPTY_VAL) < 1e-8;
-}
-
-std::tuple<double, double> TopBotBoundUModel::getValueRange()
-{
-    if (m_data->bound_sources.size() == 0)
-        return std::make_tuple(EMPTY_VAL, EMPTY_VAL);
+    std::vector<std::shared_ptr<ble::src::common::models::DataDistribution>> data;
+    switch (column_index) {
+    case 1: {
+        data = m_data->top_bot_bound_u;
+        break;
+    }
+    }
+    
+    if (data.size() == 0)
+        return std::make_tuple(empty_val, empty_val);
 
     double minx_grd, maxx_grd;
     std::tie(minx_grd, maxx_grd) = m_grd->get_min_max();
 
-    return m_data->get_range(minx_grd, maxx_grd);
+    return src::common::services::DataDistributionService::get_range(minx_grd, maxx_grd, data);
 }
-
 }

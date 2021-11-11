@@ -7,7 +7,7 @@
 #include "Hypodermic/Hypodermic.h"
 
 #include "blePresenter.hpp"
-#include "boundaryCondResultWidget.hpp"
+#include "topBotBoundWidget.hpp"
 #include "common/models/boundCondData.hpp"
 #include "mesh/models/grid.hpp"
 #include "models/topBotBoundModel.hpp"

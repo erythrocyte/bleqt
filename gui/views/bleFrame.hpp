@@ -4,7 +4,7 @@
 #include <iostream>
 #include <memory>
 
-#include "boundaryCondResultWidget.hpp"
+#include "topBotBoundWidget.hpp"
 #include "dataWidget.hpp"
 #include "fluidParamsGraphWidget.hpp"
 #include "logging/logger.hpp"

@@ -14,7 +14,7 @@
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
 #include "boundaryConditionsWidgetPresenter.hpp"
-#include "boundaryCondResultWidgetPresenter.hpp"
+#include "topBotBoundWidgetPresenter.hpp"
 
 namespace ble::gui {
 
@@ -36,7 +36,7 @@ BleApplication::BleApplication()
     builder.registerType<widgets::presenters::SatSolverSettsWidgetPresenter>();
     builder.registerType<widgets::presenters::ShockFrontSettsWidgetPresenter>();
     builder.registerType<widgets::presenters::BoundaryConditionsWidgetPresenter>();
-    builder.registerType<widgets::presenters::BoundaryCondResultWidgetPresenter>();
+    builder.registerType<widgets::presenters::TopBotBoundWidgetPresenter>();
 
     m_container = builder.build();
 }

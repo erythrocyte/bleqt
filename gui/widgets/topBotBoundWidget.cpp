@@ -3,11 +3,11 @@
  * Path: bleqt/gui/widgets
  * Created Date: Monday, September 27th 2021, 7:44:17 am
  * Author: erythrocyte
- * 
+ *
  * Copyright (c) 2021 Your Company
  */
 
-#include "boundaryCondResultWidget.hpp"
+#include "topBotBoundWidget.hpp"
 
 #include "logging/logger.hpp"
 
@@ -31,7 +31,7 @@ TopBotBoundWidget::~TopBotBoundWidget()
     delete m_model;
 }
 
-void TopBotBoundWidget::set_data(models::TopBotBoundUModel* model)
+void TopBotBoundWidget::set_data(models::TopBotBoundModel* model)
 {
     src::logging::write_log("rhs data set begins", ble::src::logging::kDebug);
     m_model = model;
@@ -74,8 +74,9 @@ void TopBotBoundWidget::fill_table()
 void TopBotBoundWidget::fill_chart()
 {
     ui->Chart->removeAllSeries();
+    double min_value, max_value;
 
-    for (int k = 1; k < m_model->columnCount(); k++) { //k = 0 is x axis;
+    for (int k = 1; k < m_model->columnCount(); k++) { // k = 0 is x axis;
         QVXYModelMapper* mapper = new QVXYModelMapper(this);
         mapper->setXColumn(0); // x axis;
         mapper->setYColumn(k);
@@ -84,16 +85,15 @@ void TopBotBoundWidget::fill_chart()
         mapper->setSeries(series);
         mapper->setModel(m_model);
         ui->add_series(series);
-    }
 
-    double min_value, max_value;
-    std::tie(min_value, max_value) = m_model->getValueRange();
-    if (std::abs(min_value - max_value) < 1e-6)
-    {
-        min_value = min_value * 0.95;
-        max_value = max_value * 1.05;
+        std::tie(min_value, max_value) = m_model->getValueRange(k);
+        if (std::abs(min_value - max_value) < 1e-6) {
+            min_value = min_value * 0.95;
+            max_value = max_value * 1.05;
+        }
+
+        ui->setup_yaxis_range(min_value, max_value);
     }
-    ui->setup_yaxis_range(min_value, max_value);
 }
 
 } // namespace ble_gui::widgets

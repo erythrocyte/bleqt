@@ -28,7 +28,7 @@ set (SOURCES
 	widgets/fluidParamsGraphWidget.cpp
 	widgets/wellWorkDataWidget.cpp
 	widgets/boundaryConditionsWidget.cpp
-	widgets/boundaryCondResultWidget.cpp
+	widgets/topBotBoundWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
 	widgets/models/topBotBoundModel.cpp

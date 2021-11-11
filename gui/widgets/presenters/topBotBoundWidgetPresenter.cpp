@@ -1,25 +1,25 @@
-#include "boundaryCondResultWidgetPresenter.hpp"
+#include "topBotBoundWidgetPresenter.hpp"
 
 namespace ble::gui::widgets::presenters {
 
-BoundaryCondResultWidgetPresenter::BoundaryCondResultWidgetPresenter(
+TopBotBoundWidgetPresenter::TopBotBoundWidgetPresenter(
     std::shared_ptr<Hypodermic::Container> container,
-    std::shared_ptr<BoundaryCondResultWidget> view)
+    std::shared_ptr<TopBotBoundWidget> view)
     : BlePresenter(container, view)
 {
 }
 
-void BoundaryCondResultWidgetPresenter::set_data(
+void TopBotBoundWidgetPresenter::set_data(
     const std::shared_ptr<src::mesh::models::Grid> grd,
     const std::shared_ptr<ble::src::common::models::BoundCondData>& data)
 {
-    models::TopBotBoundUModel* model = new models::TopBotBoundUModel(grd, data);
+    models::TopBotBoundModel* model = new models::TopBotBoundModel(grd, data);
     get_view()->set_data(model);
 }
 
-std::shared_ptr<BoundaryCondResultWidget> BoundaryCondResultWidgetPresenter::get_view()
+std::shared_ptr<TopBotBoundWidget> TopBotBoundWidgetPresenter::get_view()
 {
-    return std::static_pointer_cast<BoundaryCondResultWidget>(m_view);
+    return std::static_pointer_cast<TopBotBoundWidget>(m_view);
 }
 
 }
