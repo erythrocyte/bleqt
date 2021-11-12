@@ -43,8 +43,8 @@ public:
 
     void retranslateUi()
     {
-        _axisX->setTitleText("l");
-        _axisY->setTitleText("rhs");
+        _axisX->setTitleText("r/x");
+        _axisY->setTitleText("u");
     }
 
     void setup_xaxis_max(double value)

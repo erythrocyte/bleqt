@@ -17,7 +17,7 @@ public:
     ConditionsWidget(QWidget* parent = nullptr);
     ~ConditionsWidget() { delete ui; }
 
-    std::shared_ptr<src::common::models::BoundCondData> get_bound_data(double x0, double x1);
+    std::shared_ptr<src::common::models::BoundCondData> get_bound_data(double x0, double x1);    
 
 signals:
     void rhs_updated();
@@ -30,10 +30,11 @@ private:
 
 private slots:
     void contourTypeChanged(const QString&);
-    void rhsTypeChanged(const QString&);
+    void topBotBoundTypeChanged(const QString&);
     void fileChooseClicked();
-    void onRhsConstValueChanged(double);
-    void onRhsConstLenghtChanged(int);
+    void onBoundUConstValueChanged(double);
+    // void onBoundSConstValueChanged(double);
+    void onTopBotBoundLenghtChanged(int);
 };
 
 } // namespace ble_gui::widgets

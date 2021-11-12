@@ -15,7 +15,6 @@ public:
 
     double getModelingPeriod() const { return ui->Period->value(); }
     double get_save_fields_step() const { return ui->SaveFieldSteps->value(); }
-    double get_bound_satur() const { return ui->BoundSatur->value(); }
 
 private:
     UI::ModelData* ui;

@@ -8,7 +8,7 @@
 
 #include "boundCondType.hpp"
 #include "dataDistribution.hpp"
-#include "rhsType.hpp"
+#include "dataDistributionType.hpp"
 
 namespace ble::src::common::models {
 class BoundCondData {
@@ -25,9 +25,9 @@ public:
     std::vector<std::shared_ptr<DataDistribution>> top_bot_bound_s;
     std::vector<std::shared_ptr<DataDistribution>> initial_s;
     BoundCondType::TypeEnum contour_press_bound_type;
-    RHSType::TypeEnum top_bot_bound_u_type;
-    RHSType::TypeEnum top_bot_bound_s_type;
-    RHSType::TypeEnum initial_satur_type;
+    DataDistributionType::TypeEnum top_bot_bound_u_type;
+    DataDistributionType::TypeEnum top_bot_bound_s_type;
+    DataDistributionType::TypeEnum initial_satur_type;
 
 
 };
