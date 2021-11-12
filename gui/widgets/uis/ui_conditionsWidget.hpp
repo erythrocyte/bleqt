@@ -1,5 +1,5 @@
-#ifndef BLE_GUI_WIDGETS_UI_BOUNDARYCONDITIONSWIDGET_H_
-#define BLE_GUI_WIDGETS_UI_BOUNDARYCONDITIONSWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_UI_CONDITIONSWIDGET_H_
+#define BLE_GUI_WIDGETS_UI_CONDITIONSWIDGET_H_
 
 #include <iostream>
 #include <memory>
@@ -16,7 +16,7 @@
 
 namespace ble::gui::widgets::UI {
 
-class BoundaryConditions {
+class Conditions {
 
 public:
     QComboBox* ContourBoundType;

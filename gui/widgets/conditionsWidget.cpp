@@ -7,7 +7,7 @@
  * Copyright (c) 2021 Your Company
  */
 
-#include "boundaryConditionsWidget.hpp"
+#include "conditionsWidget.hpp"
 
 #include <QFileDialog>
 
@@ -20,9 +20,9 @@ namespace scms = ble::src::common::services;
 
 namespace ble::gui::widgets {
 
-BoundaryConditionsWidget::BoundaryConditionsWidget(QWidget* parent)
+ConditionsWidget::ConditionsWidget(QWidget* parent)
     : QWidget(parent)
-    , ui(new UI::BoundaryConditions)
+    , ui(new UI::Conditions)
 {
     ui->setupUI(this);
     set_items();
@@ -32,7 +32,7 @@ BoundaryConditionsWidget::BoundaryConditionsWidget(QWidget* parent)
     ui->ContourBoundType->setCurrentIndex(1);
 }
 
-void BoundaryConditionsWidget::set_items()
+void ConditionsWidget::set_items()
 {
     for (scmm::BoundCondType::TypeEnum v : scmm::BoundCondTypeEnumIterator()) {
         ui->ContourBoundType->addItem(QString::fromStdString(scmm::BoundCondType::get_description(v)));
@@ -43,7 +43,7 @@ void BoundaryConditionsWidget::set_items()
     }
 }
 
-void BoundaryConditionsWidget::subscribe()
+void ConditionsWidget::subscribe()
 {
     auto success = QObject::connect(ui->ContourBoundType, SIGNAL(currentIndexChanged(const QString&)),
         this, SLOT(contourTypeChanged(const QString&)));
@@ -59,7 +59,7 @@ void BoundaryConditionsWidget::subscribe()
     Q_ASSERT(success);
 }
 
-void BoundaryConditionsWidget::contourTypeChanged(const QString& value)
+void ConditionsWidget::contourTypeChanged(const QString& value)
 {
     auto m = scmm::BoundCondType::get_enum(value.toStdString());
     if (m == scmm::BoundCondType::kConst) {
@@ -74,7 +74,7 @@ void BoundaryConditionsWidget::contourTypeChanged(const QString& value)
     }
 }
 
-void BoundaryConditionsWidget::rhsTypeChanged(const QString& value)
+void ConditionsWidget::rhsTypeChanged(const QString& value)
 {
     auto m = scmm::RHSType::get_enum(value.toStdString());
     if (m == scmm::RHSType::kConst) {
@@ -91,7 +91,7 @@ void BoundaryConditionsWidget::rhsTypeChanged(const QString& value)
     emit rhs_updated();
 }
 
-void BoundaryConditionsWidget::fileChooseClicked()
+void ConditionsWidget::fileChooseClicked()
 {
     QString filter = tr("BLERHS (*.blerhs)");
     QString file_name = QFileDialog::getOpenFileName(
@@ -107,7 +107,7 @@ void BoundaryConditionsWidget::fileChooseClicked()
     }
 }
 
-std::shared_ptr<src::common::models::BoundCondData> BoundaryConditionsWidget::get_bound_data(double x0, double x1)
+std::shared_ptr<src::common::models::BoundCondData> ConditionsWidget::get_bound_data(double x0, double x1)
 {
     std::shared_ptr<src::common::models::BoundCondData> result = std::make_shared<src::common::models::BoundCondData>();
 
@@ -136,12 +136,12 @@ std::shared_ptr<src::common::models::BoundCondData> BoundaryConditionsWidget::ge
     return result;
 }
 
-void BoundaryConditionsWidget::onRhsConstLenghtChanged(int value)
+void ConditionsWidget::onRhsConstLenghtChanged(int value)
 {
     emit rhs_updated();
 }
 
-void BoundaryConditionsWidget::onRhsConstValueChanged(double value)
+void ConditionsWidget::onRhsConstValueChanged(double value)
 {
     emit rhs_updated();
 }

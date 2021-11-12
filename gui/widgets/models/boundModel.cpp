@@ -7,13 +7,13 @@
  * Copyright (c) 2021 Your Company
  */
 
-#include "topBotBoundModel.hpp"
+#include "boundModel.hpp"
 #include "common/models/commonVals.hpp"
 #include "common/services/dataDistributionService.hpp"
 
 namespace ble::gui::widgets::models {
 
-TopBotBoundModel::TopBotBoundModel(
+BoundModel::BoundModel(
     const std::shared_ptr<src::mesh::models::Grid> grd,
     const std::shared_ptr<src::common::models::BoundCondData> data,
     QObject* parent)
@@ -24,7 +24,7 @@ TopBotBoundModel::TopBotBoundModel(
     empty_val = src::common::models::CommonVals::EMPTY_VAL;
 }
 
-QVariant TopBotBoundModel::data(const QModelIndex& index, int role) const
+QVariant BoundModel::data(const QModelIndex& index, int role) const
 {
     auto get_value = [&]() {
         if (m_data == nullptr)
@@ -56,17 +56,17 @@ QVariant TopBotBoundModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-int TopBotBoundModel::rowCount(const QModelIndex& parent) const { return m_grd->cells.size(); }
-int TopBotBoundModel::columnCount(const QModelIndex& parent) const { return 2; }
+int BoundModel::rowCount(const QModelIndex& parent) const { return m_grd->cells.size(); }
+int BoundModel::columnCount(const QModelIndex& parent) const { return 2; }
 
-QVariant TopBotBoundModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant BoundModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
         case 0:
-            return QString("%1").arg("l");
+            return QString("%1").arg("r/x");
         case 1:
-            return QString("%1").arg("rhs");
+            return QString("%1").arg("u");
         default:
             return QVariant();
         }
@@ -75,7 +75,7 @@ QVariant TopBotBoundModel::headerData(int section, Qt::Orientation orientation, 
     return QVariant();
 }
 
-std::tuple<double, double> TopBotBoundModel::getValueRange(int column_index)
+std::tuple<double, double> BoundModel::getValueRange(int column_index)
 {
     std::vector<std::shared_ptr<ble::src::common::models::DataDistribution>> data;
     switch (column_index) {

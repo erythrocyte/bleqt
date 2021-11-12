@@ -7,8 +7,8 @@
  * Copyright (c) 2021 Your Company
  */
 
-#ifndef BLE_GUI_WIDGETS_MODELS_TOPBOTBOUNDMODEL_H_
-#define BLE_GUI_WIDGETS_MODELS_TOPBOTBOUNDMODEL_H_
+#ifndef BLE_GUI_WIDGETS_MODELS_BOUNDMODEL_H_
+#define BLE_GUI_WIDGETS_MODELS_BOUNDMODEL_H_
 
 #include <memory>
 #include <tuple>
@@ -22,11 +22,11 @@
 
 namespace ble::gui::widgets::models {
 
-class TopBotBoundModel : public QAbstractTableModel {
+class BoundModel : public QAbstractTableModel {
     Q_OBJECT
 
 public:
-    TopBotBoundModel(
+    BoundModel(
         const std::shared_ptr<src::mesh::models::Grid> grd,
         const std::shared_ptr<src::common::models::BoundCondData> data,
         QObject* parent = nullptr);

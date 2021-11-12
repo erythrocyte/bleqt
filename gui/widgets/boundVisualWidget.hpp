@@ -7,33 +7,33 @@
  * Copyright (c) 2021 Your Company
  */
 
-#ifndef BLE_GUI_WIDGETS_BOUNDARYCONDRESULTWIDGET_H_
-#define BLE_GUI_WIDGETS_BOUNDARYCONDRESULTWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_BOUNDVISUALWIDGET_H_
+#define BLE_GUI_WIDGETS_BOUNDVISUALWIDGET_H_
 
 #include <functional>
 #include <iostream>
 #include <memory>
 #include <vector>
 
-#include "models/topBotBoundModel.hpp"
-#include "uis/ui_boundaryCondResultWidget.hpp"
+#include "models/boundModel.hpp"
+#include "uis/ui_boundVisualWidget.hpp"
 
 using namespace QtCharts;
 
 namespace ble::gui::widgets {
-class TopBotBoundWidget : public QWidget, private UI::BoundaryCondResult {
+class BoundVisualWidget : public QWidget, private UI::BoundVisual {
     Q_OBJECT
 
 public:
-    TopBotBoundWidget(QWidget* parent = nullptr);
-    ~TopBotBoundWidget();
+    BoundVisualWidget(QWidget* parent = nullptr);
+    ~BoundVisualWidget();
 
-    void set_data(models::TopBotBoundModel* model);
+    void set_data(models::BoundModel* model);
     void set_xrange(double max_value);
 
 private:
-    UI::BoundaryCondResult* ui;
-    models::TopBotBoundModel* m_model;
+    UI::BoundVisual* ui;
+    models::BoundModel* m_model;
 
     void subsribe();
     void fill_table();

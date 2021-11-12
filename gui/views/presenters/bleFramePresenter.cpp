@@ -38,15 +38,15 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_wellWorkDataWidgetPresenter = m_container->resolve<bwp::WellWorkDataWidgetPresenter>();
     auto wellWorkDataView = std::static_pointer_cast<widgets::WellWorkDataWidget>(m_wellWorkDataWidgetPresenter->get_view());
 
-    m_topBotBoundPresenter = m_container->resolve<bwp::TopBotBoundWidgetPresenter>();
-    auto boundCondResultView = std::static_pointer_cast<widgets::TopBotBoundWidget>(m_topBotBoundPresenter->get_view());
+    m_boundVisualPresenter = m_container->resolve<bwp::BoundVisualWidgetPresenter>();
+    auto boundVisualView = std::static_pointer_cast<widgets::BoundVisualWidget>(m_boundVisualPresenter->get_view());
 
     std::static_pointer_cast<BleFrame>(m_view)->set_widgets(
         fluidParamsWidget,
         resultDataWidget,
         dataWidgetView,
         wellWorkDataView,
-        boundCondResultView);
+        boundVisualView);
 
     set_signals();
     m_dataWidgetPresenter->set_show_shockfront_status(true);
@@ -199,7 +199,7 @@ void BleFramePresenter::on_update_rhs_tab()
     auto data = m_dataWidgetPresenter->get_input_data();
     auto grd = ble::src::mesh::services::make_grid(data); // TODO: mesh every time!
 
-    m_topBotBoundPresenter->set_data(grd, data->bound);
+    m_boundVisualPresenter->set_data(grd, data->bound);
 }
 
 }

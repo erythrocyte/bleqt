@@ -27,11 +27,11 @@ set (SOURCES
 	widgets/resultDataWidget.cpp
 	widgets/fluidParamsGraphWidget.cpp
 	widgets/wellWorkDataWidget.cpp
-	widgets/boundaryConditionsWidget.cpp
-	widgets/topBotBoundWidget.cpp
+	widgets/conditionsWidget.cpp
+	widgets/boundVisualWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
-	widgets/models/topBotBoundModel.cpp
+	widgets/models/boundModel.cpp
 
 	widgets/presenters/fluidParamGraphWidgetPresenter.cpp
 	widgets/presenters/dataWidgetPresenter.cpp
@@ -42,8 +42,8 @@ set (SOURCES
 	widgets/presenters/satSolverSettsWidgetPresenter.cpp
 	widgets/presenters/shockFrontSettsWidgetPresenter.cpp
 	widgets/presenters/wellWorkDataWidgetPresenter.cpp
-	widgets/presenters/boundaryConditionsWidgetPresenter.cpp
-	widgets/presenters/topBotBoundWidgetPresenter.cpp
+	widgets/presenters/conditionsWidgetPresenter.cpp
+	widgets/presenters/boundVisualWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	

@@ -23,6 +23,6 @@ void DataWidget::set_view_objects(std::shared_ptr<models::DataWidgetComponentsDt
     ui->MainLayout->addWidget(components->satsolverset_view.get());
     ui->MainLayout->addWidget(components->gridset_widget.get());
     ui->MainLayout->addWidget(components->shockfront_widget.get());
-    ui->MainLayout->addWidget(components->boundarycond_widget.get());
+    ui->MainLayout->addWidget(components->cond_widget.get());
 }
 }

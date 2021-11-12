@@ -7,7 +7,7 @@
  * Copyright (c) 2021 Your Company
  */
 
-#include "topBotBoundWidget.hpp"
+#include "boundVisualWidget.hpp"
 
 #include "logging/logger.hpp"
 
@@ -16,22 +16,22 @@
 
 namespace ble::gui::widgets {
 
-TopBotBoundWidget::TopBotBoundWidget(QWidget* parent)
+BoundVisualWidget::BoundVisualWidget(QWidget* parent)
     : QWidget(parent)
-    , ui(new UI::BoundaryCondResult)
+    , ui(new UI::BoundVisual)
 {
     ui->setupUi(this);
     ui->Chart->setTitle("RHS");
     subsribe();
 }
 
-TopBotBoundWidget::~TopBotBoundWidget()
+BoundVisualWidget::~BoundVisualWidget()
 {
     delete ui;
     delete m_model;
 }
 
-void TopBotBoundWidget::set_data(models::TopBotBoundModel* model)
+void BoundVisualWidget::set_data(models::BoundModel* model)
 {
     src::logging::write_log("rhs data set begins", ble::src::logging::kDebug);
     m_model = model;
@@ -42,18 +42,18 @@ void TopBotBoundWidget::set_data(models::TopBotBoundModel* model)
     src::logging::write_log("rhs data set ends", ble::src::logging::kDebug);
 }
 
-void TopBotBoundWidget::set_xrange(double max_value)
+void BoundVisualWidget::set_xrange(double max_value)
 {
     ui->setup_xaxis_max(max_value);
 }
 
-void TopBotBoundWidget::subsribe()
+void BoundVisualWidget::subsribe()
 {
     auto success = QObject::connect(ui->ShowTable, SIGNAL(triggered()), this, SLOT(handleShowHideTable()));
     Q_ASSERT(success);
 }
 
-void TopBotBoundWidget::handleShowHideTable()
+void BoundVisualWidget::handleShowHideTable()
 {
     if (ui->Table->isHidden()) {
         ui->Table->show();
@@ -64,14 +64,14 @@ void TopBotBoundWidget::handleShowHideTable()
     }
 }
 
-void TopBotBoundWidget::fill_table()
+void BoundVisualWidget::fill_table()
 {
     ui->Table->setModel(m_model);
     ui->Table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->Table->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-void TopBotBoundWidget::fill_chart()
+void BoundVisualWidget::fill_chart()
 {
     ui->Chart->removeAllSeries();
     double min_value, max_value;

@@ -21,7 +21,7 @@ using namespace QtCharts;
 
 namespace ble::gui::widgets::UI {
 
-class BoundaryCondResult {
+class BoundVisual {
 public:
     QChart* Chart;
     QAction* ShowTable;

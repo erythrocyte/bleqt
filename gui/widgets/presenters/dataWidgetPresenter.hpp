@@ -7,7 +7,7 @@
 #include "Hypodermic/Hypodermic.h"
 
 #include "blePresenter.hpp"
-#include "boundaryConditionsWidgetPresenter.hpp"
+#include "conditionsWidgetPresenter.hpp"
 #include "common/models/boundCondData.hpp"
 #include "common/models/inputData.hpp"
 #include "dataWidget.hpp"
@@ -43,7 +43,7 @@ private:
     std::shared_ptr<RelPermDataWidgetPresenter> m_relperm_presenter;
     std::shared_ptr<SatSolverSettsWidgetPresenter> m_satsolverset_presenter;
     std::shared_ptr<ShockFrontSettsWidgetPresenter> m_shockfront_presenter;
-    std::shared_ptr<BoundaryConditionsWidgetPresenter> m_boundarycond_presenter;
+    std::shared_ptr<ConditionsWidgetPresenter> m_cond_presenter;
 
     void set_widgets_to_view();
     void resolve_sub_presenters();
