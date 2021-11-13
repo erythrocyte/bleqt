@@ -29,5 +29,5 @@ find_package(Boost REQUIRED)
 # adding sub directories which have own CMake files
 add_subdirectory(src)
 add_subdirectory(gui)
-# add_subdirectory(tests)
+add_subdirectory(tests)
 
