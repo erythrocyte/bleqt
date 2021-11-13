@@ -140,6 +140,8 @@ std::shared_ptr<src::common::models::BoundCondData> ConditionsWidget::get_bound_
         break;
     }
 
+    result->bound_satur = ui->BoundSatur->value();
+
     return result;
 }
 

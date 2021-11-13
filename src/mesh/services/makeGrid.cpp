@@ -56,7 +56,7 @@ std::shared_ptr<mesh::models::Grid> make_regular_grid(const std::shared_ptr<comm
 
     // last face;
     auto fc = make_face(data->grd->n, data->grd->rc, data->grd->n - 1, -1,
-        1.0, mesh::models::FaceType::kContour, contour_bound_press, 1.0, 0.0);
+        1.0, mesh::models::FaceType::kContour, contour_bound_press, data->bound->bound_satur, 0.0);
     result->faces.push_back(fc);
 
     // up and bottom faces;
@@ -110,7 +110,7 @@ std::shared_ptr<mesh::models::Grid> make_radial_grid(const std::shared_ptr<commo
     // last face;
     double x = data->grd->rc;
     auto fc = make_face(data->grd->n, x, data->grd->n - 1, -1, 2.0 * M_PI * x,
-        mesh::models::FaceType::kContour, contour_bound_press, 1.0, 0.0);
+        mesh::models::FaceType::kContour, contour_bound_press, data->bound->bound_satur, 0.0);
     result->faces.push_back(fc);
 
     // up and bottom faces;
