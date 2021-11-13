@@ -39,6 +39,10 @@ QVariant BoundModel::data(const QModelIndex& index, int role) const
             double x = m_grd->cells[row_index]->cntr;
             return src::common::services::DataDistributionService::get_value(x, m_data->top_bot_bound_u, empty_val);
         }
+        case 2: {
+            double x = m_grd->cells[row_index]->cntr;
+            return src::common::services::DataDistributionService::get_value(x, m_data->top_bot_bound_s, empty_val);
+        }
         }
 
         return src::common::models::CommonVals::EMPTY_VAL;
@@ -57,7 +61,7 @@ QVariant BoundModel::data(const QModelIndex& index, int role) const
 }
 
 int BoundModel::rowCount(const QModelIndex& parent) const { return m_grd->cells.size(); }
-int BoundModel::columnCount(const QModelIndex& parent) const { return 2; }
+int BoundModel::columnCount(const QModelIndex& parent) const { return 3; }
 
 QVariant BoundModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -67,6 +71,8 @@ QVariant BoundModel::headerData(int section, Qt::Orientation orientation, int ro
             return QString("%1").arg("r/x");
         case 1:
             return QString("%1").arg("u");
+        case 2:
+            return QString("%1").arg("s");
         default:
             return QVariant();
         }
@@ -79,12 +85,14 @@ std::tuple<double, double> BoundModel::getValueRange(int column_index)
 {
     std::vector<std::shared_ptr<ble::src::common::models::DataDistribution>> data;
     switch (column_index) {
-    case 1: {
+    case 1:
         data = m_data->top_bot_bound_u;
         break;
+    case 2:
+        data = m_data->top_bot_bound_s;
+        break;
     }
-    }
-    
+
     if (data.size() == 0)
         return std::make_tuple(empty_val, empty_val);
 

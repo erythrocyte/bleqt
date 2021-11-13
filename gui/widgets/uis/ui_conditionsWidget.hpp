@@ -20,7 +20,7 @@ class Conditions {
 
 public:
     QComboBox* ContourBoundType;
-    QComboBox* TopBotCondType;
+    QComboBox* BoundUType;
     QLineEdit* BoundUFile;
     QPushButton* BoundUFileChooseButton;
     QDoubleSpinBox* BoundUConstValue;
@@ -30,6 +30,10 @@ public:
     QPushButton* InitialSaturFileChooseButton;
     QComboBox* InitialSaturType;
     QLineEdit* InitialSaturFile;
+    QComboBox* BoundSType;
+    QLineEdit* BoundSFile;
+    QPushButton* BoundSFileChooseButton;
+    QDoubleSpinBox* BoundSConstValue;
 
     void retranslateUi(QWidget* widget)
     {
@@ -39,14 +43,23 @@ public:
         m_contourBoundTypeLabel->setText("CB Type");
         m_contourBoundTypeLabel->setToolTip("Contour Bound Type");
 
-        m_rhsTypeLabel->setText("RHS Type");
-        m_rhsTypeLabel->setToolTip("RHS Type");
+        m_boundUTypeLabel->setText("Bound U Type");
+        m_boundUTypeLabel->setToolTip("Top and Bottom faces bound u type");
 
-        m_boundUFileLabel->setText("RHS File");
-        m_boundUFileLabel->setToolTip("RHS File");
+        m_boundUFileLabel->setText("U File");
+        m_boundUFileLabel->setToolTip("Bound U File");
 
         m_boundUConstValueLabel->setText("U value");
         m_boundUConstValueLabel->setToolTip("Top and Bottom faces u value");
+
+        m_boundSTypeLabel->setText("Bound S Type");
+        m_boundSTypeLabel->setToolTip("Top and Bottom faces bound s type");
+
+        m_boundSFileLabel->setText("S File");
+        m_boundSFileLabel->setToolTip("Bound S File");
+
+        m_boundSConstValueLabel->setText("S value");
+        m_boundSConstValueLabel->setToolTip("Top and Bottom faces saturation value");
 
         m_boundConstLenghtLabel->setText("Const bound len");
         m_boundConstLenghtLabel->setToolTip("Top and Bottom faces bound const value lenght in \% from right bound");
@@ -87,13 +100,13 @@ public:
         layout->addWidget(m_contourBoundTypeLabel, 0, 0, 1, 1);
         layout->addWidget(ContourBoundType, 0, 1, 1, max_col);
 
-        TopBotCondType = new QComboBox();
-        TopBotCondType->setEnabled(false);
-        m_rhsTypeLabel = new QLabel("RHS Type");
-        layout->addWidget(m_rhsTypeLabel, 1, 0, 1, 1);
-        layout->addWidget(TopBotCondType, 1, 1, 1, max_col);
+        BoundUType = new QComboBox();
+        BoundUType->setEnabled(false);
+        m_boundUTypeLabel = new QLabel("Bound U Type");
+        layout->addWidget(m_boundUTypeLabel, 1, 0, 1, 1);
+        layout->addWidget(BoundUType, 1, 1, 1, max_col);
 
-        m_boundUFileLabel = new QLabel("RHS File");
+        m_boundUFileLabel = new QLabel("Bound U File");
         BoundUFile = new QLineEdit();
         BoundUFile->setEnabled(false);
         BoundUFile->setReadOnly(true);
@@ -111,7 +124,7 @@ public:
         BoundUConstValue->setValue(0.01);
         BoundUConstValue->setDecimals(3);
         BoundUConstValue->setEnabled(false);
-        m_boundUConstValueLabel = new QLabel("Const value");
+        m_boundUConstValueLabel = new QLabel("U value");
         layout->addWidget(m_boundUConstValueLabel, 3, 0, 1, 1);
         layout->addWidget(BoundUConstValue, 3, 1, 1, 10);
 
@@ -163,6 +176,34 @@ public:
         layout->addWidget(InitialSaturFile, 8, 1, 1, 9);
         layout->addWidget(InitialSaturFileChooseButton, 8, max_col, 1, 1);
 
+        BoundSType = new QComboBox();
+        BoundSType->setEnabled(false);
+        m_boundSTypeLabel = new QLabel("Bound S Type");
+        layout->addWidget(m_boundSTypeLabel, 9, 0, 1, 1);
+        layout->addWidget(BoundSType, 9, 1, 1, max_col);
+
+        m_boundSFileLabel = new QLabel("S value");
+        BoundSFile = new QLineEdit();
+        BoundSFile->setEnabled(false);
+        BoundSFile->setReadOnly(true);
+        BoundSFileChooseButton = new QPushButton("...");
+        BoundSFileChooseButton->setEnabled(false);
+        BoundSFileChooseButton->setStyleSheet("padding: 0px 5px 0px 5px;");
+        layout->addWidget(m_boundSFileLabel, 10, 0, 1, 1);
+        layout->addWidget(BoundSFile, 10, 1, 1, 9);
+        layout->addWidget(BoundSFileChooseButton, 10, max_col, 1, 1);
+
+        BoundSConstValue = new QDoubleSpinBox();
+        BoundSConstValue->setMinimum(-10.0);
+        BoundSConstValue->setMaximum(10);
+        BoundSConstValue->setSingleStep(1e-3);
+        BoundSConstValue->setValue(0.01);
+        BoundSConstValue->setDecimals(3);
+        BoundSConstValue->setEnabled(false);
+        m_boundSConstValueLabel = new QLabel("S value");
+        layout->addWidget(m_boundSConstValueLabel, 11, 0, 1, 1);
+        layout->addWidget(BoundSConstValue, 11, 1, 1, max_col);
+
         retranslateUi(widget);
     }
 
@@ -171,7 +212,7 @@ private:
     QVBoxLayout* mainLayout;
     QGridLayout* layout;
     QLabel* m_contourBoundTypeLabel;
-    QLabel* m_rhsTypeLabel;
+    QLabel* m_boundUTypeLabel;
     QLabel* m_boundUFileLabel;
     QLabel* m_boundUConstValueLabel;
     QLabel* m_boundConstLenghtLabel;
@@ -179,6 +220,9 @@ private:
     QLabel* m_initialSaturTypeLabel;
     QLabel* m_initialsSaturConstLabel;
     QLabel* m_initialSaturFileLabel;
+    QLabel* m_boundSTypeLabel;
+    QLabel* m_boundSFileLabel;
+    QLabel* m_boundSConstValueLabel;
 };
 
 }

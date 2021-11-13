@@ -9,6 +9,7 @@
 
 #include "boundVisualWidget.hpp"
 
+#include "common/models/commonVals.hpp"
 #include "logging/logger.hpp"
 
 #include <QHeaderView>
@@ -21,7 +22,6 @@ BoundVisualWidget::BoundVisualWidget(QWidget* parent)
     , ui(new UI::BoundVisual)
 {
     ui->setupUi(this);
-    ui->Chart->setTitle("RHS");
     subsribe();
 }
 
@@ -77,6 +77,9 @@ void BoundVisualWidget::fill_chart()
     double min_value, max_value;
 
     for (int k = 1; k < m_model->columnCount(); k++) { // k = 0 is x axis;
+        std::tie(min_value, max_value) = m_model->getValueRange(k);
+        if (src::common::models::CommonVals::is_empty(min_value) && src::common::models::CommonVals::is_empty(max_value))
+            continue;
         QVXYModelMapper* mapper = new QVXYModelMapper(this);
         mapper->setXColumn(0); // x axis;
         mapper->setYColumn(k);
@@ -84,15 +87,14 @@ void BoundVisualWidget::fill_chart()
         auto series = ui->create_series(name);
         mapper->setSeries(series);
         mapper->setModel(m_model);
-        ui->add_series(series);
+        ui->add_series(series, k);
 
-        std::tie(min_value, max_value) = m_model->getValueRange(k);
         if (std::abs(min_value - max_value) < 1e-6) {
             min_value = min_value * 0.95;
             max_value = max_value * 1.05;
         }
 
-        ui->setup_yaxis_range(min_value, max_value);
+        ui->setup_yaxis_range(min_value, max_value, k);
     }
 }
 

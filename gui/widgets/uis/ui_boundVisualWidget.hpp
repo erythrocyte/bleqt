@@ -44,7 +44,8 @@ public:
     void retranslateUi()
     {
         _axisX->setTitleText("r/x");
-        _axisY->setTitleText("u");
+        _axisY_U->setTitleText("u");
+        _axisY_S->setTitleText("s");
     }
 
     void setup_xaxis_max(double value)
@@ -52,12 +53,11 @@ public:
         _axisX->setRange(0.0, value);
     }
 
-    void add_series(QLineSeries* series)
+    void add_series(QLineSeries* series, int k)
     {
         Chart->addSeries(series);
-
         series->attachAxis(_axisX);
-        series->attachAxis(_axisY);
+        series->attachAxis(get_y_axis(k));
     }
 
     QLineSeries* create_series(QString name)
@@ -67,16 +67,32 @@ public:
         return result;
     }
 
-    void setup_yaxis_range(double minVal, double maxVal)
+    void setup_yaxis_range(double minVal, double maxVal, int k)
     {
-        _axisY->setRange(minVal, maxVal);
+        if (k == 2)
+            return;
+        auto yaxis = get_y_axis(k);
+        yaxis->setRange(minVal, maxVal);
+    }
+
+    QValueAxis* get_y_axis(int k)
+    {
+        switch (k) {
+        case 1:
+            return _axisY_U;
+        case 2:
+            return _axisY_S;
+        default:
+            return _axisY_U;
+        }
     }
 
 private:
     QGridLayout* _chartTableLayout;
     QChartView* _chartView;
     QValueAxis* _axisX;
-    QValueAxis* _axisY;
+    QValueAxis* _axisY_U;
+    QValueAxis* _axisY_S;
     QToolBar* _toolbar;
     QSplitter* _splitter;
     QBoxLayout* _toolLayout;
@@ -92,13 +108,21 @@ private:
         _axisX->setTickCount(5);
         _axisX->setMin(0.0);
 
-        _axisY = new QValueAxis();
-        _axisY->setLabelFormat("%g");
-        _axisY->setTickCount(5);
-        _axisY->setMin(0.0);
+        _axisY_U = new QValueAxis();
+        _axisY_U->setLabelFormat("%g");
+        _axisY_U->setTickCount(5);
+        _axisY_U->setMin(0.0);
+        _axisY_U->setMax(1.0);
+
+        _axisY_S = new QValueAxis();
+        _axisY_S->setLabelFormat("%g");
+        _axisY_S->setTickCount(5);
+        _axisY_S->setMin(0.0);
+        _axisY_S->setMax(1.0);
 
         Chart->addAxis(_axisX, Qt::AlignBottom);
-        Chart->addAxis(_axisY, Qt::AlignLeft);
+        Chart->addAxis(_axisY_U, Qt::AlignLeft);
+        Chart->addAxis(_axisY_S, Qt::AlignRight);
 
         _chartView = new QChartView(Chart);
     }
@@ -122,7 +146,7 @@ private:
     void add_toolbar(QWidget* widget)
     {
         _toolLayout = new QBoxLayout(QBoxLayout::TopToBottom, widget);
-        //set margins to zero so the toolbar touches the widget's edges
+        // set margins to zero so the toolbar touches the widget's edges
         _toolLayout->setContentsMargins(0, 0, 0, 0);
 
         QCommonStyle* style = new QCommonStyle();

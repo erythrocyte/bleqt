@@ -158,12 +158,15 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
         double bound_u = isolated_contour
             ? common::services::DataDistributionService::get_value(cl->cntr, data->bound->top_bot_bound_u, 0.0)
             : 0.0;
-        auto top = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop, common::models::CommonVals::EMPTY_VAL, 1.0, bound_u);
-        ind++;
+        double bound_s = isolated_contour
+            ? common::services::DataDistributionService::get_value(cl->cntr, data->bound->top_bot_bound_s, 0.0)
+            : 0.0;
+        auto top = make_face(ind++, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop,
+            common::models::CommonVals::EMPTY_VAL, bound_s, bound_u);
         result->faces.push_back(top);
 
-        auto bot = make_face(ind, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kBot, common::models::CommonVals::EMPTY_VAL, 1.0, bound_u);
-        ind++;
+        auto bot = make_face(ind++, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kBot,
+            common::models::CommonVals::EMPTY_VAL, bound_s, bound_u);
         result->faces.push_back(bot);
     }
 

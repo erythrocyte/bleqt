@@ -27,13 +27,16 @@ private:
 
     void set_items();
     void subscribe();
+    QString get_choosed_file();
 
 private slots:
     void contourTypeChanged(const QString&);
-    void topBotBoundTypeChanged(const QString&);
-    void fileChooseClicked();
+    void topBotBoundUTypeChanged(const QString&);
+    void topBotBoundSTypeChanged(const QString&);
+    void fileBoundUChooseClicked();
+    void fileBoundSChooseClicked();
     void onBoundUConstValueChanged(double);
-    // void onBoundSConstValueChanged(double);
+    void onBoundSConstValueChanged(double);
     void onTopBotBoundLenghtChanged(int);
 };
 
