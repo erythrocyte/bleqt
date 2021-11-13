@@ -1,5 +1,8 @@
 #include "saturSolverNum.hpp"
 
+#include <fstream>
+#include <sstream> // для stringstream
+
 #include "common/services/workRp.hpp"
 
 namespace cs = ble::src::common::services;
@@ -27,20 +30,16 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
     };
 
     std::vector<double> result(init.size(), 0.);
-
     std::vector<double> dvs(grd->cells.size(), 0.);
 
     for (auto& fc : grd->faces) {
         double u = get_u(fc);
-        double s = get_s(fc, u);        
+        double s = get_s(fc, u);
         double fbl = cs::rp::get_fbl(s, data->phys);
         double cf = u * fbl * fc->area;
         dvs[fc->cl1] += cf;
         if (fc->cl2 != -1)
             dvs[fc->cl2] -= cf;
-        // if (fc->cl1 == 99) {
-        //     std::cout << "u = " << u << ", s = " << s << ", tp = " << mesh::models::FaceType::get_description(fc->type) << std::endl;
-        // }
     }
 
     for (auto& cl : grd->cells) {

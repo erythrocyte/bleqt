@@ -29,7 +29,7 @@ ConditionsWidget::ConditionsWidget(QWidget* parent)
 
     subscribe();
 
-    ui->ContourBoundType->setCurrentIndex(1);
+    ui->ContourBoundType->setCurrentIndex(0);
 }
 
 void ConditionsWidget::set_items()
