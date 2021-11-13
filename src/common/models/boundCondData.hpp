@@ -28,7 +28,7 @@ public:
     DataDistributionType::TypeEnum top_bot_bound_u_type;
     DataDistributionType::TypeEnum top_bot_bound_s_type;
     DataDistributionType::TypeEnum initial_satur_type;
-
+    double bound_satur;
 
 };
 }
