@@ -4,6 +4,8 @@
 
 #include "common/models/commonVals.hpp"
 #include "common/services/dataDistributionService.hpp"
+#include "common/services/workString.hpp"
+#include "logging/logger.hpp"
 
 namespace ble::src::mesh::services {
 
@@ -23,6 +25,49 @@ std::shared_ptr<mesh::models::Face> make_face(int ind, double x, int cl1, int cl
 
     return fc;
 };
+
+void check_cells_volume(const std::shared_ptr<common::models::InputData> data,
+    const std::shared_ptr<mesh::models::Grid> grd)
+{
+    auto get_analytic_volume = [&]() {
+        double rc = data->grd->rc, rw = data->grd->rw;
+        switch (data->grd->type) {
+        case common::models::GridType::TypeEnum::kRegular:
+            return rc;
+        case common::models::GridType::TypeEnum::kRadial: {
+            return M_PI * (rc * rc - rw * rw);
+        }
+        default:
+            return 0.0;
+        }
+    };
+
+    auto get_numeric_volume = [&]() {
+        double result = 0.0;
+        for (auto& cl : grd->cells)
+            result += cl->volume;
+
+        return result;
+    };
+
+    auto get_caption = [&]() {
+        switch (data->grd->type) {
+        case common::models::GridType::TypeEnum::kRegular:
+            return "regular";
+        case common::models::GridType::TypeEnum::kRadial:
+            return "radial";
+        default:
+            return "";
+        }
+    };
+
+    double anvol = get_analytic_volume();
+    double numvol = get_numeric_volume();
+    std::string cap = get_caption();
+
+    std::string mess = common::services::string_format("for %s grid analytical volume is %.6f, numeric volume is %.6f.", cap, anvol, numvol);
+    logging::write_log(mess, logging::kDebug);
+}
 
 std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::models::InputData> data)
 {
@@ -120,7 +165,8 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
         result->faces.push_back(bot);
     }
 
+    check_cells_volume(data, result);
+
     return result;
 }
-
 }
