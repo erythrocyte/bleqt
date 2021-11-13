@@ -1,8 +1,5 @@
 #include "saturSolverNum.hpp"
 
-#include <fstream>
-#include <sstream> // для stringstream
-
 #include "common/services/workRp.hpp"
 
 namespace cs = ble::src::common::services;
