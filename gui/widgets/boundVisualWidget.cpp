@@ -3,11 +3,11 @@
  * Path: bleqt/gui/widgets
  * Created Date: Monday, September 27th 2021, 7:44:17 am
  * Author: erythrocyte
- * 
+ *
  * Copyright (c) 2021 Your Company
  */
 
-#include "boundaryCondResultWidget.hpp"
+#include "boundVisualWidget.hpp"
 
 #include "logging/logger.hpp"
 
@@ -16,22 +16,22 @@
 
 namespace ble::gui::widgets {
 
-BoundaryCondResultWidget::BoundaryCondResultWidget(QWidget* parent)
+BoundVisualWidget::BoundVisualWidget(QWidget* parent)
     : QWidget(parent)
-    , ui(new UI::BoundaryCondResult)
+    , ui(new UI::BoundVisual)
 {
     ui->setupUi(this);
     ui->Chart->setTitle("RHS");
     subsribe();
 }
 
-BoundaryCondResultWidget::~BoundaryCondResultWidget()
+BoundVisualWidget::~BoundVisualWidget()
 {
     delete ui;
     delete m_model;
 }
 
-void BoundaryCondResultWidget::set_data(models::BoundaryCondResultModel* model)
+void BoundVisualWidget::set_data(models::BoundModel* model)
 {
     src::logging::write_log("rhs data set begins", ble::src::logging::kDebug);
     m_model = model;
@@ -42,18 +42,18 @@ void BoundaryCondResultWidget::set_data(models::BoundaryCondResultModel* model)
     src::logging::write_log("rhs data set ends", ble::src::logging::kDebug);
 }
 
-void BoundaryCondResultWidget::set_xrange(double max_value)
+void BoundVisualWidget::set_xrange(double max_value)
 {
     ui->setup_xaxis_max(max_value);
 }
 
-void BoundaryCondResultWidget::subsribe()
+void BoundVisualWidget::subsribe()
 {
     auto success = QObject::connect(ui->ShowTable, SIGNAL(triggered()), this, SLOT(handleShowHideTable()));
     Q_ASSERT(success);
 }
 
-void BoundaryCondResultWidget::handleShowHideTable()
+void BoundVisualWidget::handleShowHideTable()
 {
     if (ui->Table->isHidden()) {
         ui->Table->show();
@@ -64,18 +64,19 @@ void BoundaryCondResultWidget::handleShowHideTable()
     }
 }
 
-void BoundaryCondResultWidget::fill_table()
+void BoundVisualWidget::fill_table()
 {
     ui->Table->setModel(m_model);
     ui->Table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->Table->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-void BoundaryCondResultWidget::fill_chart()
+void BoundVisualWidget::fill_chart()
 {
     ui->Chart->removeAllSeries();
+    double min_value, max_value;
 
-    for (int k = 1; k < m_model->columnCount(); k++) { //k = 0 is x axis;
+    for (int k = 1; k < m_model->columnCount(); k++) { // k = 0 is x axis;
         QVXYModelMapper* mapper = new QVXYModelMapper(this);
         mapper->setXColumn(0); // x axis;
         mapper->setYColumn(k);
@@ -84,16 +85,15 @@ void BoundaryCondResultWidget::fill_chart()
         mapper->setSeries(series);
         mapper->setModel(m_model);
         ui->add_series(series);
-    }
 
-    double min_value, max_value;
-    std::tie(min_value, max_value) = m_model->getValueRange();
-    if (std::abs(min_value - max_value) < 1e-6)
-    {
-        min_value = min_value * 0.95;
-        max_value = max_value * 1.05;
+        std::tie(min_value, max_value) = m_model->getValueRange(k);
+        if (std::abs(min_value - max_value) < 1e-6) {
+            min_value = min_value * 0.95;
+            max_value = max_value * 1.05;
+        }
+
+        ui->setup_yaxis_range(min_value, max_value);
     }
-    ui->setup_yaxis_range(min_value, max_value);
 }
 
 } // namespace ble_gui::widgets

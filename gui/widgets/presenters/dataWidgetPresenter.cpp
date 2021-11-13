@@ -23,7 +23,7 @@ void DataWidgetPresenter::resolve_sub_presenters()
     m_relperm_presenter = m_container->resolve<RelPermDataWidgetPresenter>();
     m_satsolverset_presenter = m_container->resolve<SatSolverSettsWidgetPresenter>();
     m_shockfront_presenter = m_container->resolve<ShockFrontSettsWidgetPresenter>();
-    m_boundarycond_presenter = m_container->resolve<BoundaryConditionsWidgetPresenter>();
+    m_cond_presenter = m_container->resolve<ConditionsWidgetPresenter>();
 }
 
 void DataWidgetPresenter::set_widgets_to_view()
@@ -34,7 +34,7 @@ void DataWidgetPresenter::set_widgets_to_view()
     model->relperm_widget = m_relperm_presenter->get_view();
     model->satsolverset_view = m_satsolverset_presenter->get_view();
     model->shockfront_widget = m_shockfront_presenter->get_view();
-    model->boundarycond_widget = m_boundarycond_presenter->get_view();
+    model->cond_widget = m_cond_presenter->get_view();
 
     get_view()->set_view_objects(model);
 }
@@ -47,7 +47,7 @@ void DataWidgetPresenter::set_signals()
     success = QObject::connect(m_relperm_presenter.get(), SIGNAL(valuesChanged()),
         this, SLOT(onRpValuesChanged()));
     Q_ASSERT(success);
-    success = QObject::connect(m_boundarycond_presenter.get(), SIGNAL(rhsUpdate()),
+    success = QObject::connect(m_cond_presenter.get(), SIGNAL(rhsUpdate()),
         this, SLOT(onUpdateRhs()));
     Q_ASSERT(success);
     success = QObject::connect(m_gridset_presenter.get(), SIGNAL(cellCountChanged()),
@@ -77,7 +77,7 @@ std::shared_ptr<ble::src::common::models::InputData> DataWidgetPresenter::get_in
     result->grd->n = m_gridset_presenter->get_cell_count();
     result->grd->type = m_gridset_presenter->get_grid_type();
 
-    result->bound = m_boundarycond_presenter->get_bound_data(result->grd->rw, result->grd->rc);
+    result->bound = m_cond_presenter->get_bound_data(result->grd->rw, result->grd->rc);
 
     return result;
 }

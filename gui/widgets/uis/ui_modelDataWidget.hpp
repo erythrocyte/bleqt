@@ -4,19 +4,18 @@
 #include <iostream>
 #include <memory>
 
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QWidget>
 
 namespace ble::gui::widgets::UI {
 
 class ModelData {
-private:
-    QGroupBox* m_groupBox;
-    QLabel* m_periodLabel;
-    QLabel* m_saveFieldStepsLabel;
 
 public:
     QDoubleSpinBox* Period;
@@ -32,10 +31,14 @@ public:
 
         m_saveFieldStepsLabel->setText("Field step");
         m_saveFieldStepsLabel->setToolTip("Field step");
+
+        SaveFieldSteps->setToolTip("Time step to save fields while calculating");
+        Period->setToolTip("Calculation time period");
     }
 
     void setupUi(QWidget* widget)
     {
+        int max_col = 10;
         m_groupBox = new QGroupBox("Modeling data");
         QVBoxLayout* mainLayout = new QVBoxLayout(widget);
         mainLayout->addWidget(m_groupBox);
@@ -44,30 +47,33 @@ public:
 
         layout->setMargin(5);
 
+        m_periodLabel = new QLabel("Period");
         Period = new QDoubleSpinBox();
         Period->setMinimum(0.1);
         Period->setMaximum(1e10);
         Period->setSingleStep(0.1);
         Period->setValue(5);
         Period->setToolTip("Calculation time period");
-        layout->addWidget(Period, 0, 1);
-
-        m_periodLabel = new QLabel("Period");
         layout->addWidget(m_periodLabel, 0, 0);
+        layout->addWidget(Period, 0, 1, 1, max_col);
 
+        m_saveFieldStepsLabel = new QLabel("Field step");
         SaveFieldSteps = new QDoubleSpinBox();
         SaveFieldSteps->setMinimum(0.01);
         SaveFieldSteps->setMaximum(5);
         SaveFieldSteps->setSingleStep(0.01);
         SaveFieldSteps->setValue(0.1);
         SaveFieldSteps->setToolTip("Time step to save fields while calculating");
-        layout->addWidget(SaveFieldSteps, 1, 1);
-
-        m_saveFieldStepsLabel = new QLabel("Field step");
         layout->addWidget(m_saveFieldStepsLabel, 1, 0);
+        layout->addWidget(SaveFieldSteps, 1, 1, 1, max_col);
 
         retranslateUi(widget);
     }
+
+private:
+    QGroupBox* m_groupBox;
+    QLabel* m_periodLabel;
+    QLabel* m_saveFieldStepsLabel;
 };
 
 }

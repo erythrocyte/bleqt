@@ -38,15 +38,15 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_wellWorkDataWidgetPresenter = m_container->resolve<bwp::WellWorkDataWidgetPresenter>();
     auto wellWorkDataView = std::static_pointer_cast<widgets::WellWorkDataWidget>(m_wellWorkDataWidgetPresenter->get_view());
 
-    m_boundCondResultPresenter = m_container->resolve<bwp::BoundaryCondResultWidgetPresenter>();
-    auto boundCondResultView = std::static_pointer_cast<widgets::BoundaryCondResultWidget>(m_boundCondResultPresenter->get_view());
+    m_boundVisualPresenter = m_container->resolve<bwp::BoundVisualWidgetPresenter>();
+    auto boundVisualView = std::static_pointer_cast<widgets::BoundVisualWidget>(m_boundVisualPresenter->get_view());
 
     std::static_pointer_cast<BleFrame>(m_view)->set_widgets(
         fluidParamsWidget,
         resultDataWidget,
         dataWidgetView,
         wellWorkDataView,
-        boundCondResultView);
+        boundVisualView);
 
     set_signals();
     m_dataWidgetPresenter->set_show_shockfront_status(true);
@@ -116,7 +116,7 @@ void BleFramePresenter::on_run_calc()
     std::string mess = cs::string_format("calculation completed in %.2f sec.", diff.count());
     set_status(QString::fromStdString(mess));
 
-    m_resultDataWidgetPresenter->set_data(results, data->bound->bound_type, a);
+    m_resultDataWidgetPresenter->set_data(results, data->bound->contour_press_bound_type, a);
     m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
     m_wellWorkDataWidgetPresenter->set_time_period(data->model->period);
     update_progress(100);
@@ -199,7 +199,7 @@ void BleFramePresenter::on_update_rhs_tab()
     auto data = m_dataWidgetPresenter->get_input_data();
     auto grd = ble::src::mesh::services::make_grid(data); // TODO: mesh every time!
 
-    m_boundCondResultPresenter->set_data(grd, data->bound);
+    m_boundVisualPresenter->set_data(grd, data->bound);
 }
 
 }

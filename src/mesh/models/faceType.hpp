@@ -11,10 +11,10 @@ public:
         kInner,
         kTop,
         kBot,
-        kUndefined,    
+        kUndefined,
     };
 
-    static std::string get_description(TypeEnum enumVal)
+    static std::string get_description(const TypeEnum& enumVal)
     {
         switch (enumVal) {
         case TypeEnum::kBot:
@@ -32,7 +32,7 @@ public:
         }
     }
 
-    static TypeEnum get_enum(std::string val)
+    static TypeEnum get_enum(const std::string& val)
     {
         if (val == "Bot")
             return TypeEnum::kBot;
@@ -46,6 +46,16 @@ public:
             return TypeEnum::kWell;
 
         return TypeEnum::kUndefined;
+    }
+
+    static bool is_well_countour(const TypeEnum& enumVal)
+    {
+        return enumVal == TypeEnum::kWell || enumVal == TypeEnum::kContour;
+    }
+
+    static bool is_top_bot(const TypeEnum& enumval)
+    {
+        return enumval == TypeEnum::kTop || enumval == TypeEnum::kBot;
     }
 };
 

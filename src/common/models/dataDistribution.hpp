@@ -3,9 +3,9 @@
 
 namespace ble::src::common::models {
 
-class BoundSourceCond {
+class DataDistribution {
 public:
-    BoundSourceCond()
+    DataDistribution()
     {
         x0 = 0.0;
         x1 = 0.0;

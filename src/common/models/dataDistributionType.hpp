@@ -5,7 +5,7 @@
 
 namespace ble::src::common::models {
 
-struct RHSType {
+struct DataDistributionType {
 public:
     enum TypeEnum {
         kConst,
@@ -16,7 +16,7 @@ public:
     {
         switch (enumVal) {
         case TypeEnum::kConst:
-            return "Const u";
+            return "Const";
         case TypeEnum::kFile:
             return "File";
         default:
@@ -33,10 +33,10 @@ public:
     }
 };
 
-typedef common::utils::Iterator<RHSType::TypeEnum,
-    RHSType::TypeEnum::kConst,
-    RHSType::TypeEnum::kFile>
-    RHSTypeEnumIterator;
+typedef common::utils::Iterator<DataDistributionType::TypeEnum,
+    DataDistributionType::TypeEnum::kConst,
+    DataDistributionType::TypeEnum::kFile>
+    DataDistributionTypeEnumIterator;
 
 } // namespace ble::src
 

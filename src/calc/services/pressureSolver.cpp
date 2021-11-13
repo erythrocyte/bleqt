@@ -4,6 +4,7 @@
 
 #include "calc/models/diagMatrix.hpp"
 #include "calc/services/workSigma.hpp"
+#include "common/models/commonVals.hpp"
 
 namespace ble::src::calc::services {
 
@@ -58,10 +59,7 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
     std::vector<double> rhs(grd->cells.size(), 0.0);
 
     for (auto& fc : grd->faces) {
-        if (fc->isolated) {
-            continue;
-        }
-        
+
         double sigma = get_face_sigma(fc, s, data->phys, grd);
         double h = get_h(fc, grd, data);
         double cf = fc->area * sigma / h;
@@ -97,7 +95,14 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     const std::shared_ptr<common::models::InputData> data, std::shared_ptr<mm::Grid> grd)
 {
     for (auto& fc : grd->faces) {
-        if (fc->isolated) {
+
+        if (mm::FaceType::is_top_bot(fc->type)) {
+            fc->u = fc->bound_u;
+            continue;
+        }
+
+        if (mm::FaceType::is_well_countour(fc->type) && common::models::CommonVals::is_empty(fc->bound_press)) {
+            fc->u = 0.0; // empty bound press means that face is impermeable;
             continue;
         }
 
@@ -105,7 +110,7 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
         double h = get_h(fc, grd, data);
 
         double p1 = p[fc->cl1];
-        double p2 = (fc->cl2 == -1)
+        double p2 = mm::FaceType::is_well_countour(fc->type)
             ? fc->bound_press
             : p[fc->cl2];
 

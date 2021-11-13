@@ -9,7 +9,7 @@
 #include "relPermDataWidget.hpp"
 #include "satSolverSettsWidget.hpp"
 #include "shockFrontSettsWidget.hpp"
-#include "boundaryConditionsWidget.hpp"
+#include "conditionsWidget.hpp"
 
 namespace ble::gui::widgets::models {
 
@@ -19,7 +19,7 @@ struct DataWidgetComponentsDto {
     std::shared_ptr<RelPermDataWidget> relperm_widget;
     std::shared_ptr<SatSolverSettsWidget> satsolverset_view;
     std::shared_ptr<ShockFrontSettsWidget> shockfront_widget;
-    std::shared_ptr<BoundaryConditionsWidget> boundarycond_widget;
+    std::shared_ptr<ConditionsWidget> cond_widget;
 };
 
 }

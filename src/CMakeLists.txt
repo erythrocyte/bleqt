@@ -24,7 +24,7 @@ set(HEADERS
 	common/services/commonVector.hpp
 	common/services/commonMath.hpp
 	common/services/workString.hpp
-	common/services/boundSourceService.hpp
+	common/services/dataDistributionService.hpp
 
 	common/utils/mapInit.hpp
 
@@ -37,6 +37,8 @@ set(HEADERS
 	common/models/outputSettings.hpp
 	common/models/wellWorkParams.hpp
 	common/models/boundCondData.hpp
+	common/models/dataDistribution.hpp
+	common/models/commonVals.hpp
 
 	mesh/models/cell.hpp
 	mesh/models/face.hpp
@@ -66,9 +68,7 @@ set (SOURCES
 	common/services/commonVector.cpp
 	common/services/commonMath.cpp
 	common/services/workString.cpp
-	common/services/boundSourceService.cpp
-
-	common/models/boundCondData.cpp
+	common/services/dataDistributionService.cpp
 
 	mesh/models/grid.cpp
 

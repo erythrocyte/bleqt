@@ -7,25 +7,26 @@
  * Copyright (c) 2021 Your Company
  */
 
-#ifndef BLE_GUI_WIDGETS_MODELS_BOUNDARYCONDRESULTMODEL_H_
-#define BLE_GUI_WIDGETS_MODELS_BOUNDARYCONDRESULTMODEL_H_
+#ifndef BLE_GUI_WIDGETS_MODELS_BOUNDMODEL_H_
+#define BLE_GUI_WIDGETS_MODELS_BOUNDMODEL_H_
 
 #include <memory>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 #include <QAbstractTableModel>
 
 #include "common/models/boundCondData.hpp"
+#include "common/models/dataDistribution.hpp"
 #include "mesh/models/grid.hpp"
 
 namespace ble::gui::widgets::models {
 
-class BoundaryCondResultModel : public QAbstractTableModel {
+class BoundModel : public QAbstractTableModel {
     Q_OBJECT
 
 public:
-    BoundaryCondResultModel(
+    BoundModel(
         const std::shared_ptr<src::mesh::models::Grid> grd,
         const std::shared_ptr<src::common::models::BoundCondData> data,
         QObject* parent = nullptr);
@@ -36,14 +37,12 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    std::tuple<double, double> getValueRange();
+    std::tuple<double, double> getValueRange(int column_index);
 
 private:
     std::shared_ptr<src::common::models::BoundCondData> m_data;
     std::shared_ptr<src::mesh::models::Grid> m_grd;
-    const double EMPTY_VAL = -99999.0;
-
-    bool is_empty(double value) const;
+    double empty_val;
 };
 
 }

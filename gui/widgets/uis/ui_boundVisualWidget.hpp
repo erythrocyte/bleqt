@@ -21,7 +21,7 @@ using namespace QtCharts;
 
 namespace ble::gui::widgets::UI {
 
-class BoundaryCondResult {
+class BoundVisual {
 public:
     QChart* Chart;
     QAction* ShowTable;
@@ -43,8 +43,8 @@ public:
 
     void retranslateUi()
     {
-        _axisX->setTitleText("l");
-        _axisY->setTitleText("rhs");
+        _axisX->setTitleText("r/x");
+        _axisY->setTitleText("u");
     }
 
     void setup_xaxis_max(double value)
