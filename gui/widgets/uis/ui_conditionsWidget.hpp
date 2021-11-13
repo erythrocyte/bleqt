@@ -130,7 +130,7 @@ public:
         BoundSatur->setMinimum(0.0);
         BoundSatur->setMaximum(1.0);
         BoundSatur->setSingleStep(0.01);
-        BoundSatur->setValue(1.0);
+        BoundSatur->setValue(0.25);
         BoundSatur->setToolTip("Bound satur value");
         layout->addWidget(m_boundSaturLabel, 5, 0);
         layout->addWidget(BoundSatur, 5, 1, 1, max_col);
