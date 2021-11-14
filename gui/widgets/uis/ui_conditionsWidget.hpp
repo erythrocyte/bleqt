@@ -133,7 +133,7 @@ public:
         TopBotBoundConstLenght->setMaximum(100);
         TopBotBoundConstLenght->setSingleStep(1);
         TopBotBoundConstLenght->setValue(100);
-        TopBotBoundConstLenght->setEnabled(false);
+        // TopBotBoundConstLenght->setEnabled(false);
         m_boundConstLenghtLabel = new QLabel("Const lenght");
         layout->addWidget(m_boundConstLenghtLabel, 4, 0, 1, 1);
         layout->addWidget(TopBotBoundConstLenght, 4, 1, 1, 10);

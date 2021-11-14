@@ -29,7 +29,7 @@ ConditionsWidget::ConditionsWidget(QWidget* parent)
 
     subscribe();
 
-    ui->ContourBoundType->setCurrentIndex(0);
+    ui->ContourBoundType->setCurrentIndex(1);
 }
 
 void ConditionsWidget::set_items()
@@ -85,11 +85,13 @@ void ConditionsWidget::contourTypeChanged(const QString& value)
         ui->BoundSConstValue->setEnabled(false);
         ui->BoundSFile->setEnabled(false);
         ui->BoundSFileChooseButton->setEnabled(false);
+        ui->BoundSatur->setEnabled(true);
     } else if (m == scmm::BoundCondType::kImpermeable) {
         ui->BoundUType->setEnabled(true);
         topBotBoundUTypeChanged(ui->BoundUType->currentText());
         ui->BoundSType->setEnabled(true);
         topBotBoundSTypeChanged(ui->BoundSType->currentText());
+        ui->BoundSatur->setEnabled(false);
     }
 }
 
