@@ -32,6 +32,7 @@ set (SOURCES
 
 	widgets/models/wellWorkParamsModel.cpp
 	widgets/models/boundModel.cpp
+	widgets/models/tauModel.cpp
 
 	widgets/presenters/fluidParamGraphWidgetPresenter.cpp
 	widgets/presenters/dataWidgetPresenter.cpp
