@@ -30,6 +30,8 @@ ConditionsWidget::ConditionsWidget(QWidget* parent)
     subscribe();
 
     ui->ContourBoundType->setCurrentIndex(1);
+    ui->BoundSType->setCurrentIndex(1);
+    ui->BoundSFile->setText("/home/erythrocyte/Documents/progs/cpp/bleqt/samples/rhs/s_sample.blerhs");
 }
 
 void ConditionsWidget::set_items()

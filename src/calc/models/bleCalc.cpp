@@ -65,8 +65,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             pressIndex++;
 
             double t = services::get_time_step(grd, s_prev, data);
-            // std::string mess = common::services::string_format("tau = %.8f", t);
-            // logging::write_log(mess, logging::kInfo);
+            std::string mess = common::services::string_format("tau = %.8f", t);
+            logging::write_log(mess, logging::kDebug);
             if (saveT + t >= data->model->save_field_step) {
                 t = data->model->save_field_step - saveT;
                 saveT = 0.0;
@@ -75,6 +75,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 saveT += t;
                 need_save_fiels = false;
             }
+            // mess = common::services::string_format("tau after = %.8f", t);
+            // logging::write_log(mess, logging::kDebug);
 
             double u = services::getULiqInject(grd, data->grd->type);
             // std::string mess = common::services::string_format("uw = %.8f", u);
