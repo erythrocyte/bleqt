@@ -6,7 +6,12 @@
 namespace ble::src::common::models {
 class TauData {
 public:
-    TauData() { }
+    TauData(double time, double tau)
+    {
+        this->time = time;
+        this->tau = tau;
+    }
+
     ~TauData() { }
 
     double time;

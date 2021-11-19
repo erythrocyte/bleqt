@@ -9,6 +9,7 @@
 #include "bleResultData.hpp"
 #include "common/models/inputData.hpp"
 #include "common/models/wellWorkParams.hpp"
+#include "common/models/tauData.hpp"
 #include "mesh/models/grid.hpp"
 
 namespace ble::src::calc::models {
@@ -24,10 +25,12 @@ public:
     std::shared_ptr<common::models::DynamicData> get_data(int index) const { return _results->data[index]; }
     std::shared_ptr<BleResultData> get_result() { return _results; }
     std::vector<std::shared_ptr<common::models::WellWorkParams>> get_well_work_params() { return _wellWorkParams; }
+    std::vector<std::shared_ptr<common::models::TauData>> get_tau_data() {return m_tau_data;}
 
 private:
     std::shared_ptr<BleResultData> _results;
     std::vector<std::shared_ptr<common::models::WellWorkParams>> _wellWorkParams;
+    std::vector<std::shared_ptr<common::models::TauData>> m_tau_data;
 
     void set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
         const std::shared_ptr<common::models::InputData> data);

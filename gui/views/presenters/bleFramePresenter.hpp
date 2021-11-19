@@ -15,6 +15,7 @@
 #include "resultDataWidgetPresenter.hpp"
 #include "wellWorkDataWidgetPresenter.hpp"
 #include "boundVisualWidgetPresenter.hpp"
+#include "tauVisualWidgetPresenter.hpp"
 
 namespace bwp = ble::gui::widgets::presenters;
 
@@ -36,6 +37,7 @@ private:
     std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;
     std::shared_ptr<bwp::WellWorkDataWidgetPresenter> m_wellWorkDataWidgetPresenter;
     std::shared_ptr<bwp::BoundVisualWidgetPresenter> m_boundVisualPresenter;
+    std::shared_ptr<bwp::TauVisualWidgetPresenter> m_tauVisualPresenter;
 
     void set_signals();
     double get_sc();

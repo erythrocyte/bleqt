@@ -26,6 +26,7 @@ BleCalc::~BleCalc()
 {
     _results.reset();
     _wellWorkParams.clear();
+    m_tau_data.clear();
 }
 
 void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
@@ -33,6 +34,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     std::function<void(double)> set_progress)
 {
     _results->data.clear();
+    m_tau_data.clear();
     set_initial_cond(grd, data);
     double sc = cs::shock_front::get_shock_front(data->phys);
 
@@ -46,20 +48,20 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     if (!data->satSetts->need_satur_solve) {
         auto well_params = services::calc_well_work_param(grd, s_prev, data->phys, sumT);
-        double qan = services::calc_q_analytic(grd, data);
-        double qnum = well_params->ql;
-        double perc = std::abs(qan - qnum) / qan * 100.0;
+        // double qan = services::calc_q_analytic(grd, data);
+        // double qnum = well_params->ql;
+        // double perc = std::abs(qan - qnum) / qan * 100.0;
 
-        std::string mess = common::services::string_format("qan = %.5f, qnum = %.5f, r = %.3f", qan, qnum, perc);
-        logging::write_log(mess, logging::kInfo);
+        // std::string mess = common::services::string_format("qan = %.5f, qnum = %.5f, r = %.3f", qan, qnum, perc);
+        // logging::write_log(mess, logging::kInfo);
 
-        save_faces_val(grd, data);
+        // save_faces_val(grd, data);
     } else {
         while (sumT < data->model->period) {
             if (pressIndex == 0 || pressIndex == data->satSetts->pN) {
                 p = services::solve_press(grd, s_prev, data);
                 services::calc_u(p, s_prev, data, grd);
-                //save_press(index, grd, p);
+                // save_press(index, grd, p);
                 pressIndex = 0;
             }
             pressIndex++;
@@ -85,6 +87,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             s_cur = services::solve_satur(t, s_prev, data, grd);
             s_prev = s_cur;
             sumT += t;
+            m_tau_data.push_back(std::make_shared<common::models::TauData>(sumT, t));
 
             if (need_save_fiels) {
                 std::vector<std::tuple<double, double>> xs_an = services::get_satur_exact(sc, sumU, data);

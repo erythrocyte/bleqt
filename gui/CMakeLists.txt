@@ -46,6 +46,7 @@ set (SOURCES
 	widgets/presenters/wellWorkDataWidgetPresenter.cpp
 	widgets/presenters/conditionsWidgetPresenter.cpp
 	widgets/presenters/boundVisualWidgetPresenter.cpp
+	widgets/presenters/tauVisualWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	
