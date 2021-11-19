@@ -29,6 +29,7 @@ set (SOURCES
 	widgets/wellWorkDataWidget.cpp
 	widgets/conditionsWidget.cpp
 	widgets/boundVisualWidget.cpp
+	widgets/tauVisualWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
 	widgets/models/boundModel.cpp

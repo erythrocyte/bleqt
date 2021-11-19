@@ -69,4 +69,34 @@ QVariant TauModel::headerData(int section, Qt::Orientation orientation, int role
     return QVariant();
 }
 
+std::tuple<double, double> TauModel::get_value_range(int column_index)
+{
+    if (m_data.size() == 0)
+        return std::make_tuple(empty_val, empty_val);
+
+    double min = 1e8, max = -1e8;
+
+    for (size_t k = 0; k < m_data.size(); k++) {
+        double val = get_value(column_index, k);
+        if (val < min)
+            min = val;
+        if (val > max)
+            max = val;
+    }
+
+    return std::make_tuple(min, max);
+}
+
+double TauModel::get_value(int column_index, int row_index)
+{
+    switch (column_index) {
+    case 0:
+        return m_data[row_index]->time;
+    case 1:
+        return m_data[row_index]->tau;
+    }
+
+    return src::common::models::CommonVals::EMPTY_VAL;
+}
+
 }

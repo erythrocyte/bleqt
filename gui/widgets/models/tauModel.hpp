@@ -13,6 +13,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <tuple>
 
 #include <QAbstractTableModel>
 
@@ -33,9 +34,14 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
+    std::tuple<double, double> get_value_range(int column_index);
+
 private:
     std::vector<std::shared_ptr<src::common::models::TauData>> m_data;
     double empty_val;
+
+    double get_value(int column_index, int row_index);
+
 };
 
 }
