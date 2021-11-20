@@ -1,5 +1,5 @@
-#ifndef BLE_GUI_WIDGETS_UI_BOUNDVISUALWIDGET_H_
-#define BLE_GUI_WIDGETS_UI_BOUNDVISUALWIDGET_H_
+#ifndef BLE_GUI_WIDGETS_UI_TAUVISUALWIDGET_H_
+#define BLE_GUI_WIDGETS_UI_TAUVISUALWIDGET_H_
 
 #include <functional>
 #include <iostream>
@@ -21,7 +21,7 @@ using namespace QtCharts;
 
 namespace ble::gui::widgets::UI {
 
-class BoundVisual {
+class TauVisual {
 public:
     QChart* Chart;
     QAction* ShowTable;
@@ -43,20 +43,19 @@ public:
 
     void retranslateUi()
     {
-        _axisX->setTitleText("r/x");
-        _axisY_U->setTitleText("u");
-        _axisY_S->setTitleText("s");
+        _axis_x->setTitleText("T");
+        _axis_y_tau->setTitleText("tau");
     }
 
     void setup_xaxis_max(double value)
     {
-        _axisX->setRange(0.0, value);
+        _axis_x->setRange(0.0, value);
     }
 
     void add_series(QLineSeries* series, int k)
     {
         Chart->addSeries(series);
-        series->attachAxis(_axisX);
+        series->attachAxis(_axis_x);
         series->attachAxis(get_y_axis(k));
     }
 
@@ -69,8 +68,6 @@ public:
 
     void setup_yaxis_range(double minVal, double maxVal, int k)
     {
-        if (k == 2)
-            return;
         auto yaxis = get_y_axis(k);
         yaxis->setRange(minVal, maxVal);
     }
@@ -79,20 +76,17 @@ public:
     {
         switch (k) {
         case 1:
-            return _axisY_U;
-        case 2:
-            return _axisY_S;
+            return _axis_y_tau;
         default:
-            return _axisY_U;
+            return _axis_y_tau;
         }
     }
 
 private:
     QGridLayout* _chartTableLayout;
     QChartView* _chartView;
-    QValueAxis* _axisX;
-    QValueAxis* _axisY_U;
-    QValueAxis* _axisY_S;
+    QValueAxis* _axis_x;
+    QValueAxis* _axis_y_tau;
     QToolBar* _toolbar;
     QSplitter* _splitter;
     QBoxLayout* _toolLayout;
@@ -103,26 +97,18 @@ private:
         Chart->legend()->setVisible(true);
 
         // Настройка осей графика
-        _axisX = new QValueAxis();
-        _axisX->setLabelFormat("%g");
-        _axisX->setTickCount(5);
-        _axisX->setMin(0.0);
+        _axis_x = new QValueAxis();
+        _axis_x->setLabelFormat("%g");
+        _axis_x->setTickCount(5);
+        _axis_x->setMin(0.0);
 
-        _axisY_U = new QValueAxis();
-        _axisY_U->setLabelFormat("%g");
-        _axisY_U->setTickCount(5);
-        _axisY_U->setMin(0.0);
-        _axisY_U->setMax(1.0);
+        _axis_y_tau = new QValueAxis();
+        _axis_y_tau->setLabelFormat("%g");
+        _axis_y_tau->setTickCount(5);
+        _axis_y_tau->setMin(0.0);
 
-        _axisY_S = new QValueAxis();
-        _axisY_S->setLabelFormat("%g");
-        _axisY_S->setTickCount(5);
-        _axisY_S->setMin(0.0);
-        _axisY_S->setMax(1.0);
-
-        Chart->addAxis(_axisX, Qt::AlignBottom);
-        Chart->addAxis(_axisY_U, Qt::AlignLeft);
-        Chart->addAxis(_axisY_S, Qt::AlignRight);
+        Chart->addAxis(_axis_x, Qt::AlignBottom);
+        Chart->addAxis(_axis_y_tau, Qt::AlignLeft);
 
         _chartView = new QChartView(Chart);
     }

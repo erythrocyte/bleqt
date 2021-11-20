@@ -7,7 +7,7 @@
  * Copyright (c) 2021 Your Company
  */
 
-#include "boundVisualWidget.hpp"
+#include "tauVisualWidget.hpp"
 
 #include "common/models/commonVals.hpp"
 #include "logging/logger.hpp"
@@ -17,43 +17,40 @@
 
 namespace ble::gui::widgets {
 
-BoundVisualWidget::BoundVisualWidget(QWidget* parent)
+TauVisualWidget::TauVisualWidget(QWidget* parent)
     : QWidget(parent)
-    , ui(new UI::BoundVisual)
+    , ui(new UI::TauVisual)
 {
     ui->setupUi(this);
     subsribe();
 }
 
-BoundVisualWidget::~BoundVisualWidget()
+TauVisualWidget::~TauVisualWidget()
 {
     delete ui;
     delete m_model;
 }
 
-void BoundVisualWidget::set_data(models::BoundModel* model)
+void TauVisualWidget::set_data(models::TauModel* model)
 {
-    src::logging::write_log("rhs data set begins", ble::src::logging::kDebug);
     m_model = model;
 
     fill_table();
     fill_chart();
-
-    src::logging::write_log("rhs data set ends", ble::src::logging::kDebug);
 }
 
-void BoundVisualWidget::set_xrange(double max_value)
+void TauVisualWidget::set_xrange(double max_value)
 {
     ui->setup_xaxis_max(max_value);
 }
 
-void BoundVisualWidget::subsribe()
+void TauVisualWidget::subsribe()
 {
     auto success = QObject::connect(ui->ShowTable, SIGNAL(triggered()), this, SLOT(handleShowHideTable()));
     Q_ASSERT(success);
 }
 
-void BoundVisualWidget::handleShowHideTable()
+void TauVisualWidget::handleShowHideTable()
 {
     if (ui->Table->isHidden()) {
         ui->Table->show();
@@ -64,20 +61,20 @@ void BoundVisualWidget::handleShowHideTable()
     }
 }
 
-void BoundVisualWidget::fill_table()
+void TauVisualWidget::fill_table()
 {
     ui->Table->setModel(m_model);
     ui->Table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->Table->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-void BoundVisualWidget::fill_chart()
+void TauVisualWidget::fill_chart()
 {
     ui->Chart->removeAllSeries();
     double min_value, max_value;
 
     for (int k = 1; k < m_model->columnCount(); k++) { // k = 0 is x axis;
-        std::tie(min_value, max_value) = m_model->getValueRange(k);
+        std::tie(min_value, max_value) = m_model->get_value_range(k);
         if (src::common::models::CommonVals::is_empty(min_value) && src::common::models::CommonVals::is_empty(max_value))
             continue;
         QVXYModelMapper* mapper = new QVXYModelMapper(this);
@@ -89,10 +86,10 @@ void BoundVisualWidget::fill_chart()
         mapper->setModel(m_model);
         ui->add_series(series, k);
 
-        if (std::abs(min_value - max_value) < 1e-6) {
-            min_value = min_value * 0.95;
-            max_value = max_value * 1.05;
-        }
+        // if (std::abs(min_value - max_value) < 1e-6) {
+        //     min_value = min_value * 0.95;
+        //     max_value = max_value * 1.05;
+        // }
 
         ui->setup_yaxis_range(min_value, max_value, k);
     }

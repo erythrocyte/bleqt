@@ -9,6 +9,7 @@
 #include "fluidParamsGraphWidget.hpp"
 #include "logging/logger.hpp"
 #include "resultDataWidget.hpp"
+#include "tauVisualWidget.hpp"
 #include "ui_bleFrame.hpp"
 #include "wellWorkDataWidget.hpp"
 
@@ -29,13 +30,14 @@ public:
         std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
         std::shared_ptr<widgets::DataWidget> dataWidget,
         std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget,
-        std::shared_ptr<widgets::BoundVisualWidget> condWidget);
+        std::shared_ptr<widgets::BoundVisualWidget> condWidget,
+        std::shared_ptr<widgets::TauVisualWidget> tauWidget);
     void update_progress(double perc) { ui->statusProgressBar->setValue(perc); }
     void set_status(QString str) { ui->statusLabel->setText(str); }
     void add_log_message(std::string str, ble::src::logging::SeverityLevelEnum level);
 
 signals:
-    void sgn_run_calc();    
+    void sgn_run_calc();
 
 private:
     UI::UI_BleFrame* ui;

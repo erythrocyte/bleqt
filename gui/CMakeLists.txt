@@ -29,9 +29,11 @@ set (SOURCES
 	widgets/wellWorkDataWidget.cpp
 	widgets/conditionsWidget.cpp
 	widgets/boundVisualWidget.cpp
+	widgets/tauVisualWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
 	widgets/models/boundModel.cpp
+	widgets/models/tauModel.cpp
 
 	widgets/presenters/fluidParamGraphWidgetPresenter.cpp
 	widgets/presenters/dataWidgetPresenter.cpp
@@ -44,6 +46,7 @@ set (SOURCES
 	widgets/presenters/wellWorkDataWidgetPresenter.cpp
 	widgets/presenters/conditionsWidgetPresenter.cpp
 	widgets/presenters/boundVisualWidgetPresenter.cpp
+	widgets/presenters/tauVisualWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	

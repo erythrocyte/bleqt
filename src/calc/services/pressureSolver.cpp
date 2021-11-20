@@ -59,7 +59,6 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
     std::vector<double> rhs(grd->cells.size(), 0.0);
 
     for (auto& fc : grd->faces) {
-
         double sigma = get_face_sigma(fc, s, data->phys, grd);
         double h = get_h(fc, grd, data);
         double cf = fc->area * sigma / h;
@@ -74,8 +73,10 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         }
         case mm::FaceType::kWell:
         case mm::FaceType::kContour: {
-            rhs[fc->cl1] += cf * fc->bound_press;
-            ret.C[fc->cl1] += cf;
+            if (!common::models::CommonVals::is_empty(fc->bound_press)) {
+                rhs[fc->cl1] += cf * fc->bound_press;
+                ret.C[fc->cl1] += cf;
+            }
             break;
         }
         case mm::FaceType::kTop:

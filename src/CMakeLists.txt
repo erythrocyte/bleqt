@@ -39,6 +39,7 @@ set(HEADERS
 	common/models/boundCondData.hpp
 	common/models/dataDistribution.hpp
 	common/models/commonVals.hpp
+	common/models/tauData.hpp
 
 	mesh/models/cell.hpp
 	mesh/models/face.hpp

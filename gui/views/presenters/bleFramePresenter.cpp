@@ -41,12 +41,16 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_boundVisualPresenter = m_container->resolve<bwp::BoundVisualWidgetPresenter>();
     auto boundVisualView = std::static_pointer_cast<widgets::BoundVisualWidget>(m_boundVisualPresenter->get_view());
 
+    m_tauVisualPresenter = m_container->resolve<bwp::TauVisualWidgetPresenter>();
+    auto tauVisualView = std::static_pointer_cast<widgets::TauVisualWidget>(m_tauVisualPresenter->get_view());
+
     std::static_pointer_cast<BleFrame>(m_view)->set_widgets(
         fluidParamsWidget,
         resultDataWidget,
         dataWidgetView,
         wellWorkDataView,
-        boundVisualView);
+        boundVisualView,
+        tauVisualView);
 
     set_signals();
     m_dataWidgetPresenter->set_show_shockfront_status(true);
@@ -119,6 +123,7 @@ void BleFramePresenter::on_run_calc()
     m_resultDataWidgetPresenter->set_data(results, data->bound->contour_press_bound_type, a);
     m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
     m_wellWorkDataWidgetPresenter->set_time_period(data->model->period);
+    m_tauVisualPresenter->set_data(solver->get_tau_data());
     update_progress(100);
 }
 
