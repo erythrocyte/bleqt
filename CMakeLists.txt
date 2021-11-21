@@ -27,7 +27,7 @@ enable_testing()
 find_package(Boost REQUIRED)
 
 # adding sub directories which have own CMake files
-add_subdirectory(src)
+add_subdirectory(lib)
 add_subdirectory(gui)
 add_subdirectory(tests)
 
