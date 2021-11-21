@@ -63,8 +63,8 @@ Fracture:
 
     - saturation:
         .. math::
-            m_f \dfrac{s_f}{t} + 
-            \triangledown_r \left(f(s_f)u_f\right) + \dfrac{1}{2\delta} \left.\left(f(s)u_z\right)\right|_{\Gamma_f(-\delta)}^{\Gamma_f(\delta)}, \;\;\;
+            m_f \dfrac{\partial s_f}{\partial t} + 
+            \triangledown_r \left(f(s_f)u_f\right) + \dfrac{1}{2\delta} \left.\left(f(s)u_z\right)\right|_{\Gamma_f(-\delta)}^{\Gamma_f(\delta)} = 0, \;\;\;
             f(x) = \dfrac{k_w(x)}{\phi(x)},
             :label: saturfract
 

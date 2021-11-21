@@ -18,6 +18,7 @@ Contents
 
    task description
    equations
+   dimensionless
    .. params
    .. numerical approach
    .. api
