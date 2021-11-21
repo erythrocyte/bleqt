@@ -144,9 +144,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.70000001"
-     inkscape:cx="12.193313"
-     inkscape:cy="152.70441"
+     inkscape:zoom="1.4"
+     inkscape:cx="109.44321"
+     inkscape:cy="207.40722"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -433,5 +433,16 @@
          style="font-size:4.9389px;stroke-width:0.264583">Г<tspan
    style="font-size:3.52777px;stroke-width:0.264583"
    id="tspan1690-0-8">w</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="65.862633"
+       y="137.26346"
+       id="text1604-2-2-6-3-3"><tspan
+         sodipodi:role="line"
+         id="tspan1602-6-7-1-2-6"
+         x="65.862633"
+         y="137.26346"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.9389px;font-family:serif;-inkscape-font-specification:serif;stroke-width:0.264583">0</tspan></text>
   </g>
 </svg>

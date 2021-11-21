@@ -1,6 +1,8 @@
 Equations
 =====
 
+Domain is a cylinder :math:`D = [rw, R] * [0, 2\pi] * [-L, L]`, which includes fracture :math:`D_f = [rw, R] * [0, 2\pi] * [-\delta, \delta]`.
+
 Reservoir:
     - pressure:
         .. math::
@@ -69,9 +71,30 @@ Fracture:
         here :math:`f(x) -` Backley-Leverette function.
 
 
-Boundary conditions:
+Conditions:
+    - boundary:
+        .. math::
+            
+            \Gamma_w^f \in [r_w, rw]*[0,2\pi]*[-\delta, \delta]: p = p_w, \\
+            \Gamma_T \in [r_w, R]*[0, 2\pi]*[\pm L,\pm L]: p = p_c, \\
+            \Gamma_w \in [r_w, rw]*[0,2\pi]*[-L, L]/[-\delta, \delta]: u_n = -\sigma \dfrac{\partial p}{\partial n} = 0, \\
+            \Gamma_B \in [R, R]*[0, 2\pi]*[-L, L]: u_n = 0, \\
+            \Gamma_f \in [R, R]*[0, 2\pi]*[\pm \delta, \pm \delta]: p = p_f, u = u_f, s = s_0.
+
+    - initial:
+        .. math::
+            s = s_0 = const, \\
+            s_f = s_f^0.
 
 
 Well flow rate:
+    - from fract to well:  
+        .. math::
+            q = \int_{\Gamma_w^f} u_f d\Gamma = 4\pi r_w \delta u_f.
+
+
+    - from reservoir to fract:
+        .. math::
+            q = \int_{\Gamma_T} u d\Gamma.
 
     
