@@ -15,7 +15,7 @@
 
 namespace ble::gui::widgets::models {
 
-struct DataWidgetComponentsDto {
+struct DataComponents {
     std::shared_ptr<GridSettsWidget> gridset_widget;
     std::shared_ptr<ModelDataWidget> modeldata_widget;
     std::shared_ptr<RelPermDataWidget> relperm_widget;

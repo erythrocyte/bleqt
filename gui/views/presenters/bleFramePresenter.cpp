@@ -53,7 +53,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
         tauVisualView);
 
     set_signals();
-    m_dataWidgetPresenter->set_show_shockfront_status(true);
+    // m_dataWidgetPresenter->set_show_shockfront_status(true);
     onRpValuesUpdated();
     on_update_rhs_tab();
 }
@@ -65,16 +65,16 @@ void BleFramePresenter::run()
 
 void BleFramePresenter::set_signals()
 {
-    auto success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(showShockFrontCurve(bool)),
-        this, SLOT(onShowShockFrontCurve(bool)));
-    Q_ASSERT(success);
-    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(rpValuesUpdated()),
+    // auto success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(showShockFrontCurve(bool)),
+    //     this, SLOT(onShowShockFrontCurve(bool)));
+    // Q_ASSERT(success);
+    auto success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(rpValuesUpdated()),
         this, SLOT(onRpValuesUpdated()));
     Q_ASSERT(success);
-    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
-    Q_ASSERT(success);
-    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(cellCountChanged()), this, SLOT(on_update_rhs_tab()));
-    Q_ASSERT(success);
+    // success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
+    // Q_ASSERT(success);
+    // success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(cellCountChanged()), this, SLOT(on_update_rhs_tab()));
+    // Q_ASSERT(success);
 
     QObject* view_obj = dynamic_cast<QObject*>(m_view.get());
     success = QObject::connect(view_obj, SIGNAL(sgn_run_calc()), this, SLOT(on_run_calc()));
@@ -83,19 +83,19 @@ void BleFramePresenter::set_signals()
 
 void BleFramePresenter::onShowShockFrontCurve(bool status)
 {
-    m_resultDataWidgetPresenter->set_sc_visibility(status);
-    if (status) {
-        auto data = m_dataWidgetPresenter->get_input_data();
-        double sc = cs::shock_front::get_shock_front(data->phys);
-        m_resultDataWidgetPresenter->update_sc(data->grd->rc, sc);
-    }
+    // m_resultDataWidgetPresenter->set_sc_visibility(status);
+    // if (status) {
+    //     auto data = m_dataWidgetPresenter->get_input_data();
+    //     double sc = cs::shock_front::get_shock_front(data->phys);
+    //     m_resultDataWidgetPresenter->update_sc(data->grd->rc, sc);
+    // }
 }
 
 void BleFramePresenter::onRpValuesUpdated()
 {
     auto data = m_dataWidgetPresenter->get_input_data();
     double sc = cs::shock_front::get_shock_front(data->phys);
-    m_dataWidgetPresenter->set_shockfront_value(sc);
+    // m_dataWidgetPresenter->set_shockfront_value(sc);
     m_resultDataWidgetPresenter->update_sc(data->grd->rc, sc);
     m_fluidWidgetPresenter->update_view(data->phys, sc);
 }

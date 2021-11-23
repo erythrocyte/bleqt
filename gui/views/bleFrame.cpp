@@ -44,8 +44,9 @@ void BleFrame::set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidg
     tabSettings->addTab(dataWidget.get(), "");
     tabSettings->setMinimumWidth(330);
 
-    frames::QVerticalLabel* tabSettingsLabel1 = new frames::QVerticalLabel("Main");
-    tabSettingsLabel1->setStyleSheet("QLabel { color : #C0BBFE }");
+    frames::QVerticalLabel* tabSettingsLabel1 = new frames::QVerticalLabel("Data");
+    tabSettingsLabel1->setTextColor(QColor(0, 0, 0, 127));
+    // tabSettingsLabel1->setStyleSheet("QLabel { color : #FFFFFF }");
 
     QTabBar* tabbar = tabSettings->tabBar();
     tabSettings->setTabText(0, "");

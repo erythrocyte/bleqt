@@ -11,12 +11,13 @@ class QVerticalLabel : public QLabel {
 public:
     explicit QVerticalLabel(QWidget* parent = 0);
     explicit QVerticalLabel(const QString& text, QWidget* parent = 0);
+    void setTextColor(QColor color);
 
 protected:
     void paintEvent(QPaintEvent*);
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
-    void setTextColor(QColor color);
+    
 
 private:
     QColor _textColor = Qt::white;

@@ -6,7 +6,7 @@
 
 #include <QWidget>
 
-#include "models/dataWidgetComponentsDto.hpp"
+#include "models/dataComponents.hpp"
 #include "uis/ui_dataWidget.hpp"
 
 namespace ble::gui::widgets {
@@ -17,7 +17,7 @@ public:
     DataWidget(QWidget* parent = nullptr);
     ~DataWidget();
 
-    void set_view_objects(std::shared_ptr<models::DataWidgetComponentsDto> components);
+    void set_view_objects(std::shared_ptr<models::DataComponents> components);
 
 private:
     UI::Data* ui;
