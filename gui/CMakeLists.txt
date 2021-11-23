@@ -30,6 +30,7 @@ set (SOURCES
 	widgets/conditionsWidget.cpp
 	widgets/boundVisualWidget.cpp
 	widgets/tauVisualWidget.cpp
+	widgets/geomDataWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
 	widgets/models/boundModel.cpp
@@ -47,6 +48,7 @@ set (SOURCES
 	widgets/presenters/conditionsWidgetPresenter.cpp
 	widgets/presenters/boundVisualWidgetPresenter.cpp
 	widgets/presenters/tauVisualWidgetPresenter.cpp
+	widgets/presenters/geomDataWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	
