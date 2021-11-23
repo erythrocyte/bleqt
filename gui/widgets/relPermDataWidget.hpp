@@ -13,7 +13,7 @@ public:
     RelPermDataWidget(QWidget* parent = nullptr);
     ~RelPermDataWidget() { delete ui; }
 
-    double get_kmu() const { return ui->Mu->value(); }
+    double get_kmu() const { return ui->MuWat->value() / ui->MuOil->value(); }
     double get_n() const { return ui->N->value(); }
 
 signals:

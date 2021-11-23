@@ -51,8 +51,8 @@ public:
         LabelMuWat->setText("Water visc");
         LabelMuWat->setToolTip("Water viscosity, Pa*s");
 
-        LabelMuWat->setText("Oil visc");
-        LabelMuWat->setToolTip("Oil viscosity, Pa*s");
+        LabelMuOil->setText("Oil visc");
+        LabelMuOil->setToolTip("Oil viscosity, Pa*s");
 
         LabelN->setText("N");
         LabelN->setToolTip("Relative permeability degree");

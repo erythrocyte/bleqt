@@ -9,11 +9,13 @@ RelPermDataWidget::RelPermDataWidget(QWidget* parent)
     , ui(new UI::RelPermData)
 {
     ui->setupUi(this);
-    addQDoubleSpinBoxLabel(ui->Kmu, 0.1, 100, 0.1, 1.0, 1, 0, 1, ui->LabelKmu, 0, 0);
-    addQDoubleSpinBoxLabel(ui->N, 1.1, 5, 0.1, 3.0, 1, 1, 1, ui->LabelN, 1, 0);
+    addQDoubleSpinBoxLabel(ui->MuWat, 1e-5, 1, 0.1, 1e-3, 5, 0, 1, ui->LabelMuWat, 0, 0);
+    addQDoubleSpinBoxLabel(ui->MuOil, 1e-5, 1, 0.1, 1e-3, 5, 1, 1, ui->LabelMuOil, 1, 0);
+    addQDoubleSpinBoxLabel(ui->N, 1.1, 5, 0.1, 3.0, 1, 2, 1, ui->LabelN, 2, 0);
 
     auto a = connect(ui->N, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
-    connect(ui->Kmu, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
+    connect(ui->MuWat, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
+    connect(ui->MuOil, SIGNAL(valueChanged(double)), this, SLOT(changeValues()));
 }
 
 void RelPermDataWidget::addQDoubleSpinBoxLabel(QDoubleSpinBox* dSpinBox,
