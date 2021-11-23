@@ -79,7 +79,7 @@ public:
 
     void retranslateUi(QWidget* widget)
     {
-        _groupBox->setTitle("Geometry data");
+        _groupBox->setTitle("Geometry");
         _groupBox->setToolTip("Geometry data");
 
         LabelDelta->setText("Delta");
