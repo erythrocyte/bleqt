@@ -25,6 +25,7 @@ void DataWidgetPresenter::resolve_sub_presenters()
     m_shockfront_presenter = m_container->resolve<ShockFrontSettsWidgetPresenter>();
     m_cond_presenter = m_container->resolve<ConditionsWidgetPresenter>();
     m_geom_presenter = m_container->resolve<GeomDataWidgetPresenter>();
+    m_geol_presenter = m_container->resolve<GeologyDataWidgetPresenter>();
 }
 
 void DataWidgetPresenter::set_widgets_to_view()
@@ -37,6 +38,7 @@ void DataWidgetPresenter::set_widgets_to_view()
     model->shockfront_widget = m_shockfront_presenter->get_view();
     model->cond_widget = m_cond_presenter->get_view();
     model->geom_widget = m_geom_presenter->get_view();
+    model->geol_widget = m_geol_presenter->get_view();
 
     get_view()->set_view_objects(model);
 }

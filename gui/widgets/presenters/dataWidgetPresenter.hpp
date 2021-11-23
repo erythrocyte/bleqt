@@ -17,6 +17,7 @@
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
 #include "geomDataWidgetPresenter.hpp"
+#include "geologyDataWidgetPresenter.hpp"
 
 namespace ble::gui::widgets::presenters {
 
@@ -46,6 +47,8 @@ private:
     std::shared_ptr<ShockFrontSettsWidgetPresenter> m_shockfront_presenter;
     std::shared_ptr<ConditionsWidgetPresenter> m_cond_presenter;
     std::shared_ptr<GeomDataWidgetPresenter> m_geom_presenter;
+    std::shared_ptr<GeologyDataWidgetPresenter> m_geol_presenter;
+
 
     void set_widgets_to_view();
     void resolve_sub_presenters();

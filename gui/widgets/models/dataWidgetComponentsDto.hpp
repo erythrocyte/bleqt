@@ -11,6 +11,7 @@
 #include "shockFrontSettsWidget.hpp"
 #include "conditionsWidget.hpp"
 #include "geomDataWidget.hpp"
+#include "geologyDataWidget.hpp"
 
 namespace ble::gui::widgets::models {
 
@@ -22,6 +23,7 @@ struct DataWidgetComponentsDto {
     std::shared_ptr<ShockFrontSettsWidget> shockfront_widget;
     std::shared_ptr<ConditionsWidget> cond_widget;
     std::shared_ptr<GeomDataWidget> geom_widget;
+    std::shared_ptr<GeologyDataWidget> geol_widget;
 };
 
 }

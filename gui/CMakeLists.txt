@@ -31,6 +31,7 @@ set (SOURCES
 	widgets/boundVisualWidget.cpp
 	widgets/tauVisualWidget.cpp
 	widgets/geomDataWidget.cpp
+	widgets/geologyDataWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
 	widgets/models/boundModel.cpp
@@ -49,6 +50,7 @@ set (SOURCES
 	widgets/presenters/boundVisualWidgetPresenter.cpp
 	widgets/presenters/tauVisualWidgetPresenter.cpp
 	widgets/presenters/geomDataWidgetPresenter.cpp
+	widgets/presenters/geologyDataWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	
