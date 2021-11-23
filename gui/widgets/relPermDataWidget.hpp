@@ -13,8 +13,8 @@ public:
     RelPermDataWidget(QWidget* parent = nullptr);
     ~RelPermDataWidget() { delete ui; }
 
-    double getKmu() const { return ui->Kmu->value(); }
-    double getN() const { return ui->N->value(); }
+    double get_kmu() const { return ui->Mu->value(); }
+    double get_n() const { return ui->N->value(); }
 
 signals:
     void valuesUpdated();

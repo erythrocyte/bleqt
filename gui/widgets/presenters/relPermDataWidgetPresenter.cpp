@@ -12,12 +12,12 @@ RelPermDataWidgetPresenter ::RelPermDataWidgetPresenter(
 
 double RelPermDataWidgetPresenter::get_kmu()
 {
-    return get_view()->getKmu();
+    return get_view()->get_kmu();
 }
 
 double RelPermDataWidgetPresenter::get_n()
 {
-    return get_view()->getN();
+    return get_view()->get_n();
 }
 
 std::shared_ptr<RelPermDataWidget> RelPermDataWidgetPresenter::get_view()
