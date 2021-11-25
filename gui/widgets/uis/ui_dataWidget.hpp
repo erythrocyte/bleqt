@@ -35,11 +35,17 @@ public:
     QDoubleSpinBox* FwLimit;
     QCheckBox* UseFwLimit;
 
+    // relative permeability
+    QDoubleSpinBox* MuWat;
+    QDoubleSpinBox* MuOil;
+    QDoubleSpinBox* N;
+
     void setupUI(QWidget* widget)
     {
         setupUiGeology(widget);
         setupUiGeom(widget);
         setupUiModelData(widget);
+        setupUiRelPerm(widget);
         setupUiMain(widget);
     }
 
@@ -68,6 +74,12 @@ private:
     QLabel* m_periodLabel;
     QLabel* m_saveFieldStepsLabel;
 
+    // relative permeability
+    QLabel* m_labelMuWat;
+    QLabel* m_labelMuOil;
+    QLabel* m_labelN;
+    QGroupBox* m_gbRelPerm;
+
     void setupUiMain(QWidget* widget)
     {
         m_layout = new QVBoxLayout(widget);
@@ -93,6 +105,7 @@ private:
         widget->setLayout(m_layout);
 
         m_layout->addWidget(m_gbModelData);
+        m_layout->addWidget(m_gbRelPerm);
         m_layout->addWidget(m_gbGeology);
         m_layout->addWidget(m_gbGeom);
     }
@@ -275,6 +288,61 @@ private:
 
         UseFwLimit->setText("Use watercut limit");
         UseFwLimit->setToolTip("Use watercut limit if checked otherwise time limit will be used");
+    }
+
+    void setupUiRelPerm(QWidget* widget)
+    {
+        m_gbRelPerm = new QGroupBox();
+        QGridLayout* layout = new QGridLayout(m_gbRelPerm);
+        m_gbRelPerm->setLayout(layout);
+        layout->setMargin(5);
+
+        m_labelMuWat = new QLabel();
+        MuWat = new QDoubleSpinBox();
+        MuWat->setMinimum(1e-4);
+        MuWat->setMaximum(1);
+        MuWat->setSingleStep(0.1);
+        MuWat->setDecimals(4);
+        MuWat->setValue(1e-3);
+        layout->addWidget(m_labelMuWat, 0, 0);
+        layout->addWidget(MuWat, 0, 1);
+
+        m_labelMuOil = new QLabel();
+        MuOil = new QDoubleSpinBox();
+        MuOil->setMinimum(1e-4);
+        MuOil->setMaximum(1);
+        MuOil->setSingleStep(0.1);
+        MuOil->setDecimals(4);
+        MuOil->setValue(1e-3);
+        layout->addWidget(m_labelMuOil, 1, 0);
+        layout->addWidget(MuOil, 1, 1);
+
+        m_labelN = new QLabel();
+        N = new QDoubleSpinBox();
+        N->setMinimum(1.1);
+        N->setMaximum(5);
+        N->setSingleStep(0.1);
+        N->setDecimals(1);
+        N->setValue(3.0);
+        layout->addWidget(m_labelN, 2, 0);
+        layout->addWidget(N, 2, 1);
+
+        retranslateUiRelPerm(widget);
+    }
+
+    void retranslateUiRelPerm(QWidget* widget)
+    {
+        m_gbRelPerm->setTitle("Relative permeability data");
+        m_gbRelPerm->setToolTip("Relative permeability data");
+
+        m_labelMuWat->setText("Water visc");
+        m_labelMuWat->setToolTip("Water viscosity, Pa*s");
+
+        m_labelMuOil->setText("Oil visc");
+        m_labelMuOil->setToolTip("Oil viscosity, Pa*s");
+
+        m_labelN->setText("N");
+        m_labelN->setToolTip("Relative permeability degree");
     }
 };
 
