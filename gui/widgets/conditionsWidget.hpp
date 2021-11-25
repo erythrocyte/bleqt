@@ -31,7 +31,6 @@ private:
 
 private slots:
     void contourTypeChanged(const QString&);
-    void topBotBoundUTypeChanged(const QString&);
     void topBotBoundSTypeChanged(const QString&);
     void fileBoundUChooseClicked();
     void fileBoundSChooseClicked();
