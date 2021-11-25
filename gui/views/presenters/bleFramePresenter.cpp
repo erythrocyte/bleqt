@@ -30,6 +30,8 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
     m_conditionsWidgetPresenter = m_container->resolve<bwp::ConditionsWidgetPresenter>();
     auto conditionsWidgetView = std::static_pointer_cast<widgets::ConditionsWidget>(m_conditionsWidgetPresenter->get_view());
+    m_satsolver_presenter= m_container->resolve<bwp::SatSolverSettsWidgetPresenter>();
+    auto satsolver_view = std::static_pointer_cast<widgets::SatSolverSettsWidget>(m_satsolver_presenter->get_view());
 
     m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
     auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
@@ -45,6 +47,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     std::static_pointer_cast<BleFrame>(m_view)->set_widgets(
         dataWidgetView,
         conditionsWidgetView,
+        satsolver_view,
         fluidParamsWidget,
         resultDataWidget,
         wellWorkDataView,

@@ -25,6 +25,8 @@ public:
     {
         _groupBox = new QGroupBox();
         _mainLayout = new QVBoxLayout(widget);
+        _mainLayout->addStretch();
+        _mainLayout->setDirection(QVBoxLayout::BottomToTop);
         _mainLayout->addWidget(_groupBox);
         _layout = new QGridLayout(_groupBox);
         _groupBox->setLayout(_layout);
