@@ -41,10 +41,6 @@ void ConditionsWidget::set_items()
         ui->ContourBoundType->addItem(QString::fromStdString(scmm::BoundCondType::get_description(v)));
     }
 
-    // for (scmm::DataDistributionType::TypeEnum v : scmm::DataDistributionTypeEnumIterator()) {
-    //     ui->BoundUType->addItem(QString::fromStdString(scmm::DataDistributionType::get_description(v)));
-    // }
-
     for (scmm::DataDistributionType::TypeEnum v : scmm::DataDistributionTypeEnumIterator()) {
         ui->InitialSaturType->addItem(QString::fromStdString(scmm::DataDistributionType::get_description(v)));
     }
@@ -59,13 +55,6 @@ void ConditionsWidget::subscribe()
     auto success = QObject::connect(ui->ContourBoundType, SIGNAL(currentIndexChanged(const QString&)),
         this, SLOT(contourTypeChanged(const QString&)));
     Q_ASSERT(success);
-    // success = QObject::connect(ui->BoundUType, SIGNAL(currentIndexChanged(const QString&)),
-    //     this, SLOT(topBotBoundUTypeChanged(const QString&)));
-    // Q_ASSERT(success);
-    // success = QObject::connect(ui->BoundUFileChooseButton, SIGNAL(clicked()), this, SLOT(fileBoundUChooseClicked()));
-    // Q_ASSERT(success);
-    // success = QObject::connect(ui->BoundUConstValue, SIGNAL(valueChanged(double)), this, SLOT(onBoundUConstValueChanged(double)));
-    // Q_ASSERT(success);
     success = QObject::connect(ui->TopBotBoundConstLenght, SIGNAL(valueChanged(int)), this, SLOT(onTopBotBoundLenghtChanged(int)));
     Q_ASSERT(success);
     success = QObject::connect(ui->BoundSConstValue, SIGNAL(valueChanged(double)), this, SLOT(onBoundSConstValueChanged(double)));
@@ -79,10 +68,6 @@ void ConditionsWidget::contourTypeChanged(const QString& value)
 {
     auto m = scmm::BoundCondType::get_enum(value.toStdString());
     if (m == scmm::BoundCondType::kConst) {
-        // ui->BoundUType->setEnabled(false);
-        // ui->BoundUConstValue->setEnabled(false);
-        // ui->BoundUFile->setEnabled(false);
-        // ui->BoundUFileChooseButton->setEnabled(false);
         ui->TopBotBoundConstLenght->setEnabled(false);
         ui->BoundSType->setEnabled(false);
         ui->BoundSConstValue->setEnabled(false);
@@ -90,31 +75,11 @@ void ConditionsWidget::contourTypeChanged(const QString& value)
         ui->BoundSFileChooseButton->setEnabled(false);
         ui->BoundSatur->setEnabled(true);
     } else if (m == scmm::BoundCondType::kImpermeable) {
-        // ui->BoundUType->setEnabled(true);
-        // topBotBoundUTypeChanged(ui->BoundUType->currentText());
         ui->BoundSType->setEnabled(true);
         topBotBoundSTypeChanged(ui->BoundSType->currentText());
         ui->BoundSatur->setEnabled(false);
     }
 }
-
-// void ConditionsWidget::topBotBoundUTypeChanged(const QString& value)
-// {
-//     // auto m = scmm::DataDistributionType::get_enum(value.toStdString());
-//     // switch (m) {
-//     // case scmm::DataDistributionType::kConst:
-//     //     ui->BoundUConstValue->setEnabled(true);
-//     //     ui->BoundUFile->setEnabled(false);
-//     //     ui->BoundUFileChooseButton->setEnabled(false);
-//     //     break;
-//     // case scmm::DataDistributionType::kFile:
-//     //     ui->BoundUConstValue->setEnabled(false);
-//     //     ui->BoundUFile->setEnabled(true);
-//     //     ui->BoundUFileChooseButton->setEnabled(true);
-//     //     break;
-//     // }
-//     emit rhs_updated();
-// }
 
 void ConditionsWidget::topBotBoundSTypeChanged(const QString& value)
 {
@@ -132,15 +97,6 @@ void ConditionsWidget::topBotBoundSTypeChanged(const QString& value)
         break;
     }
     emit rhs_updated();
-}
-
-void ConditionsWidget::fileBoundUChooseClicked()
-{
-    QString file_name = get_choosed_file();
-    if (!file_name.trimmed().isEmpty()) {
-        // ui->BoundUFile->setText(file_name);
-        emit rhs_updated();
-    }
 }
 
 void ConditionsWidget::fileBoundSChooseClicked()

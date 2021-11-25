@@ -156,12 +156,6 @@ private:
         m_gbBound->setToolTip("Boundary Conditions");
         m_contourBoundTypeLabel->setText("CB Type");
         m_contourBoundTypeLabel->setToolTip("Contour Bound Type");
-        // m_boundUTypeLabel->setText("Bound U Type");
-        // m_boundUTypeLabel->setToolTip("Top and Bottom faces bound u type");
-        // m_boundUFileLabel->setText("U File");
-        // m_boundUFileLabel->setToolTip("Bound U File");
-        // m_boundUConstValueLabel->setText("U value");
-        // m_boundUConstValueLabel->setToolTip("Top and Bottom faces u value");
         m_boundSTypeLabel->setText("Bound S Type");
         m_boundSTypeLabel->setToolTip("Top and Bottom faces bound s type");
         m_boundSFileLabel->setText("S File");

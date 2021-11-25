@@ -104,7 +104,7 @@ void BleFramePresenter::onRpValuesUpdated()
 {
     auto data = m_dataWidgetPresenter->get_data();
     double sc = cs::shock_front::get_shock_front(data->phys);
-    // m_dataWidgetPresenter->set_shockfront_value(sc);
+    m_shockfront_presenter->set_shockfront_value(sc);
     m_resultDataWidgetPresenter->update_sc(data->r, sc);
     m_fluidWidgetPresenter->update_view(data->phys, sc);
 }

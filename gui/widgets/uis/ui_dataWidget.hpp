@@ -169,8 +169,6 @@ private:
     void setupUiGeom(QWidget* widget)
     {
         m_gbGeom = new QGroupBox();
-        // _mainLayout = new QVBoxLayout(widget);
-        // _mainLayout->addWidget(_groupBox);
         m_layoutGeom = new QGridLayout(m_gbGeom);
         m_gbGeom->setLayout(m_layoutGeom);
         m_layoutGeom->setMargin(5);
