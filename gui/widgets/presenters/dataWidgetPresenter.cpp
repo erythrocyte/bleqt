@@ -16,17 +16,17 @@ DataWidgetPresenter::DataWidgetPresenter(
     set_signals();
 }
 
-void DataWidgetPresenter::resolve_sub_presenters()
-{
-    // m_gridset_presenter = m_container->resolve<GridSettsWidgetPresenter>();
-    // m_modeldata_presenter = m_container->resolve<ModelDataWidgetPresenter>();
-    // m_relperm_presenter = m_container->resolve<RelPermDataWidgetPresenter>();
-    // // m_satsolverset_presenter = m_container->resolve<SatSolverSettsWidgetPresenter>();
-    // // m_shockfront_presenter = m_container->resolve<ShockFrontSettsWidgetPresenter>();
-    // // m_cond_presenter = m_container->resolve<ConditionsWidgetPresenter>();
-    // m_geom_presenter = m_container->resolve<GeomDataWidgetPresenter>();
-    // m_geol_presenter = m_container->resolve<GeologyDataWidgetPresenter>();
-}
+// void DataWidgetPresenter::resolve_sub_presenters()
+// {
+//     // m_gridset_presenter = m_container->resolve<GridSettsWidgetPresenter>();
+//     // m_modeldata_presenter = m_container->resolve<ModelDataWidgetPresenter>();
+//     // m_relperm_presenter = m_container->resolve<RelPermDataWidgetPresenter>();
+//     // // m_satsolverset_presenter = m_container->resolve<SatSolverSettsWidgetPresenter>();
+//     // // m_shockfront_presenter = m_container->resolve<ShockFrontSettsWidgetPresenter>();
+//     // // m_cond_presenter = m_container->resolve<ConditionsWidgetPresenter>();
+//     // m_geom_presenter = m_container->resolve<GeomDataWidgetPresenter>();
+//     // m_geol_presenter = m_container->resolve<GeologyDataWidgetPresenter>();
+// }
 
 // void DataWidgetPresenter::set_widgets_to_view()
 // {
@@ -49,7 +49,7 @@ void DataWidgetPresenter::set_signals()
     // auto success = QObject::connect(m_shockfront_presenter.get(), SIGNAL(showShockFrontCurve(bool)),
     //     this, SLOT(onShowShockFrontCurve(bool)));
     // Q_ASSERT(success);
-    auto success = QObject::connect(view_obj, SIGNAL(rp_values_changed()),
+    auto success = QObject::connect(view_obj, SIGNAL(rp_values_updated()),
         this, SLOT(onRpValuesChanged()));
     Q_ASSERT(success);
     // success = QObject::connect(m_cond_presenter.get(), SIGNAL(rhsUpdate()),

@@ -19,9 +19,12 @@ DataWidget::~DataWidget()
 
 void DataWidget::subscribe()
 {
-    auto a = connect(ui->N, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
-    connect(ui->MuWat, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
-    connect(ui->MuOil, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
+    auto success = connect(ui->N, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
+    Q_ASSERT(success);
+    success = connect(ui->MuWat, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
+    Q_ASSERT(success);
+    success = connect(ui->MuOil, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
+    Q_ASSERT(success);
 }
 
 std::shared_ptr<ble::src::common::models::Data> DataWidget::get_data()

@@ -50,8 +50,8 @@ private:
     // std::shared_ptr<GeologyDataWidgetPresenter> m_geol_presenter;
 
 
-    void set_widgets_to_view();
-    void resolve_sub_presenters();
+    // void set_widgets_to_view();
+    // void resolve_sub_presenters();
     void set_signals();
 
 private slots:
