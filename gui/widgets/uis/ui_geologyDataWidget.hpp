@@ -62,10 +62,10 @@ public:
         Layout->addWidget(LabelPoroFract, 2, 0);
         Layout->addWidget(PoroFract, 2, 1);
 
-        retranslateUi(widget);
+        retranslateUiGeology(widget);
     }
 
-    void retranslateUi(QWidget* widget)
+    void retranslateUiGeology(QWidget* widget)
     {
         _groupBox->setTitle("Geology");
         _groupBox->setToolTip("Geology data");

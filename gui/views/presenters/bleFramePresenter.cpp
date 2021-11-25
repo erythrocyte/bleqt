@@ -46,7 +46,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
         dataWidgetView,
         conditionsWidgetView,
         fluidParamsWidget,
-        resultDataWidget,        
+        resultDataWidget,
         wellWorkDataView,
         boundVisualView,
         tauVisualView);
