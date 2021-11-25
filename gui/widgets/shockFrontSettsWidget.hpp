@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 
+#include "common/models/shockFrontSettings.hpp"
 #include "uis/ui_shockFrontSettsWidget.hpp"
 
 namespace ble::gui::widgets {
@@ -18,6 +19,7 @@ public:
     void SetShockFrontValue(double value);
     void set_show_shockfront_status(bool status);
     void set_block(bool status);
+    std::shared_ptr<src::common::models::ShockFrontSettings> get_data();
 
 signals:
     void showShockFrontCurve(bool status);

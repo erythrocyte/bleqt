@@ -22,6 +22,7 @@ public:
     void set_show_shockfront_status(bool status);
     void set_shockfront_value(double value);
     void set_block(bool status);
+    std::shared_ptr<src::common::models::ShockFrontSettings> get_data();
 
 signals:
     void showShockFrontCurve(bool status);

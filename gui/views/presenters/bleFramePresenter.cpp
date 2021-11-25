@@ -221,6 +221,7 @@ std::shared_ptr<ble::src::common::models::InputData> BleFramePresenter::get_data
     result->bound = m_conditionsWidgetPresenter->get_bound_data(result->data->rw, result->data->r);
     result->sat_setts = m_satsolver_presenter->get_data();
     result->mesh_setts = m_gridsetts_presenter->get_data();
+    result->sc_setts = m_shockfront_presenter->get_data();
     return result;
 }
 

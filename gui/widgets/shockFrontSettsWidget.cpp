@@ -32,4 +32,11 @@ void ShockFrontSettsWidget::set_block(bool status)
     ui->shockFrontValue->setEnabled(status);
 }
 
+std::shared_ptr<src::common::models::ShockFrontSettings> ShockFrontSettsWidget::get_data()
+{
+    auto result = std::make_shared<src::common::models::ShockFrontSettings>();
+    result->show_sc = ui->showCurve->isChecked();
+    return result;
+}
+
 }

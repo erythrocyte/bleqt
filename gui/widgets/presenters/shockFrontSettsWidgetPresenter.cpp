@@ -38,4 +38,9 @@ void ShockFrontSettsWidgetPresenter::set_block(bool status)
     get_view()->set_block(status);
 }
 
+std::shared_ptr<src::common::models::ShockFrontSettings> ShockFrontSettsWidgetPresenter::get_data()
+{
+    return get_view()->get_data();
+}
+
 }
