@@ -12,6 +12,7 @@
 #include "logging/logger.hpp"
 #include "resultDataWidget.hpp"
 #include "satSolverSettsWidget.hpp"
+#include "shockFrontSettsWidget.hpp"
 #include "tauVisualWidget.hpp"
 #include "ui_bleFrame.hpp"
 #include "wellWorkDataWidget.hpp"
@@ -34,6 +35,7 @@ public:
         std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
         std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
         std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
+        std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget,
 
         std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
         std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
@@ -52,7 +54,8 @@ private:
     void set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget,
         std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
         std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
-        std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget);
+        std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
+        std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget);
 
 private slots:
     void handleRunButton() { emit sgn_run_calc(); }

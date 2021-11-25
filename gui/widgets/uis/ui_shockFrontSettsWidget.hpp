@@ -20,7 +20,11 @@ public:
     {
         _groupBox = new QGroupBox("Shock front");
         _mainLayout = new QVBoxLayout(widget);
+        _mainLayout->addStretch();
+        _mainLayout->setDirection(QVBoxLayout::BottomToTop);
+        widget->setLayout(_mainLayout);
         _mainLayout->addWidget(_groupBox);
+
         _layout = new QVBoxLayout(_groupBox);
         _groupBox->setLayout(_layout);
 
@@ -28,7 +32,6 @@ public:
         _layout->addWidget(shockFrontValue);
 
         showCurve = new QCheckBox();
-        showCurve->setChecked(true);
 
         _layout->addWidget(showCurve);
 

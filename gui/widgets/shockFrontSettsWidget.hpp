@@ -17,6 +17,7 @@ public:
 
     void SetShockFrontValue(double value);
     void set_show_shockfront_status(bool status);
+    void set_block(bool status);
 
 signals:
     void showShockFrontCurve(bool status);

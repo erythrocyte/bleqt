@@ -33,4 +33,9 @@ void ShockFrontSettsWidgetPresenter::set_shockfront_value(double value)
     get_view()->SetShockFrontValue(value);
 }
 
+void ShockFrontSettsWidgetPresenter::set_block(bool status)
+{
+    get_view()->set_block(status);
+}
+
 }

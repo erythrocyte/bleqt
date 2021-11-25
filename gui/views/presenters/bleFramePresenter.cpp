@@ -15,6 +15,7 @@
 #include "logging/logger.hpp"
 #include "mesh/models/grid.hpp"
 #include "mesh/services/makeGrid.hpp"
+#include "shockFrontSettsWidget.hpp"
 
 namespace cs = ble::src::common::services;
 
@@ -35,6 +36,8 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     auto satsolver_view = std::static_pointer_cast<widgets::SatSolverSettsWidget>(m_satsolver_presenter->get_view());
     m_gridsetts_presenter = m_container->resolve<bwp::GridSettsWidgetPresenter>();
     auto gridsetts_view = std::static_pointer_cast<widgets::GridSettsWidget>(m_gridsetts_presenter->get_view());
+    m_shockfront_presenter = m_container->resolve<bwp::ShockFrontSettsWidgetPresenter>();
+    auto shockfront_view = std::static_pointer_cast<widgets::ShockFrontSettsWidget>(m_shockfront_presenter->get_view());
 
     m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
     auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
@@ -52,6 +55,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
         conditionsWidgetView,
         satsolver_view,
         gridsetts_view,
+        shockfront_view,
 
         fluidParamsWidget,
         resultDataWidget,
@@ -60,7 +64,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
         tauVisualView);
 
     set_signals();
-    // m_dataWidgetPresenter->set_show_shockfront_status(true);
+    m_shockfront_presenter->set_show_shockfront_status(false);
     onRpValuesUpdated();
     on_update_rhs_tab();
 }
@@ -72,10 +76,10 @@ void BleFramePresenter::run()
 
 void BleFramePresenter::set_signals()
 {
-    // auto success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(showShockFrontCurve(bool)),
-    //     this, SLOT(onShowShockFrontCurve(bool)));
-    // Q_ASSERT(success);
-    auto success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(rpValuesUpdated()),
+    auto success = QObject::connect(m_shockfront_presenter.get(), SIGNAL(showShockFrontCurve(bool)),
+        this, SLOT(onShowShockFrontCurve(bool)));
+    Q_ASSERT(success);
+    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(rpValuesUpdated()),
         this, SLOT(onRpValuesUpdated()));
     Q_ASSERT(success);
     success = QObject::connect(m_conditionsWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
@@ -88,12 +92,12 @@ void BleFramePresenter::set_signals()
 
 void BleFramePresenter::onShowShockFrontCurve(bool status)
 {
-    // m_resultDataWidgetPresenter->set_sc_visibility(status);
-    // if (status) {
-    //     auto data = m_dataWidgetPresenter->get_input_data();
-    //     double sc = cs::shock_front::get_shock_front(data->phys);
-    //     m_resultDataWidgetPresenter->update_sc(data->grd->rc, sc);
-    // }
+    m_resultDataWidgetPresenter->set_sc_visibility(status);
+    if (status) {
+        auto data = m_dataWidgetPresenter->get_data();
+        double sc = cs::shock_front::get_shock_front(data->phys);
+        m_resultDataWidgetPresenter->update_sc(data->r, sc);
+    }
 }
 
 void BleFramePresenter::onRpValuesUpdated()

@@ -21,6 +21,7 @@ public:
     std::shared_ptr<ShockFrontSettsWidget> get_view();
     void set_show_shockfront_status(bool status);
     void set_shockfront_value(double value);
+    void set_block(bool status);
 
 signals:
     void showShockFrontCurve(bool status);

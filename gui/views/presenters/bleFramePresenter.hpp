@@ -18,6 +18,7 @@
 #include "logging/logger.hpp"
 #include "resultDataWidgetPresenter.hpp"
 #include "satSolverSettsWidgetPresenter.hpp"
+#include "shockFrontSettsWidgetPresenter.hpp"
 #include "tauVisualWidgetPresenter.hpp"
 #include "wellWorkDataWidgetPresenter.hpp"
 
@@ -41,6 +42,7 @@ private:
     std::shared_ptr<bwp::ConditionsWidgetPresenter> m_conditionsWidgetPresenter;
     std::shared_ptr<bwp::SatSolverSettsWidgetPresenter> m_satsolver_presenter;
     std::shared_ptr<bwp::GridSettsWidgetPresenter> m_gridsetts_presenter;
+    std::shared_ptr<bwp::ShockFrontSettsWidgetPresenter> m_shockfront_presenter;
 
     std::shared_ptr<bwp::FluidParamGraphWidgetPresenter> m_fluidWidgetPresenter;
     std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;
