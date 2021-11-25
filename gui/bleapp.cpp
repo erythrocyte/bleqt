@@ -8,8 +8,6 @@
 #include "dataWidgetPresenter.hpp"
 #include "fluidParamGraphWidgetPresenter.hpp"
 #include "gridSettsWidgetPresenter.hpp"
-#include "modelDataWidget.hpp"
-#include "relPermDataWidgetPresenter.hpp"
 #include "resultDataWidgetPresenter.hpp"
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
@@ -31,8 +29,6 @@ BleApplication::BleApplication()
     builder.registerType<widgets::ResultDataWidget>();
     builder.registerType<widgets::presenters::ResultDataWidgetPresenter>();
     builder.registerType<widgets::presenters::GridSettsWidgetPresenter>();
-    // builder.registerType<widgets::presenters::ModelDataWidgetPresenter>();
-    // builder.registerType<widgets::presenters::RelPermDataWidgetPresenter>();
     builder.registerType<widgets::presenters::SatSolverSettsWidgetPresenter>();
     builder.registerType<widgets::presenters::ShockFrontSettsWidgetPresenter>();
     builder.registerType<widgets::presenters::ConditionsWidgetPresenter>();

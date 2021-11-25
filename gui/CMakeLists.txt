@@ -19,8 +19,6 @@ set (SOURCES
 	views/presenters/bleFramePresenter.cpp
 
 	widgets/dataWidget.cpp
-	widgets/modelDataWidget.cpp
-	widgets/relPermDataWidget.cpp
 	widgets/satSolverSettsWidget.cpp
 	widgets/gridSettsWidget.cpp
 	widgets/shockFrontSettsWidget.cpp
@@ -30,8 +28,6 @@ set (SOURCES
 	widgets/conditionsWidget.cpp
 	widgets/boundVisualWidget.cpp
 	widgets/tauVisualWidget.cpp
-	widgets/geomDataWidget.cpp
-	widgets/geologyDataWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
 	widgets/models/boundModel.cpp
@@ -41,16 +37,12 @@ set (SOURCES
 	widgets/presenters/dataWidgetPresenter.cpp
 	widgets/presenters/gridSettsWidgetPresenter.cpp
 	widgets/presenters/resultDataWidgetPresenter.cpp
-	widgets/presenters/modelDataWidgetPresenter.cpp
-	widgets/presenters/relPermDataWidgetPresenter.cpp
 	widgets/presenters/satSolverSettsWidgetPresenter.cpp
 	widgets/presenters/shockFrontSettsWidgetPresenter.cpp
 	widgets/presenters/wellWorkDataWidgetPresenter.cpp
 	widgets/presenters/conditionsWidgetPresenter.cpp
 	widgets/presenters/boundVisualWidgetPresenter.cpp
 	widgets/presenters/tauVisualWidgetPresenter.cpp
-	widgets/presenters/geomDataWidgetPresenter.cpp
-	widgets/presenters/geologyDataWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	
