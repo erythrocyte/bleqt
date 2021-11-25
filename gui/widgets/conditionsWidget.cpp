@@ -172,25 +172,6 @@ std::shared_ptr<src::common::models::BoundCondData> ConditionsWidget::get_bound_
     std::string str = ui->ContourBoundType->currentText().toStdString();
     result->contour_press_bound_type = src::common::models::BoundCondType::get_enum(str);
 
-    // str = ui->BoundUType->currentText().toStdString();
-    // result->top_bot_bound_u_type = src::common::models::DataDistributionType::get_enum(str);
-
-    // switch (result->top_bot_bound_u_type) {
-    // case src::common::models::DataDistributionType::kConst: {
-    //     double val = ui->BoundUConstValue->value();
-    //     int len_right_perc = ui->TopBotBoundConstLenght->value();
-    //     result->top_bot_bound_u = scms::DataDistributionService::get_data_from_const(val, len_right_perc, x0, x1);
-    //     break;
-    // }
-    // case src::common::models::DataDistributionType::kFile: {
-    //     std::string file_name = ui->BoundUFile->text().toStdString();
-    //     result->top_bot_bound_u = scms::DataDistributionService::get_data_from_file(file_name);
-    //     break;
-    // }
-    // default:
-    //     break;
-    // }
-
     str = ui->BoundSType->currentText().toStdString();
     result->top_bot_bound_s_type = src::common::models::DataDistributionType::get_enum(str);
     switch (result->top_bot_bound_s_type) {
@@ -210,6 +191,8 @@ std::shared_ptr<src::common::models::BoundCondData> ConditionsWidget::get_bound_
     }
 
     result->bound_satur = ui->BoundSatur->value();
+    result->pc = ui->PressureContour->value();
+    result->pw = ui->PressureWell->value();
 
     return result;
 }

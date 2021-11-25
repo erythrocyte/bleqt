@@ -20,20 +20,19 @@ class Conditions {
 
 public:
     QComboBox* ContourBoundType;
-    // QComboBox* BoundUType;
-    // QLineEdit* BoundUFile;
-    // QPushButton* BoundUFileChooseButton;
-    // QDoubleSpinBox* BoundUConstValue;
     QSpinBox* TopBotBoundConstLenght;
     QDoubleSpinBox* BoundSatur;
-    QDoubleSpinBox* InitialConstSatur;
-    QPushButton* InitialSaturFileChooseButton;
-    QComboBox* InitialSaturType;
-    QLineEdit* InitialSaturFile;
     QComboBox* BoundSType;
     QLineEdit* BoundSFile;
     QPushButton* BoundSFileChooseButton;
     QDoubleSpinBox* BoundSConstValue;
+    QDoubleSpinBox* PressureContour;
+    QDoubleSpinBox* PressureWell;
+
+    QDoubleSpinBox* InitialConstSatur;
+    QPushButton* InitialSaturFileChooseButton;
+    QComboBox* InitialSaturType;
+    QLineEdit* InitialSaturFile;
 
     void setupUI(QWidget* widget)
     {
@@ -53,18 +52,19 @@ private:
     QGroupBox* m_gbBound;
     QGroupBox* m_gbInit;
     QVBoxLayout* m_layout;
+
     QLabel* m_contourBoundTypeLabel;
-    // QLabel* m_boundUTypeLabel;
-    // QLabel* m_boundUFileLabel;
-    // QLabel* m_boundUConstValueLabel;
     QLabel* m_boundConstLenghtLabel;
     QLabel* m_boundSaturLabel;
-    QLabel* m_initialSaturTypeLabel;
-    QLabel* m_initialsSaturConstLabel;
-    QLabel* m_initialSaturFileLabel;
     QLabel* m_boundSTypeLabel;
     QLabel* m_boundSFileLabel;
     QLabel* m_boundSConstValueLabel;
+    QLabel* m_pressureContour;
+    QLabel* m_pressureWell;
+
+    QLabel* m_initialSaturTypeLabel;
+    QLabel* m_initialsSaturConstLabel;
+    QLabel* m_initialSaturFileLabel;
 
     void setupUiBound(QWidget* widget)
     {
@@ -79,17 +79,12 @@ private:
         layout->addWidget(m_contourBoundTypeLabel, 0, 0, 1, 1);
         layout->addWidget(ContourBoundType, 0, 1, 1, max_col);
 
-        // BoundUType = new QComboBox();
-        // BoundUType->setEnabled(false);
-        // m_boundUTypeLabel = new QLabel("Bound U Type");
-        // layout->addWidget(m_boundUTypeLabel, 1, 0, 1, 1);
-        // layout->addWidget(BoundUType, 1, 1, 1, max_col);        
-
         TopBotBoundConstLenght = new QSpinBox();
         TopBotBoundConstLenght->setMinimum(0);
         TopBotBoundConstLenght->setMaximum(100);
         TopBotBoundConstLenght->setSingleStep(1);
-        TopBotBoundConstLenght->setValue(100);;
+        TopBotBoundConstLenght->setValue(100);
+
         m_boundConstLenghtLabel = new QLabel("Lenght");
         layout->addWidget(m_boundConstLenghtLabel, 1, 0, 1, 1);
         layout->addWidget(TopBotBoundConstLenght, 1, 1, 1, 10);
@@ -131,6 +126,26 @@ private:
         m_boundSConstValueLabel = new QLabel("S value");
         layout->addWidget(m_boundSConstValueLabel, 5, 0, 1, 1);
         layout->addWidget(BoundSConstValue, 5, 1, 1, max_col);
+
+        m_pressureContour = new QLabel("Pc, at");
+        PressureContour = new QDoubleSpinBox();
+        PressureContour->setMinimum(0.0);
+        PressureContour->setMaximum(1000);
+        PressureContour->setSingleStep(10);
+        PressureContour->setValue(150);
+        PressureContour->setToolTip("Contour pressure value");
+        layout->addWidget(m_pressureContour, 6, 0);
+        layout->addWidget(PressureContour, 6, 1, 1, max_col);
+
+        m_pressureWell = new QLabel("Pw, at");
+        PressureWell = new QDoubleSpinBox();
+        PressureWell->setMinimum(0.0);
+        PressureWell->setMaximum(1000);
+        PressureWell->setSingleStep(10);
+        PressureWell->setValue(100);
+        PressureWell->setToolTip("Well pressure value");
+        layout->addWidget(m_pressureWell, 7, 0);
+        layout->addWidget(PressureWell, 7, 1, 1, max_col);
 
         retranslateUiBound(widget);
     }
