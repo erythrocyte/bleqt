@@ -7,6 +7,7 @@
 #include "Hypodermic/Hypodermic.h"
 
 #include "blePresenter.hpp"
+#include "calc/models/saturSolverSettings.hpp"
 #include "satSolverSettsWidget.hpp"
 
 namespace ble::gui::widgets::presenters {
@@ -18,9 +19,7 @@ public:
     ~SatSolverSettsWidgetPresenter() { }
 
     std::shared_ptr<SatSolverSettsWidget> get_view();
-    double get_curant_value();
-    double get_press_recalc_n();
-    bool need_satur_solve();
+    std::shared_ptr<src::calc::models::SaturSolverSetts> get_data();
 };
 
 }

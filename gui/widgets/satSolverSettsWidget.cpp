@@ -17,4 +17,10 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
     }
 }
 
+src::calc::models::SaturSolverType::TypeEnum SatSolverSettsWidget::solver_type()
+{
+    auto str = ui->SolverType->currentText().toStdString();
+    return src::calc::models::SaturSolverType::get_enum(str);
+}
+
 }
