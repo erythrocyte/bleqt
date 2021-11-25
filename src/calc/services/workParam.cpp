@@ -59,13 +59,13 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     return result;
 }
 
-double calc_q_analytic(const std::shared_ptr<mm::Grid> grd, const std::shared_ptr<cm::InputData> data)
+double calc_q_analytic(const std::shared_ptr<mm::Grid> grd, const std::shared_ptr<cm::InputData> params)
 {
-    switch (data->grd->type) {
+    switch (params->mesh_setts->type) {
     case cm::GridType::kRadial:
-        return 2 * M_PI / std::log(data->grd->rc / data->grd->rw);
+        return 2 * M_PI / std::log(params->data->r / params->data->rw);
     case cm::GridType::kRegular:
-        return (1.0 - 0.0) / data->grd->get_lenght(); // pc - pw / l
+        return (1.0 - 0.0) / params->data->get_lenght(); // pc - pw / l
     default:
         return 0.0;
     }

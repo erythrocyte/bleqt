@@ -10,6 +10,7 @@
 #include "bleFrame.hpp"
 #include "blePresenter.hpp"
 #include "boundVisualWidgetPresenter.hpp"
+#include "common/models/inputData.hpp"
 #include "conditionsWidgetPresenter.hpp"
 #include "dataWidgetPresenter.hpp"
 #include "fluidParamGraphWidgetPresenter.hpp"
@@ -49,6 +50,7 @@ private:
     void set_status(const QString& str) { get_view()->set_status(str); }
     void init_log();
     std::tuple<std::string, ble::src::logging::SeverityLevelEnum> parse_log_mess(std::string mess);
+    std::shared_ptr<ble::src::common::models::InputData> get_data();
 
 private slots:
     void onShowShockFrontCurve(bool status);

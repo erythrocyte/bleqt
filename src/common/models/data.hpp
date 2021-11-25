@@ -21,6 +21,8 @@ public:
     double period;
     double fw_lim;
     bool use_fwlim;
+
+    double get_lenght() { return r - rw; }
 };
 
 }

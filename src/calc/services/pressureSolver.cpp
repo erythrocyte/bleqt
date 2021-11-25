@@ -9,7 +9,7 @@
 namespace ble::src::calc::services {
 
 double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid> grd,
-    const std::shared_ptr<common::models::InputData> data)
+    const std::shared_ptr<common::models::InputData> params)
 {
     auto regular = [&]() {
         return (fc->cl2 == -1)
@@ -34,9 +34,9 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
     };
 
     if (fc->type == mm::FaceType::kWell) {
-        switch (data->grd->type) {
+        switch (params->mesh_setts->type) {
         case common::models::GridType::kRadial: {
-            double rw = data->grd->rw;
+            double rw = params->data->rw;
             double d = grd->cells[fc->cl1]->cntr;
             double b2 = regular();
             double b3 = correct_radial2(d, rw);
@@ -51,7 +51,7 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
 }
 
 std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::vector<double>& s,
-    const std::shared_ptr<common::models::InputData> data)
+    const std::shared_ptr<common::models::InputData> params)
 {
     models::DiagMat ret;
     ret.resize(grd->cells.size());
@@ -59,8 +59,8 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
     std::vector<double> rhs(grd->cells.size(), 0.0);
 
     for (auto& fc : grd->faces) {
-        double sigma = get_face_sigma(fc, s, data->data->phys, grd);
-        double h = get_h(fc, grd, data);
+        double sigma = get_face_sigma(fc, s, params->data->phys, grd);
+        double h = get_h(fc, grd, params);
         double cf = fc->area * sigma / h;
 
         switch (fc->type) {
@@ -93,7 +93,7 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
 }
 
 void calc_u(const std::vector<double>& p, const std::vector<double>& s,
-    const std::shared_ptr<common::models::InputData> data, std::shared_ptr<mm::Grid> grd)
+    const std::shared_ptr<common::models::InputData> params, std::shared_ptr<mm::Grid> grd)
 {
     for (auto& fc : grd->faces) {
 
@@ -107,8 +107,8 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
             continue;
         }
 
-        double sigma = get_face_sigma(fc, s, data->data->phys, grd);
-        double h = get_h(fc, grd, data);
+        double sigma = get_face_sigma(fc, s, params->data->phys, grd);
+        double h = get_h(fc, grd, params);
 
         double p1 = p[fc->cl1];
         double p2 = mm::FaceType::is_well_countour(fc->type)
@@ -120,11 +120,11 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
 }
 
 std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
-    const std::shared_ptr<common::models::InputData> data)
+    const std::shared_ptr<common::models::InputData> params)
 {
     std::vector<double> result;
     double pw = 0.0, pc = 1.0;
-    double rw = data->grd->rw, rc = data->grd->rc;
+    double rw = params->data->rw, rc = params->data->r;
 
     auto calc_p_aver_radial = [&](const std::shared_ptr<mm::Cell> cl) {
         auto m = [](double r) { return (r * r / 2.0) * (std::log(r) - 0.5); };
@@ -144,7 +144,7 @@ std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
 
     for (auto& cl : grd->cells) {
         double p = 0.0;
-        switch (data->grd->type) {
+        switch (params->mesh_setts->type) {
         case common::models::GridType::kRadial:
             p = calc_p_aver_radial(cl);
             break;

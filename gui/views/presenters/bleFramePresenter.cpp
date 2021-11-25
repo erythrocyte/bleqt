@@ -70,8 +70,8 @@ void BleFramePresenter::set_signals()
     auto success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(rpValuesUpdated()),
         this, SLOT(onRpValuesUpdated()));
     Q_ASSERT(success);
-    // success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
-    // Q_ASSERT(success);
+    success = QObject::connect(m_conditionsWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
+    Q_ASSERT(success);
     // success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(cellCountChanged()), this, SLOT(on_update_rhs_tab()));
     // Q_ASSERT(success);
 
@@ -200,10 +200,16 @@ std::tuple<std::string, ble::src::logging::SeverityLevelEnum> BleFramePresenter:
 
 void BleFramePresenter::on_update_rhs_tab()
 {
-    // auto data = m_dataWidgetPresenter->get_input_data();
-    // auto grd = ble::src::mesh::services::make_grid(data); // TODO: mesh every time!
+    auto data = get_data();
+    m_boundVisualPresenter->set_data(data->data->rw, data->data->r, 100, data->bound);
+}
 
-    // m_boundVisualPresenter->set_data(grd, data->bound);
+std::shared_ptr<ble::src::common::models::InputData> BleFramePresenter::get_data()
+{
+    auto result = std::make_shared<ble::src::common::models::InputData>();
+    result->data = m_dataWidgetPresenter->get_data();
+    result->bound = m_conditionsWidgetPresenter->get_bound_data(result->data->rw, result->data->r);
+    return result;
 }
 
 }

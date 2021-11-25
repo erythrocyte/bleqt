@@ -9,11 +9,10 @@ BoundVisualWidgetPresenter::BoundVisualWidgetPresenter(
 {
 }
 
-void BoundVisualWidgetPresenter::set_data(
-    const std::shared_ptr<src::mesh::models::Grid> grd,
-    const std::shared_ptr<ble::src::common::models::BoundCondData>& data)
+void BoundVisualWidgetPresenter::set_data(double x0, double x1, int n,
+const std::shared_ptr<ble::src::common::models::BoundCondData>& data)
 {
-    models::BoundModel* model = new models::BoundModel(grd, data);
+    models::BoundModel* model = new models::BoundModel(x0, x1, n, data);
     get_view()->set_data(model);
 }
 

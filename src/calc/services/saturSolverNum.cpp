@@ -51,7 +51,7 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
 std::vector<double> solve_satur(const double tau, const std::vector<double>& init,
     const std::shared_ptr<common::models::InputData> data, const std::shared_ptr<mesh::models::Grid> grd)
 {
-    switch (data->satSetts->type) {
+    switch (data->sat_setts->type) {
     case calc::models::SaturSolverType::TypeEnum::kExplicit:
         return solve_explicit(tau, init, data, grd);
     case calc::models::SaturSolverType::TypeEnum::kImplicit:

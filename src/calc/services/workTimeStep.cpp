@@ -42,7 +42,7 @@ double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
         }
     }
 
-    double cv = data->satSetts->cur_val;
+    double cv = data->sat_setts->cur_val;
     for (auto& cl : grd->cells) {
         double udfbl = udfbls[cl->ind];
         double poro = data->data->poro_fract; // for every cell

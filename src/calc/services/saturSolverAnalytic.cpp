@@ -11,12 +11,12 @@ namespace cs = ble::src::common::services;
 namespace ble::src::calc::services {
 
 std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const double u,
-    const std::shared_ptr<common::models::InputData> data)
+    const std::shared_ptr<common::models::InputData> params)
 {
     auto get_xs = [&](const double s) {
-        double ksi0 = data->grd->rc, poro = data->data->poro_fract;
-        double fu = u / poro * cs::rp::get_dfbl(s, data->data->phys);
-        switch (data->grd->type) {
+        double ksi0 = params->data->r, poro = params->data->poro_fract;
+        double fu = u / poro * cs::rp::get_dfbl(s, params->data->phys);
+        switch (params->mesh_setts->type) {
         case common::models::GridType::kRegular:
             return ksi0 - fu;
         case common::models::GridType::kRadial: {

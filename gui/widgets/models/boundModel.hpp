@@ -27,7 +27,7 @@ class BoundModel : public QAbstractTableModel {
 
 public:
     BoundModel(
-        const std::shared_ptr<src::mesh::models::Grid> grd,
+        double x0, double x1, int n,
         const std::shared_ptr<src::common::models::BoundCondData> data,
         QObject* parent = nullptr);
 
@@ -41,7 +41,10 @@ public:
 
 private:
     std::shared_ptr<src::common::models::BoundCondData> m_data;
-    std::shared_ptr<src::mesh::models::Grid> m_grd;
+    std::vector<double> x_values;
+    int m_n;
+    double m_x0;
+    double m_x1;
     double empty_val;
 };
 
