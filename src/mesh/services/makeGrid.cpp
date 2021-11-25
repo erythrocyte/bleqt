@@ -135,8 +135,8 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
         cl->faces.push_back(k);
         cl->faces.push_back(k + 1);
         cl->volume = get_cell_volume(step, cl->xl, cl->xr);
-        cl->poro = data->phys->poro;
-        cl->perm = data->phys->perm;
+        cl->poro = data->data->poro_fract;
+        cl->perm = data->data->perm_fract;
         result->cells.push_back(cl);
     }
 

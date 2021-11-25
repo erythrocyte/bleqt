@@ -18,7 +18,9 @@ void case1_kw()
     double expected = 0.0;
     double s = 0.;
     auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 0.125; // = mw / moil;
+    // kmu = 0.125; // = mw / moil;
+    pd->mu_wat = 0.125;
+    pd->mu_oil = 1.0;
     pd->n_oil = 2.0;
     pd->n_wat = 5.3;
 
@@ -35,7 +37,9 @@ void case2_kw()
     double expected = 1.0;
     double s = 1.;
     auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 0.125; // = mw / moil;
+    // kmu = 0.125; // = mw / moil;
+    pd->mu_wat = 0.125;
+    pd->mu_oil = 1.0;
     pd->n_oil = 2.0;
     pd->n_wat = 5.3;
 
@@ -52,7 +56,9 @@ void case1_koil()
     double expected = 1.0;
     double s = 0.;
     auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 0.125; // = mw / moil;
+    // kmu = 0.125; // = mw / moil;
+    pd->mu_wat = 0.125;
+    pd->mu_oil = 1.0;
     pd->n_oil = 2.0;
     pd->n_wat = 5.3;
 
@@ -69,7 +75,9 @@ void case2_koil()
     double expected = 0.0;
     double s = 1.;
     auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 0.125; // = mw / moil;
+    // kmu = 0.125; // = mw / moil;
+    pd->mu_wat = 0.125;
+    pd->mu_oil = 1.0;
     pd->n_oil = 2.0;
     pd->n_wat = 5.3;
 
@@ -86,7 +94,9 @@ void case1_fbl()
     double expected = 1.0;
     double s = 1.;
     auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 0.125; // = mw / moil;
+    // kmu = 0.125; // = mw / moil;
+    pd->mu_wat = 0.125;
+    pd->mu_oil = 1.0;
     pd->n_oil = 2.0;
     pd->n_wat = 5.3;
 
@@ -103,7 +113,9 @@ void case2_fbl()
     double expected = 0.0;
     double s = 0.;
     auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 0.125; // = mw / moil;
+    // kmu = 0.125; // = mw / moil;
+    pd->mu_wat = 0.125;
+    pd->mu_oil = 1.0;
     pd->n_oil = 2.0;
     pd->n_wat = 5.3;
 
@@ -120,7 +132,9 @@ void case3_fbl()
     double expected = 0.2;
     double s = 0.2;
     auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 1; // = mw / moil;
+    // kmu = 1.0; // = mw / moil;
+    pd->mu_wat = 1.0;
+    pd->mu_oil = 1.0;
     pd->n_oil = 1.0;
     pd->n_wat = 1.0;
 
@@ -137,7 +151,9 @@ void case1_sigma()
     double expected = 1.0;
     double s = 0.2;
     auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 1; // = mw / moil;
+    // kmu = 1.0; // = mw / moil;
+    pd->mu_wat = 1.0;
+    pd->mu_oil = 1.0;
     pd->n_oil = 1.0;
     pd->n_wat = 1.0;
 
@@ -154,7 +170,9 @@ void case2_sigma()
     double expected = 0.1;
     double s = 0.0;
     auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 0.1; // = mw / moil;
+    // kmu = 0.1; // = mw / moil;
+    pd->mu_wat = 0.1;
+    pd->mu_oil = 1.0;
     pd->n_oil = 2.0;
     pd->n_wat = 2.0;
 
@@ -171,7 +189,9 @@ void case1_dfbl()
     double expected = 0.0;
     double s = 0.0;
     auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 0.1; // = mw / moil;
+    // kmu = 0.1; // = mw / moil;
+    pd->mu_wat = 0.1;
+    pd->mu_oil = 1.0;
     pd->n_oil = 2.0;
     pd->n_wat = 2.0;
 
@@ -187,8 +207,10 @@ void case2_dfbl()
     // arrange
     double expected = 2.076124567474048; // from wxmaxima
     double s = 0.6;
-    auto pd = std::make_shared<cm::PhysData>();
-    pd->kmu = 2.0; // = mw / moil;
+    auto pd = std::make_shared<cm::PhysData>();    
+    // kmu = 2.0; // = mw / moil;
+    pd->mu_wat = 2.0;
+    pd->mu_oil = 1.0;
     pd->n_oil = 2.0;
     pd->n_wat = 2.0;
 

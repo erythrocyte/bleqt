@@ -31,8 +31,8 @@ BleApplication::BleApplication()
     builder.registerType<widgets::ResultDataWidget>();
     builder.registerType<widgets::presenters::ResultDataWidgetPresenter>();
     builder.registerType<widgets::presenters::GridSettsWidgetPresenter>();
-    builder.registerType<widgets::presenters::ModelDataWidgetPresenter>();
-    builder.registerType<widgets::presenters::RelPermDataWidgetPresenter>();
+    // builder.registerType<widgets::presenters::ModelDataWidgetPresenter>();
+    // builder.registerType<widgets::presenters::RelPermDataWidgetPresenter>();
     builder.registerType<widgets::presenters::SatSolverSettsWidgetPresenter>();
     builder.registerType<widgets::presenters::ShockFrontSettsWidgetPresenter>();
     builder.registerType<widgets::presenters::ConditionsWidgetPresenter>();

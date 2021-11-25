@@ -8,16 +8,16 @@
 
 #include "blePresenter.hpp"
 // #include "conditionsWidgetPresenter.hpp"
-#include "common/models/boundCondData.hpp"
-#include "common/models/inputData.hpp"
+// #include "common/models/boundCondData.hpp"
+#include "common/models/data.hpp"
 #include "dataWidget.hpp"
 // #include "gridSettsWidgetPresenter.hpp"
-#include "modelDataWidgetPresenter.hpp"
-#include "relPermDataWidgetPresenter.hpp"
+// #include "modelDataWidgetPresenter.hpp"
+// #include "relPermDataWidgetPresenter.hpp"
 // #include "satSolverSettsWidgetPresenter.hpp"
 // #include "shockFrontSettsWidgetPresenter.hpp"
-#include "geomDataWidgetPresenter.hpp"
-#include "geologyDataWidgetPresenter.hpp"
+// #include "geomDataWidgetPresenter.hpp"
+// #include "geologyDataWidgetPresenter.hpp"
 
 namespace ble::gui::widgets::presenters {
 
@@ -27,7 +27,7 @@ public:
     DataWidgetPresenter(std::shared_ptr<Hypodermic::Container> container,
         std::shared_ptr<DataWidget> view);
 
-    std::shared_ptr<ble::src::common::models::InputData> get_input_data();
+    std::shared_ptr<ble::src::common::models::Data> get_data();
     std::shared_ptr<DataWidget> get_view();
 
     // void set_show_shockfront_status(bool status);
@@ -41,13 +41,13 @@ signals:
 
 private:
     // std::shared_ptr<GridSettsWidgetPresenter> m_gridset_presenter;
-    std::shared_ptr<ModelDataWidgetPresenter> m_modeldata_presenter;
-    std::shared_ptr<RelPermDataWidgetPresenter> m_relperm_presenter;
-    // std::shared_ptr<SatSolverSettsWidgetPresenter> m_satsolverset_presenter;
-    // std::shared_ptr<ShockFrontSettsWidgetPresenter> m_shockfront_presenter;
-    // std::shared_ptr<ConditionsWidgetPresenter> m_cond_presenter;
-    std::shared_ptr<GeomDataWidgetPresenter> m_geom_presenter;
-    std::shared_ptr<GeologyDataWidgetPresenter> m_geol_presenter;
+    // std::shared_ptr<ModelDataWidgetPresenter> m_modeldata_presenter;
+    // std::shared_ptr<RelPermDataWidgetPresenter> m_relperm_presenter;
+    // // std::shared_ptr<SatSolverSettsWidgetPresenter> m_satsolverset_presenter;
+    // // std::shared_ptr<ShockFrontSettsWidgetPresenter> m_shockfront_presenter;
+    // // std::shared_ptr<ConditionsWidgetPresenter> m_cond_presenter;
+    // std::shared_ptr<GeomDataWidgetPresenter> m_geom_presenter;
+    // std::shared_ptr<GeologyDataWidgetPresenter> m_geol_presenter;
 
 
     void set_widgets_to_view();

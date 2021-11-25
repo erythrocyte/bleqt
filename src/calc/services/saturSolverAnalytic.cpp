@@ -14,8 +14,8 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
     const std::shared_ptr<common::models::InputData> data)
 {
     auto get_xs = [&](const double s) {
-        double ksi0 = data->grd->rc, poro = data->phys->poro;
-        double fu = u / poro * cs::rp::get_dfbl(s, data->phys);
+        double ksi0 = data->grd->rc, poro = data->data->poro_fract;
+        double fu = u / poro * cs::rp::get_dfbl(s, data->data->phys);
         switch (data->grd->type) {
         case common::models::GridType::kRegular:
             return ksi0 - fu;
