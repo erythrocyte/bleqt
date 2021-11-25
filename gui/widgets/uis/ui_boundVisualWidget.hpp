@@ -121,7 +121,7 @@ private:
         _axisY_S->setMax(1.0);
 
         Chart->addAxis(_axisX, Qt::AlignBottom);
-        Chart->addAxis(_axisY_U, Qt::AlignLeft);
+        // Chart->addAxis(_axisY_U, Qt::AlignLeft);
         Chart->addAxis(_axisY_S, Qt::AlignRight);
 
         _chartView = new QChartView(Chart);

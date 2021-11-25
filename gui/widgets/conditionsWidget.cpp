@@ -31,7 +31,8 @@ ConditionsWidget::ConditionsWidget(QWidget* parent)
 
     ui->ContourBoundType->setCurrentIndex(1);
     ui->BoundSType->setCurrentIndex(1);
-    ui->BoundSFile->setText("../../../samples/rhs/s_sample.blerhs");
+    ui->BoundSFile->setText("../../samples/rhs/s_sample.blerhs");
+    emit rhs_updated();
 }
 
 void ConditionsWidget::set_items()
