@@ -8,6 +8,7 @@
 
 #include "blePresenter.hpp"
 #include "common/models/gridType.hpp"
+#include "common/models/meshSettings.hpp"
 #include "gridSettsWidget.hpp"
 
 namespace ble::gui::widgets::presenters {
@@ -20,10 +21,7 @@ public:
     ~GridSettsWidgetPresenter() { }
 
     std::shared_ptr<GridSettsWidget> get_view();
-
-    double get_well_radius();
-    int get_cell_count();
-    src::common::models::GridType::TypeEnum get_grid_type();
+    std::shared_ptr<src::common::models::MeshSettings> get_data();
 
 signals:
     void cellCountChanged();

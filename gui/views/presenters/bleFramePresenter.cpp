@@ -11,6 +11,7 @@
 #include "dataWidget.hpp"
 #include "file/services/workFile.hpp"
 #include "fluidParamsGraphWidget.hpp"
+#include "gridSettsWidget.hpp"
 #include "logging/logger.hpp"
 #include "mesh/models/grid.hpp"
 #include "mesh/services/makeGrid.hpp"
@@ -30,8 +31,10 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
     m_conditionsWidgetPresenter = m_container->resolve<bwp::ConditionsWidgetPresenter>();
     auto conditionsWidgetView = std::static_pointer_cast<widgets::ConditionsWidget>(m_conditionsWidgetPresenter->get_view());
-    m_satsolver_presenter= m_container->resolve<bwp::SatSolverSettsWidgetPresenter>();
+    m_satsolver_presenter = m_container->resolve<bwp::SatSolverSettsWidgetPresenter>();
     auto satsolver_view = std::static_pointer_cast<widgets::SatSolverSettsWidget>(m_satsolver_presenter->get_view());
+    m_gridsetts_presenter = m_container->resolve<bwp::GridSettsWidgetPresenter>();
+    auto gridsetts_view = std::static_pointer_cast<widgets::GridSettsWidget>(m_gridsetts_presenter->get_view());
 
     m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
     auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
@@ -48,6 +51,8 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
         dataWidgetView,
         conditionsWidgetView,
         satsolver_view,
+        gridsetts_view,
+
         fluidParamsWidget,
         resultDataWidget,
         wellWorkDataView,
@@ -75,8 +80,6 @@ void BleFramePresenter::set_signals()
     Q_ASSERT(success);
     success = QObject::connect(m_conditionsWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
     Q_ASSERT(success);
-    // success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(cellCountChanged()), this, SLOT(on_update_rhs_tab()));
-    // Q_ASSERT(success);
 
     QObject* view_obj = dynamic_cast<QObject*>(m_view.get());
     success = QObject::connect(view_obj, SIGNAL(sgn_run_calc()), this, SLOT(on_run_calc()));
@@ -213,6 +216,7 @@ std::shared_ptr<ble::src::common::models::InputData> BleFramePresenter::get_data
     result->data = m_dataWidgetPresenter->get_data();
     result->bound = m_conditionsWidgetPresenter->get_bound_data(result->data->rw, result->data->r);
     result->sat_setts = m_satsolver_presenter->get_data();
+    result->mesh_setts = m_gridsetts_presenter->get_data();
     return result;
 }
 

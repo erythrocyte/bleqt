@@ -16,37 +16,24 @@ GridSettsWidget::GridSettsWidget(QWidget* parent)
     ui->GridType->setCurrentIndex(1);
 
     subscribe();
-    fix_well_radius(ui->GridType->currentText());
-}
-
-void GridSettsWidget::gridTypeChanged(int index)
-{
-    fix_well_radius(ui->GridType->currentText());
 }
 
 void GridSettsWidget::subscribe()
 {
-    auto success = QObject::connect(ui->GridType, SIGNAL(currentIndexChanged(int)),
-        this, SLOT(gridTypeChanged(int)));
+    auto success = QObject::connect(ui->GridType, SIGNAL(currentIndexChanged(int)), this, SLOT(on_grid_type_changed(int)));
     Q_ASSERT(success);
     success = QObject::connect(ui->CellCount, SIGNAL(valueChanged(int)), this, SLOT(onCellCountChanged(int)));
     Q_ASSERT(success);
 }
 
-void GridSettsWidget::fix_well_radius(const QString& txt)
+std::shared_ptr<scm::MeshSettings> GridSettsWidget::get_data()
 {
-    auto gridType = scm::GridType::get_enum(txt.toStdString());
-    if (gridType == scm::GridType::kRegular) {
-        ui->WellRadius->setValue(0.0);
-    } else {
-        ui->WellRadius->setValue(1e-3);
-    }
-}
+    auto result = std::make_shared<scm::MeshSettings>();
+    result->n = ui->CellCount->value();
 
-scm::GridType::TypeEnum GridSettsWidget::get_grid_type()
-{
     auto txt = ui->GridType->currentText();
-    return scm::GridType::get_enum(txt.toStdString());
+    result->type = scm::GridType::get_enum(txt.toStdString());
+    return result;
 }
 
 }

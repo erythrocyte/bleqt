@@ -8,12 +8,13 @@
 #include "conditionsWidget.hpp"
 #include "dataWidget.hpp"
 #include "fluidParamsGraphWidget.hpp"
+#include "gridSettsWidget.hpp"
 #include "logging/logger.hpp"
 #include "resultDataWidget.hpp"
+#include "satSolverSettsWidget.hpp"
 #include "tauVisualWidget.hpp"
 #include "ui_bleFrame.hpp"
 #include "wellWorkDataWidget.hpp"
-#include "satSolverSettsWidget.hpp"
 
 #include <QMainWindow>
 
@@ -32,6 +33,8 @@ public:
         std::shared_ptr<widgets::DataWidget> dataWidget,
         std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
         std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
+        std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
+
         std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
         std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
         std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget,
@@ -48,7 +51,8 @@ private:
     UI::UI_BleFrame* ui;
     void set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget,
         std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
-        std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget);
+        std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
+        std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget);
 
 private slots:
     void handleRunButton() { emit sgn_run_calc(); }

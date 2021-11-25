@@ -14,11 +14,12 @@
 #include "conditionsWidgetPresenter.hpp"
 #include "dataWidgetPresenter.hpp"
 #include "fluidParamGraphWidgetPresenter.hpp"
+#include "gridSettsWidgetPresenter.hpp"
 #include "logging/logger.hpp"
 #include "resultDataWidgetPresenter.hpp"
+#include "satSolverSettsWidgetPresenter.hpp"
 #include "tauVisualWidgetPresenter.hpp"
 #include "wellWorkDataWidgetPresenter.hpp"
-#include "satSolverSettsWidgetPresenter.hpp"
 
 namespace bwp = ble::gui::widgets::presenters;
 
@@ -39,6 +40,7 @@ private:
     std::shared_ptr<bwp::DataWidgetPresenter> m_dataWidgetPresenter;
     std::shared_ptr<bwp::ConditionsWidgetPresenter> m_conditionsWidgetPresenter;
     std::shared_ptr<bwp::SatSolverSettsWidgetPresenter> m_satsolver_presenter;
+    std::shared_ptr<bwp::GridSettsWidgetPresenter> m_gridsetts_presenter;
 
     std::shared_ptr<bwp::FluidParamGraphWidgetPresenter> m_fluidWidgetPresenter;
     std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;
