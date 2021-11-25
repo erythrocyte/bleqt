@@ -7,7 +7,6 @@
 #include <QWidget>
 
 #include "common/models/data.hpp"
-#include "models/dataComponents.hpp"
 #include "uis/ui_dataWidget.hpp"
 
 namespace ble::gui::widgets {
@@ -19,7 +18,6 @@ public:
     ~DataWidget();
 
     std::shared_ptr<ble::src::common::models::Data> get_data();
-    // void set_view_objects(std::shared_ptr<models::DataComponents> components);
 
 signals:
     void rp_values_updated();
