@@ -26,28 +26,27 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_log_line_start_index = 0;
     init_log();
 
-    m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
-    auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
-
-    m_resultDataWidgetPresenter = m_container->resolve<bwp::ResultDataWidgetPresenter>();
-    auto resultDataWidget = std::static_pointer_cast<widgets::ResultDataWidget>(m_resultDataWidgetPresenter->get_view());
-
     m_dataWidgetPresenter = m_container->resolve<bwp::DataWidgetPresenter>();
     auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
+    m_conditionsWidgetPresenter = m_container->resolve<bwp::ConditionsWidgetPresenter>();
+    auto conditionsWidgetView = std::static_pointer_cast<widgets::ConditionsWidget>(m_conditionsWidgetPresenter->get_view());
 
+    m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
+    auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
+    m_resultDataWidgetPresenter = m_container->resolve<bwp::ResultDataWidgetPresenter>();
+    auto resultDataWidget = std::static_pointer_cast<widgets::ResultDataWidget>(m_resultDataWidgetPresenter->get_view());
     m_wellWorkDataWidgetPresenter = m_container->resolve<bwp::WellWorkDataWidgetPresenter>();
     auto wellWorkDataView = std::static_pointer_cast<widgets::WellWorkDataWidget>(m_wellWorkDataWidgetPresenter->get_view());
-
     m_boundVisualPresenter = m_container->resolve<bwp::BoundVisualWidgetPresenter>();
     auto boundVisualView = std::static_pointer_cast<widgets::BoundVisualWidget>(m_boundVisualPresenter->get_view());
-
     m_tauVisualPresenter = m_container->resolve<bwp::TauVisualWidgetPresenter>();
     auto tauVisualView = std::static_pointer_cast<widgets::TauVisualWidget>(m_tauVisualPresenter->get_view());
 
     std::static_pointer_cast<BleFrame>(m_view)->set_widgets(
-        fluidParamsWidget,
-        resultDataWidget,
         dataWidgetView,
+        conditionsWidgetView,
+        fluidParamsWidget,
+        resultDataWidget,        
         wellWorkDataView,
         boundVisualView,
         tauVisualView);

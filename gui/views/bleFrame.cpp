@@ -37,33 +37,42 @@ BleFrame::BleFrame(QWidget* parent)
     resizeDocks({ ui->dockSettings }, { 100 }, Qt::Horizontal); // This is the hack
 }
 
-void BleFrame::set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget)
+void BleFrame::set_settings_widget(
+    std::shared_ptr<widgets::DataWidget> dataWidget,
+    std::shared_ptr<widgets::ConditionsWidget> conditionsWidget)
 {
     QTabWidget* tabSettings = new QTabWidget();
     tabSettings->setTabPosition(QTabWidget::TabPosition::West);
     tabSettings->addTab(dataWidget.get(), "");
+    tabSettings->addTab(conditionsWidget.get(), "");
     tabSettings->setMinimumWidth(330);
-
-    frames::QVerticalLabel* tabSettingsLabel1 = new frames::QVerticalLabel("Data");
-    tabSettingsLabel1->setTextColor(QColor(0, 0, 0, 127));
-    // tabSettingsLabel1->setStyleSheet("QLabel { color : #FFFFFF }");
-
     QTabBar* tabbar = tabSettings->tabBar();
+
+    // data widget caption
+    frames::QVerticalLabel* label = new frames::QVerticalLabel("Data");
+    label->setTextColor(QColor(0, 0, 0, 127));
     tabSettings->setTabText(0, "");
-    tabbar->setTabButton(0, QTabBar::LeftSide, tabSettingsLabel1);
+    tabbar->setTabButton(0, QTabBar::LeftSide, label);
+
+    // conditions widget caption
+    label = new frames::QVerticalLabel("Conditions");
+    label->setTextColor(QColor(0, 100, 0, 127));
+    tabSettings->setTabText(1, "");
+    tabbar->setTabButton(1, QTabBar::LeftSide, label);
 
     ui->dockSettings->setWidget(tabSettings);
 }
 
 void BleFrame::set_widgets(
+    std::shared_ptr<widgets::DataWidget> dataWidget,
+    std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
     std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
     std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
-    std::shared_ptr<widgets::DataWidget> dataWidget,
     std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget,
     std::shared_ptr<widgets::BoundVisualWidget> condWidget,
     std::shared_ptr<widgets::TauVisualWidget> tauWidget)
 {
-    this->set_settings_widget(dataWidget);
+    this->set_settings_widget(dataWidget, conditionsWidget);
     ui->tabs->addTab(resultDataWidget.get(), "Results");
     ui->tabs->addTab(fluidParamsWidget.get(), "Fluid params");
     ui->tabs->addTab(wellWorkDataWidget.get(), "Well work");

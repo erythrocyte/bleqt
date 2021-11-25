@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "boundVisualWidget.hpp"
+#include "conditionsWidget.hpp"
 #include "dataWidget.hpp"
 #include "fluidParamsGraphWidget.hpp"
 #include "logging/logger.hpp"
@@ -26,9 +27,11 @@ public:
 
     void run() { show(); }
 
-    void set_widgets(std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
-        std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
+    void set_widgets(
         std::shared_ptr<widgets::DataWidget> dataWidget,
+        std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
+        std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
+        std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
         std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget,
         std::shared_ptr<widgets::BoundVisualWidget> condWidget,
         std::shared_ptr<widgets::TauVisualWidget> tauWidget);
@@ -41,7 +44,8 @@ signals:
 
 private:
     UI::UI_BleFrame* ui;
-    void set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget);
+    void set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget,
+        std::shared_ptr<widgets::ConditionsWidget> conditionsWidget);
 
 private slots:
     void handleRunButton() { emit sgn_run_calc(); }
