@@ -81,8 +81,19 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         }
         case mm::FaceType::kTop:
         case mm::FaceType::kBot: {
-            if (!common::models::CommonVals::is_empty(fc->bound_press)) {
-                rhs[fc->cl1] += fc->area * fc->bound_u;
+            switch (params->contour_press_bound_type) {
+            case common::models::BoundCondType::kImpermeable: {
+                double alp = 1.0 / params->l;
+                ret.C[fc->cl1] += alp;
+                rhs[fc->cl1] += alp; // alp * pw (= 1);
+            } break;
+            case common::models::BoundCondType::kConst: {
+                if (!common::models::CommonVals::is_empty(fc->bound_press)) {
+                    rhs[fc->cl1] += fc->area * fc->bound_u;
+                }
+            } break;
+            default:
+                break;
             }
             break;
         }
