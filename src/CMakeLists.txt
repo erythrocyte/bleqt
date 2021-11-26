@@ -25,6 +25,7 @@ set(HEADERS
 	common/services/commonMath.hpp
 	common/services/workString.hpp
 	common/services/dataDistributionService.hpp
+	common/services/dimensionlessService.hpp
 
 	common/utils/mapInit.hpp
 
@@ -68,6 +69,7 @@ set (SOURCES
 	common/services/commonMath.cpp
 	common/services/workString.cpp
 	common/services/dataDistributionService.cpp
+	common/services/dimensionlessService.cpp
 
 	mesh/models/grid.cpp
 

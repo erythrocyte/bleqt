@@ -155,9 +155,7 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
     size_t ind = result->faces.size();
     for (auto& cl : result->cells) {
         double area = get_cell_volume(step, cl->xl, cl->xr);
-        double bound_u = isolated_contour
-            ? common::services::DataDistributionService::get_value(cl->cntr, params->bound->top_bot_bound_u, 0.0)
-            : 0.0;
+        double bound_u = common::models::CommonVals::EMPTY_VAL;
         double bound_s = isolated_contour
             ? common::services::DataDistributionService::get_value(cl->cntr, params->bound->top_bot_bound_s, 0.0)
             : 0.0;
