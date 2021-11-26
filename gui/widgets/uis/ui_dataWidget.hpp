@@ -205,7 +205,7 @@ private:
 
         m_labelRw = new QLabel("Rw");
         Rw = new QDoubleSpinBox();
-        Rw->setDecimals(1e-2);
+        Rw->setDecimals(2);
         Rw->setMinimum(1e-2);
         Rw->setMaximum(1);
         Rw->setSingleStep(1e-2);

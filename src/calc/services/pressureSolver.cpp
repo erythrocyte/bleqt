@@ -81,7 +81,9 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         }
         case mm::FaceType::kTop:
         case mm::FaceType::kBot: {
-            rhs[fc->cl1] += fc->area * fc->bound_u;
+            if (!common::models::CommonVals::is_empty(fc->bound_press)) {
+                rhs[fc->cl1] += fc->area * fc->bound_u;
+            }
             break;
         }
         default:
