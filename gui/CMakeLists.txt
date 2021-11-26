@@ -19,8 +19,6 @@ set (SOURCES
 	views/presenters/bleFramePresenter.cpp
 
 	widgets/dataWidget.cpp
-	widgets/modelDataWidget.cpp
-	widgets/relPermDataWidget.cpp
 	widgets/satSolverSettsWidget.cpp
 	widgets/gridSettsWidget.cpp
 	widgets/shockFrontSettsWidget.cpp
@@ -39,8 +37,6 @@ set (SOURCES
 	widgets/presenters/dataWidgetPresenter.cpp
 	widgets/presenters/gridSettsWidgetPresenter.cpp
 	widgets/presenters/resultDataWidgetPresenter.cpp
-	widgets/presenters/modelDataWidgetPresenter.cpp
-	widgets/presenters/relPermDataWidgetPresenter.cpp
 	widgets/presenters/satSolverSettsWidgetPresenter.cpp
 	widgets/presenters/shockFrontSettsWidgetPresenter.cpp
 	widgets/presenters/wellWorkDataWidgetPresenter.cpp

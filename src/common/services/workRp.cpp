@@ -16,7 +16,7 @@ double get_koil(double s, const std::shared_ptr<common::models::PhysData> data)
 
 double get_sigma(double s, const std::shared_ptr<common::models::PhysData> data)
 {
-    return get_kw(s, data) + data->kmu * get_koil(s, data);
+    return get_kw(s, data) + data->get_kmu() * get_koil(s, data);
 }
 
 double get_fbl(double s, const std::shared_ptr<common::models::PhysData> data)
@@ -35,7 +35,7 @@ double get_dfbl(double s, const std::shared_ptr<common::models::PhysData> data)
 
     double f = get_sigma(s, data);
     double f2 = f * f;
-    double ff = dkw + data->kmu * dkoil;
+    double ff = dkw + data->get_kmu() * dkoil;
 
     return (dkw * f - ff * kw) / f2;
 }

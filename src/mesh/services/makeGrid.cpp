@@ -26,12 +26,12 @@ std::shared_ptr<mesh::models::Face> make_face(int ind, double x, int cl1, int cl
     return fc;
 };
 
-void check_cells_volume(const std::shared_ptr<common::models::InputData> data,
+void check_cells_volume(const std::shared_ptr<common::models::InputData> params,
     const std::shared_ptr<mesh::models::Grid> grd)
 {
     auto get_analytic_volume = [&]() {
-        double rc = data->grd->rc, rw = data->grd->rw;
-        switch (data->grd->type) {
+        double rc = params->data->r, rw = params->data->rw;
+        switch (params->mesh_setts->type) {
         case common::models::GridType::TypeEnum::kRegular:
             return rc;
         case common::models::GridType::TypeEnum::kRadial: {
@@ -51,7 +51,7 @@ void check_cells_volume(const std::shared_ptr<common::models::InputData> data,
     };
 
     auto get_caption = [&]() {
-        switch (data->grd->type) {
+        switch (params->mesh_setts->type) {
         case common::models::GridType::TypeEnum::kRegular:
             return "regular";
         case common::models::GridType::TypeEnum::kRadial:
@@ -69,21 +69,21 @@ void check_cells_volume(const std::shared_ptr<common::models::InputData> data,
     logging::write_log(mess, logging::kDebug);
 }
 
-std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::models::InputData> data)
+std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::models::InputData> params)
 {
     auto get_x = [&](double step, int k) {
-        switch (data->grd->type) {
+        switch (params->mesh_setts->type) {
         case common::models::GridType::TypeEnum::kRegular:
             return step * k;
         case common::models::GridType::TypeEnum::kRadial:
-            return data->grd->rw + step * k;
+            return params->data->rw + step * k;
         default:
             return 0.0;
         }
     };
 
     auto get_cyl_area = [&](double x) {
-        switch (data->grd->type) {
+        switch (params->mesh_setts->type) {
         case common::models::GridType::TypeEnum::kRegular:
             return 1.0;
         case common::models::GridType::TypeEnum::kRadial:
@@ -94,18 +94,18 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
     };
 
     auto get_x_bound = [&](int k, double step) {
-        switch (data->grd->type) {
+        switch (params->mesh_setts->type) {
         case common::models::GridType::TypeEnum::kRegular:
             return k * step;
         case common::models::GridType::TypeEnum::kRadial:
-            return data->grd->rw + k * step;
+            return params->data->rw + k * step;
         default:
             return 0.0;
         }
     };
 
     auto get_cell_volume = [&](double step, double xl, double xr) {
-        switch (data->grd->type) {
+        switch (params->mesh_setts->type) {
         case common::models::GridType::TypeEnum::kRegular:
             return step;
         case common::models::GridType::TypeEnum::kRadial:
@@ -116,9 +116,9 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
     };
 
     std::shared_ptr<mesh::models::Grid> result(new mesh::models::Grid());
-    double step = data->grd->get_lenght() / data->grd->n;
+    double step = params->data->get_lenght() / params->mesh_setts->n;
 
-    for (int k = 0; k < data->grd->n; k++) { // cells
+    for (int k = 0; k < params->mesh_setts->n; k++) { // cells
         auto tp = (k == 0)
             ? mesh::models::FaceType::kWell
             : mesh::models::FaceType::kInner;
@@ -135,20 +135,20 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
         cl->faces.push_back(k);
         cl->faces.push_back(k + 1);
         cl->volume = get_cell_volume(step, cl->xl, cl->xr);
-        cl->poro = data->phys->poro;
-        cl->perm = data->phys->perm;
+        cl->poro = params->data->poro_fract;
+        cl->perm = params->data->perm_fract;
         result->cells.push_back(cl);
     }
 
-    bool isolated_contour = data->bound->contour_press_bound_type == common::models::BoundCondType::kImpermeable;
+    bool isolated_contour = params->bound->contour_press_bound_type == common::models::BoundCondType::kImpermeable;
     double contour_bound_press = isolated_contour
         ? common::models::CommonVals::EMPTY_VAL
         : 1.0;
 
     // last face;
-    auto fc = make_face(data->grd->n, data->grd->rc, data->grd->n - 1, -1,
-        get_cyl_area(data->grd->rc), mesh::models::FaceType::kContour,
-        contour_bound_press, data->bound->bound_satur, 0.0);
+    auto fc = make_face(params->mesh_setts->n, params->data->r, params->mesh_setts->n - 1, -1,
+        get_cyl_area(params->data->r), mesh::models::FaceType::kContour,
+        contour_bound_press, params->bound->bound_satur, 0.0);
     result->faces.push_back(fc);
 
     // up and bottom faces;
@@ -156,10 +156,10 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
     for (auto& cl : result->cells) {
         double area = get_cell_volume(step, cl->xl, cl->xr);
         double bound_u = isolated_contour
-            ? common::services::DataDistributionService::get_value(cl->cntr, data->bound->top_bot_bound_u, 0.0)
+            ? common::services::DataDistributionService::get_value(cl->cntr, params->bound->top_bot_bound_u, 0.0)
             : 0.0;
         double bound_s = isolated_contour
-            ? common::services::DataDistributionService::get_value(cl->cntr, data->bound->top_bot_bound_s, 0.0)
+            ? common::services::DataDistributionService::get_value(cl->cntr, params->bound->top_bot_bound_s, 0.0)
             : 0.0;
         auto top = make_face(ind++, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop,
             common::models::CommonVals::EMPTY_VAL, bound_s, bound_u);
@@ -170,7 +170,7 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
         result->faces.push_back(bot);
     }
 
-    check_cells_volume(data, result);
+    check_cells_volume(params, result);
 
     return result;
 }

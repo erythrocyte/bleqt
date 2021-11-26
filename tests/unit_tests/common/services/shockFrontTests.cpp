@@ -17,7 +17,9 @@ void case1()
     // arrange
     double expected = 0.66564999999999996;
     auto pd = std::make_shared<ble::src::common::models::PhysData>();
-    pd->kmu = 0.125; // = mw / moil;
+    // kmu = 0.125; // = mw / moil;
+    pd->mu_wat = 0.125;
+    pd->mu_oil = 1.0; 
     pd->n_oil = 2.0;
     pd->n_wat = 5.3;
 
@@ -33,7 +35,9 @@ void case2()
     // arrange
     double expected = 0.8163999999999999; // wxmaxima gives 0.8164965809277261;
     auto pd = std::make_shared<src::common::models::PhysData>();
-    pd->kmu = 2.0; // = mw / moil;
+    // kmu = 2.0; // = mw / moil;
+    pd->mu_wat = 2.0;
+    pd->mu_oil = 1.0; 
     pd->n_oil = 2.0;
     pd->n_wat = 2.0;
 

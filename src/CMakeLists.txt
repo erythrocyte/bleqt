@@ -30,8 +30,6 @@ set(HEADERS
 
 	common/models/inputData.hpp
 	common/models/physData.hpp
-	common/models/modelData.hpp
-	common/models/gridData.hpp
 	common/models/gridType.hpp
 	common/models/dynamicData.hpp
 	common/models/outputSettings.hpp

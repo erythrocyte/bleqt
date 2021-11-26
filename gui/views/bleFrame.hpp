@@ -5,10 +5,14 @@
 #include <memory>
 
 #include "boundVisualWidget.hpp"
+#include "conditionsWidget.hpp"
 #include "dataWidget.hpp"
 #include "fluidParamsGraphWidget.hpp"
+#include "gridSettsWidget.hpp"
 #include "logging/logger.hpp"
 #include "resultDataWidget.hpp"
+#include "satSolverSettsWidget.hpp"
+#include "shockFrontSettsWidget.hpp"
 #include "tauVisualWidget.hpp"
 #include "ui_bleFrame.hpp"
 #include "wellWorkDataWidget.hpp"
@@ -26,9 +30,15 @@ public:
 
     void run() { show(); }
 
-    void set_widgets(std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
-        std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
+    void set_widgets(
         std::shared_ptr<widgets::DataWidget> dataWidget,
+        std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
+        std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
+        std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
+        std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget,
+
+        std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
+        std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
         std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget,
         std::shared_ptr<widgets::BoundVisualWidget> condWidget,
         std::shared_ptr<widgets::TauVisualWidget> tauWidget);
@@ -41,7 +51,11 @@ signals:
 
 private:
     UI::UI_BleFrame* ui;
-    void set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget);
+    void set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget,
+        std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
+        std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
+        std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
+        std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget);
 
 private slots:
     void handleRunButton() { emit sgn_run_calc(); }

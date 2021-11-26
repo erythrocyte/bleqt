@@ -11,9 +11,11 @@
 #include "dataWidget.hpp"
 #include "file/services/workFile.hpp"
 #include "fluidParamsGraphWidget.hpp"
+#include "gridSettsWidget.hpp"
 #include "logging/logger.hpp"
 #include "mesh/models/grid.hpp"
 #include "mesh/services/makeGrid.hpp"
+#include "shockFrontSettsWidget.hpp"
 
 namespace cs = ble::src::common::services;
 
@@ -26,34 +28,43 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_log_line_start_index = 0;
     init_log();
 
-    m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
-    auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
-
-    m_resultDataWidgetPresenter = m_container->resolve<bwp::ResultDataWidgetPresenter>();
-    auto resultDataWidget = std::static_pointer_cast<widgets::ResultDataWidget>(m_resultDataWidgetPresenter->get_view());
-
     m_dataWidgetPresenter = m_container->resolve<bwp::DataWidgetPresenter>();
     auto dataWidgetView = std::static_pointer_cast<widgets::DataWidget>(m_dataWidgetPresenter->get_view());
+    m_conditionsWidgetPresenter = m_container->resolve<bwp::ConditionsWidgetPresenter>();
+    auto conditionsWidgetView = std::static_pointer_cast<widgets::ConditionsWidget>(m_conditionsWidgetPresenter->get_view());
+    m_satsolver_presenter = m_container->resolve<bwp::SatSolverSettsWidgetPresenter>();
+    auto satsolver_view = std::static_pointer_cast<widgets::SatSolverSettsWidget>(m_satsolver_presenter->get_view());
+    m_gridsetts_presenter = m_container->resolve<bwp::GridSettsWidgetPresenter>();
+    auto gridsetts_view = std::static_pointer_cast<widgets::GridSettsWidget>(m_gridsetts_presenter->get_view());
+    m_shockfront_presenter = m_container->resolve<bwp::ShockFrontSettsWidgetPresenter>();
+    auto shockfront_view = std::static_pointer_cast<widgets::ShockFrontSettsWidget>(m_shockfront_presenter->get_view());
 
+    m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
+    auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
+    m_resultDataWidgetPresenter = m_container->resolve<bwp::ResultDataWidgetPresenter>();
+    auto resultDataWidget = std::static_pointer_cast<widgets::ResultDataWidget>(m_resultDataWidgetPresenter->get_view());
     m_wellWorkDataWidgetPresenter = m_container->resolve<bwp::WellWorkDataWidgetPresenter>();
     auto wellWorkDataView = std::static_pointer_cast<widgets::WellWorkDataWidget>(m_wellWorkDataWidgetPresenter->get_view());
-
     m_boundVisualPresenter = m_container->resolve<bwp::BoundVisualWidgetPresenter>();
     auto boundVisualView = std::static_pointer_cast<widgets::BoundVisualWidget>(m_boundVisualPresenter->get_view());
-
     m_tauVisualPresenter = m_container->resolve<bwp::TauVisualWidgetPresenter>();
     auto tauVisualView = std::static_pointer_cast<widgets::TauVisualWidget>(m_tauVisualPresenter->get_view());
 
     std::static_pointer_cast<BleFrame>(m_view)->set_widgets(
+        dataWidgetView,
+        conditionsWidgetView,
+        satsolver_view,
+        gridsetts_view,
+        shockfront_view,
+
         fluidParamsWidget,
         resultDataWidget,
-        dataWidgetView,
         wellWorkDataView,
         boundVisualView,
         tauVisualView);
 
     set_signals();
-    m_dataWidgetPresenter->set_show_shockfront_status(true);
+    m_shockfront_presenter->set_show_shockfront_status(false);
     onRpValuesUpdated();
     on_update_rhs_tab();
 }
@@ -65,15 +76,13 @@ void BleFramePresenter::run()
 
 void BleFramePresenter::set_signals()
 {
-    auto success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(showShockFrontCurve(bool)),
+    auto success = QObject::connect(m_shockfront_presenter.get(), SIGNAL(showShockFrontCurve(bool)),
         this, SLOT(onShowShockFrontCurve(bool)));
     Q_ASSERT(success);
     success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(rpValuesUpdated()),
         this, SLOT(onRpValuesUpdated()));
     Q_ASSERT(success);
-    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
-    Q_ASSERT(success);
-    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(cellCountChanged()), this, SLOT(on_update_rhs_tab()));
+    success = QObject::connect(m_conditionsWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
     Q_ASSERT(success);
 
     QObject* view_obj = dynamic_cast<QObject*>(m_view.get());
@@ -85,46 +94,46 @@ void BleFramePresenter::onShowShockFrontCurve(bool status)
 {
     m_resultDataWidgetPresenter->set_sc_visibility(status);
     if (status) {
-        auto data = m_dataWidgetPresenter->get_input_data();
+        auto data = m_dataWidgetPresenter->get_data();
         double sc = cs::shock_front::get_shock_front(data->phys);
-        m_resultDataWidgetPresenter->update_sc(data->grd->rc, sc);
+        m_resultDataWidgetPresenter->update_sc(data->r, sc);
     }
 }
 
 void BleFramePresenter::onRpValuesUpdated()
 {
-    auto data = m_dataWidgetPresenter->get_input_data();
+    auto data = m_dataWidgetPresenter->get_data();
     double sc = cs::shock_front::get_shock_front(data->phys);
-    m_dataWidgetPresenter->set_shockfront_value(sc);
-    m_resultDataWidgetPresenter->update_sc(data->grd->rc, sc);
+    m_shockfront_presenter->set_shockfront_value(sc);
+    m_resultDataWidgetPresenter->update_sc(data->r, sc);
     m_fluidWidgetPresenter->update_view(data->phys, sc);
 }
 
 void BleFramePresenter::on_run_calc()
 {
-    auto start = std::chrono::high_resolution_clock::now();
+    // auto start = std::chrono::high_resolution_clock::now();
 
-    auto data = m_dataWidgetPresenter->get_input_data();
-    auto grd = ble::src::mesh::services::make_grid(data);
+    // auto data = m_dataWidgetPresenter->get_data();
+    // auto grd = ble::src::mesh::services::make_grid(data);
 
-    set_status(tr("calculation running"));
+    // set_status(tr("calculation running"));
 
-    std::function<void(int)> a = std::bind(&BleFramePresenter::update_progress, this, std::placeholders::_1);
-    auto solver = std::make_shared<src::calc::models::BleCalc>();
-    solver->calc(grd, data, a);
-    auto results = solver->get_result();
-    results->grd = grd;
+    // std::function<void(int)> a = std::bind(&BleFramePresenter::update_progress, this, std::placeholders::_1);
+    // auto solver = std::make_shared<src::calc::models::BleCalc>();
+    // solver->calc(grd, data, a);
+    // auto results = solver->get_result();
+    // results->grd = grd;
 
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> diff = end - start;
-    std::string mess = cs::string_format("calculation completed in %.2f sec.", diff.count());
-    set_status(QString::fromStdString(mess));
+    // auto end = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<double> diff = end - start;
+    // std::string mess = cs::string_format("calculation completed in %.2f sec.", diff.count());
+    // set_status(QString::fromStdString(mess));
 
-    m_resultDataWidgetPresenter->set_data(results, data->bound->contour_press_bound_type, a);
-    m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
-    m_wellWorkDataWidgetPresenter->set_time_period(data->model->period);
-    m_tauVisualPresenter->set_data(solver->get_tau_data());
-    update_progress(100);
+    // m_resultDataWidgetPresenter->set_data(results, data->bound->contour_press_bound_type, a);
+    // m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
+    // m_wellWorkDataWidgetPresenter->set_time_period(data->model->period);
+    // m_tauVisualPresenter->set_data(solver->get_tau_data());
+    // update_progress(100);
 }
 
 std::shared_ptr<BleFrame> BleFramePresenter::get_view()
@@ -201,10 +210,19 @@ std::tuple<std::string, ble::src::logging::SeverityLevelEnum> BleFramePresenter:
 
 void BleFramePresenter::on_update_rhs_tab()
 {
-    auto data = m_dataWidgetPresenter->get_input_data();
-    auto grd = ble::src::mesh::services::make_grid(data); // TODO: mesh every time!
+    auto data = get_data();
+    m_boundVisualPresenter->set_data(data->data->rw, data->data->r, 100, data->bound);
+}
 
-    m_boundVisualPresenter->set_data(grd, data->bound);
+std::shared_ptr<ble::src::common::models::InputData> BleFramePresenter::get_data()
+{
+    auto result = std::make_shared<ble::src::common::models::InputData>();
+    result->data = m_dataWidgetPresenter->get_data();
+    result->bound = m_conditionsWidgetPresenter->get_bound_data(result->data->rw, result->data->r);
+    result->sat_setts = m_satsolver_presenter->get_data();
+    result->mesh_setts = m_gridsetts_presenter->get_data();
+    result->sc_setts = m_shockfront_presenter->get_data();
+    return result;
 }
 
 }

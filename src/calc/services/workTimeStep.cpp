@@ -32,7 +32,7 @@ double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
     std::vector<double> udfbls(grd->cells.size(), 0.);
 
     for (auto& fc : grd->faces) {
-        double dfbl = get_face_dfbl(fc, s, data->phys);
+        double dfbl = get_face_dfbl(fc, s, data->data->phys);
         double udfbl = fc->u * dfbl;
         if (fc->u > 0.) {
             udfbls[fc->cl1] += udfbl;
@@ -42,10 +42,10 @@ double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
         }
     }
 
-    double cv = data->satSetts->cur_val;
+    double cv = data->sat_setts->cur_val;
     for (auto& cl : grd->cells) {
         double udfbl = udfbls[cl->ind];
-        double poro = data->phys->poro; // for every cell
+        double poro = data->data->poro_fract; // for every cell
         if (udfbl > 1e-10) {
             double t = (cv * poro * cl->volume) / udfbl;
             if (t > 1e-8 && t < result)

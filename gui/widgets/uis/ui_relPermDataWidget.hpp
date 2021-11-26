@@ -14,10 +14,12 @@
 namespace ble::gui::widgets::UI {
 class RelPermData {
 public:
-    QDoubleSpinBox* Kmu;
+    QDoubleSpinBox* MuWat;
+    QDoubleSpinBox* MuOil;
     QDoubleSpinBox* N;
     QGridLayout* Layout;
-    QLabel* LabelKmu;
+    QLabel* LabelMuWat;
+    QLabel* LabelMuOil;
     QLabel* LabelN;
 
     void setupUi(QWidget* widget)
@@ -30,10 +32,12 @@ public:
 
         Layout->setMargin(5);
 
-        Kmu = new QDoubleSpinBox();
+        MuWat = new QDoubleSpinBox();
+        MuOil = new QDoubleSpinBox();
         N = new QDoubleSpinBox();
 
-        LabelKmu = new QLabel();
+        LabelMuOil = new QLabel();
+        LabelMuWat = new QLabel();
         LabelN = new QLabel();
 
         retranslateUi(widget);
@@ -44,11 +48,14 @@ public:
         _groupBox->setTitle("Relative permeability data");
         _groupBox->setToolTip("Relative permeability data");
 
-        LabelKmu->setText("Kmu");
-        LabelKmu->setToolTip("Kmu");
+        LabelMuWat->setText("Water visc");
+        LabelMuWat->setToolTip("Water viscosity, Pa*s");
+
+        LabelMuOil->setText("Oil visc");
+        LabelMuOil->setToolTip("Oil viscosity, Pa*s");
 
         LabelN->setText("N");
-        LabelN->setToolTip("N");
+        LabelN->setToolTip("Relative permeability degree");
     }
 
 private:

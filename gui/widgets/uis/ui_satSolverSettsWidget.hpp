@@ -25,6 +25,8 @@ public:
     {
         _groupBox = new QGroupBox();
         _mainLayout = new QVBoxLayout(widget);
+        _mainLayout->addStretch();
+        _mainLayout->setDirection(QVBoxLayout::BottomToTop);
         _mainLayout->addWidget(_groupBox);
         _layout = new QGridLayout(_groupBox);
         _groupBox->setLayout(_layout);
@@ -67,14 +69,14 @@ public:
 
     void retranslateUi(QWidget* widget)
     {
-        _groupBox->setTitle("Saturation solver");
-        _groupBox->setToolTip("Saturation solver");
+        _groupBox->setTitle("Saturation");
+        _groupBox->setToolTip("Saturation");
 
         _curantLabel->setText("Curant number");
         _curantLabel->setToolTip("Curant number");
 
         _recalcPressLabel->setText("Calc press step");
-        _recalcPressLabel->setToolTip("Calc press step");
+        _recalcPressLabel->setToolTip("Calculate pressure every N saturation calc step");
 
         _solverTypeLabel->setText("Solver type");
         _solverTypeLabel->setToolTip("Solver type");

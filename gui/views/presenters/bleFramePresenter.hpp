@@ -9,13 +9,18 @@
 
 #include "bleFrame.hpp"
 #include "blePresenter.hpp"
+#include "boundVisualWidgetPresenter.hpp"
+#include "common/models/inputData.hpp"
+#include "conditionsWidgetPresenter.hpp"
 #include "dataWidgetPresenter.hpp"
 #include "fluidParamGraphWidgetPresenter.hpp"
+#include "gridSettsWidgetPresenter.hpp"
 #include "logging/logger.hpp"
 #include "resultDataWidgetPresenter.hpp"
-#include "wellWorkDataWidgetPresenter.hpp"
-#include "boundVisualWidgetPresenter.hpp"
+#include "satSolverSettsWidgetPresenter.hpp"
+#include "shockFrontSettsWidgetPresenter.hpp"
 #include "tauVisualWidgetPresenter.hpp"
+#include "wellWorkDataWidgetPresenter.hpp"
 
 namespace bwp = ble::gui::widgets::presenters;
 
@@ -32,8 +37,14 @@ public:
 
 private:
     int m_log_line_start_index;
-    std::shared_ptr<bwp::FluidParamGraphWidgetPresenter> m_fluidWidgetPresenter;
+
     std::shared_ptr<bwp::DataWidgetPresenter> m_dataWidgetPresenter;
+    std::shared_ptr<bwp::ConditionsWidgetPresenter> m_conditionsWidgetPresenter;
+    std::shared_ptr<bwp::SatSolverSettsWidgetPresenter> m_satsolver_presenter;
+    std::shared_ptr<bwp::GridSettsWidgetPresenter> m_gridsetts_presenter;
+    std::shared_ptr<bwp::ShockFrontSettsWidgetPresenter> m_shockfront_presenter;
+
+    std::shared_ptr<bwp::FluidParamGraphWidgetPresenter> m_fluidWidgetPresenter;
     std::shared_ptr<bwp::ResultDataWidgetPresenter> m_resultDataWidgetPresenter;
     std::shared_ptr<bwp::WellWorkDataWidgetPresenter> m_wellWorkDataWidgetPresenter;
     std::shared_ptr<bwp::BoundVisualWidgetPresenter> m_boundVisualPresenter;
@@ -43,8 +54,9 @@ private:
     double get_sc();
     void update_progress(double perc) { get_view()->update_progress(perc); }
     void set_status(const QString& str) { get_view()->set_status(str); }
-    void init_log();    
+    void init_log();
     std::tuple<std::string, ble::src::logging::SeverityLevelEnum> parse_log_mess(std::string mess);
+    std::shared_ptr<ble::src::common::models::InputData> get_data();
 
 private slots:
     void onShowShockFrontCurve(bool status);

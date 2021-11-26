@@ -17,17 +17,13 @@ namespace ble::gui::widgets::UI {
 class GridSetts {
 
 public:
-    QDoubleSpinBox* WellRadius;
     QSpinBox* CellCount;
     QComboBox* GridType;
 
     void retranslateUi(QWidget* widget)
     {
-        groupBox->setTitle("Grid/Domain");
-        groupBox->setToolTip("Grid/Domain");
-
-        wellRadiusLabel->setText("Well radius");
-        wellRadiusLabel->setToolTip("Well radius");
+        groupBox->setTitle("Settings");
+        groupBox->setToolTip("Settings");
 
         cellCountLabel->setText("Cell count");
         cellCountLabel->setToolTip("Cell count");
@@ -38,24 +34,18 @@ public:
 
     void setupUI(QWidget* widget)
     {
-        groupBox = new QGroupBox("Grid/Domain");
-        mainLayout = new QVBoxLayout(widget);
-        mainLayout->addWidget(groupBox);
+        groupBox = new QGroupBox("Settings");
+        auto m_layout = new QVBoxLayout(widget);
+        m_layout->addStretch();
+        m_layout->setDirection(QVBoxLayout::BottomToTop);
+        m_layout->addWidget(groupBox);
+        widget->setLayout(m_layout);
+        
         layout = new QGridLayout(groupBox);
-        groupBox->setLayout(layout);
-
         layout->setMargin(5);
-
-        WellRadius = new QDoubleSpinBox();
-        WellRadius->setMinimum(0.0);
-        WellRadius->setMaximum(0.1);
-        WellRadius->setSingleStep(1e-3);
-        WellRadius->setValue(0.0);
-        WellRadius->setDecimals(3);
-        layout->addWidget(WellRadius, 0, 1);
-
-        wellRadiusLabel = new QLabel("Well radius");
-        layout->addWidget(wellRadiusLabel, 0, 0);
+        
+        groupBox->setLayout(layout);
+        layout->setMargin(5);
 
         CellCount = new QSpinBox();
         CellCount->setMinimum(1);
@@ -77,9 +67,7 @@ public:
 
 private:
     QGroupBox* groupBox;
-    QVBoxLayout* mainLayout;
     QGridLayout* layout;
-    QLabel* wellRadiusLabel;
     QLabel* cellCountLabel;
     QLabel* gridTypeLabel;
 };

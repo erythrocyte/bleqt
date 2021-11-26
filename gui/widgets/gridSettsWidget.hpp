@@ -6,9 +6,8 @@
 
 #include <QWidget>
 
+#include "common/models/meshSettings.hpp"
 #include "uis/ui_gridSettsWidget.hpp"
-
-#include "common/models/gridType.hpp"
 
 namespace scm = ble::src::common::models;
 
@@ -20,22 +19,20 @@ public:
     GridSettsWidget(QWidget* parent = nullptr);
     ~GridSettsWidget() { delete ui; }
 
-    double getWellRadius() const { return ui->WellRadius->value(); }
-    int getCellCount() const { return ui->CellCount->value(); }
-    scm::GridType::TypeEnum get_grid_type();
+    std::shared_ptr<scm::MeshSettings> get_data();
 
 signals:
     void cell_count_changed();
+    void grid_type_changed();
 
 private:
     UI::GridSetts* ui;
 
     void subscribe();
-    void fix_well_radius(const QString&);
 
 private slots:
-    void gridTypeChanged(int index);
     void onCellCountChanged(int index) { emit cell_count_changed(); }
+    void on_grid_type_changed(int index) { emit grid_type_changed(); }
 };
 
 } // namespace ble_gui::widgets

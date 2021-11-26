@@ -5,11 +5,12 @@ namespace ble::src::common::models {
 
 class PhysData {
 public:
-    double kmu; // = mw / moil;
+    double mu_wat;
+    double mu_oil;
     double n_oil;
     double n_wat;
-    double poro = 1.;
-    double perm = 1.;
+
+    double get_kmu() { return mu_wat / mu_oil; }
 };
 
 }

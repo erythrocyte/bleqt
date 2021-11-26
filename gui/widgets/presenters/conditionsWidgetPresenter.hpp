@@ -23,13 +23,13 @@ public:
     std::shared_ptr<src::common::models::BoundCondData> get_bound_data(double x0, double x1);
 
 signals:
-    void rhsUpdate();
+    void update_rhs();
 
 private:
     void subscribe();
 
 private slots:
-    void onRhsUpdate() { emit rhsUpdate(); }
+    void onRhsUpdate() { emit update_rhs(); }
 };
 
 }

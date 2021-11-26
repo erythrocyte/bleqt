@@ -21,7 +21,7 @@ public:
     ~BoundVisualWidgetPresenter() { }
 
     void set_data(
-        const std::shared_ptr<src::mesh::models::Grid> grd,
+        double x0, double x1, int n,
         const std::shared_ptr<src::common::models::BoundCondData>& data);
 
     std::shared_ptr<BoundVisualWidget> get_view();

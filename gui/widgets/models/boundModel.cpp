@@ -14,13 +14,20 @@
 namespace ble::gui::widgets::models {
 
 BoundModel::BoundModel(
-    const std::shared_ptr<src::mesh::models::Grid> grd,
+    double x0, double x1, int n,
     const std::shared_ptr<src::common::models::BoundCondData> data,
     QObject* parent)
     : QAbstractTableModel(parent)
 {
     m_data = data;
-    m_grd = grd;
+    m_n = n;
+    m_x0 = x0;
+    m_x1 = x1;
+    x_values.clear();
+    double dx = (m_x1 - m_x0) / (m_n - 1);
+    for (int k = 0; k < m_n; k++) {
+        x_values.push_back(m_x0 + k * dx);
+    }
     empty_val = src::common::models::CommonVals::EMPTY_VAL;
 }
 
@@ -34,13 +41,13 @@ QVariant BoundModel::data(const QModelIndex& index, int role) const
 
         switch (column_index) {
         case 0:
-            return m_grd->cells[row_index]->cntr;
+            return x_values[row_index];
         case 1: {
-            double x = m_grd->cells[row_index]->cntr;
+            double x = x_values[row_index];
             return src::common::services::DataDistributionService::get_value(x, m_data->top_bot_bound_u, empty_val);
         }
         case 2: {
-            double x = m_grd->cells[row_index]->cntr;
+            double x = x_values[row_index];
             return src::common::services::DataDistributionService::get_value(x, m_data->top_bot_bound_s, empty_val);
         }
         }
@@ -60,7 +67,7 @@ QVariant BoundModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-int BoundModel::rowCount(const QModelIndex& parent) const { return m_grd->cells.size(); }
+int BoundModel::rowCount(const QModelIndex& parent) const { return m_n; }
 int BoundModel::columnCount(const QModelIndex& parent) const { return 3; }
 
 QVariant BoundModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -96,9 +103,6 @@ std::tuple<double, double> BoundModel::getValueRange(int column_index)
     if (data.size() == 0)
         return std::make_tuple(empty_val, empty_val);
 
-    double minx_grd, maxx_grd;
-    std::tie(minx_grd, maxx_grd) = m_grd->get_min_max();
-
-    return src::common::services::DataDistributionService::get_range(minx_grd, maxx_grd, data);
+    return src::common::services::DataDistributionService::get_range(m_x0, m_x1, data);
 }
 }

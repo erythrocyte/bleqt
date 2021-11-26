@@ -6,7 +6,7 @@
 
 #include <QWidget>
 
-#include "models/dataWidgetComponentsDto.hpp"
+#include "common/models/data.hpp"
 #include "uis/ui_dataWidget.hpp"
 
 namespace ble::gui::widgets {
@@ -17,10 +17,18 @@ public:
     DataWidget(QWidget* parent = nullptr);
     ~DataWidget();
 
-    void set_view_objects(std::shared_ptr<models::DataWidgetComponentsDto> components);
+    std::shared_ptr<ble::src::common::models::Data> get_data();
+
+signals:
+    void rp_values_updated();
 
 private:
     UI::Data* ui;
+
+    void subscribe();
+
+private slots:
+    void rp_values_changed() { emit rp_values_updated(); }
 };
 
 } // namespace ble_gui::widgets

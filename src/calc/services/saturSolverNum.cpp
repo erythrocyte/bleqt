@@ -32,7 +32,7 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
     for (auto& fc : grd->faces) {
         double u = get_u(fc);
         double s = get_s(fc, u);
-        double fbl = cs::rp::get_fbl(s, data->phys);
+        double fbl = cs::rp::get_fbl(s, data->data->phys);
         double cf = u * fbl * fc->area;
         dvs[fc->cl1] += cf;
         if (fc->cl2 != -1)
@@ -40,7 +40,7 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
     }
 
     for (auto& cl : grd->cells) {
-        result[cl->ind] = init[cl->ind] + tau / (data->phys->poro * cl->volume) * dvs[cl->ind];
+        result[cl->ind] = init[cl->ind] + tau / (data->data->poro_fract * cl->volume) * dvs[cl->ind];
     }
 
     // std::cout << dvs[99] << std::endl;
@@ -51,7 +51,7 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
 std::vector<double> solve_satur(const double tau, const std::vector<double>& init,
     const std::shared_ptr<common::models::InputData> data, const std::shared_ptr<mesh::models::Grid> grd)
 {
-    switch (data->satSetts->type) {
+    switch (data->sat_setts->type) {
     case calc::models::SaturSolverType::TypeEnum::kExplicit:
         return solve_explicit(tau, init, data, grd);
     case calc::models::SaturSolverType::TypeEnum::kImplicit:
