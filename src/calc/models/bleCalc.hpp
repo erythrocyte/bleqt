@@ -26,11 +26,13 @@ public:
     std::shared_ptr<BleResultData> get_result() { return _results; }
     std::vector<std::shared_ptr<common::models::WellWorkParams>> get_well_work_params() { return _wellWorkParams; }
     std::vector<std::shared_ptr<common::models::TauData>> get_tau_data() { return m_tau_data; }
+    double get_period();
 
 private:
     std::shared_ptr<BleResultData> _results;
     std::vector<std::shared_ptr<common::models::WellWorkParams>> _wellWorkParams;
     std::vector<std::shared_ptr<common::models::TauData>> m_tau_data;
+    double m_sum_t;
 
     void set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
         const std::shared_ptr<common::models::SolverData> data);

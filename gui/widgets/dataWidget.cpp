@@ -25,6 +25,8 @@ void DataWidget::subscribe()
     Q_ASSERT(success);
     success = connect(ui->MuOil, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
     Q_ASSERT(success);
+    success = connect(ui->UseFwLimit, &QCheckBox::toggled, this, &DataWidget::use_fw_limit_toogled);
+    Q_ASSERT(success);
 }
 
 std::shared_ptr<ble::src::common::models::Data> DataWidget::get_data()
@@ -55,6 +57,12 @@ std::shared_ptr<ble::src::common::models::Data> DataWidget::get_data()
     result->phys->n_wat = ui->N->value();
 
     return result;
+}
+
+void DataWidget::use_fw_limit_toogled(bool state)
+{
+    ui->FwLimit->setEnabled(state);
+    ui->Period->setEnabled(!state);
 }
 
 }

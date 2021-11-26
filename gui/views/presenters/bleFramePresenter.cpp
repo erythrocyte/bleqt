@@ -138,7 +138,7 @@ void BleFramePresenter::on_run_calc()
 
     m_resultDataWidgetPresenter->set_data(results, solver_data->contour_press_bound_type, a);
     m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
-    m_wellWorkDataWidgetPresenter->set_time_period(solver_data->period);
+    m_wellWorkDataWidgetPresenter->set_time_period(solver->get_period());
     m_tauVisualPresenter->set_data(solver->get_tau_data());
     update_progress(100);
 }

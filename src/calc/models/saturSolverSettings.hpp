@@ -8,9 +8,10 @@ namespace ble::src::calc::models {
 class SaturSolverSetts {
 public:
     double cur_val;
-    int pN; // pressUpdateTimeStepCount;
+    int pressure_update_n;
     SaturSolverType::TypeEnum type;
     bool need_satur_solve;
+    int satur_field_save_n;
 };
 
 }

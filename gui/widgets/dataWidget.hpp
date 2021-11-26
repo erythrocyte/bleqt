@@ -29,6 +29,7 @@ private:
 
 private slots:
     void rp_values_changed() { emit rp_values_updated(); }
+    void use_fw_limit_toogled(bool state);
 };
 
 } // namespace ble_gui::widgets

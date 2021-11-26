@@ -33,14 +33,29 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     const std::shared_ptr<common::models::SolverData> data,
     std::function<void(double)> set_progress)
 {
+    auto suit_step = [&](double fw, double sum_t) {
+        if (data->use_fwlim) {
+            return fw <= data->fw_lim;
+        } else {
+            return sum_t <= data->period;
+        }
+    };
+
+    auto get_pecr = [&](double fw, double sum_t) {
+        double p = data->use_fwlim
+            ? fw / data->fw_lim
+            : sum_t / data->period;
+
+        return std::min(100.0, p * 100);
+    };
+
     _results->data.clear();
     m_tau_data.clear();
     set_initial_cond(grd, data);
     double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
 
-    int index = 0, pressIndex = 0;
-    double sumT = 0.0, sumU = 0.0, saveT = 0.0;
-    bool need_save_fiels = false;
+    int index = 0;
+    double sumT = 0.0, sumU = 0.0, cur_fw = 0.0;
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
     std::vector<double> p = _results->data[0]->p;
 
@@ -57,27 +72,16 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
         // save_faces_val(grd, data);
     } else {
-        while (sumT < data->period) {
-            if (pressIndex == 0 || pressIndex == data->sat_setts->pN) {
+        while (suit_step(cur_fw, sumT)) {
+            if (index % data->sat_setts->pressure_update_n == 0) {
                 p = services::solve_press(grd, s_prev, data);
                 services::calc_u(p, s_prev, data, grd);
                 // save_press(index, grd, p);
-                pressIndex = 0;
             }
-            pressIndex++;
 
             double t = services::get_time_step(grd, s_prev, data);
-            std::string mess = common::services::string_format("tau = %.8f", t);
-            logging::write_log(mess, logging::kDebug);
-            double save_field_step = 0.1;
-            if (saveT + t >= save_field_step) {
-                t = save_field_step - saveT;
-                saveT = 0.0;
-                need_save_fiels = true;
-            } else {
-                saveT += t;
-                need_save_fiels = false;
-            }
+            // std::string mess = common::services::string_format("tau = %.8f", t);
+            // logging::write_log(mess, logging::kDebug);
             // mess = common::services::string_format("tau after = %.8f", t);
             // logging::write_log(mess, logging::kDebug);
 
@@ -90,7 +94,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             sumT += t;
             m_tau_data.push_back(std::make_shared<common::models::TauData>(sumT, t));
 
-            if (need_save_fiels) {
+            if (index % data->sat_setts->satur_field_save_n == 0) {
                 std::vector<std::tuple<double, double>> xs_an = services::get_satur_exact(sc, sumU, data);
                 auto d = std::make_shared<ble::src::common::models::DynamicData>();
                 d->t = sumT;
@@ -100,18 +104,25 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 d->p_ex = _results->data[0]->p_ex;
 
                 _results->data.push_back(d);
-                index++;
             }
 
+            // double qw = grd->faces[0]->area * grd->faces[0]->u;
+            // double qc = grd->faces[0]->area * grd->faces[0]->u;
+            // std::string mess = common::services::string_format("qw = %.8f, qc = %.8f", qw, qc);
+            // logging::write_log(mess, logging::kInfo);
+
             auto wwp = services::calc_well_work_param(grd, s_cur, data, sumT);
+            cur_fw = wwp->fw;
             _wellWorkParams.push_back(wwp);
 
-            double perc = std::min(100.0, (sumT / data->period * 100.0));
+            double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
         }
 
         logging::write_log("saturation solve completed", logging::kInfo);
     }
+
+    m_sum_t = sumT;
 
     set_progress(100); // completed;
 }
@@ -173,6 +184,11 @@ void BleCalc::save_any_vector(const std::vector<std::tuple<double, double>>& v, 
         f << x << "\t" << y << std::endl;
     }
     f.close();
+}
+
+double BleCalc::get_period()
+{
+    return m_sum_t;
 }
 
 }

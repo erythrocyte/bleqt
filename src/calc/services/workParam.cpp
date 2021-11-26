@@ -10,30 +10,11 @@ namespace ble::src::calc::services {
 double getULiqInject(const std::shared_ptr<mm::Grid> grd, common::models::GridType::TypeEnum grid_type)
 {
     double result = 0.;
-    double result2 = 0.;
 
-    switch (grid_type) {
-    case common::models::GridType::kRegular:
-        for (auto& fc : grd->faces) {
-            if (fc->type == mesh::models::FaceType::kContour) {
-                result += fc->u;
-            }
+    for (auto& fc : grd->faces) {
+        if (fc->type == mesh::models::FaceType::kContour) {
+            result += std::abs(fc->u);
         }
-        break;
-    case common::models::GridType::kRadial:
-        for (auto& fc : grd->faces) {
-            if (fc->type == mesh::models::FaceType::kContour) {
-                result += fc->u;
-            }
-        }
-        for (auto& fc : grd->faces) {
-            if (fc->type == mesh::models::FaceType::kWell) {
-                result2 += fc->area * std::abs(fc->u);
-            }
-        }
-        result2 /= 2.0 * M_PI;
-    default:
-        break;
     }
 
     return result;

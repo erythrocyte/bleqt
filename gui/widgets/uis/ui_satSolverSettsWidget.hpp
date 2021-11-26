@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QWidget>
+#include <QSpinBox>
 
 namespace ble::gui::widgets::UI {
 class SatSolverSetts {
@@ -20,6 +21,7 @@ public:
     QSpinBox* RecalcPressN;
     QComboBox* SolverType;
     QCheckBox* NeedSaturSolve;
+    QSpinBox* SaveSaturField;
 
     void setupUi(QWidget* widget)
     {
@@ -33,25 +35,23 @@ public:
 
         _layout->setMargin(5);
 
+        _curantLabel = new QLabel();
         Curant = new QDoubleSpinBox();
         Curant->setDecimals(4);
         Curant->setMinimum(1e-6);
         Curant->setMaximum(1e6);
         Curant->setSingleStep(0.001);
         Curant->setValue(0.1);
+        _layout->addWidget(_curantLabel, 0, 0);
         _layout->addWidget(Curant, 0, 1);
 
-        _curantLabel = new QLabel();
-        _layout->addWidget(_curantLabel, 0, 0);
-
+        _recalcPressLabel = new QLabel();
         RecalcPressN = new QSpinBox();
         RecalcPressN->setMinimum(1);
         RecalcPressN->setMaximum(100);
         RecalcPressN->setValue(10);
-        _layout->addWidget(RecalcPressN, 1, 1);
-
-        _recalcPressLabel = new QLabel();
         _layout->addWidget(_recalcPressLabel, 1, 0);
+        _layout->addWidget(RecalcPressN, 1, 1);
 
         SolverType = new QComboBox();
         SolverType->setEnabled(false);
@@ -63,6 +63,14 @@ public:
         NeedSaturSolve = new QCheckBox("Solve saturation");
         NeedSaturSolve->setChecked(true);
         _layout->addWidget(NeedSaturSolve, 3, 0, 1, 2);
+
+        m_saveDataStep = new QLabel();
+        SaveSaturField = new QSpinBox();
+        SaveSaturField->setMinimum(1);
+        SaveSaturField->setMaximum(100000);
+        SaveSaturField->setValue(100);
+        _layout->addWidget(m_saveDataStep, 4, 0);
+        _layout->addWidget(SaveSaturField, 4, 1);
 
         retranslateUi(widget);
     }
@@ -92,6 +100,7 @@ private:
     QLabel* _curantLabel;
     QLabel* _recalcPressLabel;
     QLabel* _solverTypeLabel;
+    QLabel* m_saveDataStep;
 };
 
 }
