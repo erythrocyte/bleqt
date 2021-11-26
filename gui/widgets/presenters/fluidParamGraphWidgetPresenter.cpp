@@ -15,10 +15,9 @@ FluidParamGraphWidgetPresenter::FluidParamGraphWidgetPresenter(
     : BlePresenter(container, view)
 {
     QObject* view_obj = dynamic_cast<QObject*>(view.get());
-    const bool connected = connect(view_obj,
-        SIGNAL(get_data(const std::shared_ptr<ble::src::common::models::PhysData>, double)),
-        this,
-        SLOT(send_data(const std::shared_ptr<ble::src::common::models::PhysData>, double)));
+    const bool connected = connect(
+        view_obj, SIGNAL(get_data(double, double, double)),
+        this, SLOT(send_data(double, double, double)));
     Q_ASSERT(connected);
 }
 
