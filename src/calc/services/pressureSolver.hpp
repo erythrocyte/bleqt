@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "common/models/gridType.hpp"
-#include "common/models/inputData.hpp"
+#include "common/models/solverData.hpp"
 #include "mesh/models/grid.hpp"
 
 namespace mm = ble::src::mesh::models;
@@ -13,11 +13,11 @@ namespace mm = ble::src::mesh::models;
 namespace ble::src::calc::services {
 
 std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::vector<double>& s,
-    const std::shared_ptr<common::models::InputData> data);
+    const std::shared_ptr<common::models::SolverData> data);
 std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
-    const std::shared_ptr<common::models::InputData> data);
+    const std::shared_ptr<common::models::SolverData> data);
 void calc_u(const std::vector<double>& p, const std::vector<double>& s,
-    const std::shared_ptr<common::models::InputData> data,
+    const std::shared_ptr<common::models::SolverData> data,
     std::shared_ptr<mm::Grid> grd);
 
 }

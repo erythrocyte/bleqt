@@ -40,14 +40,14 @@ double getULiqInject(const std::shared_ptr<mm::Grid> grd, common::models::GridTy
 }
 
 std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::shared_ptr<mm::Grid> grd,
-    const std::vector<double>& s, const std::shared_ptr<common::models::PhysData> data, double t)
+    const std::vector<double>& s, const std::shared_ptr<cm::SolverData> data, double t)
 {
     auto result = std::make_shared<common::models::WellWorkParams>();
     result->t = t;
     for (auto& fc : grd->faces) {
         if (fc->type == mm::FaceType::kWell) {
             double ql = -fc->u * fc->area;
-            double f = common::services::rp::get_fbl(s[fc->cl1], data);
+            double f = common::services::rp::get_fbl(s[fc->cl1], data->rp_n, data->kmu);
             result->ql += ql;
             result->qw += ql * f;
         }
@@ -59,13 +59,13 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     return result;
 }
 
-double calc_q_analytic(const std::shared_ptr<mm::Grid> grd, const std::shared_ptr<cm::InputData> params)
+double calc_q_analytic(const std::shared_ptr<mm::Grid> grd, const std::shared_ptr<cm::SolverData> params)
 {
     switch (params->mesh_setts->type) {
     case cm::GridType::kRadial:
-        return 2 * M_PI / std::log(params->data->r / params->data->rw);
+        return 2 * M_PI / std::log(1.0 / params->rw);
     case cm::GridType::kRegular:
-        return (1.0 - 0.0) / params->data->get_lenght(); // pc - pw / l
+        return (1.0 - 0.0) / params->get_lenght(); // pc - pw / l
     default:
         return 0.0;
     }

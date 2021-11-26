@@ -38,7 +38,7 @@ std::shared_ptr<ble::src::common::models::Data> DataWidget::get_data()
     result->rw = ui->Rw->value();
 
     // geol
-    result->perm = ui->Perm->value();
+    result->perm_res = ui->Perm->value();
     result->poro_fract = ui->PoroFract->value();
     result->perm_fract = ui->PermFract->value();
 

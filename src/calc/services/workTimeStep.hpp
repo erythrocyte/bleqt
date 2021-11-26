@@ -5,13 +5,13 @@
 #include <memory>
 #include <vector>
 
-#include "common/models/inputData.hpp"
+#include "common/models/solverData.hpp"
 #include "mesh/models/grid.hpp"
 
 namespace ble::src::calc::services {
 
 double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
-    const std::vector<double>& s, const std::shared_ptr<common::models::InputData> data);
+    const std::vector<double>& s, const std::shared_ptr<common::models::SolverData> data);
 
 }
 

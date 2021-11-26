@@ -4,12 +4,12 @@
 #include <iostream>
 #include <memory>
 
-#include "common/models/inputData.hpp"
+#include "common/models/solverData.hpp"
 #include "mesh/models/grid.hpp"
 
 namespace ble::src::mesh::services {
 
-std::shared_ptr<models::Grid> make_grid(const std::shared_ptr<common::models::InputData> data);
+std::shared_ptr<models::Grid> make_grid(const std::shared_ptr<common::models::SolverData> data);
 
 }
 

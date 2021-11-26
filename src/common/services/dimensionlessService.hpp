@@ -14,7 +14,7 @@ namespace ble::src::common::services {
 
 class DimensionlessService {
 public:
-    std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverData>> make_dimless(
+    static std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverData>> make_dimless(
         const std::shared_ptr<models::InputData> params);
 };
 

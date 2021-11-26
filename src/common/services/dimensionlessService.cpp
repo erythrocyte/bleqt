@@ -1,6 +1,6 @@
 #include "dimensionlessService.hpp"
 
-#include "dataDistribution.hpp"
+#include "common/models/dataDistribution.hpp"
 
 namespace ble::src::common::services {
 
@@ -14,15 +14,11 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
         return x / result_scale->r0;
     };
 
-    auto scale_p = [&](double p) {
-        return (p - result_scale->p0) / (result_scale->dp);
-    };
+    auto scale_distr_s = [&](const std::vector<std::shared_ptr<models::DataDistribution>>& data) {
+        std::vector<std::shared_ptr<models::DataDistribution>> result;
 
-    auto scale_distr_s = [&](const std::vector<DataDistribution>& data) {
-        std::vector<DataDistribution> result;
-
-        for (auto& d : data) {
-            auto item = std::make_shared<DataDistribution>();
+        for (auto const d : data) {
+            auto item = std::make_shared<models::DataDistribution>();
             item->x0 = scale_x(d->x0);
             item->x1 = scale_x(d->x1);
             item->v0 = d->v0;
@@ -40,8 +36,10 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
     result_scale->r0 = params->data->r;
     result_scale->p0 = params->bound->pw;
 
+    // solver data
     result_solver_data->mesh_setts = params->mesh_setts;
     result_solver_data->sat_setts = params->sat_setts;
+
     result_solver_data->delta = scale_x(params->data->delta);
     result_solver_data->fw_lim = params->data->fw_lim;
     result_solver_data->kmu = params->data->phys->mu_wat / params->data->phys->mu_oil;
@@ -50,6 +48,8 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
     result_solver_data->rp_n = params->data->phys->n_oil;
     result_solver_data->rw = scale_x(params->data->rw);
     result_solver_data->use_fwlim = params->data->use_fwlim;
+    result_solver_data->period = params->data->period / result_scale->t0();
+    result_solver_data->perm_fract = params->data->perm_fract / result_scale->perm0;
 
     result_solver_data->bound_satur = params->bound->bound_satur;
     result_solver_data->contour_press_bound_type = params->bound->contour_press_bound_type;

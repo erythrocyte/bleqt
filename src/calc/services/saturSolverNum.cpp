@@ -7,7 +7,7 @@ namespace cs = ble::src::common::services;
 namespace ble::src::calc::services {
 
 std::vector<double> solve_explicit(const double tau, const std::vector<double>& init,
-    const std::shared_ptr<common::models::InputData> data, const std::shared_ptr<mesh::models::Grid> grd)
+    const std::shared_ptr<common::models::SolverData> data, const std::shared_ptr<mesh::models::Grid> grd)
 {
     auto get_u = [&](const std::shared_ptr<mesh::models::Face> fc) {
         switch (fc->type) {
@@ -32,7 +32,7 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
     for (auto& fc : grd->faces) {
         double u = get_u(fc);
         double s = get_s(fc, u);
-        double fbl = cs::rp::get_fbl(s, data->data->phys);
+        double fbl = cs::rp::get_fbl(s, data->rp_n, data->kmu);
         double cf = u * fbl * fc->area;
         dvs[fc->cl1] += cf;
         if (fc->cl2 != -1)
@@ -40,7 +40,8 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
     }
 
     for (auto& cl : grd->cells) {
-        result[cl->ind] = init[cl->ind] + tau / (data->data->poro_fract * cl->volume) * dvs[cl->ind];
+        double poro = 1.0;
+        result[cl->ind] = init[cl->ind] + tau / (poro * cl->volume) * dvs[cl->ind];
     }
 
     // std::cout << dvs[99] << std::endl;
@@ -49,7 +50,7 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
 }
 
 std::vector<double> solve_satur(const double tau, const std::vector<double>& init,
-    const std::shared_ptr<common::models::InputData> data, const std::shared_ptr<mesh::models::Grid> grd)
+    const std::shared_ptr<common::models::SolverData> data, const std::shared_ptr<mesh::models::Grid> grd)
 {
     switch (data->sat_setts->type) {
     case calc::models::SaturSolverType::TypeEnum::kExplicit:

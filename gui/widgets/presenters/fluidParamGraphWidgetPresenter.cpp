@@ -22,8 +22,7 @@ FluidParamGraphWidgetPresenter::FluidParamGraphWidgetPresenter(
     Q_ASSERT(connected);
 }
 
-std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_data(
-    const std::shared_ptr<ble::src::common::models::PhysData> data, double sc)
+std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_data(double rp_n, double kmu, double sc)
 {
     auto result = std::make_shared<models::FluidParamsDto>();
 
@@ -32,14 +31,14 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
 
     result->max_dfbl = 1.0;
 
-    double dsc = cs::rp::get_fbl(sc, data);
+    double dsc = cs::rp::get_fbl(sc, rp_n, kmu);
 
     for (int k = 0; k < n; k++) {
         double s = ds * k; // saturation;
-        double kw = cs::rp::get_kw(s, data);
-        double koil = cs::rp::get_koil(s, data);
-        double fbl = cs::rp::get_fbl(s, data);
-        double dfbl = cs::rp::get_dfbl(s, data);
+        double kw = cs::rp::get_kw(s, rp_n);
+        double koil = cs::rp::get_koil(s, rp_n);
+        double fbl = cs::rp::get_fbl(s, rp_n, kmu);
+        double dfbl = cs::rp::get_dfbl(s, rp_n, kmu);
 
         if (dfbl > result->max_dfbl)
             result->max_dfbl = dfbl;
@@ -60,10 +59,9 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
     return result;
 }
 
-void FluidParamGraphWidgetPresenter::update_view(
-    const std::shared_ptr<ble::src::common::models::PhysData> physData, double sc)
+void FluidParamGraphWidgetPresenter::update_view(double n, double kmu, double sc)
 {
-    std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_view)->update_view(physData, sc);
+    std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_view)->update_view(n, kmu, sc);
 }
 
 std::shared_ptr<FluidParamsGraphWidget> FluidParamGraphWidgetPresenter::get_view()

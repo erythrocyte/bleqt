@@ -15,8 +15,8 @@ public:
     double dp;
     double p0;
 
-    double u0() { return 0; }
-    double t0() { return 0; }
+    double u0() { return (perm0 / mu0) * dp / r0; }
+    double t0() { return poro0 * r0 / u0(); }
 };
 
 }

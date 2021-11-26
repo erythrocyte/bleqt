@@ -30,13 +30,13 @@ BleCalc::~BleCalc()
 }
 
 void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
-    const std::shared_ptr<common::models::InputData> data,
+    const std::shared_ptr<common::models::SolverData> data,
     std::function<void(double)> set_progress)
 {
     _results->data.clear();
     m_tau_data.clear();
     set_initial_cond(grd, data);
-    double sc = cs::shock_front::get_shock_front(data->data->phys);
+    double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
 
     int index = 0, pressIndex = 0;
     double sumT = 0.0, sumU = 0.0, saveT = 0.0;
@@ -47,7 +47,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     services::calc_u(p, s_prev, data, grd);
 
     if (!data->sat_setts->need_satur_solve) {
-        auto well_params = services::calc_well_work_param(grd, s_prev, data->data->phys, sumT);
+        auto well_params = services::calc_well_work_param(grd, s_prev, data, sumT);
         // double qan = services::calc_q_analytic(grd, data);
         // double qnum = well_params->ql;
         // double perc = std::abs(qan - qnum) / qan * 100.0;
@@ -57,7 +57,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
         // save_faces_val(grd, data);
     } else {
-        while (sumT < data->data->period) {
+        while (sumT < data->period) {
             if (pressIndex == 0 || pressIndex == data->sat_setts->pN) {
                 p = services::solve_press(grd, s_prev, data);
                 services::calc_u(p, s_prev, data, grd);
@@ -103,10 +103,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 index++;
             }
 
-            auto wwp = services::calc_well_work_param(grd, s_cur, data->data->phys, sumT);
+            auto wwp = services::calc_well_work_param(grd, s_cur, data, sumT);
             _wellWorkParams.push_back(wwp);
 
-            double perc = std::min(100.0, (sumT / data->data->period * 100.0));
+            double perc = std::min(100.0, (sumT / data->period * 100.0));
             set_progress(perc);
         }
 
@@ -117,7 +117,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 }
 
 void BleCalc::set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
-    const std::shared_ptr<common::models::InputData> data)
+    const std::shared_ptr<common::models::SolverData> data)
 {
     size_t n = grd->cells.size();
 
@@ -151,10 +151,10 @@ void BleCalc::save_press(int index, const std::shared_ptr<mesh::models::Grid> gr
 }
 
 void BleCalc::save_faces_val(const std::shared_ptr<mesh::models::Grid> grd,
-    const std::shared_ptr<common::models::InputData> params)
+    const std::shared_ptr<common::models::SolverData> params)
 {
     auto uan = [&](double x) {
-        return (1.0 - 0.0) / std::log(params->data->r / params->data->rw) / x;
+        return (1.0 - 0.0) / std::log(1.0 / params->rw) / x;
     };
 
     std::ofstream f("faces_val.dat");

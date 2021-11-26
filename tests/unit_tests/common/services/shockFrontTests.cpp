@@ -6,7 +6,6 @@
 #include <memory>
 
 #include "common/services/shockFront.hpp"
-#include "common/models/physData.hpp"
 
 namespace cs = ble::src::common::services;
 
@@ -15,16 +14,12 @@ namespace ble::tests::unit_tests::common::services::shock_front {
 void case1()
 {
     // arrange
-    double expected = 0.66564999999999996;
-    auto pd = std::make_shared<ble::src::common::models::PhysData>();
-    // kmu = 0.125; // = mw / moil;
-    pd->mu_wat = 0.125;
-    pd->mu_oil = 1.0; 
-    pd->n_oil = 2.0;
-    pd->n_wat = 5.3;
+    double expected = 0.33355000000000001;
+    double kmu = 0.125; // = mw / moil;
+    double n = 2.0;
 
     // act
-    double actual = cs::shock_front::get_shock_front(pd);
+    double actual = cs::shock_front::get_shock_front(n, kmu);
 
     // assert
     BOOST_CHECK_CLOSE(expected, actual, 1e-8);
@@ -34,15 +29,11 @@ void case2()
 {
     // arrange
     double expected = 0.8163999999999999; // wxmaxima gives 0.8164965809277261;
-    auto pd = std::make_shared<src::common::models::PhysData>();
-    // kmu = 2.0; // = mw / moil;
-    pd->mu_wat = 2.0;
-    pd->mu_oil = 1.0; 
-    pd->n_oil = 2.0;
-    pd->n_wat = 2.0;
+    double kmu = 2.0; // = mw / moil;
+    double n = 2.0;
 
     // act
-    double actual = cs::shock_front::get_shock_front(pd);
+    double actual = cs::shock_front::get_shock_front(n, kmu);
 
     // assert
     BOOST_CHECK_CLOSE(expected, actual, 1e-8);

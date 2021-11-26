@@ -4,38 +4,37 @@
 
 namespace ble::src::common::services::rp {
 
-double get_kw(double s, const std::shared_ptr<common::models::PhysData> data)
+double get_kw(double s, double n)
 {
-    return std::pow(s, data->n_wat);
+    return std::pow(s, n);
 }
 
-double get_koil(double s, const std::shared_ptr<common::models::PhysData> data)
+double get_koil(double s, double n)
 {
-    return std::pow((1. - s), data->n_oil);
+    return std::pow((1. - s), n);
 }
 
-double get_sigma(double s, const std::shared_ptr<common::models::PhysData> data)
+double get_sigma(double s, double n, double kmu)
 {
-    return get_kw(s, data) + data->get_kmu() * get_koil(s, data);
+    return get_kw(s, n) + kmu * get_koil(s, n);
 }
 
-double get_fbl(double s, const std::shared_ptr<common::models::PhysData> data)
+double get_fbl(double s, double n, double kmu)
 {
-    double kw = get_kw(s, data);
-    double sig = get_sigma(s, data);
+    double kw = get_kw(s, n);
+    double sig = get_sigma(s, n, kmu);
 
     return kw / sig;
 }
 
-double get_dfbl(double s, const std::shared_ptr<common::models::PhysData> data)
+double get_dfbl(double s, double n, double kmu)
 {
-    double kw = get_kw(s, data);
-    double nw = data->n_wat, noil = data->n_oil;
-    double dkw = nw * std::pow(s, nw - 1), dkoil = -noil * std::pow((1 - s), noil - 1);
+    double kw = get_kw(s, n);
+    double dkw = n * std::pow(s, n - 1), dkoil = -n * std::pow((1 - s), n - 1);
 
-    double f = get_sigma(s, data);
+    double f = get_sigma(s, n, kmu);
     double f2 = f * f;
-    double ff = dkw + data->get_kmu() * dkoil;
+    double ff = dkw + kmu * dkoil;
 
     return (dkw * f - ff * kw) / f2;
 }
