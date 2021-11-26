@@ -17,6 +17,7 @@ void FluidParamsGraphWidget::update_view(double n, double kmu, double sc)
     ui->series_fbl->clear();
     ui->series_dfbl->clear();
     ui->series_sc->clear();
+    ui->sigma->clear();
 
     auto data = get_data(n, kmu, sc);
 
@@ -25,6 +26,7 @@ void FluidParamsGraphWidget::update_view(double n, double kmu, double sc)
         ui->series_koil->append(data->koils);
         ui->series_fbl->append(data->fbls);
         ui->series_dfbl->append(data->dfbls);
+        ui->sigma->append(data->sigma);
 
         ui->series_sc->append(data->scs);
 

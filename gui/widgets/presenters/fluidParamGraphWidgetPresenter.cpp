@@ -4,6 +4,8 @@
 
 #include "common/services/commonMath.hpp"
 #include "common/services/workRp.hpp"
+#include "common/services/workString.hpp"
+#include "logging/logger.hpp"
 
 namespace cs = ble::src::common::services;
 
@@ -31,6 +33,7 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
     result->max_dfbl = 1.0;
 
     double dsc = cs::rp::get_fbl(sc, rp_n, kmu);
+    // std::string mess;
 
     for (int k = 0; k < n; k++) {
         double s = ds * k; // saturation;
@@ -38,6 +41,10 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
         double koil = cs::rp::get_koil(s, rp_n);
         double fbl = cs::rp::get_fbl(s, rp_n, kmu);
         double dfbl = cs::rp::get_dfbl(s, rp_n, kmu);
+        double sig = cs::rp::get_sigma(s, rp_n, kmu);
+
+        // mess = cs::string_format("sigma(%.4f) = %.4f", s, sig);
+        // src::logging::write_log(mess, src::logging::kDebug);
 
         if (dfbl > result->max_dfbl)
             result->max_dfbl = dfbl;
@@ -46,6 +53,7 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
         result->koils.append(QPointF(s, koil));
         result->fbls.append(QPointF(s, fbl));
         result->dfbls.append(QPointF(s, dfbl));
+        result->sigma.append(QPointF(s, sig));
     }
 
     double x_up = ble::src::common::services::get_value_lin_approx(0, 0, dsc, sc, 1.0);
