@@ -9,15 +9,6 @@ namespace ble::src::calc::services {
 std::vector<double> solve_explicit(const double tau, const std::vector<double>& init,
     const std::shared_ptr<common::models::SolverData> data, const std::shared_ptr<mesh::models::Grid> grd)
 {
-    // auto get_u = [&](const std::shared_ptr<mesh::models::Face> fc) {
-    //     switch (fc->type) {
-    //     case mesh::models::FaceType::kBot:
-    //     case mesh::models::FaceType::kTop:
-    //         return fc->bound_u;
-    //     default:
-    //         return fc->u;
-    //     }
-    // };
     auto get_s = [&](const std::shared_ptr<mesh::models::Face> fc, double u) {
         return (u > 0.)
             ? (fc->cl2 == -1)
@@ -30,7 +21,7 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
     std::vector<double> dvs(grd->cells.size(), 0.);
 
     for (auto& fc : grd->faces) {
-        double u = fc->u; // get_u(fc);
+        double u = fc->u;
         double s = get_s(fc, u);
         double fbl = cs::rp::get_fbl(s, data->rp_n, data->kmu);
         double cf = u * fbl * fc->area;
@@ -43,8 +34,6 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
         double poro = 1.0;
         result[cl->ind] = init[cl->ind] + tau / (poro * cl->volume) * dvs[cl->ind];
     }
-
-    // std::cout << dvs[99] << std::endl;
 
     return result;
 }
