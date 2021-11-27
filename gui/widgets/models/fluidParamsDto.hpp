@@ -15,6 +15,7 @@ struct FluidParamsDto {
     QList<QPointF> fbls;
     QList<QPointF> dfbls;
     QList<QPointF> scs;
+    QList<QPointF> sigma;
 };
 
 }

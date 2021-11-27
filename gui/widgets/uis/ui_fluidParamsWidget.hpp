@@ -19,6 +19,7 @@ public:
     QLineSeries* series_fbl;
     QLineSeries* series_dfbl;
     QLineSeries* series_sc;
+    QLineSeries* sigma;
     QGridLayout* layout;
 
     QValueAxis* axis_dfY;
@@ -79,6 +80,11 @@ public:
         pen.setBrush(Qt::GlobalColor::magenta);
         series_dfbl->setPen(pen);
 
+        sigma = new QLineSeries();
+        sigma->setName("sigma");
+        pen.setBrush(Qt::GlobalColor::black);
+        sigma->setPen(pen);
+
         series_sc = new QLineSeries();
         series_sc->setName("sc");
         pen.setBrush(Qt::GlobalColor::darkCyan);
@@ -90,6 +96,7 @@ public:
         chart->addSeries(series_fbl);
         chart->addSeries(series_dfbl);
         chart->addSeries(series_sc);
+        chart->addSeries(sigma);
 
         chart->addAxis(_axisS, Qt::AlignBottom);
         chart->addAxis(_axis_kY, Qt::AlignLeft);
@@ -109,6 +116,9 @@ public:
 
         series_dfbl->attachAxis(_axisS);
         series_dfbl->attachAxis(axis_dfY);
+
+        sigma->attachAxis(_axisS);
+        sigma->attachAxis(axis_dfY);
 
         retranslateUi(widget);
     }

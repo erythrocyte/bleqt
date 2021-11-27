@@ -6,6 +6,9 @@
 #include <QFileSystemWatcher>
 
 #include "calc/models/bleCalc.hpp"
+#include "common/models/scaleData.hpp"
+#include "common/models/solverData.hpp"
+#include "common/services/dimensionlessService.hpp"
 #include "common/services/shockFront.hpp"
 #include "common/services/workString.hpp"
 #include "dataWidget.hpp"
@@ -95,7 +98,7 @@ void BleFramePresenter::onShowShockFrontCurve(bool status)
     m_resultDataWidgetPresenter->set_sc_visibility(status);
     if (status) {
         auto data = m_dataWidgetPresenter->get_data();
-        double sc = cs::shock_front::get_shock_front(data->phys);
+        double sc = cs::shock_front::get_shock_front(data->phys->n_wat, data->phys->get_kmu());
         m_resultDataWidgetPresenter->update_sc(data->r, sc);
     }
 }
@@ -103,37 +106,41 @@ void BleFramePresenter::onShowShockFrontCurve(bool status)
 void BleFramePresenter::onRpValuesUpdated()
 {
     auto data = m_dataWidgetPresenter->get_data();
-    double sc = cs::shock_front::get_shock_front(data->phys);
+    double sc = cs::shock_front::get_shock_front(data->phys->n_wat, data->phys->get_kmu());
     m_shockfront_presenter->set_shockfront_value(sc);
     m_resultDataWidgetPresenter->update_sc(data->r, sc);
-    m_fluidWidgetPresenter->update_view(data->phys, sc);
+    m_fluidWidgetPresenter->update_view(data->phys->n_wat, data->phys->get_kmu(), sc);
 }
 
 void BleFramePresenter::on_run_calc()
 {
-    // auto start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
 
-    // auto data = m_dataWidgetPresenter->get_data();
-    // auto grd = ble::src::mesh::services::make_grid(data);
+    auto data = get_data();
+    std::shared_ptr<src::common::models::ScaleData> scale_data;
+    std::shared_ptr<src::common::models::SolverData> solver_data;
+    std::tie(scale_data, solver_data) = src::common::services::DimensionlessService::make_dimless(data);
 
-    // set_status(tr("calculation running"));
+    auto grd = ble::src::mesh::services::make_grid(solver_data);
 
-    // std::function<void(int)> a = std::bind(&BleFramePresenter::update_progress, this, std::placeholders::_1);
-    // auto solver = std::make_shared<src::calc::models::BleCalc>();
-    // solver->calc(grd, data, a);
-    // auto results = solver->get_result();
-    // results->grd = grd;
+    set_status(tr("calculation running"));
 
-    // auto end = std::chrono::high_resolution_clock::now();
-    // std::chrono::duration<double> diff = end - start;
-    // std::string mess = cs::string_format("calculation completed in %.2f sec.", diff.count());
-    // set_status(QString::fromStdString(mess));
+    std::function<void(int)> a = std::bind(&BleFramePresenter::update_progress, this, std::placeholders::_1);
+    auto solver = std::make_shared<src::calc::models::BleCalc>();
+    solver->calc(grd, solver_data, a);
+    auto results = solver->get_result();
+    results->grd = grd;
 
-    // m_resultDataWidgetPresenter->set_data(results, data->bound->contour_press_bound_type, a);
-    // m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
-    // m_wellWorkDataWidgetPresenter->set_time_period(data->model->period);
-    // m_tauVisualPresenter->set_data(solver->get_tau_data());
-    // update_progress(100);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff = end - start;
+    std::string mess = cs::string_format("calculation completed in %.2f sec.", diff.count());
+    set_status(QString::fromStdString(mess));
+
+    m_resultDataWidgetPresenter->set_data(results, solver_data->contour_press_bound_type, a);
+    m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
+    m_wellWorkDataWidgetPresenter->set_time_period(solver->get_period());
+    m_tauVisualPresenter->set_data(solver->get_tau_data());
+    update_progress(100);
 }
 
 std::shared_ptr<BleFrame> BleFramePresenter::get_view()

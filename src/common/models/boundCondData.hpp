@@ -16,16 +16,13 @@ public:
     BoundCondData() { }
     ~BoundCondData()
     {
-        top_bot_bound_u.clear();
         top_bot_bound_s.clear();
         initial_s.clear();
     }
 
-    std::vector<std::shared_ptr<DataDistribution>> top_bot_bound_u;
     std::vector<std::shared_ptr<DataDistribution>> top_bot_bound_s;
     std::vector<std::shared_ptr<DataDistribution>> initial_s;
     BoundCondType::TypeEnum contour_press_bound_type;
-    DataDistributionType::TypeEnum top_bot_bound_u_type;
     DataDistributionType::TypeEnum top_bot_bound_s_type;
     DataDistributionType::TypeEnum initial_satur_type;
     double bound_satur;

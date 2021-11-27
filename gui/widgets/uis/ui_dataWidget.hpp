@@ -156,10 +156,10 @@ private:
         m_gbGeology->setTitle("Geology");
         m_gbGeology->setToolTip("Geology data");
 
-        m_labelPerm->setText("Permeability");
+        m_labelPerm->setText("Res perm, d");
         m_labelPerm->setToolTip("Reservoir permeability, d");
 
-        m_labelPermFract->setText("Fract perm");
+        m_labelPermFract->setText("Fract perm, d");
         m_labelPermFract->setToolTip("Fracture  permeability, d");
 
         m_labelPoroFract->setText("Fract poro");
@@ -205,7 +205,7 @@ private:
 
         m_labelRw = new QLabel("Rw");
         Rw = new QDoubleSpinBox();
-        Rw->setDecimals(1e-2);
+        Rw->setDecimals(2);
         Rw->setMinimum(1e-2);
         Rw->setMaximum(1);
         Rw->setSingleStep(1e-2);
@@ -221,16 +221,16 @@ private:
         m_gbGeom->setTitle("Geometry");
         m_gbGeom->setToolTip("Geometry data");
 
-        m_labelDelta->setText("Delta");
+        m_labelDelta->setText("Delta, m");
         m_labelDelta->setToolTip("Fracture half thickness, m");
 
-        m_labelL->setText("L");
+        m_labelL->setText("L, m");
         m_labelL->setToolTip("Reservoir lenght, m");
 
-        m_labelR->setText("R");
+        m_labelR->setText("R, m");
         m_labelR->setToolTip("Reservoir radius, m");
 
-        m_labelRw->setText("Rw");
+        m_labelRw->setText("Rw, m");
         m_labelRw->setToolTip("Well radius, m");
     }
 
@@ -275,8 +275,8 @@ private:
         m_gbModelData->setTitle("Modeling data");
         m_gbModelData->setToolTip("Modeling data");
 
-        m_periodLabel->setText("Period");
-        m_periodLabel->setToolTip("Period");
+        m_periodLabel->setText("Period, h");
+        m_periodLabel->setToolTip("Period in hours");
 
         m_saveFieldStepsLabel->setText("Watercut limit, %");
         m_saveFieldStepsLabel->setToolTip("Set modeling as a critical watercut value on well");
@@ -333,10 +333,10 @@ private:
         m_gbRelPerm->setTitle("Relative permeability data");
         m_gbRelPerm->setToolTip("Relative permeability data");
 
-        m_labelMuWat->setText("Water visc");
+        m_labelMuWat->setText("Water visc, Pa*s");
         m_labelMuWat->setToolTip("Water viscosity, Pa*s");
 
-        m_labelMuOil->setText("Oil visc");
+        m_labelMuOil->setText("Oil visc, Pa*s");
         m_labelMuOil->setToolTip("Oil viscosity, Pa*s");
 
         m_labelN->setText("N");

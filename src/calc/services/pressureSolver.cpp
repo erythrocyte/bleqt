@@ -9,7 +9,7 @@
 namespace ble::src::calc::services {
 
 double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid> grd,
-    const std::shared_ptr<common::models::InputData> params)
+    const std::shared_ptr<common::models::SolverData> params)
 {
     auto regular = [&]() {
         return (fc->cl2 == -1)
@@ -36,7 +36,7 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
     if (fc->type == mm::FaceType::kWell) {
         switch (params->mesh_setts->type) {
         case common::models::GridType::kRadial: {
-            double rw = params->data->rw;
+            double rw = params->rw;
             double d = grd->cells[fc->cl1]->cntr;
             double b2 = regular();
             double b3 = correct_radial2(d, rw);
@@ -51,7 +51,7 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
 }
 
 std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::vector<double>& s,
-    const std::shared_ptr<common::models::InputData> params)
+    const std::shared_ptr<common::models::SolverData> params)
 {
     models::DiagMat ret;
     ret.resize(grd->cells.size());
@@ -59,7 +59,7 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
     std::vector<double> rhs(grd->cells.size(), 0.0);
 
     for (auto& fc : grd->faces) {
-        double sigma = get_face_sigma(fc, s, params->data->phys, grd);
+        double sigma = get_face_sigma(fc, s, params, grd);
         double h = get_h(fc, grd, params);
         double cf = fc->area * sigma / h;
 
@@ -81,7 +81,20 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         }
         case mm::FaceType::kTop:
         case mm::FaceType::kBot: {
-            rhs[fc->cl1] += fc->area * fc->bound_u;
+            switch (params->contour_press_bound_type) {
+            case common::models::BoundCondType::kImpermeable: {
+                double alp = 1.0 / params->l;
+                ret.C[fc->cl1] += alp;
+                rhs[fc->cl1] += alp; // alp * pw (= 1);
+            } break;
+            case common::models::BoundCondType::kConst: {
+                if (!common::models::CommonVals::is_empty(fc->bound_press)) {
+                    rhs[fc->cl1] += fc->area * fc->bound_u;
+                }
+            } break;
+            default:
+                break;
+            }
             break;
         }
         default:
@@ -93,12 +106,23 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
 }
 
 void calc_u(const std::vector<double>& p, const std::vector<double>& s,
-    const std::shared_ptr<common::models::InputData> params, std::shared_ptr<mm::Grid> grd)
+    const std::shared_ptr<common::models::SolverData> params, std::shared_ptr<mm::Grid> grd)
 {
     for (auto& fc : grd->faces) {
 
         if (mm::FaceType::is_top_bot(fc->type)) {
-            fc->u = fc->bound_u;
+            double u = 0.0;
+            switch (params->contour_press_bound_type) {
+            case common::models::BoundCondType::kImpermeable:
+                u = -(1.0 - p[fc->cl1]) / params->l;
+                break;
+            case common::models::BoundCondType::kConst:
+                u = 0.0;
+                break;
+            default:
+                break;
+            }
+            fc->u = u;
             continue;
         }
 
@@ -107,7 +131,7 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
             continue;
         }
 
-        double sigma = get_face_sigma(fc, s, params->data->phys, grd);
+        double sigma = get_face_sigma(fc, s, params, grd);
         double h = get_h(fc, grd, params);
 
         double p1 = p[fc->cl1];
@@ -120,11 +144,11 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
 }
 
 std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
-    const std::shared_ptr<common::models::InputData> params)
+    const std::shared_ptr<common::models::SolverData> params)
 {
     std::vector<double> result;
     double pw = 0.0, pc = 1.0;
-    double rw = params->data->rw, rc = params->data->r;
+    double rw = params->rw, rc = 1.0;
 
     auto calc_p_aver_radial = [&](const std::shared_ptr<mm::Cell> cl) {
         auto m = [](double r) { return (r * r / 2.0) * (std::log(r) - 0.5); };

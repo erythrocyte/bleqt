@@ -17,10 +17,18 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
     }
 }
 
-src::calc::models::SaturSolverType::TypeEnum SatSolverSettsWidget::solver_type()
+std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_data()
 {
+    auto result = std::make_shared<src::calc::models::SaturSolverSetts>();
+    result->cur_val = ui->Curant->value();
+    result->need_satur_solve = ui->NeedSaturSolve->isChecked();
+    result->pressure_update_n = ui->RecalcPressN->value();
+    result->satur_field_save_n = ui->SaveSaturField->value();
+
     auto str = ui->SolverType->currentText().toStdString();
-    return src::calc::models::SaturSolverType::get_enum(str);
+    result->type = src::calc::models::SaturSolverType::get_enum(str);
+
+    return result;
 }
 
 }

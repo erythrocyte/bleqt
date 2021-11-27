@@ -11,7 +11,7 @@ namespace ble::src::common::models {
 class Data {
 public:
     std::shared_ptr<PhysData> phys;
-    double perm;
+    double perm_res;
     double perm_fract;
     double poro_fract;
     double l;
@@ -21,8 +21,6 @@ public:
     double period;
     double fw_lim;
     bool use_fwlim;
-
-    double get_lenght() { return r - rw; }
 };
 
 }

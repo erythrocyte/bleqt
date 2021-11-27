@@ -44,7 +44,6 @@ public:
     void retranslateUi()
     {
         _axisX->setTitleText("r/x");
-        _axisY_U->setTitleText("u");
         _axisY_S->setTitleText("s");
     }
 
@@ -69,7 +68,7 @@ public:
 
     void setup_yaxis_range(double minVal, double maxVal, int k)
     {
-        if (k == 2)
+        if (k == 1)
             return;
         auto yaxis = get_y_axis(k);
         yaxis->setRange(minVal, maxVal);
@@ -79,11 +78,9 @@ public:
     {
         switch (k) {
         case 1:
-            return _axisY_U;
-        case 2:
             return _axisY_S;
         default:
-            return _axisY_U;
+            return _axisY_S;
         }
     }
 
@@ -91,7 +88,6 @@ private:
     QGridLayout* _chartTableLayout;
     QChartView* _chartView;
     QValueAxis* _axisX;
-    QValueAxis* _axisY_U;
     QValueAxis* _axisY_S;
     QToolBar* _toolbar;
     QSplitter* _splitter;
@@ -108,12 +104,6 @@ private:
         _axisX->setTickCount(5);
         _axisX->setMin(0.0);
 
-        _axisY_U = new QValueAxis();
-        _axisY_U->setLabelFormat("%g");
-        _axisY_U->setTickCount(5);
-        _axisY_U->setMin(0.0);
-        _axisY_U->setMax(1.0);
-
         _axisY_S = new QValueAxis();
         _axisY_S->setLabelFormat("%g");
         _axisY_S->setTickCount(5);
@@ -121,7 +111,6 @@ private:
         _axisY_S->setMax(1.0);
 
         Chart->addAxis(_axisX, Qt::AlignBottom);
-        // Chart->addAxis(_axisY_U, Qt::AlignLeft);
         Chart->addAxis(_axisY_S, Qt::AlignRight);
 
         _chartView = new QChartView(Chart);

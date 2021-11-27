@@ -4,6 +4,8 @@
 
 #include "common/services/commonMath.hpp"
 #include "common/services/workRp.hpp"
+#include "common/services/workString.hpp"
+#include "logging/logger.hpp"
 
 namespace cs = ble::src::common::services;
 
@@ -15,15 +17,13 @@ FluidParamGraphWidgetPresenter::FluidParamGraphWidgetPresenter(
     : BlePresenter(container, view)
 {
     QObject* view_obj = dynamic_cast<QObject*>(view.get());
-    const bool connected = connect(view_obj,
-        SIGNAL(get_data(const std::shared_ptr<ble::src::common::models::PhysData>, double)),
-        this,
-        SLOT(send_data(const std::shared_ptr<ble::src::common::models::PhysData>, double)));
+    const bool connected = connect(
+        view_obj, SIGNAL(get_data(double, double, double)),
+        this, SLOT(send_data(double, double, double)));
     Q_ASSERT(connected);
 }
 
-std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_data(
-    const std::shared_ptr<ble::src::common::models::PhysData> data, double sc)
+std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_data(double rp_n, double kmu, double sc)
 {
     auto result = std::make_shared<models::FluidParamsDto>();
 
@@ -32,14 +32,19 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
 
     result->max_dfbl = 1.0;
 
-    double dsc = cs::rp::get_fbl(sc, data);
+    double dsc = cs::rp::get_fbl(sc, rp_n, kmu);
+    // std::string mess;
 
     for (int k = 0; k < n; k++) {
         double s = ds * k; // saturation;
-        double kw = cs::rp::get_kw(s, data);
-        double koil = cs::rp::get_koil(s, data);
-        double fbl = cs::rp::get_fbl(s, data);
-        double dfbl = cs::rp::get_dfbl(s, data);
+        double kw = cs::rp::get_kw(s, rp_n);
+        double koil = cs::rp::get_koil(s, rp_n);
+        double fbl = cs::rp::get_fbl(s, rp_n, kmu);
+        double dfbl = cs::rp::get_dfbl(s, rp_n, kmu);
+        double sig = cs::rp::get_sigma(s, rp_n, kmu);
+
+        // mess = cs::string_format("sigma(%.4f) = %.4f", s, sig);
+        // src::logging::write_log(mess, src::logging::kDebug);
 
         if (dfbl > result->max_dfbl)
             result->max_dfbl = dfbl;
@@ -48,6 +53,7 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
         result->koils.append(QPointF(s, koil));
         result->fbls.append(QPointF(s, fbl));
         result->dfbls.append(QPointF(s, dfbl));
+        result->sigma.append(QPointF(s, sig));
     }
 
     double x_up = ble::src::common::services::get_value_lin_approx(0, 0, dsc, sc, 1.0);
@@ -60,10 +66,9 @@ std::shared_ptr<models::FluidParamsDto> FluidParamGraphWidgetPresenter::send_dat
     return result;
 }
 
-void FluidParamGraphWidgetPresenter::update_view(
-    const std::shared_ptr<ble::src::common::models::PhysData> physData, double sc)
+void FluidParamGraphWidgetPresenter::update_view(double n, double kmu, double sc)
 {
-    std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_view)->update_view(physData, sc);
+    std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_view)->update_view(n, kmu, sc);
 }
 
 std::shared_ptr<FluidParamsGraphWidget> FluidParamGraphWidgetPresenter::get_view()
