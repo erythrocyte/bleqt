@@ -114,7 +114,7 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
             double u = 0.0;
             switch (params->contour_press_bound_type) {
             case common::models::BoundCondType::kImpermeable:
-                u = -(1.0 - p[fc->cl1]) / params->l;
+                u = -(p[fc->cl1] - 1.0) / params->l;
                 break;
             case common::models::BoundCondType::kConst:
                 u = 0.0;

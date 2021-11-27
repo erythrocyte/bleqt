@@ -60,6 +60,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     std::vector<double> p = _results->data[0]->p;
 
     services::calc_u(p, s_prev, data, grd);
+    int max_index = 100;
 
     if (!data->sat_setts->need_satur_solve) {
         auto well_params = services::calc_well_work_param(grd, s_prev, data, sumT);
@@ -105,6 +106,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
                 _results->data.push_back(d);
             }
+            index++;
 
             // double qw = grd->faces[0]->area * grd->faces[0]->u;
             // double qc = grd->faces[0]->area * grd->faces[0]->u;
@@ -117,6 +119,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
             double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
+
+            // if (index > max_index)
+            //     break;
         }
 
         logging::write_log("saturation solve completed", logging::kInfo);
