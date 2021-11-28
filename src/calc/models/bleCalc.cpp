@@ -1,5 +1,6 @@
 #include "bleCalc.hpp"
 
+#include <chrono>
 #include <fstream>
 #include <math.h>
 #include <sstream>
@@ -56,11 +57,26 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     int index = 0;
     double sumT = 0.0, sumU = 0.0, cur_fw = 0.0;
+    std::map<std::string, double> speed;
+    speed.insert(std::pair<std::string, double>("press", 0.0));
+    speed.insert(std::pair<std::string, double>("tau", 0.0));
+    speed.insert(std::pair<std::string, double>("\ttau p1", 0.0));
+    speed.insert(std::pair<std::string, double>("\ttau p2", 0.0));
+    speed.insert(std::pair<std::string, double>("u inj", 0.0));
+    speed.insert(std::pair<std::string, double>("satur", 0.0));
+    speed.insert(std::pair<std::string, double>("fields", 0.0));
+    speed.insert(std::pair<std::string, double>("well work", 0.0));
+    speed.insert(std::pair<std::string, double>("\t get faces dfbl", 0.0));
+    speed.insert(std::pair<std::string, double>("\tadd vector", 0.0));
+    speed.insert(std::pair<std::string, double>("\tcontinue", 0.0));
+
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
     std::vector<double> p = _results->data[0]->p;
 
     services::calc_u(p, s_prev, data, grd);
-    int max_index = 100;
+    // int max_index = 100;
+    std::chrono::system_clock::time_point start, end;
+    std::chrono::duration<double> diff;
 
     if (!data->sat_setts->need_satur_solve) {
         auto well_params = services::calc_well_work_param(grd, s_prev, data, sumT);
@@ -74,29 +90,46 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         // save_faces_val(grd, data);
     } else {
         while (suit_step(cur_fw, sumT)) {
+            start = std::chrono::high_resolution_clock::now();
             if (index % data->sat_setts->pressure_update_n == 0) {
                 p = services::solve_press(grd, s_prev, data);
                 services::calc_u(p, s_prev, data, grd);
                 // save_press(index, grd, p);
             }
+            end = std::chrono::high_resolution_clock::now();
+            diff = end - start;
+            speed["press"] += diff.count();
 
-            double t = services::get_time_step(grd, s_prev, data);
-            // std::string mess = common::services::string_format("tau = %.8f", t);
-            // logging::write_log(mess, logging::kDebug);
-            // mess = common::services::string_format("tau after = %.8f", t);
-            // logging::write_log(mess, logging::kDebug);
+            start = std::chrono::high_resolution_clock::now();
+            double t = services::get_time_step(grd, s_prev, data, speed);
+            end = std::chrono::high_resolution_clock::now();
+            diff = end - start;
+            speed["tau"] += diff.count();
 
-            double u = services::getULiqInject(grd, data->mesh_setts->type);
-            // std::string mess = common::services::string_format("uw = %.8f", u);
-            // logging::write_log(mess, logging::kInfo);
+            start = std::chrono::high_resolution_clock::now();
+            double u = data->contour_press_bound_type == common::models::BoundCondType::kConst
+                ? services::getULiqInject(grd, data->mesh_setts->type)
+                : 0.0;
             sumU += u * t;
+            end = std::chrono::high_resolution_clock::now();
+            diff = end - start;
+            speed["u inj"] += diff.count();
+
+            start = std::chrono::high_resolution_clock::now();
             s_cur = services::solve_satur(t, s_prev, data, grd);
+            end = std::chrono::high_resolution_clock::now();
+            diff = end - start;
+            speed["satur"] += diff.count();
+
             s_prev = s_cur;
             sumT += t;
             m_tau_data.push_back(std::make_shared<common::models::TauData>(sumT, t));
 
+            start = std::chrono::high_resolution_clock::now();
             if (index % data->sat_setts->satur_field_save_n == 0) {
-                std::vector<std::tuple<double, double>> xs_an = services::get_satur_exact(sc, sumU, data);
+                std::vector<std::tuple<double, double>> xs_an;
+                if (data->contour_press_bound_type == common::models::BoundCondType::kConst)
+                    xs_an = services::get_satur_exact(sc, sumU, data);
                 auto d = std::make_shared<ble::src::common::models::DynamicData>();
                 d->t = sumT;
                 d->p = p;
@@ -106,25 +139,34 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
                 _results->data.push_back(d);
             }
+            end = std::chrono::high_resolution_clock::now();
+            diff = end - start;
+            speed["fields"] += diff.count();
             index++;
 
-            // double qw = grd->faces[0]->area * grd->faces[0]->u;
-            // double qc = grd->faces[0]->area * grd->faces[0]->u;
-            // std::string mess = common::services::string_format("qw = %.8f, qc = %.8f", qw, qc);
-            // logging::write_log(mess, logging::kInfo);
-
+            start = std::chrono::high_resolution_clock::now();
             auto wwp = services::calc_well_work_param(grd, s_cur, data, sumT);
             cur_fw = wwp->fw;
             _wellWorkParams.push_back(wwp);
+            end = std::chrono::high_resolution_clock::now();
+            diff = end - start;
+            speed["well work"] += diff.count();
 
             double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
 
             // if (index > max_index)
             //     break;
+            // break;
         }
 
         logging::write_log("saturation solve completed", logging::kInfo);
+
+        for (auto const& [key, val] : speed) {
+            std::string mess = common::services::string_format("%s takes %.5f sec.", key.c_str(), val);
+            // logging::write_log(mess, logging::kDebug);
+            std::cout << mess << std::endl;
+        }
     }
 
     m_sum_t = sumT;

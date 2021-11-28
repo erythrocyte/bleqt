@@ -10,6 +10,8 @@ DataWidget::DataWidget(QWidget* parent)
 {
     ui->setupUI(this);
     subscribe();
+
+    ui->FwLimit->setValue(0.5);
 }
 
 DataWidget::~DataWidget()
