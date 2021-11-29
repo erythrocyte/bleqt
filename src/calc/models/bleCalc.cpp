@@ -74,7 +74,6 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     std::vector<double> p = _results->data[0]->p;
 
     services::calc_u(p, s_prev, data, grd);
-    // int max_index = 100;
     std::chrono::system_clock::time_point start, end;
     std::chrono::duration<double> diff;
 
@@ -154,18 +153,13 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
             double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
-
-            // if (index > max_index)
-            //     break;
-            // break;
         }
 
         logging::write_log("saturation solve completed", logging::kInfo);
 
         for (auto const& [key, val] : speed) {
             std::string mess = common::services::string_format("%s takes %.5f sec.", key.c_str(), val);
-            // logging::write_log(mess, logging::kDebug);
-            std::cout << mess << std::endl;
+            logging::write_log(mess, logging::kDebug);
         }
     }
 
