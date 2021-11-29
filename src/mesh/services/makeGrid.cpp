@@ -116,6 +116,7 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
     };
 
     std::shared_ptr<mesh::models::Grid> result(new mesh::models::Grid());
+    double empty_val = common::models::CommonVals::EMPTY_VAL;
     double step = params->get_lenght() / params->mesh_setts->n;
 
     for (int k = 0; k < params->mesh_setts->n; k++) { // cells
@@ -124,7 +125,7 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
             : mesh::models::FaceType::kInner;
         double x = get_x(step, k);
         double area = get_cyl_area(x);
-        auto fc = make_face(k, x, k, k - 1, area, tp, 0.0, 0.0, 0.0);
+        auto fc = make_face(k, x, k, k - 1, area, tp, 0.0, empty_val, empty_val);
         result->faces.push_back(fc);
 
         std::shared_ptr<mesh::models::Cell> cl(new mesh::models::Cell());
