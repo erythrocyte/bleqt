@@ -8,7 +8,7 @@ namespace ble::src::mesh::models {
 class Face {
 	public:
 		int ind;
-		double x;
+		double cntr;
 
 		int cl1;
 		int cl2 = -1;

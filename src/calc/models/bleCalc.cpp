@@ -211,7 +211,7 @@ void BleCalc::save_faces_val(const std::shared_ptr<mesh::models::Grid> grd,
 
     std::ofstream f("faces_val.dat");
     for (auto& fc : grd->faces) {
-        f << fc->x << "\t" << fc->u << "\t" << fc->area << "\t" << uan(fc->x) << std::endl;
+        f << fc->cntr << "\t" << fc->u << "\t" << fc->area << "\t" << uan(fc->cntr) << std::endl;
     }
     f.close();
 }
