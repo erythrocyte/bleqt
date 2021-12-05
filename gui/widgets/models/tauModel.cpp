@@ -22,24 +22,25 @@ TauModel::TauModel(const std::vector<std::shared_ptr<src::common::models::TauDat
 
 QVariant TauModel::data(const QModelIndex& index, int role) const
 {
-    auto get_value = [&]() {
-        if (m_data.size() == 0)
-            return empty_val;
+    // auto get_value = [&]() {
+    //     if (m_data.size() == 0)
+    //         return empty_val;
 
-        int row_index = index.row(), column_index = index.column();
+    //     int row_index = index.row(), column_index = index.column();
 
-        switch (column_index) {
-        case 0:
-            return m_data[row_index]->time;
-        case 1:
-            return m_data[row_index]->tau;
-        }
+    //     switch (column_index) {
+    //     case 0:
+    //         return m_data[row_index]->time;
+    //     case 1:
+    //         return m_data[row_index]->tau;
+    //     }
 
-        return src::common::models::CommonVals::EMPTY_VAL;
-    };
+    //     return src::common::models::CommonVals::EMPTY_VAL;
+    // };
 
     if (role == Qt::DisplayRole) {
-        double value = get_value();
+        int row_index = index.row(), column_index = index.column();
+        double value = get_value(row_index, column_index);
         if (src::common::models::CommonVals::is_empty(value))
             return QVariant();
 
@@ -87,8 +88,10 @@ std::tuple<double, double> TauModel::get_value_range(int column_index)
     return std::make_tuple(min, max);
 }
 
-double TauModel::get_value(int column_index, int row_index)
+double TauModel::get_value(int column_index, int row_index) const
 {
+    if (m_data.size() == 0)
+        return empty_val;
     switch (column_index) {
     case 0:
         return m_data[row_index]->time;
