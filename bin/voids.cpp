@@ -36,7 +36,7 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
     result->kmu = 1.0;
     result->l = 500.0 / 100.0;
     result->m = 10.0;
-    result->rp_n = 1.0;
+    result->rp_n = 2.0;
     result->rw = 0.01 / 100;
     result->use_fwlim = true;
     result->period = 1.0;

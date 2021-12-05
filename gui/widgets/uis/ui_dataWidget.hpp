@@ -317,8 +317,8 @@ private:
 
         m_labelN = new QLabel();
         N = new QDoubleSpinBox();
-        N->setMinimum(1.1);
-        N->setMaximum(5);
+        N->setMinimum(1.0);
+        N->setMaximum(5.0);
         N->setSingleStep(0.1);
         N->setDecimals(1);
         N->setValue(3.0);

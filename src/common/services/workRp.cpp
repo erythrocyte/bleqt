@@ -11,7 +11,7 @@ double get_kw(double s, double n)
 
 double get_koil(double s, double n)
 {
-    return (1. - s);
+    return std::pow((1. - s), n);
 }
 
 double get_sigma(double s, double n, double kmu)
