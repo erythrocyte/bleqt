@@ -7,19 +7,21 @@
 namespace ble::src::mesh::models {
 
 class Cell {
-	public:
-		int ind;
+public:
+    int ind;
 
-		double xl;
-		double xr;
-		double cntr;
+    double xl;
+    double xr;
+    double cntr;
 
-		std::vector<int> faces;
+    std::vector<int> faces;
 
-		double volume;
+    double volume;
 
-		double poro;
-		double perm;
+    double poro;
+    double perm;
+
+    double get_h() { return xr - xl; }
 };
 
 }

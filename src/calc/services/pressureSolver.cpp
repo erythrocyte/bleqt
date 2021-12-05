@@ -5,6 +5,7 @@
 #include "calc/models/diagMatrix.hpp"
 #include "calc/services/workSigma.hpp"
 #include "common/models/commonVals.hpp"
+#include "common/services/workRp.hpp"
 
 namespace ble::src::calc::services {
 
@@ -13,7 +14,7 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
 {
     auto regular = [&]() {
         return (fc->cl2 == -1)
-            ? std::abs(grd->cells[fc->cl1]->cntr - fc->x)
+            ? std::abs(grd->cells[fc->cl1]->cntr - fc->cntr)
             : std::abs(grd->cells[fc->cl1]->cntr - grd->cells[fc->cl2]->cntr);
     };
 
@@ -50,6 +51,15 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
     return regular();
 }
 
+double get_res_ceff(double s, const std::shared_ptr<common::models::SolverData> params)
+{
+    auto get_sigma = [&]() {
+        return common::services::rp::get_sigma(s, params->rp_n, params->kmu);
+    };
+
+    return get_sigma() / params->l;
+}
+
 std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::vector<double>& s,
     const std::shared_ptr<common::models::SolverData> params)
 {
@@ -83,7 +93,7 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         case mm::FaceType::kBot: {
             switch (params->contour_press_bound_type) {
             case common::models::BoundCondType::kImpermeable: {
-                double alp = 1.0 / params->l;
+                double alp = get_res_ceff(fc->bound_satur, params);
                 ret.C[fc->cl1] += alp;
                 rhs[fc->cl1] += alp; // alp * pw (= 1);
             } break;
@@ -109,13 +119,14 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     const std::shared_ptr<common::models::SolverData> params, std::shared_ptr<mm::Grid> grd)
 {
     for (auto& fc : grd->faces) {
-
         if (mm::FaceType::is_top_bot(fc->type)) {
             double u = 0.0;
             switch (params->contour_press_bound_type) {
-            case common::models::BoundCondType::kImpermeable:
-                u = -(p[fc->cl1] - 1.0) / params->l;
+            case common::models::BoundCondType::kImpermeable: {
+                double alp = get_res_ceff(fc->bound_satur, params);
+                u = -alp * (p[fc->cl1] - 1.0);
                 break;
+            }
             case common::models::BoundCondType::kConst:
                 u = 0.0;
                 break;

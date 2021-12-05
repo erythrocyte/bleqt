@@ -14,7 +14,8 @@ set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH}${LIB_INSTALL_DIR})
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -fPIC") 
 
 # targets
-set(EXE_TARGET ble)
+set(EXE_GUI_TARGET ble)
+set(EXE_BIN_TARGET a)
 set(LIB_BLE_TARGET libBle)
 
 # "make" output
@@ -30,4 +31,5 @@ find_package(Boost REQUIRED)
 add_subdirectory(src)
 add_subdirectory(gui)
 add_subdirectory(tests)
+add_subdirectory(bin)
 

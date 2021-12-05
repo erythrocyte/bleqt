@@ -14,7 +14,7 @@ std::shared_ptr<mesh::models::Face> make_face(int ind, double x, int cl1, int cl
 {
     auto fc = std::make_shared<mesh::models::Face>();
     fc->ind = ind;
-    fc->x = x;
+    fc->cntr = x;
     fc->cl1 = cl1;
     fc->cl2 = cl2;
     fc->area = area;

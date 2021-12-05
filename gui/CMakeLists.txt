@@ -52,17 +52,17 @@ set (SOURCES
 	main.cpp
 )
 
-add_executable(${EXE_TARGET} ${SOURCES})
+add_executable(${EXE_GUI_TARGET} ${SOURCES})
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -fPIC") 
 
 get_target_property(QtCore_location Qt5::Core LOCATION)
 
-target_link_libraries(${EXE_TARGET} Qt5::Widgets)
-target_link_libraries(${EXE_TARGET} Qt5::Core)
-target_link_libraries(${EXE_TARGET} Qt5::Charts)
+target_link_libraries(${EXE_GUI_TARGET} Qt5::Widgets)
+target_link_libraries(${EXE_GUI_TARGET} Qt5::Core)
+target_link_libraries(${EXE_GUI_TARGET} Qt5::Charts)
 
-target_link_libraries(${EXE_TARGET} ${LIB_BLE_TARGET})
+target_link_libraries(${EXE_GUI_TARGET} ${LIB_BLE_TARGET})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/gui)

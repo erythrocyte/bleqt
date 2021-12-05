@@ -12,10 +12,10 @@ double get_face_sigma(const std::shared_ptr<mm::Face> fc, const std::vector<doub
 {
     auto get_sigma_d = [&](int cind) {
         return (cind == fc->cl1)
-            ? std::abs(grd->cells[fc->cl1]->cntr - fc->x)
+            ? std::abs(grd->cells[fc->cl1]->cntr - fc->cntr)
             : (fc->cl2 == -1)
             ? 0.
-            : std::abs(grd->cells[fc->cl2]->cntr - fc->x);
+            : std::abs(grd->cells[fc->cl2]->cntr - fc->cntr);
     };
 
     double s1 = sats[fc->cl1];
