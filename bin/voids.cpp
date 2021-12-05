@@ -14,7 +14,7 @@ namespace clm = ble::src::calc::models;
 
 namespace ble::bin {
 
-std::shared_ptr<cm::SolverData> get_solver_data()
+std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
 {
     auto result = std::make_shared<cm::SolverData>();
 
@@ -32,7 +32,7 @@ std::shared_ptr<cm::SolverData> get_solver_data()
     result->sat_setts->type = clm::SaturSolverType::kImplicit;
 
     result->delta = 0.005 / 100.0;
-    result->fw_lim = 0.5;
+    result->fw_lim = 50;
     result->kmu = 1.0;
     result->l = 500.0 / 100.0;
     result->m = 10.0;
@@ -54,24 +54,32 @@ std::shared_ptr<cm::SolverData> get_solver_data()
     return result;
 }
 
-std::shared_ptr<msm::Grid> get_grid(const std::shared_ptr<cm::SolverData> params)
+std::shared_ptr<msm::Grid> Calculator::get_grid(const std::shared_ptr<cm::SolverData> params)
 {
     return mss::make_grid(params);
 }
 
-void solve(const std::shared_ptr<cm::SolverData> params, const std::shared_ptr<msm::Grid> grd)
+void Calculator::solve(const std::shared_ptr<cm::SolverData> params, const std::shared_ptr<msm::Grid> grd)
 {
+    print_index = 0;
     auto solver = std::make_shared<clm::BleCalc>();
-    solver->calc(grd, params, update_progress);
+    std::function<void(int)> a = std::bind(&Calculator::update_progress, this, std::placeholders::_1);
+    solver->calc(grd, params, a);
 
     auto wwp = solver->get_well_work_params();
 
     std::cout << "last fw = " << wwp[wwp.size() - 1]->fw << std::endl;
+    print_index = 0;
+    update_progress(100);
 }
 
-void update_progress(double perc)
+void Calculator::update_progress(double perc)
 {
-    std::cout << "calc progress: " << perc << " %" << std::endl;
+    if (print_index % PRINT_STEP == 0) {
+        std::cout << "calc progress: " << perc << " %" << std::endl;
+    }
+
+    print_index++;
 }
 
 }

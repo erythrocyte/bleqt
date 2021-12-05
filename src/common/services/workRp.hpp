@@ -8,6 +8,7 @@ double get_koil(double s, double n);
 double get_fbl(double s, double n, double kmu);
 double get_sigma(double s, double n, double kmu);
 double get_dfbl(double s, double n, double kmu);
+double get_sigma(double s, double n, double kmu, double kw);
 
 } // namespace ble::src
 

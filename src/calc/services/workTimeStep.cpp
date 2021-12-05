@@ -35,42 +35,17 @@ double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
 
     std::vector<double> udfbls(grd->cells.size(), 0.);
 
-    std::chrono::system_clock::time_point start, end;
-    std::chrono::system_clock::time_point start2, end2;
-    std::chrono::duration<double> diff;
-
-    start = std::chrono::system_clock::now();
     for (auto& fc : grd->faces) {
-        start2 = std::chrono::system_clock::now();
-        if (fc->u < 0.0 && fc->cl2 == -1) {
-            continue;
-        }
-        end2 = std::chrono::system_clock::now();
-        diff = end2 - start2;
-        tt["\tcontinue"] += diff.count();
-
-        start2 = std::chrono::system_clock::now();
         double dfbl = get_face_dfbl(fc, s, data);
-        end2 = std::chrono::system_clock::now();
-        diff = end2 - start2;
-        tt["\t get faces dfbl"] += diff.count();
-
-        start2 = std::chrono::system_clock::now();
         double udfbl = fc->u * dfbl;
         if (fc->u > 0.) {
             udfbls[fc->cl1] += udfbl;
         } else {
-            udfbls[fc->cl2] -= udfbl;
+            if (fc->cl2 != -1)
+                udfbls[fc->cl2] -= udfbl;
         }
-        end2 = std::chrono::system_clock::now();
-        diff = end2 - start2;
-        tt["\tadd vector"] += diff.count();
     }
-    end = std::chrono::system_clock::now();
-    diff = end - start;
-    tt["\ttau p1"] += diff.count();
 
-    start = std::chrono::system_clock::now();
     double cv = data->sat_setts->cur_val;
     for (auto& cl : grd->cells) {
         double udfbl = udfbls[cl->ind];
@@ -81,9 +56,6 @@ double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
                 result = t;
         }
     }
-    end = std::chrono::system_clock::now();
-    diff = end - start;
-    tt["\ttau p2"] += diff.count();
 
     return result;
 }

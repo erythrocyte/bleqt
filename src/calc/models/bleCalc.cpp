@@ -60,15 +60,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     std::map<std::string, double> speed;
     speed.insert(std::pair<std::string, double>("press", 0.0));
     speed.insert(std::pair<std::string, double>("tau", 0.0));
-    speed.insert(std::pair<std::string, double>("\ttau p1", 0.0));
-    speed.insert(std::pair<std::string, double>("\ttau p2", 0.0));
     speed.insert(std::pair<std::string, double>("u inj", 0.0));
     speed.insert(std::pair<std::string, double>("satur", 0.0));
     speed.insert(std::pair<std::string, double>("fields", 0.0));
     speed.insert(std::pair<std::string, double>("well work", 0.0));
-    speed.insert(std::pair<std::string, double>("\t get faces dfbl", 0.0));
-    speed.insert(std::pair<std::string, double>("\tadd vector", 0.0));
-    speed.insert(std::pair<std::string, double>("\tcontinue", 0.0));
 
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
     std::vector<double> p = _results->data[0]->p;

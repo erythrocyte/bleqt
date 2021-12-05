@@ -5,9 +5,10 @@
 
 int main(int argc, char** argv)
 {
-    auto params = ble::bin::get_solver_data();
-    auto grd = ble::bin::get_grid(params);
-    ble::bin::solve(params, grd);
+    auto calculator = std::make_shared<ble::bin::Calculator>();
+    auto params = calculator->get_solver_data();
+    auto grd = calculator->get_grid(params);
+    calculator->solve(params, grd);
 
     return 0;
 }
