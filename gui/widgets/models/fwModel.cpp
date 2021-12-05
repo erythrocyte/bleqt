@@ -71,4 +71,35 @@ double FwModel::get_value(int column_index, int row_index) const
     }
 }
 
+std::tuple<double, double> FwModel::get_value_range(int column_index)
+{
+    auto calc_range = [&]() {
+        if (m_data.size() == 0)
+            return std::make_tuple(empty_val, empty_val);
+
+        double min = 1e8, max = -1e8;
+
+        for (size_t k = 0; k < m_data.size(); k++) {
+            double val = get_value(column_index, k);
+            if (val < min)
+                min = val;
+            if (val > max)
+                max = val;
+        }
+
+        return std::make_tuple(min, max);
+    };
+
+    switch (column_index) {
+    case 1:
+    case 2:
+        return std::make_tuple(0.0, 100.0);
+    case 3:
+    case 4:
+        return std::make_tuple(0.0, 1.0);
+    default:
+        return calc_range();
+    }
+}
+
 }
