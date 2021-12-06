@@ -50,6 +50,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         return std::min(100.0, p * 100);
     };
 
+    m_data = data;
+    m_grd = grd;
+
     _results->data.clear();
     m_tau_data.clear();
     set_initial_cond(grd, data);
@@ -146,6 +149,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             diff = end - start;
             speed["well work"] += diff.count();
 
+            add_aver_fw(sumT, cur_fw, s_cur, grd);
+
             double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
         }
@@ -226,5 +231,25 @@ double BleCalc::get_period()
 {
     return m_sum_t;
 }
+
+double BleCalc::get_sav_an(double n, double fw, double km)
+{
+    if (fw > 0.99)
+        return 1.0;
+    double a = std::pow((fw * km) / (1.0 - fw), 1.0 / n);
+    return a / (1.0 + a);
+}
+
+void BleCalc::add_aver_fw(double t, double fw, const std::vector<double> s)
+{
+    auto item = std::make_shared<common::models::FwData>();
+    item->t = t;
+    item->fw_num = fw;
+    item->sav_an = get_sav(m_data->rp_n, fw, m_data->kmu);
+    item->sav_num = 
+    m_fw_data.push_back(item);
+}
+
+double Bl
 
 }
