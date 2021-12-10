@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "bleResultData.hpp"
+#include "common/models/fwData.hpp"
 #include "common/models/solverData.hpp"
 #include "common/models/tauData.hpp"
 #include "common/models/wellWorkParams.hpp"
@@ -26,21 +27,25 @@ public:
     std::shared_ptr<BleResultData> get_result() { return _results; }
     std::vector<std::shared_ptr<common::models::WellWorkParams>> get_well_work_params() { return _wellWorkParams; }
     std::vector<std::shared_ptr<common::models::TauData>> get_tau_data() { return m_tau_data; }
+    std::vector<std::shared_ptr<common::models::FwData>> get_aver_fw_data() { return m_fw_data; }
     double get_period();
 
 private:
     std::shared_ptr<BleResultData> _results;
     std::vector<std::shared_ptr<common::models::WellWorkParams>> _wellWorkParams;
     std::vector<std::shared_ptr<common::models::TauData>> m_tau_data;
+    std::vector<std::shared_ptr<common::models::FwData>> m_fw_data;
     double m_sum_t;
+    std::shared_ptr<mesh::models::Grid> m_grd;
+    std::shared_ptr<common::models::SolverData> m_data;
 
-    void set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
-        const std::shared_ptr<common::models::SolverData> data);
-    void save_press(int index, const std::shared_ptr<mesh::models::Grid> grd,
-        const std::vector<double> p);
+    void set_initial_cond();
+    void save_press(int index, const std::vector<double> p);
     void save_any_vector(const std::vector<std::tuple<double, double>>& v, const std::string& fn);
-    void save_faces_val(const std::shared_ptr<mesh::models::Grid> grd,
-        const std::shared_ptr<common::models::SolverData> data);
+    void save_faces_val();
+    double get_sav_an(double n, double fw, double km);
+    double get_sav_num(const std::vector<double>& s);
+    void add_aver_fw(double t, double fw, const std::vector<double> s);
 };
 } // namespace ble::src
 

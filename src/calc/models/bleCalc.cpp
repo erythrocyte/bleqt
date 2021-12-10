@@ -50,9 +50,14 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         return std::min(100.0, p * 100);
     };
 
+    m_data = data;
+    m_grd = grd;
+
     _results->data.clear();
     m_tau_data.clear();
-    set_initial_cond(grd, data);
+    m_fw_data.clear();
+    m_sum_t = 0.0;
+    set_initial_cond();
     double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
 
     int index = 0;
@@ -146,6 +151,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             diff = end - start;
             speed["well work"] += diff.count();
 
+            add_aver_fw(sumT, cur_fw, s_cur);
+
             double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
         }
@@ -163,14 +170,13 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     set_progress(100); // completed;
 }
 
-void BleCalc::set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
-    const std::shared_ptr<common::models::SolverData> data)
+void BleCalc::set_initial_cond()
 {
-    size_t n = grd->cells.size();
+    size_t n = m_grd->cells.size();
 
     std::vector<double> s(n, 0.);
-    std::vector<double> p = services::solve_press(grd, s, data);
-    std::vector<double> p_ex = services::calc_press_exact(grd, data);
+    std::vector<double> p = services::solve_press(m_grd, s, m_data);
+    std::vector<double> p_ex = services::calc_press_exact(m_grd, m_data);
 
     auto d = std::make_shared<ble::src::common::models::DynamicData>();
     d->t = 0;
@@ -181,8 +187,7 @@ void BleCalc::set_initial_cond(const std::shared_ptr<mesh::models::Grid> grd,
     _results->data.push_back(d);
 }
 
-void BleCalc::save_press(int index, const std::shared_ptr<mesh::models::Grid> grd,
-    const std::vector<double> p)
+void BleCalc::save_press(int index, const std::vector<double> p)
 {
     std::ostringstream oss;
     oss << "press_" << index << ".dat";
@@ -190,22 +195,23 @@ void BleCalc::save_press(int index, const std::shared_ptr<mesh::models::Grid> gr
 
     ofs << "cind\tpress\tum\tup";
 
-    for (auto& cl : grd->cells) {
-        ofs << cl->ind << "\t" << p[cl->ind] << "\t" << grd->faces[cl->faces[0]]->u << "\t" << grd->faces[cl->faces[1]]->u << std::endl;
+    for (auto& cl : m_grd->cells) {
+        ofs << cl->ind << "\t" << p[cl->ind] << "\t"
+            << m_grd->faces[cl->faces[0]]->u << "\t"
+            << m_grd->faces[cl->faces[1]]->u << std::endl;
     }
 
     ofs.close();
 }
 
-void BleCalc::save_faces_val(const std::shared_ptr<mesh::models::Grid> grd,
-    const std::shared_ptr<common::models::SolverData> params)
+void BleCalc::save_faces_val()
 {
     auto uan = [&](double x) {
-        return (1.0 - 0.0) / std::log(1.0 / params->rw) / x;
+        return (1.0 - 0.0) / std::log(1.0 / m_data->rw) / x;
     };
 
     std::ofstream f("faces_val.dat");
-    for (auto& fc : grd->faces) {
+    for (auto& fc : m_grd->faces) {
         f << fc->cntr << "\t" << fc->u << "\t" << fc->area << "\t" << uan(fc->cntr) << std::endl;
     }
     f.close();
@@ -225,6 +231,34 @@ void BleCalc::save_any_vector(const std::vector<std::tuple<double, double>>& v, 
 double BleCalc::get_period()
 {
     return m_sum_t;
+}
+
+double BleCalc::get_sav_an(double n, double fw, double km)
+{
+    if (fw > 0.99)
+        return 1.0;
+    double a = std::pow((fw * km) / (1.0 - fw), 1.0 / n);
+    return a / (1.0 + a);
+}
+
+void BleCalc::add_aver_fw(double t, double fw, const std::vector<double> s)
+{
+    auto item = std::make_shared<common::models::FwData>();
+    item->t = t;
+    item->fw_num = fw;
+    item->sav_an = get_sav_an(m_data->rp_n, fw, m_data->kmu);
+    item->sav_num = get_sav_num(s);
+    m_fw_data.push_back(item);
+}
+
+double BleCalc::get_sav_num(const std::vector<double>& s)
+{
+    double result = 0.0;
+    for (auto& cl : m_grd->cells) {
+        result += cl->volume * s[cl->ind];
+    }
+
+    return result / m_grd->sum_volume;
 }
 
 }

@@ -52,6 +52,8 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     auto boundVisualView = std::static_pointer_cast<widgets::BoundVisualWidget>(m_boundVisualPresenter->get_view());
     m_tauVisualPresenter = m_container->resolve<bwp::TauVisualWidgetPresenter>();
     auto tauVisualView = std::static_pointer_cast<widgets::TauVisualWidget>(m_tauVisualPresenter->get_view());
+    m_fwVisualPresenter = m_container->resolve<bwp::FwVisualWidgetPresenter>();
+    auto fwVisualView = std::static_pointer_cast<widgets::FwVisualWidget>(m_fwVisualPresenter->get_view());
 
     std::static_pointer_cast<BleFrame>(m_view)->set_widgets(
         dataWidgetView,
@@ -64,7 +66,8 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
         resultDataWidget,
         wellWorkDataView,
         boundVisualView,
-        tauVisualView);
+        tauVisualView,
+        fwVisualView);
 
     set_signals();
     m_shockfront_presenter->set_show_shockfront_status(false);
@@ -140,6 +143,7 @@ void BleFramePresenter::on_run_calc()
     m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
     m_wellWorkDataWidgetPresenter->set_time_period(solver->get_period());
     m_tauVisualPresenter->set_data(solver->get_tau_data());
+    m_fwVisualPresenter->set_data(solver->get_aver_fw_data());
     update_progress(100);
 }
 

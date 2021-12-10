@@ -20,6 +20,7 @@
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
 #include "tauVisualWidgetPresenter.hpp"
+#include "fwVisualWidgetPresenter.hpp"
 #include "wellWorkDataWidgetPresenter.hpp"
 
 namespace bwp = ble::gui::widgets::presenters;
@@ -49,6 +50,7 @@ private:
     std::shared_ptr<bwp::WellWorkDataWidgetPresenter> m_wellWorkDataWidgetPresenter;
     std::shared_ptr<bwp::BoundVisualWidgetPresenter> m_boundVisualPresenter;
     std::shared_ptr<bwp::TauVisualWidgetPresenter> m_tauVisualPresenter;
+    std::shared_ptr<bwp::FwVisualWidgetPresenter> m_fwVisualPresenter;
 
     void set_signals();
     double get_sc();
