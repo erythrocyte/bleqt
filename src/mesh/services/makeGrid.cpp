@@ -169,7 +169,12 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
         result->faces.push_back(bot);
     }
 
-    check_cells_volume(params, result);
+    // check_cells_volume(params, result);
+
+    // calc sum volume
+    for(auto &cl: result->cells) {
+        result->sum_volume += cl->volume;
+    }
 
     return result;
 }

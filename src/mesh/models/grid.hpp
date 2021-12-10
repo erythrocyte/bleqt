@@ -16,6 +16,8 @@ public:
     std::vector<std::shared_ptr<Face>> faces;
     std::vector<std::shared_ptr<Cell>> cells;
 
+    double sum_volume = 0.0;
+
     std::tuple<double, double> get_min_max();
 };
 
