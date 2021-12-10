@@ -22,22 +22,6 @@ TauModel::TauModel(const std::vector<std::shared_ptr<src::common::models::TauDat
 
 QVariant TauModel::data(const QModelIndex& index, int role) const
 {
-    // auto get_value = [&]() {
-    //     if (m_data.size() == 0)
-    //         return empty_val;
-
-    //     int row_index = index.row(), column_index = index.column();
-
-    //     switch (column_index) {
-    //     case 0:
-    //         return m_data[row_index]->time;
-    //     case 1:
-    //         return m_data[row_index]->tau;
-    //     }
-
-    //     return src::common::models::CommonVals::EMPTY_VAL;
-    // };
-
     if (role == Qt::DisplayRole) {
         int row_index = index.row(), column_index = index.column();
         double value = get_value(row_index, column_index);
