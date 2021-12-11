@@ -7,8 +7,8 @@ class PhysData {
 public:
     double mu_wat;
     double mu_oil;
-    double n_oil;
-    double n_wat;
+    int n_oil;
+    int n_wat;
 
     double get_kmu() { return mu_wat / mu_oil; }
 };

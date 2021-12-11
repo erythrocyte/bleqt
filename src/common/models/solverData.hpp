@@ -14,7 +14,7 @@ namespace ble::src::common::models {
 
 class SolverData {
 public:
-    double rp_n;
+    int rp_n;
     double kmu;
     double perm_fract;
     double l;

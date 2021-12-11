@@ -5,6 +5,7 @@
 
 #include <QCheckBox>
 #include <QDoubleSpinBox>
+#include <QSpinBox>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QLabel>
@@ -38,7 +39,7 @@ public:
     // relative permeability
     QDoubleSpinBox* MuWat;
     QDoubleSpinBox* MuOil;
-    QDoubleSpinBox* N;
+    QSpinBox* N;
 
     void setupUI(QWidget* widget)
     {
@@ -316,11 +317,9 @@ private:
         layout->addWidget(MuOil, 1, 1);
 
         m_labelN = new QLabel();
-        N = new QDoubleSpinBox();
+        N = new QSpinBox();
         N->setMinimum(1.0);
         N->setMaximum(5.0);
-        N->setSingleStep(0.1);
-        N->setDecimals(1);
         N->setValue(3.0);
         layout->addWidget(m_labelN, 2, 0);
         layout->addWidget(N, 2, 1);
