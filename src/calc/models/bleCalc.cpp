@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "calc/services/pressureSolver.hpp"
+#include "calc/services/saturAverService.hpp"
 #include "calc/services/saturSolverAnalytic.hpp"
 #include "calc/services/saturSolverNum.hpp"
 #include "calc/services/workParam.hpp"
@@ -233,32 +234,14 @@ double BleCalc::get_period()
     return m_sum_t;
 }
 
-double BleCalc::get_sav_an(double n, double fw, double km)
-{
-    if (fw > 0.99)
-        return 1.0;
-    double a = std::pow((fw * km) / (1.0 - fw), 1.0 / n);
-    return a / (1.0 + a);
-}
-
 void BleCalc::add_aver_fw(double t, double fw, const std::vector<double> s)
 {
     auto item = std::make_shared<common::models::FwData>();
     item->t = t;
     item->fw_num = fw;
-    item->sav_an = get_sav_an(m_data->rp_n, fw, m_data->kmu);
-    item->sav_num = get_sav_num(s);
+    item->sav_an = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, fw / 100.0, m_data->kmu);
+    item->sav_num = services::SaturAverService::get_satur_aver_num(m_grd, s);
     m_fw_data.push_back(item);
-}
-
-double BleCalc::get_sav_num(const std::vector<double>& s)
-{
-    double result = 0.0;
-    for (auto& cl : m_grd->cells) {
-        result += cl->volume * s[cl->ind];
-    }
-
-    return result / m_grd->sum_volume;
 }
 
 }

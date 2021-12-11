@@ -64,7 +64,7 @@ void FwVisualWidget::fill_chart()
 {
     ui->Chart->removeAllSeries();
     double min_value, max_value;
-    std::tie(min_value, max_value) = m_model->get_value_range(0); // date
+    std::tie(min_value, max_value) = m_model->get_value_range(0); // x axis
     ui->setup_xaxis_max(max_value);
 
     for (int k = 1; k < m_model->columnCount(); k++) { // k = 0 is x axis;
