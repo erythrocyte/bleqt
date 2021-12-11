@@ -24,6 +24,7 @@ FwVisualWidget::~FwVisualWidget()
 
 void FwVisualWidget::set_data(models::FwModel* model)
 {
+    ui->Chart->series().clear();
     m_model = model;
 
     fill_table();
@@ -63,6 +64,8 @@ void FwVisualWidget::fill_chart()
 {
     ui->Chart->removeAllSeries();
     double min_value, max_value;
+    std::tie(min_value, max_value) = m_model->get_value_range(0); // date
+    ui->setup_xaxis_max(max_value);
 
     for (int k = 1; k < m_model->columnCount(); k++) { // k = 0 is x axis;
         std::tie(min_value, max_value) = m_model->get_value_range(k);

@@ -24,7 +24,7 @@ QVariant TauModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::DisplayRole) {
         int row_index = index.row(), column_index = index.column();
-        double value = get_value(row_index, column_index);
+        double value = get_value(column_index, row_index);
         if (src::common::models::CommonVals::is_empty(value))
             return QVariant();
 
