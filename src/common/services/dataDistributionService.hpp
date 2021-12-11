@@ -23,6 +23,9 @@ public:
 
     static std::tuple<double, double> get_range(double minx_grd, double maxx_grd,
         const std::vector<std::shared_ptr<models::DataDistribution>>& data);
+
+private:
+    static double constexpr EPSILON = 1e-6;
 };
 
 }
