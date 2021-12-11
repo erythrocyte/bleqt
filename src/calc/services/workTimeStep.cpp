@@ -28,8 +28,7 @@ double get_face_dfbl(const std::shared_ptr<mesh::models::Face> fc,
 }
 
 double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
-    const std::vector<double>& s, const std::shared_ptr<common::models::SolverData> data,
-    std::map<std::string, double>& tt)
+    const std::vector<double>& s, const std::shared_ptr<common::models::SolverData> data)
 {
     double result = 1e19;
 

@@ -6,7 +6,6 @@ namespace ble::src::calc::services {
 
 double SaturAverService::get_satur_aver_analytic(int n, double fw, double kmu)
 {
-    std::cout << "fw = " << fw << std::endl;
     if (fw > 0.99)
         return 1.0;
     double a = std::pow((fw * kmu) / (1.0 - fw), 1.0 / n);
