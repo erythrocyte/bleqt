@@ -80,12 +80,13 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     if (!data->sat_setts->need_satur_solve) {
         auto well_params = services::calc_well_work_param(grd, s_prev, data, sumT);
+        // std::cout << "m = " << data->m << ", q = " << well_params->ql << std::endl;
         // double qan = services::calc_q_analytic(grd, data);
         // double qnum = well_params->ql;
         // double perc = std::abs(qan - qnum) / qan * 100.0;
 
-        // std::string mess = common::services::string_format("qan = %.5f, qnum = %.5f, r = %.3f", qan, qnum, perc);
-        // logging::write_log(mess, logging::kInfo);
+        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, well_params->ql);
+        logging::write_log(mess, logging::kInfo);
 
         // save_faces_val(grd, data);
     } else {

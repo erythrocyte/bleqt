@@ -91,6 +91,9 @@ public:
 
         NeedSaturSolve->setText("Solve saturation");
         NeedSaturSolve->setToolTip("Solve saturation");
+
+        m_saveDataStep->setText("Save data");
+        m_saveDataStep->setToolTip("Save data step");
     }
 
 private:

@@ -318,9 +318,9 @@ private:
 
         m_labelN = new QLabel();
         N = new QSpinBox();
-        N->setMinimum(1.0);
-        N->setMaximum(5.0);
-        N->setValue(3.0);
+        N->setMinimum(1);
+        N->setMaximum(5);
+        N->setValue(2);
         layout->addWidget(m_labelN, 2, 0);
         layout->addWidget(N, 2, 1);
 
