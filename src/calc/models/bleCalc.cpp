@@ -80,12 +80,43 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     if (!data->sat_setts->need_satur_solve) {
         auto well_params = services::calc_well_work_param(grd, s_prev, data, sumT);
+
+        double q_top_bot = 0.0;
+        for (auto& f : grd->faces) {
+            if (f->type == mm::FaceType::kTop || f->type == mm::FaceType::kBot) {
+                q_top_bot += f->u * f->area;
+            }
+        }
+
+        // check conservative
+        double max_sum_q = -1e6;
+        int cind = -1;
+
+        for (auto& cl : grd->cells) {
+            double sum_q = 0.0;
+            for (auto& fi : cl->faces) {
+                auto f = grd->faces[fi];
+                double u = f->cl1 == cl->ind
+                    ? f->u
+                    : -f->u;
+                sum_q += u * f->area;
+            }
+
+            if (std::abs(sum_q) > max_sum_q) {
+                max_sum_q = std::abs(sum_q);
+                cind = cl->ind;
+            }
+        }
+
         // std::cout << "m = " << data->m << ", q = " << well_params->ql << std::endl;
         // double qan = services::calc_q_analytic(grd, data);
         // double qnum = well_params->ql;
         // double perc = std::abs(qan - qnum) / qan * 100.0;
 
-        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, well_params->ql);
+        std::string mess = common::services::string_format("m = %.4f, q_well = %.5f, q_top_bot = %.5f", data->m, well_params->ql, q_top_bot);
+        logging::write_log(mess, logging::kInfo);
+
+        mess = common::services::string_format("r[%i] = %.12f", cind, max_sum_q);
         logging::write_log(mess, logging::kInfo);
 
         // save_faces_val(grd, data);

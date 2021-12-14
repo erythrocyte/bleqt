@@ -162,17 +162,19 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
             : 0.0;
         auto top = make_face(ind++, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop,
             common::models::CommonVals::EMPTY_VAL, bound_s, bound_u);
+        cl->faces.push_back(top->ind);
         result->faces.push_back(top);
 
         auto bot = make_face(ind++, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kBot,
             common::models::CommonVals::EMPTY_VAL, bound_s, bound_u);
+        cl->faces.push_back(bot->ind);
         result->faces.push_back(bot);
     }
 
     // check_cells_volume(params, result);
 
     // calc sum volume
-    for(auto &cl: result->cells) {
+    for (auto& cl : result->cells) {
         result->sum_volume += cl->volume;
     }
 

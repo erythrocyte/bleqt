@@ -26,27 +26,27 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
     //     return b1;
     // };
 
-    auto correct_radial2 = [&](double d, double rw) {
-        double a = 16.0 * (d * d - 4.0 * rw * rw);
-        double a2 = -9.0 * (d * d - 4.0 * rw * rw) * std::log(2.0 * rw / 3.0 / d);
-        double a3 = (9.0 * d * d - 4.0 * rw * rw) * std::log(2.0 * rw / d);
-        double b1 = a / (a2 + a3);
-        return b1;
-    };
+    // auto correct_radial2 = [&](double d, double rw) {
+    //     double a = 16.0 * (d * d - 4.0 * rw * rw);
+    //     double a2 = -9.0 * (d * d - 4.0 * rw * rw) * std::log(2.0 * rw / 3.0 / d);
+    //     double a3 = (9.0 * d * d - 4.0 * rw * rw) * std::log(2.0 * rw / d);
+    //     double b1 = a / (a2 + a3);
+    //     return b1;
+    // };
 
-    if (fc->type == mm::FaceType::kWell) {
-        switch (params->mesh_setts->type) {
-        case common::models::GridType::kRadial: {
-            double rw = params->rw;
-            double d = grd->cells[fc->cl1]->cntr;
-            double b2 = regular();
-            double b3 = correct_radial2(d, rw);
-            return b2 / b3;
-        }
-        default:
-            return regular();
-        }
-    }
+    // if (fc->type == mm::FaceType::kWell) {
+    //     switch (params->mesh_setts->type) {
+    //     case common::models::GridType::kRadial: {
+    //         double rw = params->rw;
+    //         double d = grd->cells[fc->cl1]->cntr;
+    //         double b2 = regular();
+    //         double b3 = correct_radial2(d, rw);
+    //         return b2 / b3;
+    //     }
+    //     default:
+    //         return regular();
+    //     }
+    // }
 
     return regular();
 }
@@ -54,7 +54,7 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
 double get_res_ceff(double s, const std::shared_ptr<common::models::SolverData> params)
 {
     double sigma = common::services::rp::get_sigma(s, params->rp_n, params->kmu);
-    return sigma / (params->l * 2.0 * params->m);
+    return sigma / params->l / (2.0 * params->m);
 }
 
 std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::vector<double>& s,
@@ -90,7 +90,7 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         case mm::FaceType::kBot: {
             switch (params->contour_press_bound_type) {
             case common::models::BoundCondType::kImpermeable: {
-                double alp = get_res_ceff(fc->bound_satur, params);
+                double alp = get_res_ceff(fc->bound_satur, params); // / (2.0 * params->m);
                 ret.C[fc->cl1] += alp;
                 rhs[fc->cl1] += alp; // alp * pw (= 1);
             } break;

@@ -34,6 +34,9 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
         }
     }
 
+    result->ql *= 2.0 *data->delta;
+    result->qw *= 2.0 *data->delta;
+
     result->qo = result->ql - result->qw;
     result->fw = result->qw / result->ql * 100.0;
 
