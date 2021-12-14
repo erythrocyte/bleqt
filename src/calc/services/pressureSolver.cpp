@@ -53,11 +53,8 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
 
 double get_res_ceff(double s, const std::shared_ptr<common::models::SolverData> params)
 {
-    auto get_sigma = [&]() {
-        return common::services::rp::get_sigma(s, params->rp_n, params->kmu);
-    };
-
-    return get_sigma() / (params->l * 2.0 * params->m);
+    double sigma = common::services::rp::get_sigma(s, params->rp_n, params->kmu);
+    return sigma / (params->l * 2.0 * params->m);
 }
 
 std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::vector<double>& s,
