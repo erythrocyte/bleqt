@@ -76,7 +76,7 @@ double DataDistributionService::get_value(double x,
     double def_val)
 {
     for (auto& d : data) {
-        if ((d->x0 <= x) && (x <= d->x1)) {
+        if ((d->x0 - EPSILON <= x) && (x <= d->x1 + EPSILON)) {
             return src::common::services::get_value_lin_approx(d, x);
         }
     }

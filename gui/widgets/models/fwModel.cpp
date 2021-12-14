@@ -14,7 +14,7 @@ FwModel::FwModel(
 QVariant FwModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::DisplayRole) {
-        double value = get_value(index.row(), index.column());
+        double value = get_value(index.column(), index.row());
         if (src::common::models::CommonVals::is_empty(value))
             return QVariant();
 

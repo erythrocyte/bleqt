@@ -21,7 +21,7 @@ DataWidget::~DataWidget()
 
 void DataWidget::subscribe()
 {
-    auto success = connect(ui->N, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
+    auto success = connect(ui->N, SIGNAL(valueChanged(int)), this, SLOT(rp_values_changed()));
     Q_ASSERT(success);
     success = connect(ui->MuWat, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
     Q_ASSERT(success);
