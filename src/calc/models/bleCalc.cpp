@@ -57,6 +57,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     _results->data.clear();
     m_tau_data.clear();
     m_fw_data.clear();
+    _wellWorkParams.clear();
+    
     m_sum_t = 0.0;
     set_initial_cond();
     double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
@@ -89,35 +91,23 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         }
 
         // check conservative
-        double max_sum_q = -1e6;
-        int cind = -1;
-
-        for (auto& cl : grd->cells) {
-            double sum_q = 0.0;
-            for (auto& fi : cl->faces) {
-                auto f = grd->faces[fi];
-                double u = f->cl1 == cl->ind
-                    ? f->u
-                    : -f->u;
-                sum_q += u * f->area;
-            }
-
-            if (std::abs(sum_q) > max_sum_q) {
-                max_sum_q = std::abs(sum_q);
-                cind = cl->ind;
-            }
-        }
+        // double res = 0.0;
+        // int cind = 0;
+        // std::tie(cind, res) = check_conservative();
 
         // std::cout << "m = " << data->m << ", q = " << well_params->ql << std::endl;
         // double qan = services::calc_q_analytic(grd, data);
         // double qnum = well_params->ql;
         // double perc = std::abs(qan - qnum) / qan * 100.0;
 
-        std::string mess = common::services::string_format("m = %.4f, q_well = %.5f, q_top_bot = %.5f", data->m, well_params->ql, q_top_bot);
+        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, well_params->ql);
         logging::write_log(mess, logging::kInfo);
 
-        mess = common::services::string_format("r[%i] = %.12f", cind, max_sum_q);
-        logging::write_log(mess, logging::kInfo);
+        // std::string mess = common::services::string_format("m = %.4f, q_well = %.5f, q_top_bot = %.5f", data->m, well_params->ql, q_top_bot);
+        // logging::write_log(mess, logging::kInfo);
+
+        // mess = common::services::string_format("r[%i] = %.12f", cind, max_sum_q);
+        // logging::write_log(mess, logging::kInfo);
 
         // save_faces_val(grd, data);
     } else {
@@ -280,6 +270,33 @@ void BleCalc::add_aver_fw(double t, double fw, const std::vector<double> s)
     item->sav_an = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, fw / 100.0, m_data->kmu);
     item->sav_num = services::SaturAverService::get_satur_aver_num(m_grd, s);
     m_fw_data.push_back(item);
+}
+
+std::tuple<int, double> BleCalc::check_conservative()
+{
+    double max_sum_q = -1e6;
+    int cind = -1;
+
+    for (auto& cl : m_grd->cells) {
+        double sum_q = 0.0;
+        for (auto& fi : cl->faces) {
+            auto f = m_grd->faces[fi];
+            double u = f->cl1 == cl->ind
+                ? f->u
+                : -f->u;
+            double c = mm::FaceType::is_top_bot(f->type)
+                ? 2.0 * m_data->m
+                : 1.0;
+            sum_q += u * f->area / c;
+        }
+
+        if (std::abs(sum_q) > max_sum_q) {
+            max_sum_q = std::abs(sum_q);
+            cind = cl->ind;
+        }
+    }
+
+    return std::make_tuple(cind, max_sum_q);
 }
 
 }
