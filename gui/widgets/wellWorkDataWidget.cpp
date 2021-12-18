@@ -3,7 +3,7 @@
  * Path: bleqt/gui/widgets
  * Created Date: Sunday, September 19th 2021, 10:46:09 pm
  * Author: erythrocyte
- * 
+ *
  * Copyright (c) 2021 Your Company
  */
 
@@ -77,19 +77,21 @@ void WellWorkDataWidget::fill_chart()
 {
     ui->Chart->removeAllSeries();
 
-    for (int k = 1; k < m_model->columnCount(); k++) { //k = 0 is x axis;
+    for (int k = 1; k < m_model->columnCount(); k++) { // k = 0 is x axis;
         QVXYModelMapper* mapper = new QVXYModelMapper(this);
         mapper->setXColumn(0); // x axis;
         mapper->setYColumn(k);
         QString name = m_model->headerData(k, Qt::Horizontal, Qt::DisplayRole).toString();
-        auto series = ui->create_series(name);        
+        auto series = ui->create_series(name);
         mapper->setSeries(series);
         mapper->setModel(m_model);
         bool is_left = m_model->is_yaxis_left(k);
         ui->add_series(series, is_left);
     }
 
-    ui->set_min_q(0.0);
+    double max_q = 0.0, min_q = 0.0;
+    std::tie(min_q, max_q) = m_model->get_min_max_q();
+    ui->set_q_range(min_q, max_q);
 }
 
 }

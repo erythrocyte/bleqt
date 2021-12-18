@@ -70,9 +70,9 @@ public:
         return result;
     }
 
-    void set_min_q(double min_value)
+    void set_q_range(double min_value, double max_value)
     {
-        _axisQ->setMin(min_value);
+        _axisQ->setRange(min_value, max_value);
     }
 
 private:
@@ -131,7 +131,7 @@ private:
     void add_toolbar(QWidget* widget)
     {
         _toolLayout = new QBoxLayout(QBoxLayout::TopToBottom, widget);
-        //set margins to zero so the toolbar touches the widget's edges
+        // set margins to zero so the toolbar touches the widget's edges
         _toolLayout->setContentsMargins(0, 0, 0, 0);
 
         QCommonStyle* style = new QCommonStyle();
