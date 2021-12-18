@@ -76,13 +76,6 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     if (!data->sat_setts->need_satur_solve) {
         auto well_params = services::calc_well_work_param(grd, s_prev, data, sumT);
 
-        double q_top_bot = 0.0;
-        for (auto& f : grd->faces) {
-            if (f->type == mm::FaceType::kTop || f->type == mm::FaceType::kBot) {
-                q_top_bot += f->u * f->area;
-            }
-        }
-
         // check_conservative();
 
         // std::cout << "m = " << data->m << ", q = " << well_params->ql << std::endl;
@@ -92,9 +85,6 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
         std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, well_params->ql);
         logging::write_log(mess, logging::kInfo);
-
-        // std::string mess = common::services::string_format("m = %.4f, q_well = %.5f, q_top_bot = %.5f", data->m, well_params->ql, q_top_bot);
-        // logging::write_log(mess, logging::kInfo);
 
         // save_faces_val(grd, data);
     } else {

@@ -26,27 +26,27 @@ double get_h(const std::shared_ptr<mm::Face> fc, const std::shared_ptr<mm::Grid>
     //     return b1;
     // };
 
-    // auto correct_radial2 = [&](double d, double rw) {
-    //     double a = 16.0 * (d * d - 4.0 * rw * rw);
-    //     double a2 = -9.0 * (d * d - 4.0 * rw * rw) * std::log(2.0 * rw / 3.0 / d);
-    //     double a3 = (9.0 * d * d - 4.0 * rw * rw) * std::log(2.0 * rw / d);
-    //     double b1 = a / (a2 + a3);
-    //     return b1;
-    // };
+    auto correct_radial2 = [&](double d, double rw) {
+        double a = 16.0 * (d * d - 4.0 * rw * rw);
+        double a2 = -9.0 * (d * d - 4.0 * rw * rw) * std::log(2.0 * rw / 3.0 / d);
+        double a3 = (9.0 * d * d - 4.0 * rw * rw) * std::log(2.0 * rw / d);
+        double b1 = a / (a2 + a3);
+        return b1;
+    };
 
-    // if (fc->type == mm::FaceType::kWell) {
-    //     switch (params->mesh_setts->type) {
-    //     case common::models::GridType::kRadial: {
-    //         double rw = params->rw;
-    //         double d = grd->cells[fc->cl1]->cntr;
-    //         double b2 = regular();
-    //         double b3 = correct_radial2(d, rw);
-    //         return b2 / b3;
-    //     }
-    //     default:
-    //         return regular();
-    //     }
-    // }
+    if (fc->type == mm::FaceType::kWell) {
+        switch (params->mesh_setts->type) {
+        case common::models::GridType::kRadial: {
+            double rw = params->rw;
+            double d = grd->cells[fc->cl1]->cntr;
+            double b2 = regular();
+            double b3 = correct_radial2(d, rw);
+            return b2 / b3;
+        }
+        default:
+            return regular();
+        }
+    }
 
     return regular();
 }
