@@ -1,6 +1,7 @@
 #include "saturSolverNum.hpp"
 
 #include "common/services/workRp.hpp"
+#include "mesh/models/faceType.hpp"
 
 namespace cs = ble::src::common::services;
 
@@ -17,6 +18,17 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
             : init[fc->cl1];
     };
 
+    auto get_eps = [&]() {
+        switch (data->contour_press_bound_type) {
+        case common::models::BoundCondType::kImpermeable: {
+            return 1.0 / data->perm_fract;
+        }
+        case common::models::BoundCondType::kConst:
+        default:
+            return 1.0;
+        }
+    };
+
     std::vector<double> result(init.size(), 0.);
     std::vector<double> dvs(grd->cells.size(), 0.);
 
@@ -24,15 +36,18 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
         double u = fc->u;
         double s = get_s(fc, u);
         double fbl = cs::rp::get_fbl(s, data->rp_n, data->kmu);
-        double cf = u * fbl * fc->area;
-        dvs[fc->cl1] += cf;
+        double cf = mm::FaceType::is_top_bot(fc->type)
+            ? 1.0 / (2.0 * data->m)
+            : 1.0;
+        double val = u * fbl * fc->area * cf;
+        dvs[fc->cl1] += val;
         if (fc->cl2 != -1)
-            dvs[fc->cl2] -= cf;
+            dvs[fc->cl2] -= val;
     }
 
+    double eps = get_eps();
     for (auto& cl : grd->cells) {
-        double poro = 1.0;
-        result[cl->ind] = init[cl->ind] + tau / (poro * cl->volume) * dvs[cl->ind];
+        result[cl->ind] = init[cl->ind] + tau / (eps * cl->volume) * dvs[cl->ind];
     }
 
     return result;

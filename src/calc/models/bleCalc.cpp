@@ -57,19 +57,14 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     _results->data.clear();
     m_tau_data.clear();
     m_fw_data.clear();
+    _wellWorkParams.clear();
+
     m_sum_t = 0.0;
     set_initial_cond();
     double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
 
     int index = 0;
     double sumT = 0.0, sumU = 0.0, cur_fw = 0.0;
-    // std::map<std::string, double> speed;
-    // speed.insert(std::pair<std::string, double>("press", 0.0));
-    // speed.insert(std::pair<std::string, double>("tau", 0.0));
-    // speed.insert(std::pair<std::string, double>("u inj", 0.0));
-    // speed.insert(std::pair<std::string, double>("satur", 0.0));
-    // speed.insert(std::pair<std::string, double>("fields", 0.0));
-    // speed.insert(std::pair<std::string, double>("well work", 0.0));
 
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
     std::vector<double> p = _results->data[0]->p;
@@ -80,6 +75,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     if (!data->sat_setts->need_satur_solve) {
         auto well_params = services::calc_well_work_param(grd, s_prev, data, sumT);
+
+        // check_conservative();
+
         // std::cout << "m = " << data->m << ", q = " << well_params->ql << std::endl;
         // double qan = services::calc_q_analytic(grd, data);
         // double qnum = well_params->ql;
@@ -91,42 +89,25 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         // save_faces_val(grd, data);
     } else {
         while (suit_step(cur_fw, sumT)) {
-            // start = std::chrono::high_resolution_clock::now();
             if (index % data->sat_setts->pressure_update_n == 0) {
                 p = services::solve_press(grd, s_prev, data);
                 services::calc_u(p, s_prev, data, grd);
                 // save_press(index, grd, p);
             }
-            // end = std::chrono::high_resolution_clock::now();
-            // diff = end - start;
-            // speed["press"] += diff.count();
 
-            // start = std::chrono::high_resolution_clock::now();
             double t = services::get_time_step(grd, s_prev, data);
-            // end = std::chrono::high_resolution_clock::now();
-            // diff = end - start;
-            // speed["tau"] += diff.count();
 
-            // start = std::chrono::high_resolution_clock::now();
             double u = data->contour_press_bound_type == common::models::BoundCondType::kConst
                 ? services::getULiqInject(grd, data->mesh_setts->type)
                 : 0.0;
             sumU += u * t;
-            // end = std::chrono::high_resolution_clock::now();
-            // diff = end - start;
-            // speed["u inj"] += diff.count();
 
-            // start = std::chrono::high_resolution_clock::now();
             s_cur = services::solve_satur(t, s_prev, data, grd);
-            // end = std::chrono::high_resolution_clock::now();
-            // diff = end - start;
-            // speed["satur"] += diff.count();
 
             s_prev = s_cur;
             sumT += t;
             m_tau_data.push_back(std::make_shared<common::models::TauData>(sumT, t));
 
-            // start = std::chrono::high_resolution_clock::now();
             if (index % data->sat_setts->satur_field_save_n == 0) {
                 std::vector<std::tuple<double, double>> xs_an;
                 if (data->contour_press_bound_type == common::models::BoundCondType::kConst)
@@ -140,20 +121,13 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
                 _results->data.push_back(d);
             }
-            // end = std::chrono::high_resolution_clock::now();
-            // diff = end - start;
-            // speed["fields"] += diff.count();
             index++;
 
-            // start = std::chrono::high_resolution_clock::now();
             auto wwp = services::calc_well_work_param(grd, s_cur, data, sumT);
             cur_fw = wwp->fw;
             _wellWorkParams.push_back(wwp);
             if (index % 10 == 0)
                 std::cout << "fw = " << cur_fw << ", t = " << t << ", index = " << index << std::endl;
-            // end = std::chrono::high_resolution_clock::now();
-            // diff = end - start;
-            // speed["well work"] += diff.count();
 
             add_aver_fw(sumT, cur_fw, s_cur);
 
@@ -165,11 +139,6 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         }
 
         logging::write_log("saturation solve completed", logging::kInfo);
-
-        // for (auto const& [key, val] : speed) {
-        //     std::string mess = common::services::string_format("%s takes %.5f sec.", key.c_str(), val);
-        //     logging::write_log(mess, logging::kDebug);
-        // }
     }
 
     m_sum_t = sumT;
@@ -249,6 +218,34 @@ void BleCalc::add_aver_fw(double t, double fw, const std::vector<double> s)
     item->sav_an = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, fw / 100.0, m_data->kmu);
     item->sav_num = services::SaturAverService::get_satur_aver_num(m_grd, s);
     m_fw_data.push_back(item);
+}
+
+void BleCalc::check_conservative()
+{
+    double max_sum_q = -1e6;
+    int cind = -1;
+
+    for (auto& cl : m_grd->cells) {
+        double sum_q = 0.0;
+        for (auto& fi : cl->faces) {
+            auto f = m_grd->faces[fi];
+            double u = f->cl1 == cl->ind
+                ? f->u
+                : -f->u;
+            double c = mm::FaceType::is_top_bot(f->type)
+                ? 2.0 * m_data->m
+                : 1.0;
+            sum_q += u * f->area / c;
+        }
+
+        if (std::abs(sum_q) > max_sum_q) {
+            max_sum_q = std::abs(sum_q);
+            cind = cl->ind;
+        }
+    }
+
+    std::string mess = common::services::string_format("residual(%i) = %.12f", cind, max_sum_q);
+    logging::write_log(mess, logging::kInfo);
 }
 
 }

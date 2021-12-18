@@ -34,6 +34,10 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
         }
     }
 
+    double c = 2.0 * data->delta * data->perm_fract;
+    result->ql *= c;
+    result->qw *= c;
+
     result->qo = result->ql - result->qw;
     result->fw = result->qw / result->ql * 100.0;
 

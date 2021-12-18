@@ -33,11 +33,13 @@ public:
 
     bool is_yaxis_left(int section);
 
+    std::tuple<double, double> get_min_max_q();
+
 private:
     std::vector<std::shared_ptr<ble::src::common::models::WellWorkParams>> m_data;
-    const double EMPTY_VAL = -99999.0;
-
-    bool is_empty(double value) const;
+    double empty_val;
+    
+    double get_value(int column_index, int row_index) const;
 };
 
 }
