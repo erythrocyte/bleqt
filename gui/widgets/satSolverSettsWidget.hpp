@@ -20,6 +20,11 @@ public:
 
 private:
     UI::SatSolverSetts* ui;
+
+    void subscribe();
+
+private slots:
+    void need_stop_fw_pseudo_const(bool state);
 };
 
 } // namespace ble_gui::widgets
