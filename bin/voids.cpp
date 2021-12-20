@@ -30,6 +30,10 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
     result->sat_setts->pressure_update_n = 10;
     result->sat_setts->satur_field_save_n = 100;
     result->sat_setts->type = clm::SaturSolverType::kImplicit;
+    result->sat_setts->max_iter = 2e5;
+    result->sat_setts->use_fw_delta = true;
+    result->sat_setts->fw_delta = 1e-5;
+    result->sat_setts->fw_delta_iter = 1e4;
 
     result->delta = 0.005 / 100.0;
     result->fw_lim = 50;

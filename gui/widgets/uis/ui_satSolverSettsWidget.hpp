@@ -12,7 +12,6 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QWidget>
-#include <QSpinBox>
 
 namespace ble::gui::widgets::UI {
 class SatSolverSetts {
@@ -22,6 +21,10 @@ public:
     QComboBox* SolverType;
     QCheckBox* NeedSaturSolve;
     QSpinBox* SaveSaturField;
+    QSpinBox* MaxIter;
+    QCheckBox* NeedStopFwPseudoConst;
+    QDoubleSpinBox* FwDelta;
+    QSpinBox* FwDeltaIter;
 
     void setupUi(QWidget* widget)
     {
@@ -41,7 +44,7 @@ public:
         Curant->setMinimum(1e-6);
         Curant->setMaximum(1e6);
         Curant->setSingleStep(0.001);
-        Curant->setValue(0.1);
+        Curant->setValue(0.001);
         _layout->addWidget(_curantLabel, 0, 0);
         _layout->addWidget(Curant, 0, 1);
 
@@ -72,13 +75,43 @@ public:
         _layout->addWidget(m_saveDataStep, 4, 0);
         _layout->addWidget(SaveSaturField, 4, 1);
 
+        m_maxIterLabel = new QLabel("Max iteration");
+        MaxIter = new QSpinBox();
+        MaxIter->setMinimum(1);
+        MaxIter->setMaximum(1000000);
+        MaxIter->setValue(200000);
+        _layout->addWidget(m_maxIterLabel, 5, 0);
+        _layout->addWidget(MaxIter, 5, 1);
+
+        NeedStopFwPseudoConst = new QCheckBox("Stop watercut change");
+        NeedStopFwPseudoConst->setChecked(true);
+        _layout->addWidget(NeedStopFwPseudoConst, 6, 0, 1, 2);
+
+        m_fwDeltaLabel = new QLabel();
+        FwDelta = new QDoubleSpinBox();
+        FwDelta->setDecimals(8);
+        FwDelta->setMinimum(1e-8);
+        FwDelta->setMaximum(100);
+        FwDelta->setSingleStep(1e-8);
+        FwDelta->setValue(1e-5);
+        _layout->addWidget(m_fwDeltaLabel, 7, 0);
+        _layout->addWidget(FwDelta, 7, 1);
+
+        m_fwDeltaIterLabel = new QLabel("Max iteration");
+        FwDeltaIter = new QSpinBox();
+        FwDeltaIter->setMinimum(1);
+        FwDeltaIter->setMaximum(1e6);
+        FwDeltaIter->setValue(10000);
+        _layout->addWidget(m_fwDeltaIterLabel, 8, 0);
+        _layout->addWidget(FwDeltaIter, 8, 1);
+
         retranslateUi(widget);
     }
 
     void retranslateUi(QWidget* widget)
     {
-        _groupBox->setTitle("Saturation");
-        _groupBox->setToolTip("Saturation");
+        // _groupBox->setTitle("Saturation");
+        // _groupBox->setToolTip("Saturation");
 
         _curantLabel->setText("Curant number");
         _curantLabel->setToolTip("Curant number");
@@ -94,6 +127,18 @@ public:
 
         m_saveDataStep->setText("Save data");
         m_saveDataStep->setToolTip("Save data step");
+
+        m_maxIterLabel->setText("Max iteration");
+        m_maxIterLabel->setToolTip("Max iteration count to stop calc");
+
+        m_fwDeltaLabel->setText("Watercur delta");
+        m_fwDeltaLabel->setToolTip("Watercut change delta");
+
+        m_fwDeltaIterLabel->setText("Watercur delta iter");
+        m_fwDeltaIterLabel->setToolTip("Watercut change for small delta iter count");
+
+        NeedStopFwPseudoConst->setText("Stop watercut change");
+        NeedStopFwPseudoConst->setToolTip("Stop when watercut change less than delta for long iter");
     }
 
 private:
@@ -104,6 +149,9 @@ private:
     QLabel* _recalcPressLabel;
     QLabel* _solverTypeLabel;
     QLabel* m_saveDataStep;
+    QLabel* m_maxIterLabel;
+    QLabel* m_fwDeltaLabel;
+    QLabel* m_fwDeltaIterLabel;
 };
 
 }

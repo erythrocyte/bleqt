@@ -63,7 +63,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     set_initial_cond();
     double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
 
-    int index = 0;
+    int index = 0, fw_const_iter = 0;
     double sumT = 0.0, sumU = 0.0, cur_fw = 0.0;
 
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
@@ -124,8 +124,26 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             index++;
 
             auto wwp = services::calc_well_work_param(grd, s_cur, data, sumT);
-            cur_fw = wwp->fw;
             _wellWorkParams.push_back(wwp);
+
+            if (data->sat_setts->use_fw_delta) {
+                double r_fw = std::abs(wwp->fw - cur_fw);
+                if (r_fw != 0.0) {
+                    if (r_fw < data->sat_setts->fw_delta) {
+                        // std::cout << "r_fw = " << r_fw << ", fw_const_iter = " << fw_const_iter << std::endl;
+                        fw_const_iter++;
+                    } else {
+                        fw_const_iter = 0;
+                    }
+                }
+
+                if (fw_const_iter > data->sat_setts->fw_delta_iter) {
+                    logging::write_log("fw change significant reason for break calc", logging::kInfo);
+                    break;
+                }
+            }
+
+            cur_fw = wwp->fw;
             if (index % 10 == 0)
                 std::cout << "fw = " << cur_fw << ", t = " << t << ", index = " << index << std::endl;
 
@@ -134,8 +152,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
 
-            if (index > 5e5)
+            if (index > data->sat_setts->max_iter) {
+                logging::write_log("max iter reached", logging::kInfo);
                 break;
+            }
         }
 
         logging::write_log("saturation solve completed", logging::kInfo);

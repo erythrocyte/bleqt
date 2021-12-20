@@ -12,6 +12,11 @@ public:
     SaturSolverType::TypeEnum type;
     bool need_satur_solve;
     int satur_field_save_n;
+    int max_iter;
+
+    bool use_fw_delta;
+    double fw_delta;
+    int fw_delta_iter;
 };
 
 }
