@@ -235,7 +235,7 @@ void BleCalc::add_aver_fw(double t, double fw_well, double fw_shore, const std::
     item->t = t;
     item->fw_num_well = fw_well;
     item->fw_num_shore = fw_shore;
-    item->sav_shore = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, fw_shore / 100.0, m_data->kmu);
+    item->sav_an_shore = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, fw_shore / 100.0, m_data->kmu);
     item->sav_num = services::SaturAverService::get_satur_aver_num(m_grd, s);
     m_fw_data.push_back(item);
 }

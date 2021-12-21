@@ -14,7 +14,7 @@ public:
     double fw_num_well;
     double fw_num_shore;
     double sav_num;
-    double sav_shore;
+    double sav_an_shore;
 };
 }
 
