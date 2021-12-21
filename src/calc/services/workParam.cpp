@@ -34,15 +34,6 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     result->ql = ql_well;
     result->qw = qw_well;
 
-    // for (auto& fc : grd->faces) {
-    //     if (fc->type == mm::FaceType::kWell) {
-    //         double ql = -fc->u * fc->area;
-    //         double f = common::services::rp::get_fbl(s[fc->cl1], data->rp_n, data->kmu);
-    //         result->ql += ql;
-    //         result->qw += ql * f;
-    //     }
-    // }
-
     double c = 2.0 * data->delta * data->perm_fract;
     result->ql *= c;
     result->qw *= c;
