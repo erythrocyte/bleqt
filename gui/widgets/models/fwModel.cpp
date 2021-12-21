@@ -35,13 +35,13 @@ QVariant FwModel::headerData(int section, Qt::Orientation orientation, int role)
         case 0:
             return QString("%1").arg("t");
         case 1:
-            return QString("%1").arg("fw_num");
+            return QString("%1").arg("fw_num_well");
         case 2:
-            return QString("%1").arg("fw_an");
+            return QString("%1").arg("fw_num_shore");
         case 3:
             return QString("%1").arg("s_num");
         case 4:
-            return QString("%1").arg("s_an");
+            return QString("%1").arg("s_shore");
         default:
             return QVariant();
         }
@@ -59,13 +59,13 @@ double FwModel::get_value(int column_index, int row_index) const
     case 0:
         return m_data[row_index]->t;
     case 1:
-        return m_data[row_index]->fw_num;
+        return m_data[row_index]->fw_num_well;
     case 2:
-        return m_data[row_index]->fw_an;
+        return m_data[row_index]->fw_num_shore;
     case 3:
         return m_data[row_index]->sav_num;
     case 4:
-        return m_data[row_index]->sav_an;
+        return m_data[row_index]->sav_shore;
     default:
         return empty_val;
     }

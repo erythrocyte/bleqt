@@ -144,10 +144,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             }
 
             cur_fw = wwp->fw;
-            if (index % 10 == 0)
+            if (index % 100 == 0)
                 std::cout << "fw = " << cur_fw << ", t = " << t << ", index = " << index << std::endl;
 
-            add_aver_fw(sumT, cur_fw, s_cur);
+            add_aver_fw(sumT, wwp->fw, wwp->fw_shore, s_cur);
 
             double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
@@ -229,13 +229,13 @@ double BleCalc::get_period()
     return m_sum_t;
 }
 
-void BleCalc::add_aver_fw(double t, double fw, const std::vector<double> s)
+void BleCalc::add_aver_fw(double t, double fw_well, double fw_shore, const std::vector<double> s)
 {
     auto item = std::make_shared<common::models::FwData>();
     item->t = t;
-    item->fw_num = fw;
-    item->fw_an = 0.0;
-    item->sav_an = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, fw / 100.0, m_data->kmu);
+    item->fw_num_well = fw_well;
+    item->fw_num_shore = fw_shore;
+    item->sav_shore = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, fw_shore / 100.0, m_data->kmu);
     item->sav_num = services::SaturAverService::get_satur_aver_num(m_grd, s);
     m_fw_data.push_back(item);
 }

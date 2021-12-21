@@ -11,10 +11,10 @@ public:
     ~FwData() { }
 
     double t;
-    double fw_num;
-    double fw_an;
+    double fw_num_well;
+    double fw_num_shore;
     double sav_num;
-    double sav_an;
+    double sav_shore;
 };
 }
 
