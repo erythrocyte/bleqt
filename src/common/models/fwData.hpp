@@ -10,7 +10,7 @@ public:
 
     ~FwData() { }
 
-    double t;
+    double pv;
     double fw_num_well;
     double fw_num_shore;
     double sav_num;

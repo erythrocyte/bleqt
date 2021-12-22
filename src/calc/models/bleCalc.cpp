@@ -51,6 +51,16 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         return std::min(100.0, p * 100);
     };
 
+    auto get_fract_pv = [&]() {
+        double ans = 0.0;
+        double poro = data->real_poro;
+        for (const auto& cl : grd->cells) {
+            ans += cl->volume;
+        }
+
+        return ans * poro * 2.0 * data->delta;
+    };
+
     m_data = data;
     m_grd = grd;
 
@@ -64,7 +74,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
 
     int index = 0, fw_const_iter = 0;
-    double sumT = 0.0, sumU = 0.0, cur_fw = 0.0;
+    double sumT = 0.0, sumU = 0.0, cur_fw = 0.0, sumQ = 0.0;
+    double fract_pv = get_fract_pv();
 
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
     std::vector<double> p = _results->data[0]->p;
@@ -147,7 +158,11 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             if (index % 100 == 0)
                 std::cout << "fw = " << cur_fw << ", t = " << t << ", index = " << index << std::endl;
 
-            add_aver_fw(sumT, wwp->fw, wwp->fw_shore, s_cur);
+            sumQ += wwp->ql * t;
+            double pv = sumQ / fract_pv; // how many pv are flushed
+            if (index % 100 == 0)
+                std::cout << "sumq = " << sumQ << ", pv = " << pv << ", fpv = " << fract_pv << std::endl;
+            add_aver_fw(pv, wwp->fw, wwp->fw_shore, s_cur);
 
             double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
@@ -229,10 +244,10 @@ double BleCalc::get_period()
     return m_sum_t;
 }
 
-void BleCalc::add_aver_fw(double t, double fw_well, double fw_shore, const std::vector<double> s)
+void BleCalc::add_aver_fw(double pv, double fw_well, double fw_shore, const std::vector<double> s)
 {
     auto item = std::make_shared<common::models::FwData>();
-    item->t = t;
+    item->pv = pv;
     item->fw_num_well = fw_well;
     item->fw_num_shore = fw_shore;
     item->sav_an_shore = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, fw_shore / 100.0, m_data->kmu);

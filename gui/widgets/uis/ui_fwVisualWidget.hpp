@@ -43,7 +43,7 @@ public:
 
     void retranslateUi()
     {
-        _axis_x->setTitleText("T");
+        _axis_x->setTitleText("PV");
         _axis_y_s->setTitleText("s");
         _axis_y_fw->setTitleText("fw");
     }

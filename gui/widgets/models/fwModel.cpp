@@ -33,7 +33,7 @@ QVariant FwModel::headerData(int section, Qt::Orientation orientation, int role)
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
         case 0:
-            return QString("%1").arg("t");
+            return QString("%1").arg("PV");
         case 1:
             return QString("%1").arg("fw_well");
         case 2:
@@ -57,7 +57,7 @@ double FwModel::get_value(int column_index, int row_index) const
 
     switch (column_index) {
     case 0:
-        return m_data[row_index]->t;
+        return m_data[row_index]->pv;
     case 1:
         return m_data[row_index]->fw_num_well;
     case 2:
