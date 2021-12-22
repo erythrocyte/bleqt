@@ -3,11 +3,14 @@
 
 #include <iostream>
 #include <memory>
+#include <set>
+#include <tuple>
 #include <vector>
 
 #include "common/models/gridType.hpp"
 #include "common/models/solverData.hpp"
 #include "common/models/wellWorkParams.hpp"
+#include "mesh/models/faceType.hpp"
 #include "mesh/models/grid.hpp"
 
 namespace mm = ble::src::mesh::models;
@@ -19,6 +22,9 @@ double getULiqInject(const std::shared_ptr<mm::Grid> grd, cm::GridType::TypeEnum
 std::shared_ptr<cm::WellWorkParams> calc_well_work_param(const std::shared_ptr<mm::Grid> grd,
     const std::vector<double>& s, const std::shared_ptr<cm::SolverData> data, double t);
 double calc_q_analytic(const std::shared_ptr<mm::Grid> grd, const std::shared_ptr<cm::SolverData> data);
+std::tuple<double, double> get_facetype_ql_qw(const std::shared_ptr<mm::Grid> grd,
+    const std::shared_ptr<cm::SolverData> data, bool use_bound_satur,
+    const std::vector<double>& s, const std::set<mm::FaceType::TypeEnum>& types);
 
 }
 

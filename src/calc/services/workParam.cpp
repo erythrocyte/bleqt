@@ -23,23 +23,28 @@ double getULiqInject(const std::shared_ptr<mm::Grid> grd, common::models::GridTy
 std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::shared_ptr<mm::Grid> grd,
     const std::vector<double>& s, const std::shared_ptr<cm::SolverData> data, double t)
 {
+    auto calc_fw = [](double qw, double ql) {
+        return qw / ql * 100.0;
+    };
     auto result = std::make_shared<common::models::WellWorkParams>();
     result->t = t;
-    for (auto& fc : grd->faces) {
-        if (fc->type == mm::FaceType::kWell) {
-            double ql = -fc->u * fc->area;
-            double f = common::services::rp::get_fbl(s[fc->cl1], data->rp_n, data->kmu);
-            result->ql += ql;
-            result->qw += ql * f;
-        }
-    }
+    double ql_well, qw_well;
+    std::tie(ql_well, qw_well) = get_facetype_ql_qw(grd, data, false, s,
+        std::set<mm::FaceType::TypeEnum> { mm::FaceType::kWell });
+    result->ql = ql_well;
+    result->qw = qw_well;
 
     double c = 2.0 * data->delta * data->perm_fract;
     result->ql *= c;
     result->qw *= c;
 
     result->qo = result->ql - result->qw;
-    result->fw = result->qw / result->ql * 100.0;
+    result->fw = calc_fw(result->qw, result->ql);
+
+    double ql_shore, qw_shore;
+    std::tie(ql_shore, qw_shore) = get_facetype_ql_qw(grd, data, true, s,
+        std::set<mm::FaceType::TypeEnum> { mm::FaceType::kTop, mm::FaceType::kBot });
+    result->fw_shore = calc_fw(qw_shore, ql_shore);
 
     return result;
 }
@@ -54,6 +59,29 @@ double calc_q_analytic(const std::shared_ptr<mm::Grid> grd, const std::shared_pt
     default:
         return 0.0;
     }
+}
+
+std::tuple<double, double> get_facetype_ql_qw(const std::shared_ptr<mm::Grid> grd,
+    const std::shared_ptr<cm::SolverData> data, bool use_bound_satur,
+    const std::vector<double>& s, const std::set<mm::FaceType::TypeEnum>& types)
+{
+    auto get_s = [&](const std::shared_ptr<mm::Face> fc) {
+        return use_bound_satur
+            ? fc->bound_satur
+            : s[fc->cl1];
+    };
+    double result_ql = 0.0, result_qw = 0.0;
+    for (auto& fc : grd->faces) {
+        if (types.find(fc->type) != types.end()) {
+            double ql = std::abs(fc->u) * fc->area; // flow is always positive (should be)
+            double sat = get_s(fc);
+            double f = common::services::rp::get_fbl(sat, data->rp_n, data->kmu);
+            result_ql += ql;
+            result_qw += ql * f;
+        }
+    }
+
+    return std::tie(result_ql, result_qw);
 }
 
 } // namespace ble::src

@@ -67,9 +67,7 @@ void FwVisualWidget::fill_chart()
     std::tie(min_value, max_value) = m_model->get_value_range(0); // x axis
     ui->setup_xaxis_max(max_value);
 
-    for (int k = 1; k < m_model->columnCount(); k++) { // k = 0 is x axis;
-        if (k == 2)
-            continue;
+    for (int k = 1; k < m_model->columnCount(); k++) { // k = 0 is x axis;s
         std::tie(min_value, max_value) = m_model->get_value_range(k);
         if (src::common::models::CommonVals::is_empty(min_value) && src::common::models::CommonVals::is_empty(max_value))
             continue;

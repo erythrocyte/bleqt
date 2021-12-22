@@ -43,7 +43,7 @@ private:
     void save_press(int index, const std::vector<double> p);
     void save_any_vector(const std::vector<std::tuple<double, double>>& v, const std::string& fn);
     void save_faces_val();
-    void add_aver_fw(double t, double fw, const std::vector<double> s);
+    void add_aver_fw(double t, double fw, double fw_shore, const std::vector<double> s);
     void check_conservative();
 };
 } // namespace ble::src
