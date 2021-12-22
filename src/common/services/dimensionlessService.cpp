@@ -50,6 +50,7 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
     result_solver_data->use_fwlim = params->data->use_fwlim;
     result_solver_data->period = params->data->period / result_scale->t0();
     result_solver_data->perm_fract = params->data->perm_fract / result_scale->perm0;
+    result_solver_data->real_poro = params->data->poro_fract;
 
     result_solver_data->bound_satur = params->bound->bound_satur;
     result_solver_data->contour_press_bound_type = params->bound->contour_press_bound_type;

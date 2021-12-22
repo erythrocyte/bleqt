@@ -25,6 +25,7 @@ public:
     bool use_fwlim;
     double get_lenght() { return 1.0 - rw; }
     double m;
+    double real_poro;
 
     std::vector<std::shared_ptr<DataDistribution>> top_bot_bound_s;
     std::vector<std::shared_ptr<DataDistribution>> initial_s;

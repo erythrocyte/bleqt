@@ -47,6 +47,7 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
     result->perm_fract = 10;
     result->bound_satur = 1.0;
     result->contour_press_bound_type = cm::BoundCondType::kConst;
+    result->real_poro = 0.2;
 
     auto item = std::make_shared<cm::DataDistribution>();
     item->v0 = 0.0;
