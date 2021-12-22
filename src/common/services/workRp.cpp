@@ -14,6 +14,16 @@ double my_pow(double val, int degree)
     return ans;
 }
 
+double get_phi(double s, int n, double kmu)
+{
+    return get_kw(s, n) + kmu * get_koil(s, n);
+}
+
+double get_phi(double s, int n, double kmu, double kw)
+{
+    return kw + kmu * get_koil(s, n);
+}
+
 double get_kw(double s, int n)
 {
     return my_pow(s, n);
@@ -26,12 +36,12 @@ double get_koil(double s, int n)
 
 double get_sigma(double s, int n, double kmu)
 {
-    return get_kw(s, n) + kmu * get_koil(s, n);
+    return get_phi(s, n, kmu); // k = 1;
 }
 
 double get_sigma(double s, int n, double kmu, double kw)
 {
-    return kw + kmu * get_koil(s, n);
+    return get_phi(s, n, kmu, kw); // k = 1;
 }
 
 double get_fbl(double s, int n, double kmu)
