@@ -36,11 +36,20 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     std::function<void(double)> set_progress)
 {
     auto suit_step = [&](double fw, double sum_t) {
+        bool result = true;
         if (data->use_fwlim) {
-            return fw <= data->fw_lim;
+            result = fw <= data->fw_lim;
+            if (!result) {
+                std::cout << "max watercut value reached" << std::endl;
+            }
         } else {
-            return sum_t <= data->period;
+            result = sum_t <= data->period;
+            if (!result) {
+                std::cout << "max time value reached" << std::endl;
+            }
         }
+
+        return result;
     };
 
     auto get_pecr = [&](double fw, double sum_t) {
@@ -160,8 +169,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
             sumQ += wwp->ql * t;
             double pv = sumQ / fract_pv; // how many pv are flushed
-            if (index % 100 == 0)
-                std::cout << "sumq = " << sumQ << ", pv = " << pv << ", fpv = " << fract_pv << std::endl;
+            // if (index % 100 == 0)
+            //     std::cout << "sumq = " << sumQ << ", pv = " << pv << ", fpv = " << fract_pv << std::endl;
             add_aver_fw(pv, wwp->fw, wwp->fw_shore, s_cur);
 
             double perc = get_pecr(cur_fw, sumT);

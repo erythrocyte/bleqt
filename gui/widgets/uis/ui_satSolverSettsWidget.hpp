@@ -40,11 +40,11 @@ public:
 
         _curantLabel = new QLabel();
         Curant = new QDoubleSpinBox();
-        Curant->setDecimals(4);
+        Curant->setDecimals(7);
         Curant->setMinimum(1e-6);
         Curant->setMaximum(1e6);
         Curant->setSingleStep(0.001);
-        Curant->setValue(0.001);
+        Curant->setValue(0.00001);
         _layout->addWidget(_curantLabel, 0, 0);
         _layout->addWidget(Curant, 0, 1);
 
@@ -78,13 +78,13 @@ public:
         m_maxIterLabel = new QLabel("Max iteration");
         MaxIter = new QSpinBox();
         MaxIter->setMinimum(1);
-        MaxIter->setMaximum(1000000);
-        MaxIter->setValue(200000);
+        MaxIter->setMaximum(100000000);
+        MaxIter->setValue(100000000);
         _layout->addWidget(m_maxIterLabel, 5, 0);
         _layout->addWidget(MaxIter, 5, 1);
 
         NeedStopFwPseudoConst = new QCheckBox("Stop watercut change");
-        NeedStopFwPseudoConst->setChecked(true);
+        NeedStopFwPseudoConst->setChecked(false);
         _layout->addWidget(NeedStopFwPseudoConst, 6, 0, 1, 2);
 
         m_fwDeltaLabel = new QLabel();
