@@ -163,6 +163,14 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 }
             }
 
+            if (data->sat_setts->use_fw_shorewell_converge) {
+                double r = std::abs(wwp->fw - wwp->fw_shore); // residual
+                if (r < data->sat_setts->fw_shw_conv) {
+                    logging::write_log("fw shore and well converged", logging::kInfo);
+                    break;
+                }
+            }
+
             cur_fw = wwp->fw;
             if (index % 100 == 0)
                 std::cout << "fw = " << cur_fw << ", t = " << t << ", index = " << index << std::endl;

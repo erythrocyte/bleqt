@@ -25,6 +25,7 @@ private:
 
 private slots:
     void need_stop_fw_pseudo_const(bool state);
+    void need_stop_fw_shorewell_converge(bool state);
 };
 
 } // namespace ble_gui::widgets
