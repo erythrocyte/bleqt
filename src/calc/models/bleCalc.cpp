@@ -4,6 +4,7 @@
 #include <fstream>
 #include <math.h>
 #include <sstream>
+#include <stdio.h>
 
 #include "calc/services/pressureSolver.hpp"
 #include "calc/services/saturAverService.hpp"
@@ -93,6 +94,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     std::chrono::system_clock::time_point start, end;
     std::chrono::duration<double> diff;
 
+    const char* aver = "aver.dat";
+    std::remove(aver);
+
     if (!data->sat_setts->need_satur_solve) {
         auto well_params = services::calc_well_work_param(grd, s_prev, data, sumT);
 
@@ -167,6 +171,11 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 double r = std::abs(wwp->fw - wwp->fw_shore); // residual
                 if (r < data->sat_setts->fw_shw_conv) {
                     logging::write_log("fw shore and well converged", logging::kInfo);
+                    auto d = std::make_shared<calc::models::AverFwSaveData>();
+                    d->m = data->m;
+                    d->s_const = data->top_bot_bound_s[0]->v0;
+                    d->data = m_fw_data[m_fw_data.size() - 1];
+                    save_aver_fw(aver, d);
                     break;
                 }
             }
@@ -298,6 +307,32 @@ void BleCalc::check_conservative()
 
     std::string mess = common::services::string_format("residual(%i) = %.12f", cind, max_sum_q);
     logging::write_log(mess, logging::kInfo);
+}
+
+void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data)
+{
+    auto get_file_exists = [&]() {
+        std::ifstream infile(fn);
+        return infile.good();
+    };
+
+    bool file_exists = get_file_exists();
+
+    std::ofstream f(fn, std::ios_base::app);
+
+    if (!file_exists) // write headers
+        f << "m\ts\tpv\tfw_well\tfw_shore\ts_num\ts_an" << std::endl;
+
+    f << data->m << "\t"
+      << data->s_const << "\t"
+      << data->data->pv << "\t"
+      << data->data->fw_num_well << "\t"
+      << data->data->fw_num_shore << "\t"
+      << data->data->sav_num << "\t"
+      << data->data->sav_an_shore
+      << std::endl;
+
+    f.close();
 }
 
 }
