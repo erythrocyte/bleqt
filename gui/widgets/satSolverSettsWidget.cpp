@@ -17,6 +17,7 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
     }
 
     subscribe();
+    need_stop_fw_shorewell_converge(false);
 }
 
 std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_data()
@@ -32,6 +33,9 @@ std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_d
     result->fw_delta = ui->FwDelta->value();
     result->fw_delta_iter = ui->FwDeltaIter->value();
 
+    result->use_fw_shorewell_converge = ui->NeedStopFwShoreWellConverge->isChecked();
+    result->fw_shw_conv = ui->FwShoreWellConverge->value();
+
     auto str = ui->SolverType->currentText().toStdString();
     result->type = src::calc::models::SaturSolverType::get_enum(str);
 
@@ -42,12 +46,19 @@ void SatSolverSettsWidget::subscribe()
 {
     auto success = connect(ui->NeedStopFwPseudoConst, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_pseudo_const);
     Q_ASSERT(success);
+    success = connect(ui->NeedStopFwShoreWellConverge, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_shorewell_converge);
+    Q_ASSERT(success);
 }
 
 void SatSolverSettsWidget::need_stop_fw_pseudo_const(bool state)
 {
     ui->FwDelta->setEnabled(state);
     ui->FwDeltaIter->setEnabled(state);
+}
+
+void SatSolverSettsWidget::need_stop_fw_shorewell_converge(bool state)
+{
+    ui->FwShoreWellConverge->setEnabled(state);
 }
 
 }
