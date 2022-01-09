@@ -11,6 +11,9 @@ class AverFwSaveData {
 public:
     double m;
     double s_const;
+    bool converged = false;
+    int iter_count;
+    double cur_val;
     std::shared_ptr<common::models::FwData> data;
 };
 }

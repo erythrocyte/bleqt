@@ -130,7 +130,7 @@ void BleFramePresenter::on_run_calc()
 
     std::function<void(int)> a = std::bind(&BleFramePresenter::update_progress, this, std::placeholders::_1);
     auto solver = std::make_shared<src::calc::models::BleCalc>();
-    solver->calc(grd, solver_data, a);
+    solver->calc(grd, solver_data, a, false);
     auto results = solver->get_result();
     results->grd = grd;
 

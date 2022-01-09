@@ -49,9 +49,9 @@ double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
     for (auto& cl : grd->cells) {
         double udfbl = udfbls[cl->ind];
         double poro = 1.0; // data->data->poro_fract; // for every cell
-        if (udfbl > 1e-10) {
+        if (udfbl > 1e-15) {
             double t = (cv * poro * cl->get_h()) / udfbl;
-            if (t > 1e-8 && t < result)
+            if (t > 1e-15 && t < result)
                 result = t;
         }
     }

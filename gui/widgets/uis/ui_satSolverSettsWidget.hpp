@@ -46,7 +46,7 @@ public:
         Curant->setMinimum(1e-6);
         Curant->setMaximum(1e6);
         Curant->setSingleStep(0.001);
-        Curant->setValue(0.00001);
+        Curant->setValue(0.00005);
         _layout->addWidget(_curantLabel, 0, 0);
         _layout->addWidget(Curant, 0, 1);
 
@@ -95,7 +95,7 @@ public:
         FwDelta->setMinimum(1e-8);
         FwDelta->setMaximum(100);
         FwDelta->setSingleStep(1e-8);
-        FwDelta->setValue(1e-5);
+        FwDelta->setValue(5);
         _layout->addWidget(m_fwDeltaLabel, 7, 0);
         _layout->addWidget(FwDelta, 7, 1);
 
@@ -159,7 +159,7 @@ public:
         NeedStopFwShoreWellConverge->setText("Watercut shore|well on converge");
         NeedStopFwShoreWellConverge->setToolTip("Stop when watercut shore|well converged");
 
-        m_fwShoreWellConvergeLabel->setText("Fw shore|well delta");
+        m_fwShoreWellConvergeLabel->setText("Fw shore|well delta, %");
         m_fwShoreWellConvergeLabel->setToolTip("Watercut shore|well residual max value to stop calculation");
     }
 

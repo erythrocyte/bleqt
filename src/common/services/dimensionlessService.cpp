@@ -44,7 +44,7 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
     result_solver_data->fw_lim = params->data->fw_lim;
     result_solver_data->kmu = params->data->phys->mu_wat / params->data->phys->mu_oil;
     result_solver_data->l = scale_x(params->data->l);
-    result_solver_data->m = params->data->perm_fract * params->data->delta / (params->data->perm_res * params->data->r);
+    // result_solver_data->m = params->data->perm_fract * params->data->delta / (params->data->perm_res * params->data->r);
     result_solver_data->rp_n = params->data->phys->n_oil;
     result_solver_data->rw = scale_x(params->data->rw);
     result_solver_data->use_fwlim = params->data->use_fwlim;

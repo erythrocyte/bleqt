@@ -21,7 +21,8 @@ public:
     ~BleCalc();
     void calc(const std::shared_ptr<mesh::models::Grid> grd,
         const std::shared_ptr<common::models::SolverData> data,
-        std::function<void(double)> set_progress);
+        std::function<void(double)> set_progress,
+        bool clear_aver);
 
     size_t get_data_len() { return _results->data.size(); }
     std::shared_ptr<common::models::DynamicData> get_data(int index) const { return _results->data[index]; }
