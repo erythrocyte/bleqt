@@ -28,12 +28,12 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
 
     // satur solver settings
     result->sat_setts = std::make_shared<clm::SaturSolverSetts>();
-    result->sat_setts->cur_val = 1e-6;
+    result->sat_setts->cur_val = 0.5e-6;
     result->sat_setts->need_satur_solve = true;
     result->sat_setts->pressure_update_n = 10;
-    result->sat_setts->satur_field_save_n = 100;
+    result->sat_setts->satur_field_save_n = 1e7;
     result->sat_setts->type = clm::SaturSolverType::kImplicit;
-    result->sat_setts->max_iter = 2.5e6;
+    result->sat_setts->max_iter = 2.5e7;
     result->sat_setts->use_fw_delta = false;
     result->sat_setts->fw_delta = 1e-5;
     result->sat_setts->fw_delta_iter = 1e4;
@@ -95,7 +95,8 @@ void Calculator::update_progress(double perc)
 void Calculator::run_s_const_loop()
 {
     std::vector<double> ms = { /*1e-1, 1e0, */ 1e2, /*1e2, 1e3*/ };
-    std::vector<double> scs = { 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0 };
+    std::vector<double> scs = { 0.05 , 0.1, 0.15, 0.2, 0.25 , 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0 };
+    // std::vector<double> scs = {0.85 };
 
     for (auto const& mi : ms) {
         for (auto const& s : scs) {
