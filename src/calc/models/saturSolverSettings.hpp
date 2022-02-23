@@ -7,7 +7,8 @@ namespace ble::src::calc::models {
 
 class SaturSolverSetts {
 public:
-    double cur_val;
+    double cv;
+    double cg;
     int pressure_update_n;
     SaturSolverType::TypeEnum type;
     bool need_satur_solve;

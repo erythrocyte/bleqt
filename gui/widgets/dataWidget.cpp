@@ -52,11 +52,11 @@ std::shared_ptr<ble::src::common::models::Data> DataWidget::get_data()
     result->use_fwlim = ui->UseFwLimit->isChecked();
 
     // rel perm
-    result->phys = std::make_shared<ble::src::common::models::PhysData>();
-    result->phys->mu_oil = ui->MuOil->value();
-    result->phys->mu_wat = ui->MuWat->value();
-    result->phys->n_oil = ui->N->value();
-    result->phys->n_wat = ui->N->value();
+    result->phys = std::make_shared<ble::src::common::models::PhysData>(
+        ui->N->value(),
+        ui->N->value(),
+        ui->MuWat->value(),
+        ui->MuOil->value());
 
     return result;
 }

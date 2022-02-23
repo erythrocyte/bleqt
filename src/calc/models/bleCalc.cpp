@@ -75,12 +75,13 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         auto s = cs::string_format("fw shore and well converged in %i iter", index);
         logging::write_log(s, logging::kInfo);
         auto d = std::make_shared<calc::models::AverFwSaveData>();
-        d->m = data->get_m();
+        d->m = data->m;
         d->s_const = data->top_bot_bound_s[0]->v0;
         d->converged = conv;
         d->data = m_fw_data[m_fw_data.size() - 1];
         d->iter_count = index;
-        d->cur_val = data->sat_setts->cur_val;
+        d->cv = data->sat_setts->cv;
+        d->cg = data->sat_setts->cg;
         save_aver_fw(fn, d);
     };
 
@@ -122,7 +123,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         // double qnum = well_params->ql;
         // double perc = std::abs(qan - qnum) / qan * 100.0;
 
-        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->get_m(), well_params->ql);
+        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, well_params->ql);
         logging::write_log(mess, logging::kInfo);
 
         // save_faces_val(grd, data);
@@ -310,7 +311,7 @@ void BleCalc::check_conservative()
                 ? f->u
                 : -f->u;
             double c = mm::FaceType::is_top_bot(f->type)
-                ? 2.0 * m_data->get_m()
+                ? 2.0 * m_data->m
                 : 1.0;
             sum_q += u * f->area / c;
         }
@@ -346,7 +347,8 @@ void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData>
           << "s_an\t"
           << "status\t"
           << "iter_count\t"
-          << "curant"
+          << "cv\t"
+          << "cg"
           << std::endl;
 
     f << data->m << "\t"
@@ -358,7 +360,8 @@ void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData>
       << data->data->sav_an_shore << "\t"
       << data->converged << "\t"
       << data->iter_count << "\t"
-      << data->cur_val
+      << data->cv << "\t"
+      << data->cg
       << std::endl;
 
     f.close();

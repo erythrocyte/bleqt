@@ -7,7 +7,6 @@ namespace ble::src::common::services {
 std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverData>> DimensionlessService::make_dimless(
     const std::shared_ptr<models::InputData> params)
 {
-    auto result_solver_data = std::make_shared<models::SolverData>();
     auto result_scale = std::make_shared<models::ScaleData>();
 
     auto scale_x = [&](double x) {
@@ -37,19 +36,24 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
     result_scale->p0 = params->bound->pw;
 
     // solver data
+    auto result_solver_data = std::make_shared<models::SolverData>(
+        scale_x(params->data->rw),
+        scale_x(params->data->delta),
+        params->data->perm_fract / result_scale->perm0);
+
     result_solver_data->mesh_setts = params->mesh_setts;
     result_solver_data->sat_setts = params->sat_setts;
 
-    result_solver_data->delta = scale_x(params->data->delta);
+    // result_solver_data->delta = scale_x(params->data->delta);
     result_solver_data->fw_lim = params->data->fw_lim;
-    result_solver_data->kmu = params->data->phys->mu_wat / params->data->phys->mu_oil;
+    result_solver_data->kmu = params->data->phys->k_mu; // params->data->phys->mu_wat / params->data->phys->mu_oil;
     result_solver_data->l = scale_x(params->data->l);
     // result_solver_data->m = params->data->perm_fract * params->data->delta / (params->data->perm_res * params->data->r);
     result_solver_data->rp_n = params->data->phys->n_oil;
-    result_solver_data->rw = scale_x(params->data->rw);
+    // result_solver_data->rw = scale_x(params->data->rw);
     result_solver_data->use_fwlim = params->data->use_fwlim;
     result_solver_data->period = params->data->period / result_scale->t0();
-    result_solver_data->perm_fract = params->data->perm_fract / result_scale->perm0;
+    // result_solver_data->perm_fract = params->data->perm_fract / result_scale->perm0;
     result_solver_data->real_poro = params->data->poro_fract;
 
     result_solver_data->bound_satur = params->bound->bound_satur;

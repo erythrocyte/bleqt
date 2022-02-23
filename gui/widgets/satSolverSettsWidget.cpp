@@ -23,7 +23,8 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
 std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_data()
 {
     auto result = std::make_shared<src::calc::models::SaturSolverSetts>();
-    result->cur_val = ui->Curant->value();
+    result->cv = ui->CurantVolume->value();
+    result->cg = ui->CurantFace->value();
     result->need_satur_solve = ui->NeedSaturSolve->isChecked();
     result->pressure_update_n = ui->RecalcPressN->value();
     result->satur_field_save_n = ui->SaveSaturField->value();

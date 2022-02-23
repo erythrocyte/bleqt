@@ -117,7 +117,7 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
 
     std::shared_ptr<mesh::models::Grid> result(new mesh::models::Grid());
     double empty_val = common::models::CommonVals::EMPTY_VAL;
-    double step = params->get_lenght() / params->mesh_setts->n;
+    double step = params->len / params->mesh_setts->n;
 
     for (int k = 0; k < params->mesh_setts->n; k++) { // cells
         auto tp = (k == 0)
