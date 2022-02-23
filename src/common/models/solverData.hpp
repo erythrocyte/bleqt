@@ -16,10 +16,12 @@ class SolverData {
 public:
     SolverData(double rw, double delta, double perm_fract)
     {
-        len = 1.0 - rw;
+        this->rw = rw;
         this->delta = delta;
         this->perm_fract = perm_fract;
+        this->len = 1.0 - rw;
     };
+
     int rp_n;
     double kmu;
     double perm_fract; // TODO : make const;

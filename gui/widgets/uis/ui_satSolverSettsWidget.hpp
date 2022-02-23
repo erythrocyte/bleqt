@@ -47,7 +47,7 @@ public:
         CurantVolume->setMinimum(1e-6);
         CurantVolume->setMaximum(1e6);
         CurantVolume->setSingleStep(0.001);
-        CurantVolume->setValue(0.00005);
+        CurantVolume->setValue(0.9);
         _layout->addWidget(_curantVolumeLabel, 0, 0);
         _layout->addWidget(CurantVolume, 0, 1);
 
@@ -57,7 +57,7 @@ public:
         CurantFace->setMinimum(1e-6);
         CurantFace->setMaximum(1e6);
         CurantFace->setSingleStep(0.001);
-        CurantFace->setValue(0.00005);
+        CurantFace->setValue(0.9);
         _layout->addWidget(_curantFaceLabel, 1, 0);
         _layout->addWidget(CurantFace, 1, 1);
 

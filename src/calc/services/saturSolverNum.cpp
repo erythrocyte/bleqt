@@ -37,9 +37,17 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
         double s = get_s(fc, u);
         double fbl = cs::rp::get_fbl(s, data->rp_n, data->kmu);
         double cf = mm::FaceType::is_top_bot(fc->type)
-            ? 1.0 / (2.0 * data->m)
+            ? data->contour_press_bound_type == common::models::BoundCondType::kConst
+                ? 1.0
+                : 1.0 / (2.0 * data->m)
             : 1.0;
         double val = u * fbl * fc->area * cf;
+        if (fc->cl1 == 0 || fc->cl2 == 0) {
+            std::cout << "find = " << fc->ind << ", val = " << val
+                      << ", u = " << u
+                      << ", s = " << s
+                      << std::endl;
+        }
         dvs[fc->cl1] += val;
         if (fc->cl2 != -1)
             dvs[fc->cl2] -= val;
