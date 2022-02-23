@@ -17,6 +17,9 @@ public:
     bool use_fw_delta;
     double fw_delta;
     int fw_delta_iter;
+
+    bool use_fw_shorewell_converge;
+    double fw_shw_conv;
 };
 
 }

@@ -20,6 +20,7 @@ public:
     std::shared_ptr<cm::SolverData> get_solver_data();
     std::shared_ptr<msm::Grid> get_grid(const std::shared_ptr<cm::SolverData> params);
     void solve(const std::shared_ptr<cm::SolverData> params, const std::shared_ptr<msm::Grid> grd);
+    void run_s_const_loop();
 
 private:
     int const PRINT_STEP = 1000;

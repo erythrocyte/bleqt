@@ -90,7 +90,7 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         case mm::FaceType::kBot: {
             switch (params->contour_press_bound_type) {
             case common::models::BoundCondType::kImpermeable: {
-                double alp = (get_res_ceff(fc->bound_satur, params) * fc->area) / (2.0 * params->m);
+                double alp = (get_res_ceff(fc->bound_satur, params) * fc->area) / (2.0 * params->get_m());
                 ret.C[fc->cl1] += alp;
                 rhs[fc->cl1] += alp; // alp * pw (= 1);
             } break;

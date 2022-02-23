@@ -4,6 +4,7 @@
 #include <fstream>
 #include <math.h>
 #include <sstream>
+#include <stdio.h>
 
 #include "calc/services/pressureSolver.hpp"
 #include "calc/services/saturAverService.hpp"
@@ -33,14 +34,23 @@ BleCalc::~BleCalc()
 
 void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     const std::shared_ptr<common::models::SolverData> data,
-    std::function<void(double)> set_progress)
+    std::function<void(double)> set_progress, bool clear_aver)
 {
     auto suit_step = [&](double fw, double sum_t) {
+        bool result = true;
         if (data->use_fwlim) {
-            return fw <= data->fw_lim;
+            result = fw <= data->fw_lim;
+            if (!result) {
+                std::cout << "max watercut value reached" << std::endl;
+            }
         } else {
-            return sum_t <= data->period;
+            result = sum_t <= data->period;
+            if (!result) {
+                std::cout << "max time value reached" << std::endl;
+            }
         }
+
+        return result;
     };
 
     auto get_pecr = [&](double fw, double sum_t) {
@@ -59,6 +69,19 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         }
 
         return ans * poro * 2.0 * data->delta;
+    };
+
+    auto save_aver_reached = [&](int index, const char* fn, bool conv) {
+        auto s = cs::string_format("fw shore and well converged in %i iter", index);
+        logging::write_log(s, logging::kInfo);
+        auto d = std::make_shared<calc::models::AverFwSaveData>();
+        d->m = data->get_m();
+        d->s_const = data->top_bot_bound_s[0]->v0;
+        d->converged = conv;
+        d->data = m_fw_data[m_fw_data.size() - 1];
+        d->iter_count = index;
+        d->cur_val = data->sat_setts->cur_val;
+        save_aver_fw(fn, d);
     };
 
     m_data = data;
@@ -83,6 +106,11 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     services::calc_u(p, s_prev, data, grd);
     std::chrono::system_clock::time_point start, end;
     std::chrono::duration<double> diff;
+    bool aver_reached = false;
+
+    const char* aver = "aver.dat";
+    if (clear_aver)
+        std::remove(aver);
 
     if (!data->sat_setts->need_satur_solve) {
         auto well_params = services::calc_well_work_param(grd, s_prev, data, sumT);
@@ -94,7 +122,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         // double qnum = well_params->ql;
         // double perc = std::abs(qan - qnum) / qan * 100.0;
 
-        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, well_params->ql);
+        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->get_m(), well_params->ql);
         logging::write_log(mess, logging::kInfo);
 
         // save_faces_val(grd, data);
@@ -160,8 +188,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
             sumQ += wwp->ql * t;
             double pv = sumQ / fract_pv; // how many pv are flushed
-            if (index % 100 == 0)
-                std::cout << "sumq = " << sumQ << ", pv = " << pv << ", fpv = " << fract_pv << std::endl;
+            // if (index % 100 == 0)
+            //     std::cout << "sumq = " << sumQ << ", pv = " << pv << ", fpv = " << fract_pv << std::endl;
             add_aver_fw(pv, wwp->fw, wwp->fw_shore, s_cur);
 
             double perc = get_pecr(cur_fw, sumT);
@@ -171,12 +199,26 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 logging::write_log("max iter reached", logging::kInfo);
                 break;
             }
+
+            if (data->sat_setts->use_fw_shorewell_converge) {
+                double r = std::abs(wwp->fw - wwp->fw_shore); // residual
+                double dr = wwp->fw_shore * data->sat_setts->fw_shw_conv / 100.0;
+                if (r < dr) {
+                    save_aver_reached(index, aver, true);
+                    aver_reached = true;
+                    break;
+                }
+            }
         }
 
         logging::write_log("saturation solve completed", logging::kInfo);
     }
 
     m_sum_t = sumT;
+
+    if (!aver_reached) {
+        save_aver_reached(index, aver, false);
+    }
 
     set_progress(100); // completed;
 }
@@ -268,7 +310,7 @@ void BleCalc::check_conservative()
                 ? f->u
                 : -f->u;
             double c = mm::FaceType::is_top_bot(f->type)
-                ? 2.0 * m_data->m
+                ? 2.0 * m_data->get_m()
                 : 1.0;
             sum_q += u * f->area / c;
         }
@@ -281,6 +323,45 @@ void BleCalc::check_conservative()
 
     std::string mess = common::services::string_format("residual(%i) = %.12f", cind, max_sum_q);
     logging::write_log(mess, logging::kInfo);
+}
+
+void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data)
+{
+    auto get_file_exists = [&]() {
+        std::ifstream infile(fn);
+        return infile.good();
+    };
+
+    bool file_exists = get_file_exists();
+
+    std::ofstream f(fn, std::ios_base::app);
+
+    if (!file_exists) // write headers
+        f << "m\t"
+          << "s\t"
+          << "pv\t"
+          << "fw_well\t"
+          << "fw_shore\t"
+          << "s_num\t"
+          << "s_an\t"
+          << "status\t"
+          << "iter_count\t"
+          << "curant"
+          << std::endl;
+
+    f << data->m << "\t"
+      << data->s_const << "\t"
+      << data->data->pv << "\t"
+      << data->data->fw_num_well << "\t"
+      << data->data->fw_num_shore << "\t"
+      << data->data->sav_num << "\t"
+      << data->data->sav_an_shore << "\t"
+      << data->converged << "\t"
+      << data->iter_count << "\t"
+      << data->cur_val
+      << std::endl;
+
+    f.close();
 }
 
 }

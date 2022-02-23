@@ -125,7 +125,7 @@ private:
         Perm->setMinimum(0.01);
         Perm->setMaximum(1000);
         Perm->setSingleStep(1);
-        Perm->setValue(0.1);
+        Perm->setValue(0.01);
         m_layoutGeology->addWidget(m_labelPerm, 0, 0);
         m_layoutGeology->addWidget(Perm, 0, 1);
 
@@ -135,7 +135,7 @@ private:
         PermFract->setMinimum(0.01);
         PermFract->setMaximum(1000);
         PermFract->setSingleStep(1);
-        PermFract->setValue(10);
+        PermFract->setValue(1000);
         m_layoutGeology->addWidget(m_labelPermFract, 1, 0);
         m_layoutGeology->addWidget(PermFract, 1, 1);
 

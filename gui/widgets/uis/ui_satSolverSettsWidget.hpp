@@ -25,6 +25,8 @@ public:
     QCheckBox* NeedStopFwPseudoConst;
     QDoubleSpinBox* FwDelta;
     QSpinBox* FwDeltaIter;
+    QCheckBox* NeedStopFwShoreWellConverge;
+    QDoubleSpinBox* FwShoreWellConverge;
 
     void setupUi(QWidget* widget)
     {
@@ -40,11 +42,11 @@ public:
 
         _curantLabel = new QLabel();
         Curant = new QDoubleSpinBox();
-        Curant->setDecimals(4);
+        Curant->setDecimals(7);
         Curant->setMinimum(1e-6);
         Curant->setMaximum(1e6);
         Curant->setSingleStep(0.001);
-        Curant->setValue(0.001);
+        Curant->setValue(0.00005);
         _layout->addWidget(_curantLabel, 0, 0);
         _layout->addWidget(Curant, 0, 1);
 
@@ -78,13 +80,13 @@ public:
         m_maxIterLabel = new QLabel("Max iteration");
         MaxIter = new QSpinBox();
         MaxIter->setMinimum(1);
-        MaxIter->setMaximum(1000000);
-        MaxIter->setValue(200000);
+        MaxIter->setMaximum(100000000);
+        MaxIter->setValue(100000000);
         _layout->addWidget(m_maxIterLabel, 5, 0);
         _layout->addWidget(MaxIter, 5, 1);
 
         NeedStopFwPseudoConst = new QCheckBox("Stop watercut change");
-        NeedStopFwPseudoConst->setChecked(true);
+        NeedStopFwPseudoConst->setChecked(false);
         _layout->addWidget(NeedStopFwPseudoConst, 6, 0, 1, 2);
 
         m_fwDeltaLabel = new QLabel();
@@ -93,7 +95,7 @@ public:
         FwDelta->setMinimum(1e-8);
         FwDelta->setMaximum(100);
         FwDelta->setSingleStep(1e-8);
-        FwDelta->setValue(1e-5);
+        FwDelta->setValue(5);
         _layout->addWidget(m_fwDeltaLabel, 7, 0);
         _layout->addWidget(FwDelta, 7, 1);
 
@@ -104,6 +106,20 @@ public:
         FwDeltaIter->setValue(10000);
         _layout->addWidget(m_fwDeltaIterLabel, 8, 0);
         _layout->addWidget(FwDeltaIter, 8, 1);
+
+        NeedStopFwShoreWellConverge = new QCheckBox("Watercut shore|well on converge");
+        NeedStopFwShoreWellConverge->setChecked(false);
+        _layout->addWidget(NeedStopFwShoreWellConverge, 9, 0, 1, 2);
+
+        m_fwShoreWellConvergeLabel = new QLabel();
+        FwShoreWellConverge = new QDoubleSpinBox();
+        FwShoreWellConverge->setDecimals(8);
+        FwShoreWellConverge->setMinimum(1e-8);
+        FwShoreWellConverge->setMaximum(100);
+        FwShoreWellConverge->setSingleStep(1e-8);
+        FwShoreWellConverge->setValue(1e-5);
+        _layout->addWidget(m_fwShoreWellConvergeLabel, 10, 0);
+        _layout->addWidget(FwShoreWellConverge, 10, 1);
 
         retranslateUi(widget);
     }
@@ -131,14 +147,20 @@ public:
         m_maxIterLabel->setText("Max iteration");
         m_maxIterLabel->setToolTip("Max iteration count to stop calc");
 
-        m_fwDeltaLabel->setText("Watercur delta");
+        m_fwDeltaLabel->setText("Watercut delta");
         m_fwDeltaLabel->setToolTip("Watercut change delta");
 
-        m_fwDeltaIterLabel->setText("Watercur delta iter");
+        m_fwDeltaIterLabel->setText("Watercut delta iter");
         m_fwDeltaIterLabel->setToolTip("Watercut change for small delta iter count");
 
         NeedStopFwPseudoConst->setText("Stop watercut change");
         NeedStopFwPseudoConst->setToolTip("Stop when watercut change less than delta for long iter");
+
+        NeedStopFwShoreWellConverge->setText("Watercut shore|well on converge");
+        NeedStopFwShoreWellConverge->setToolTip("Stop when watercut shore|well converged");
+
+        m_fwShoreWellConvergeLabel->setText("Fw shore|well delta, %");
+        m_fwShoreWellConvergeLabel->setToolTip("Watercut shore|well residual max value to stop calculation");
     }
 
 private:
@@ -152,6 +174,7 @@ private:
     QLabel* m_maxIterLabel;
     QLabel* m_fwDeltaLabel;
     QLabel* m_fwDeltaIterLabel;
+    QLabel* m_fwShoreWellConvergeLabel;
 };
 
 }

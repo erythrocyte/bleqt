@@ -237,22 +237,22 @@ private:
 
     double get_speed(QAction* action)
     {
-        double norm_speed = 1000; // ms;
+        double norm_speed = 1; // ms;
         double cf = 1.0;
         if (action == SpeedLowQuarter)
-            cf = 0.25;
+            cf = 0.01;
         else if (action == SpeedLowHalf)
-            cf = 0.5;
+            cf = 0.1;
         else if (action == SpeedLowHalfQuarter)
-            cf = 0.75;
+            cf = 0.5;
         else if (action == SpeedNormal)
             cf = 1.0;
         else if (action == SpeedHighQuarter)
-            cf = 1.25;
+            cf = 2;
         else if (action == SpeedHighHalf)
-            cf = 1.5;
+            cf = 10;
         else if (action == SpeedHighTwice)
-            cf = 2.0;
+            cf = 100;
 
         return norm_speed * (1.0 / cf);
     }

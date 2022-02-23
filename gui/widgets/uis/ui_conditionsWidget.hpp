@@ -117,8 +117,8 @@ private:
         layout->addWidget(BoundSFileChooseButton, 4, max_col, 1, 1);
 
         BoundSConstValue = new QDoubleSpinBox();
-        BoundSConstValue->setMinimum(-10.0);
-        BoundSConstValue->setMaximum(10);
+        BoundSConstValue->setMinimum(0.0);
+        BoundSConstValue->setMaximum(1.0);
         BoundSConstValue->setSingleStep(1e-3);
         BoundSConstValue->setValue(0.01);
         BoundSConstValue->setDecimals(3);

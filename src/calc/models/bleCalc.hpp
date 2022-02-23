@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "bleResultData.hpp"
+#include "calc/models/averFwSaveData.hpp"
 #include "common/models/fwData.hpp"
 #include "common/models/solverData.hpp"
 #include "common/models/tauData.hpp"
@@ -20,7 +21,8 @@ public:
     ~BleCalc();
     void calc(const std::shared_ptr<mesh::models::Grid> grd,
         const std::shared_ptr<common::models::SolverData> data,
-        std::function<void(double)> set_progress);
+        std::function<void(double)> set_progress,
+        bool clear_aver);
 
     size_t get_data_len() { return _results->data.size(); }
     std::shared_ptr<common::models::DynamicData> get_data(int index) const { return _results->data[index]; }
@@ -45,6 +47,7 @@ private:
     void save_faces_val();
     void add_aver_fw(double pv, double fw, double fw_shore, const std::vector<double> s);
     void check_conservative();
+    void save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data);
 };
 } // namespace ble::src
 
