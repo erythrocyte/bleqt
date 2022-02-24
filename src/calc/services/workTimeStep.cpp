@@ -59,4 +59,45 @@ double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
     return result;
 }
 
+double get_time_step_new(const std::shared_ptr<mesh::models::Grid> grd,
+    const std::vector<double>& s, const std::shared_ptr<common::models::SolverData> data)
+{
+    double result = 1e20;
+    std::vector<double> face_q;
+    std::vector<double> face_df;
+    double cv = data->sat_setts->cv, cg = data->sat_setts->cg;
+
+    for (auto const& fc : grd->faces) {
+        double q = fc->u * fc->area;
+        double df = get_face_dfbl(fc, s, data);
+        face_q.push_back(q);
+        face_df.push_back(df);
+    }
+
+    for (auto const& cl : grd->cells) {
+        double sum_qout = 0.0;
+        double tg_min = 1e20;
+        for (auto const fi : cl->faces) {
+            double q = face_q[fi];
+            if (q < 0) { // out for cl
+                sum_qout += q;
+            } else { // in for cl
+                double df = face_df[fi];
+                double tg = (cg * cl->volume) / (q * df);
+                if (tg < tg_min)
+                    tg_min = tg;
+            }
+        }
+
+        double df_v = cs::rp::get_dfbl(s[cl->ind], data->rp_n, data->kmu);
+        double tv = (cv * cl->volume) / (df_v * sum_qout);
+
+        double t = std::min(tv, tg_min);
+        if (t < result)
+            result = t;
+    }
+
+    return result;
+}
+
 } // namespace ble::src
