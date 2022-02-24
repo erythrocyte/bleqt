@@ -28,6 +28,7 @@ public:
     QSpinBox* FwDeltaIter;
     QCheckBox* NeedStopFwShoreWellConverge;
     QDoubleSpinBox* FwShoreWellConverge;
+    QComboBox* TimeStepType;
 
     void setupUi(QWidget* widget)
     {
@@ -69,12 +70,11 @@ public:
         _layout->addWidget(_recalcPressLabel, 2, 0);
         _layout->addWidget(RecalcPressN, 2, 1);
 
+        _solverTypeLabel = new QLabel();
         SolverType = new QComboBox();
         SolverType->setEnabled(false);
-        _layout->addWidget(SolverType, 3, 1);
-
-        _solverTypeLabel = new QLabel();
         _layout->addWidget(_solverTypeLabel, 3, 0);
+        _layout->addWidget(SolverType, 3, 1);
 
         NeedSaturSolve = new QCheckBox("Solve saturation");
         NeedSaturSolve->setChecked(true);
@@ -132,6 +132,12 @@ public:
         _layout->addWidget(m_fwShoreWellConvergeLabel, 11, 0);
         _layout->addWidget(FwShoreWellConverge, 11, 1);
 
+        m_timeStepTypeLabel = new QLabel();
+        TimeStepType = new QComboBox();
+        TimeStepType->setEnabled(false);
+        _layout->addWidget(m_timeStepTypeLabel, 12, 0);
+        _layout->addWidget(TimeStepType, 12, 1);
+
         retranslateUi(widget);
     }
 
@@ -175,6 +181,9 @@ public:
 
         m_fwShoreWellConvergeLabel->setText("Fw shore|well delta, %");
         m_fwShoreWellConvergeLabel->setToolTip("Watercut shore|well residual max value to stop calculation");
+
+        m_timeStepTypeLabel->setText("Time step type");
+        m_timeStepTypeLabel->setToolTip("Time step define type");
     }
 
 private:
@@ -190,6 +199,7 @@ private:
     QLabel* m_fwDeltaLabel;
     QLabel* m_fwDeltaIterLabel;
     QLabel* m_fwShoreWellConvergeLabel;
+    QLabel* m_timeStepTypeLabel;
 };
 
 }
