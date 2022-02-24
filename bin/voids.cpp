@@ -10,10 +10,12 @@
 #include "common/models/dataDistribution.hpp"
 #include "common/models/gridType.hpp"
 #include "common/models/meshSettings.hpp"
+#include "common/models/timeStepType.hpp"
 #include "mesh/services/makeGrid.hpp"
 
 namespace mss = ble::src::mesh::services;
 namespace clm = ble::src::calc::models;
+namespace cm = ble::src::common::models;
 
 namespace ble::bin {
 
@@ -44,6 +46,7 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
     result->sat_setts->fw_delta_iter = 1e4;
     result->sat_setts->use_fw_shorewell_converge = true;
     result->sat_setts->fw_shw_conv = 3; // %
+    result->sat_setts->time_step_type = cm::TimeStepType::kNew;
 
     // result->delta = 0.005 / 100.0;
     result->fw_lim = 99;

@@ -85,6 +85,17 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         save_aver_fw(fn, d);
     };
 
+    auto get_tau = [&](int index, const std::vector<double> s) {
+        switch (data->sat_setts->time_step_type) {
+        case cm::TimeStepType::kOld:
+            return services::get_time_step(grd, s, data);
+        case cm::TimeStepType::kNew:
+            return services::get_time_step_new(index, grd, s, data);
+        default:
+            return 0.0;
+        }
+    };
+
     m_data = data;
     m_grd = grd;
 
@@ -135,7 +146,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 // save_press(index, grd, p);
             }
 
-            double t = services::get_time_step(grd, s_prev, data);
+            double t = get_tau(index, s_prev);
 
             double u = data->contour_press_bound_type == common::models::BoundCondType::kConst
                 ? services::getULiqInject(grd, data->mesh_setts->type)

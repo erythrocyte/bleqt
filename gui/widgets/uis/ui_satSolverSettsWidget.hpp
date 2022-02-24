@@ -134,7 +134,6 @@ public:
 
         m_timeStepTypeLabel = new QLabel();
         TimeStepType = new QComboBox();
-        TimeStepType->setEnabled(false);
         _layout->addWidget(m_timeStepTypeLabel, 12, 0);
         _layout->addWidget(TimeStepType, 12, 1);
 

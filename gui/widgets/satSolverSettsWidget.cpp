@@ -1,8 +1,10 @@
 #include "satSolverSettsWidget.hpp"
 
 #include "calc/models/saturSolverType.hpp"
+#include "common/models/timeStepType.hpp"
 
 namespace sclcm = ble::src::calc::models;
+namespace scm = ble::src::common::models;
 
 namespace ble::gui::widgets {
 
@@ -15,6 +17,13 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
         ui->SolverType->addItem(
             QString::fromStdString(sclcm::SaturSolverType::get_description(v)));
     }
+
+    for (scm::TimeStepType::TypeEnum v : scm::TimeStepTypeEnumIterator()) {
+        ui->TimeStepType->addItem(QString::fromStdString(scm::TimeStepType::get_description(v)));
+    }
+
+    ui->MaxIter->setValue(10000);
+    ui->TimeStepType->setCurrentIndex(1);
 
     subscribe();
     need_stop_fw_shorewell_converge(false);
@@ -39,6 +48,9 @@ std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_d
 
     auto str = ui->SolverType->currentText().toStdString();
     result->type = src::calc::models::SaturSolverType::get_enum(str);
+
+    str = ui->TimeStepType->currentText().toStdString();
+    result->time_step_type = src::common::models::TimeStepType::get_enum(str);
 
     return result;
 }

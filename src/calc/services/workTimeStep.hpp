@@ -13,7 +13,7 @@ namespace ble::src::calc::services {
 double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
     const std::vector<double>& s, const std::shared_ptr<common::models::SolverData> data);
 
-double get_time_step_new(const std::shared_ptr<mesh::models::Grid> grd,
+double get_time_step_new(int index, const std::shared_ptr<mesh::models::Grid> grd,
     const std::vector<double>& s, const std::shared_ptr<common::models::SolverData> data);
 
 }

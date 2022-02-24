@@ -19,7 +19,9 @@ public:
         this->rw = rw;
         this->delta = delta;
         this->perm_fract = perm_fract;
+        
         this->len = 1.0 - rw;
+        this->m = delta * perm_fract;
     };
 
     int rp_n;
