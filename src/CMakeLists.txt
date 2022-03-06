@@ -15,6 +15,7 @@ set(HEADERS
 	calc/services/saturSolverAnalytic.hpp
 	calc/services/workParam.hpp
 	calc/services/saturAverService.hpp
+	calc/services/saturImplicitSolver.hpp
 	
 	logging/logger.hpp
 
@@ -58,6 +59,7 @@ set (SOURCES
 	calc/services/saturSolverAnalytic.cpp	
 	calc/services/workParam.cpp
 	calc/services/saturAverService.cpp
+	calc/services/saturImplicitSolver.cpp
 	
 	calc/models/bleCalc.cpp
 	
