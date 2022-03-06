@@ -6,25 +6,39 @@
 #include "mesh/models/grid.hpp"
 
 namespace ble::src::calc::services {
+
 class SaturImplicitSolverService {
 public:
-    std::vector<double> solve(double tau, int simple_count, const std::vector<double>& init,
-        const std::shared_ptr<mesh::models::Grid> grd);
+    SaturImplicitSolverService() { }
+    ~SaturImplicitSolverService() { }
+    std::vector<double> solve(const std::vector<double>& init,
+        const std::shared_ptr<common::models::SolverData> data,
+        const std::shared_ptr<mesh::models::Grid> grd, bool need_precise);
 
 private:
-    // std::shared_ptr<common::models::SolverData> m_data;
+    enum oper_type {
+        a,
+        b,
+        ga
+    };
+    std::shared_ptr<common::models::SolverData> m_data;
     std::shared_ptr<mesh::models::Grid> m_grd;
+    std::vector<double> m_rhs;
     int m_simple_count;
     double m_tau;
     std::vector<double> m_init;
     models::DiagMat m_ret;
 
-    SaturImplicitSolverService() { } //const std::shared_ptr<common::models::SolverData> data,
-    // const std::shared_ptr<mesh::models::Grid> grd);
-    ~SaturImplicitSolverService() { }
-
     void build_simple();
-    double operA(int cind);
+    void oper(oper_type oper_tp, const std::vector<double>& v);
+
+    std::vector<double> apply_oper(const std::vector<double>& v, oper_type oper_tp);
+
+    double get_cf(const std::shared_ptr<mesh::models::Face> fc);
+
+    double get_oper_cf(oper_type oper_tp, double s);
+
+    int get_cind_s_upwind(const std::shared_ptr<mesh::models::Face> fc);
 };
 }
 
