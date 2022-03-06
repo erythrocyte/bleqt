@@ -17,6 +17,9 @@ public:
     bool use_fw_delta;
     double fw_delta;
     int fw_delta_iter;
+
+    double tau;
+    int simple_iter_count;
 };
 
 }

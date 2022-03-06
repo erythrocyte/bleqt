@@ -16,6 +16,9 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
             QString::fromStdString(sclcm::SaturSolverType::get_description(v)));
     }
 
+    bool isExplicit = true;
+    make_solver_type_change(isExplicit);
+
     subscribe();
 }
 
@@ -32,6 +35,9 @@ std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_d
     result->fw_delta = ui->FwDelta->value();
     result->fw_delta_iter = ui->FwDeltaIter->value();
 
+    result->tau = ui->TauForFim->value();
+    result->simple_iter_count = ui->SimpleIterCount->value();
+
     auto str = ui->SolverType->currentText().toStdString();
     result->type = src::calc::models::SaturSolverType::get_enum(str);
 
@@ -42,12 +48,28 @@ void SatSolverSettsWidget::subscribe()
 {
     auto success = connect(ui->NeedStopFwPseudoConst, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_pseudo_const);
     Q_ASSERT(success);
+
+    success = QObject::connect(ui->SolverType, SIGNAL(currentIndexChanged(int)), this, SLOT(on_solver_type_changed(int)));
+    Q_ASSERT(success);
 }
 
 void SatSolverSettsWidget::need_stop_fw_pseudo_const(bool state)
 {
     ui->FwDelta->setEnabled(state);
     ui->FwDeltaIter->setEnabled(state);
+}
+
+void SatSolverSettsWidget::on_solver_type_changed(int index)
+{
+    make_solver_type_change(index == 0); // 0 is explicit
+}
+
+void SatSolverSettsWidget::make_solver_type_change(bool isExplicit)
+{
+    ui->TauForFim->setEnabled(!isExplicit);
+    ui->SimpleIterCount->setEnabled(!isExplicit);
+
+    ui->Curant->setEnabled(isExplicit);
 }
 
 }

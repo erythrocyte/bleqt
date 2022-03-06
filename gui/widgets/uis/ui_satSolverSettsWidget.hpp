@@ -26,6 +26,9 @@ public:
     QDoubleSpinBox* FwDelta;
     QSpinBox* FwDeltaIter;
 
+    QDoubleSpinBox* TauForFim;
+    QSpinBox* SimpleIterCount;
+
     void setupUi(QWidget* widget)
     {
         _groupBox = new QGroupBox();
@@ -57,7 +60,7 @@ public:
         _layout->addWidget(RecalcPressN, 1, 1);
 
         SolverType = new QComboBox();
-        SolverType->setEnabled(false);
+        SolverType->setEnabled(true);
         _layout->addWidget(SolverType, 2, 1);
 
         _solverTypeLabel = new QLabel();
@@ -105,6 +108,24 @@ public:
         _layout->addWidget(m_fwDeltaIterLabel, 8, 0);
         _layout->addWidget(FwDeltaIter, 8, 1);
 
+        m_tauLabel = new QLabel();
+        TauForFim = new QDoubleSpinBox();
+        TauForFim->setDecimals(8);
+        TauForFim->setMinimum(1e-8);
+        TauForFim->setMaximum(100);
+        TauForFim->setSingleStep(1e-8);
+        TauForFim->setValue(0.1);
+        _layout->addWidget(m_tauLabel, 9, 0);
+        _layout->addWidget(TauForFim, 9, 1);
+
+        m_simpleIterCountLabel = new QLabel();
+        SimpleIterCount = new QSpinBox();
+        SimpleIterCount->setMinimum(1);
+        SimpleIterCount->setMaximum(100);
+        SimpleIterCount->setValue(3);
+        _layout->addWidget(m_simpleIterCountLabel, 10, 0);
+        _layout->addWidget(SimpleIterCount, 10, 1);
+
         retranslateUi(widget);
     }
 
@@ -139,6 +160,12 @@ public:
 
         NeedStopFwPseudoConst->setText("Stop watercut change");
         NeedStopFwPseudoConst->setToolTip("Stop when watercut change less than delta for long iter");
+
+        m_tauLabel->setText("Tau");
+        m_tauLabel->setToolTip("Tau for fim");
+
+        m_simpleIterCountLabel->setText("Simple iter");
+        m_simpleIterCountLabel->setToolTip("Iter via simple method before Newton method");
     }
 
 private:
@@ -152,6 +179,9 @@ private:
     QLabel* m_maxIterLabel;
     QLabel* m_fwDeltaLabel;
     QLabel* m_fwDeltaIterLabel;
+
+    QLabel* m_tauLabel;
+    QLabel* m_simpleIterCountLabel;
 };
 
 }
