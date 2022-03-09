@@ -114,6 +114,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             sumU += u * t;
 
             s_cur = services::solve_satur(t, index == 0, s_prev, data, grd);
+            return;
 
             s_prev = s_cur;
             sumT += t;

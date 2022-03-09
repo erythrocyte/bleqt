@@ -1,5 +1,7 @@
 #include "commonVector.hpp"
 
+#include <fstream>
+
 namespace ble::src::common::services::common_vector {
 
 std::vector<double> make_vector(double begin, double end, int n)
@@ -53,6 +55,17 @@ double max_abs(const std::vector<double>& v)
         if (av > result)
             result = av;
     }
+}
+
+void save_vector(const std::string& fn, const std::vector<double>& v)
+{
+    std::ofstream ofs(fn);
+    int iter = 0;
+    for (auto& vi : v) {
+        ofs << iter << "\t" << vi << std::endl;
+        iter++;
+    }
+    ofs.close();
 }
 
 } // namespace common_vector

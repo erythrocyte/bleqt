@@ -1,5 +1,7 @@
 #include "saturImplicitSolver.hpp"
 
+#include <cmath>
+
 #include "common/services/commonVector.hpp"
 #include "common/services/workRp.hpp"
 #include "mesh/models/faceType.hpp"
@@ -32,29 +34,40 @@ std::vector<double> SaturImplicitSolverService::solve(const std::vector<double>&
 
     // std::vector<double> new_s;
     std::vector<double> s(m_init);
-    double lambda = 0.1;
+    double lambda = 0.01;
 
     // make initial;
     if (need_precise) {
         for (int k = 0; k < m_data->sat_setts->simple_iter_count; k++) {
             std::vector<double> as = apply_oper(s, oper_type::a);
+            std::cout << "[simple b] max_as = " << *std::max_element(as.begin(), as.end()) << std::endl;
             std::vector<double> t1 = cs::common_vector::subtract(s, as);
+            std::cout << "[simple b] max t1 = " << *std::max_element(t1.begin(), t1.end()) << std::endl;
             cs::common_vector::mult_scal(t1, lambda);
+            std::cout << "[simple b] max t1 = " << *std::max_element(t1.begin(), t1.end()) << std::endl;
             std::vector<double> bs = apply_oper(s, oper_type::b);
+            std::cout << "[simple b] max bs = " << *std::max_element(bs.begin(), bs.end()) << std::endl;
             m_rhs = cs::common_vector::add(t1, bs);
+            std::cout << "[simple b] max rhs = " << *std::max_element(m_rhs.begin(), m_rhs.end()) << std::endl;
 
             oper(oper_type::b, s);
 
             s = m_ret.solve(m_rhs);
+            cs::common_vector::save_vector("simple_b_s.dat", s);
+            std::cout << "[simple b] max s = " << *std::max_element(s.begin(), s.end()) << std::endl;
+
+            return s;
         }
     }
+
+    return s;
 
     // newton
     double eps = 1e-10;
     double err = 10;
     int max_iter = 50;
     int iter = 0;
-    while (err > eps || iter < max_iter) {
+    while (err > eps && iter < max_iter) {
         std::vector<double> as = apply_oper(s, oper_type::a);
         std::vector<double> t1 = cs::common_vector::subtract(s, as);
         m_rhs = cs::common_vector::subtract(t1, as);
@@ -64,9 +77,12 @@ std::vector<double> SaturImplicitSolverService::solve(const std::vector<double>&
         std::vector<double> ksi = m_ret.solve(m_rhs);
         err = cs::common_vector::max_abs(ksi);
         s = cs::common_vector::add(ksi, s);
+
+        std::cout << "iter=" << iter << std::endl;
+        iter++;
     }
 
-    return init;
+    return s;
 }
 
 void SaturImplicitSolverService::build_simple()
@@ -91,12 +107,12 @@ void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<doubl
         if (upwind_cind == -1) {
             m_rhs[fc->cl1] -= val * (alpha / vol1);
         } else {
-            double vol2 = m_grd->cells[fc->cl2]->volume;
             if (upwind_cind == fc->cl2) {
-                m_ret.B[fc->cl1] += val * (alpha / vol1);
-                m_ret.C[fc->cl2] += val * (alpha / vol2);
+                m_ret.B[fc->cl1] -= val * (alpha / vol1);
+                m_ret.C[fc->cl2] += val * (alpha / m_grd->cells[fc->cl2]->volume);
             } else {
-                m_ret.B[fc->cl2] += val * (alpha / vol2);
+                if (fc->cl2 != -1)
+                    m_ret.B[fc->cl2] -= val * (alpha / m_grd->cells[fc->cl2]->volume);
                 m_ret.C[fc->cl1] += val * (alpha / vol1);
             }
         }
@@ -123,8 +139,8 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
         double val = oper_cf * fc->u * fc->area * cf;
         double vol1 = m_grd->cells[fc->cl1]->volume;
         if (upwind_cind != -1) {
-            double vol2 = m_grd->cells[fc->cl2]->volume;
             if (upwind_cind == fc->cl2) {
+                double vol2 = m_grd->cells[fc->cl2]->volume;
                 result[fc->cl2] += val * (alpha / vol2);
             } else {
                 result[fc->cl1] += val * (alpha / vol1);
