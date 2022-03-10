@@ -55,6 +55,8 @@ double max_abs(const std::vector<double>& v)
         if (av > result)
             result = av;
     }
+
+    return result;
 }
 
 void save_vector(const std::string& fn, const std::vector<double>& v)
