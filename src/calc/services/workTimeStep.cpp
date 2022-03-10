@@ -64,8 +64,6 @@ double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
 double get_time_step_new(int index, const std::shared_ptr<mesh::models::Grid> grd,
     const std::vector<double>& s, const std::shared_ptr<common::models::SolverData> data)
 {
-    std::ofstream f("t_calc.txt", std::ios_base::app);
-    f << index << std::endl;
     double result = 1e20;
     std::vector<double> face_q;
     std::vector<double> face_df;
@@ -101,16 +99,9 @@ double get_time_step_new(int index, const std::shared_ptr<mesh::models::Grid> gr
             ? tg_min
             : std::min(tv, tg_min);
 
-        f << "t[cind" << cl->ind << "] = " << t << std::endl;
-
         if (!std::isinf(t) && t < result)
             result = t;
     }
-
-    f << "==================" << std::endl;
-    f << std::endl;
-
-    f.close();
 
     return result;
 }
