@@ -34,7 +34,7 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     result->ql = ql_well;
     result->qw = qw_well;
 
-    double c = 2.0 * data->get_m(); // data->delta * data->perm_fract;
+    double c = 2.0 * data->m; // data->delta * data->perm_fract;
     result->ql *= c;
     result->qw *= c;
 
@@ -55,7 +55,7 @@ double calc_q_analytic(const std::shared_ptr<mm::Grid> grd, const std::shared_pt
     case cm::GridType::kRadial:
         return 2 * M_PI / std::log(1.0 / params->rw);
     case cm::GridType::kRegular:
-        return (1.0 - 0.0) / params->get_lenght(); // pc - pw / l
+        return (1.0 - 0.0) / params->len; // pc - pw / l
     default:
         return 0.0;
     }

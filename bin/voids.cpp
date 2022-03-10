@@ -10,16 +10,22 @@
 #include "common/models/dataDistribution.hpp"
 #include "common/models/gridType.hpp"
 #include "common/models/meshSettings.hpp"
+#include "common/models/timeStepType.hpp"
 #include "mesh/services/makeGrid.hpp"
 
 namespace mss = ble::src::mesh::services;
 namespace clm = ble::src::calc::models;
+namespace cm = ble::src::common::models;
 
 namespace ble::bin {
 
 std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
 {
-    auto result = std::make_shared<cm::SolverData>();
+    auto result = std::make_shared<cm::SolverData>(
+        0.01 / 100, // rw
+        0.005 / 100.0, // delta
+        10 // perm_fract
+    );
 
     // mesh settings
     result->mesh_setts = std::make_shared<cm::MeshSettings>();
@@ -28,7 +34,8 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
 
     // satur solver settings
     result->sat_setts = std::make_shared<clm::SaturSolverSetts>();
-    result->sat_setts->cur_val = 0.5e-6;
+    result->sat_setts->cv = 0.5e-6;
+    result->sat_setts->cg = 0.9;
     result->sat_setts->need_satur_solve = true;
     result->sat_setts->pressure_update_n = 10;
     result->sat_setts->satur_field_save_n = 1e7;
@@ -39,17 +46,18 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
     result->sat_setts->fw_delta_iter = 1e4;
     result->sat_setts->use_fw_shorewell_converge = true;
     result->sat_setts->fw_shw_conv = 3; // %
+    result->sat_setts->time_step_type = cm::TimeStepType::kNew;
 
-    result->delta = 0.005 / 100.0;
+    // result->delta = 0.005 / 100.0;
     result->fw_lim = 99;
     result->kmu = 1.0;
     result->l = 500.0 / 100.0;
     // result->m = 10.0;
     result->rp_n = 2.0;
-    result->rw = 0.01 / 100;
+    // result->rw = 0.01 / 100;
     result->use_fwlim = true;
     result->period = 1.0;
-    result->perm_fract = 10;
+    // result->perm_fract = 10;
     result->bound_satur = 1.0;
     result->contour_press_bound_type = cm::BoundCondType::kImpermeable;
     result->real_poro = 0.2;
@@ -95,7 +103,7 @@ void Calculator::update_progress(double perc)
 void Calculator::run_s_const_loop()
 {
     std::vector<double> ms = { /*1e-1, 1e0, */ 1e2, /*1e2, 1e3*/ };
-    std::vector<double> scs = { 0.05 , 0.1, 0.15, 0.2, 0.25 , 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0 };
+    std::vector<double> scs = { 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0 };
     // std::vector<double> scs = {0.85 };
 
     for (auto const& mi : ms) {

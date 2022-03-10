@@ -33,6 +33,9 @@ ConditionsWidget::ConditionsWidget(QWidget* parent)
     ui->BoundSType->setCurrentIndex(0);
     ui->BoundSConstValue->setValue(1.0);
     ui->BoundSFile->setText("../../samples/rhs/s_sample.blerhs");
+    ui->BoundSFile->setEnabled(false);
+    ui->BoundSType->setEnabled(false);
+    ui->TopBotBoundConstLenght->setEnabled(false);
     emit rhs_updated();
 }
 
@@ -79,6 +82,7 @@ void ConditionsWidget::contourTypeChanged(const QString& value)
         ui->BoundSType->setEnabled(true);
         topBotBoundSTypeChanged(ui->BoundSType->currentText());
         ui->BoundSatur->setEnabled(false);
+        ui->TopBotBoundConstLenght->setEnabled(true);
     }
 }
 

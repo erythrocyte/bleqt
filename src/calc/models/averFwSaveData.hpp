@@ -13,7 +13,8 @@ public:
     double s_const;
     bool converged = false;
     int iter_count;
-    double cur_val;
+    double cv;
+    double cg;
     std::shared_ptr<common::models::FwData> data;
 };
 }
