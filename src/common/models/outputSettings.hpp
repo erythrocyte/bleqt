@@ -7,7 +7,7 @@ class OutputSetts {
 public:
     double tField;
     double tParams;
-}
+};
 
 }
 

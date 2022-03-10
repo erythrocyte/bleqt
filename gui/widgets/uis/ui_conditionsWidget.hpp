@@ -94,7 +94,7 @@ private:
         BoundSatur->setMinimum(0.0);
         BoundSatur->setMaximum(1.0);
         BoundSatur->setSingleStep(0.01);
-        BoundSatur->setValue(0.25);
+        BoundSatur->setValue(1.0);
         BoundSatur->setToolTip("Bound satur value");
         layout->addWidget(m_boundSaturLabel, 2, 0);
         layout->addWidget(BoundSatur, 2, 1, 1, max_col);
@@ -117,8 +117,8 @@ private:
         layout->addWidget(BoundSFileChooseButton, 4, max_col, 1, 1);
 
         BoundSConstValue = new QDoubleSpinBox();
-        BoundSConstValue->setMinimum(-10.0);
-        BoundSConstValue->setMaximum(10);
+        BoundSConstValue->setMinimum(0.0);
+        BoundSConstValue->setMaximum(1.0);
         BoundSConstValue->setSingleStep(1e-3);
         BoundSConstValue->setValue(0.01);
         BoundSConstValue->setDecimals(3);

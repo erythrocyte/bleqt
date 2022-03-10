@@ -14,18 +14,30 @@ namespace ble::src::common::models {
 
 class SolverData {
 public:
+    SolverData(double rw, double delta, double perm_fract)
+    {
+        this->rw = rw;
+        this->delta = delta;
+        this->perm_fract = perm_fract;
+        
+        this->len = 1.0 - rw;
+        this->m = delta * perm_fract;
+    };
+
     int rp_n;
     double kmu;
-    double perm_fract;
-    double l;
-    double rw;
-    double delta;
+    double perm_fract; // TODO : make const;
+    double l; // distance in reservoir;
+    double rw; // TODO : make const;
+    double delta; // TODO : make const;
     double period;
     double fw_lim;
     bool use_fwlim;
-    double get_lenght() { return 1.0 - rw; }
-    double m;
+    // double get_lenght() { return 1.0 - rw; }
+    // double get_m() { return delta * perm_fract; }
     double real_poro;
+    double m;
+    double len;
 
     std::vector<std::shared_ptr<DataDistribution>> top_bot_bound_s;
     std::vector<std::shared_ptr<DataDistribution>> initial_s;

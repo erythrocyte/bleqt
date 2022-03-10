@@ -1,13 +1,17 @@
 #ifndef BLE_SRC_CALC_MODELS_SATURSOLVERSETTINGS_H_
 #define BLE_SRC_CALC_MODELS_SATURSOLVERSETTINGS_H_
 
+#include "common/models/timeStepType.hpp"
 #include "saturSolverType.hpp"
+
+namespace scm = ble::src::common::models;
 
 namespace ble::src::calc::models {
 
 class SaturSolverSetts {
 public:
-    double cur_val;
+    double cv;
+    double cg;
     int pressure_update_n;
     SaturSolverType::TypeEnum type;
     bool need_satur_solve;
@@ -20,6 +24,10 @@ public:
 
     double tau;
     int simple_iter_count;
+    bool use_fw_shorewell_converge;
+    double fw_shw_conv;
+
+    scm::TimeStepType::TypeEnum time_step_type;
 };
 
 }

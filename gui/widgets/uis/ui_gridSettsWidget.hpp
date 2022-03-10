@@ -50,7 +50,7 @@ public:
         CellCount = new QSpinBox();
         CellCount->setMinimum(1);
         CellCount->setMaximum(10000);
-        CellCount->setValue(100);
+        CellCount->setValue(500);
         layout->addWidget(CellCount, 1, 1);
 
         cellCountLabel = new QLabel("Cell count");
