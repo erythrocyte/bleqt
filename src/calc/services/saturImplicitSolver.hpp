@@ -33,11 +33,8 @@ private:
     void oper(oper_type oper_tp, const std::vector<double>& v);
 
     std::vector<double> apply_oper(const std::vector<double>& v, oper_type oper_tp);
-
-    double get_cf(const std::shared_ptr<mesh::models::Face> fc);
-
+    double get_face_cf(const std::shared_ptr<mesh::models::Face> fc);
     double get_oper_cf(oper_type oper_tp, double s);
-
     int get_cind_s_upwind(const std::shared_ptr<mesh::models::Face> fc);
 };
 }

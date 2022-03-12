@@ -75,7 +75,7 @@ public:
 
         _solverTypeLabel = new QLabel();
         SolverType = new QComboBox();
-        SolverType->setEnabled(false);
+        SolverType->setEnabled(true);
         _layout->addWidget(_solverTypeLabel, 3, 0);
         _layout->addWidget(SolverType, 3, 1);
 

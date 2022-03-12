@@ -91,21 +91,29 @@ void SaturImplicitSolverService::build_simple()
 
 void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<double>& v)
 {
+    // auto get_s = [&](const std::shared_ptr<mesh::models::Face> fc, int upwind_cind) {
+    //     if (mesh::models::FaceType::is_top_bot(fc->type)) {
+    //         fc->bound_satur;
+    //     }
+    //     else {
+    //         upwind_cind
+    //     }
+    // };
     double poro = 1.0;
     double alpha = m_data->sat_setts->tau / poro;
     for (auto& fc : m_grd->faces) {
         int upwind_cind = get_cind_s_upwind(fc);
-        double s = oper_tp == oper_type::b
-            ? 1.0
-            : upwind_cind == -1
+        double s = upwind_cind == -1
             ? fc->bound_satur
             : v[upwind_cind];
-        double oper_cf = get_oper_cf(oper_tp, s);
-        double cf = get_cf(fc);
+        double oper_cf = oper_tp == oper_type::b
+            ? 1.0
+            : get_oper_cf(oper_tp, s);
+        double cf = get_face_cf(fc);
         double val = fc->u * fc->area * cf * oper_cf;
         double vol1 = m_grd->cells[fc->cl1]->volume;
         if (upwind_cind == -1) {
-            m_rhs[fc->cl1] -= val * (alpha / vol1);
+            m_rhs[fc->cl1] += val * (alpha / vol1);
         } else {
             if (upwind_cind == fc->cl2) {
                 m_ret.B[fc->cl1] -= val * (alpha / vol1);
@@ -123,7 +131,8 @@ void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<doubl
     }
 }
 
-std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<double>& v, oper_type oper_tp)
+std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<double>& v,
+    oper_type oper_tp)
 {
     std::vector<double> result(m_grd->cells.size(), 0.0);
 
@@ -135,7 +144,7 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
             ? fc->bound_satur
             : v[upwind_cind];
         double oper_cf = get_oper_cf(oper_tp, s);
-        double cf = get_cf(fc);
+        double cf = get_face_cf(fc);
         double val = oper_cf * fc->u * fc->area * cf;
         double vol1 = m_grd->cells[fc->cl1]->volume;
         if (upwind_cind != -1) {
@@ -176,7 +185,7 @@ int SaturImplicitSolverService::get_cind_s_upwind(const std::shared_ptr<mesh::mo
         : fc->cl1;
 }
 
-double SaturImplicitSolverService::get_cf(const std::shared_ptr<mesh::models::Face> fc)
+double SaturImplicitSolverService::get_face_cf(const std::shared_ptr<mesh::models::Face> fc)
 {
     return mesh::models::FaceType::is_top_bot(fc->type)
         ? 1.0 / (2.0 * m_data->m)
