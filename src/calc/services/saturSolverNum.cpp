@@ -56,12 +56,12 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
     return result;
 }
 
-std::vector<double> solve_implicit(const std::vector<double>& init,
+std::vector<double> solve_implicit(double tau, const std::vector<double>& init,
     const std::shared_ptr<common::models::SolverData> data,
     const std::shared_ptr<mesh::models::Grid> grd, bool need_precise)
 {
     auto solver = std::make_shared<SaturImplicitSolverService>();
-    return solver->solve(init, data, grd, need_precise);
+    return solver->solve(tau, init, data, grd, need_precise);
 }
 
 std::vector<double> solve_satur(const double tau, bool need_precise, const std::vector<double>& init,
@@ -71,7 +71,7 @@ std::vector<double> solve_satur(const double tau, bool need_precise, const std::
     case calc::models::SaturSolverType::TypeEnum::kExplicit:
         return solve_explicit(tau, init, data, grd);
     case calc::models::SaturSolverType::TypeEnum::kImplicit:
-        return solve_implicit(init, data, grd, need_precise);
+        return solve_implicit(tau, init, data, grd, need_precise);
     default:
         return solve_explicit(tau, init, data, grd);
     }

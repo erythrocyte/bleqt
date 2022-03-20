@@ -25,7 +25,8 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
     }
 
     ui->MaxIter->setValue(10000);
-    ui->TimeStepType->setCurrentIndex(1);
+    ui->TimeStepType->setCurrentIndex(0);
+    ui->SolverType->setCurrentIndex(1);
 
     subscribe();
     need_stop_fw_shorewell_converge(false);

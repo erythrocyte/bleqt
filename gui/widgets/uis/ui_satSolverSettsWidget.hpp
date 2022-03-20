@@ -146,7 +146,7 @@ public:
         TauForFim->setMinimum(1e-8);
         TauForFim->setMaximum(100);
         TauForFim->setSingleStep(1e-8);
-        TauForFim->setValue(0.1);
+        TauForFim->setValue(0.01);
         _layout->addWidget(m_tauLabel, 13, 0);
         _layout->addWidget(TauForFim, 13, 1);
 
@@ -154,7 +154,7 @@ public:
         SimpleIterCount = new QSpinBox();
         SimpleIterCount->setMinimum(1);
         SimpleIterCount->setMaximum(100);
-        SimpleIterCount->setValue(3);
+        SimpleIterCount->setValue(10);
         _layout->addWidget(m_simpleIterCountLabel, 14, 0);
         _layout->addWidget(SimpleIterCount, 14, 1);
 

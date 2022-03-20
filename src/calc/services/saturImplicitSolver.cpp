@@ -21,46 +21,47 @@ namespace ble::src::calc::services {
 // {
 // }
 
-std::vector<double> SaturImplicitSolverService::solve(const std::vector<double>& init,
+std::vector<double> SaturImplicitSolverService::solve(double tau, const std::vector<double>& init,
     const std::shared_ptr<common::models::SolverData> data,
     const std::shared_ptr<mesh::models::Grid> grd, bool need_precise)
 {
     m_data = data;
     m_init = init;
     m_grd = grd;
+    m_tau = tau;
 
-    m_ret.resize(grd->cells.size());
-    m_rhs.resize(grd->cells.size(), 0.0);
-
-    // std::vector<double> new_s;
     std::vector<double> s(m_init);
     double lambda = 0.01;
 
     // make initial;
     if (need_precise) {
         for (int k = 0; k < m_data->sat_setts->simple_iter_count; k++) {
+            reset_matrix();
+
             std::vector<double> as = apply_oper(s, oper_type::a);
-            std::cout << "[simple b] max_as = " << *std::max_element(as.begin(), as.end()) << std::endl;
+            // std::cout << "[simple b] max_as = " << *std::max_element(as.begin(), as.end()) << std::endl;
             std::vector<double> t1 = cs::common_vector::subtract(s, as);
-            std::cout << "[simple b] max t1 = " << *std::max_element(t1.begin(), t1.end()) << std::endl;
+            // std::cout << "[simple b] max t1 = " << *std::max_element(t1.begin(), t1.end()) << std::endl;
             cs::common_vector::mult_scal(t1, lambda);
-            std::cout << "[simple b] max t1 = " << *std::max_element(t1.begin(), t1.end()) << std::endl;
+            // std::cout << "[simple b] max t1 = " << *std::max_element(t1.begin(), t1.end()) << std::endl;
             std::vector<double> bs = apply_oper(s, oper_type::b);
-            std::cout << "[simple b] max bs = " << *std::max_element(bs.begin(), bs.end()) << std::endl;
+            // std::cout << "[simple b] max bs = " << *std::max_element(bs.begin(), bs.end()) << std::endl;
             m_rhs = cs::common_vector::add(t1, bs);
-            std::cout << "[simple b] max rhs = " << *std::max_element(m_rhs.begin(), m_rhs.end()) << std::endl;
+            // std::cout << "[simple b] max rhs = " << *std::max_element(m_rhs.begin(), m_rhs.end()) << std::endl;
 
             oper(oper_type::b, s);
 
             s = m_ret.solve(m_rhs);
-            cs::common_vector::save_vector("simple_b_s.dat", s);
+            // cs::common_vector::save_vector("simple_b_s.dat", s);
             std::cout << "[simple b] max s = " << *std::max_element(s.begin(), s.end()) << std::endl;
 
-            return s;
+            // return s;
         }
     }
 
-    return s;
+    // return s;
+
+    cs::common_vector::save_vector("simple_b_s.dat", s);
 
     // newton
     double eps = 1e-10;
@@ -68,9 +69,13 @@ std::vector<double> SaturImplicitSolverService::solve(const std::vector<double>&
     int max_iter = 50;
     int iter = 0;
     while (err > eps && iter < max_iter) {
+        reset_matrix();
+
         std::vector<double> as = apply_oper(s, oper_type::a);
-        std::vector<double> t1 = cs::common_vector::subtract(s, as);
-        m_rhs = cs::common_vector::subtract(t1, as);
+        std::cout << "[newton] max(A*s) = " << *std::max_element(as.begin(), as.end()) << std::endl;
+        // std::vector<double> t1 = cs::common_vector::subtract(s, as);
+        m_rhs = cs::common_vector::subtract(s, as);
+        std::cout << "[newton] max(s - A*s) = " << *std::max_element(m_rhs.begin(), m_rhs.end()) << std::endl;
 
         oper(oper_type::ga, s);
 
@@ -78,11 +83,17 @@ std::vector<double> SaturImplicitSolverService::solve(const std::vector<double>&
         err = cs::common_vector::max_abs(ksi);
         s = cs::common_vector::add(ksi, s);
 
-        std::cout << "iter=" << iter << std::endl;
+        std::cout << "iter=" << iter << ", err = " << err << std::endl;
         iter++;
     }
 
     return s;
+}
+
+void SaturImplicitSolverService::reset_matrix()
+{
+    m_ret.resize(m_grd->cells.size());
+    m_rhs.resize(m_grd->cells.size(), 0.0);
 }
 
 void SaturImplicitSolverService::build_simple()
@@ -91,37 +102,29 @@ void SaturImplicitSolverService::build_simple()
 
 void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<double>& v)
 {
-    // auto get_s = [&](const std::shared_ptr<mesh::models::Face> fc, int upwind_cind) {
-    //     if (mesh::models::FaceType::is_top_bot(fc->type)) {
-    //         fc->bound_satur;
-    //     }
-    //     else {
-    //         upwind_cind
-    //     }
-    // };
     double poro = 1.0;
-    double alpha = m_data->sat_setts->tau / poro;
+    double alpha = m_tau / poro;
     for (auto& fc : m_grd->faces) {
         int upwind_cind = get_cind_s_upwind(fc);
         double s = upwind_cind == -1
             ? fc->bound_satur
             : v[upwind_cind];
-        double oper_cf = oper_tp == oper_type::b
+        double oper_cf = (oper_tp == oper_type::b && upwind_cind != -1)
             ? 1.0
             : get_oper_cf(oper_tp, s);
-        double cf = get_face_cf(fc);
-        double val = fc->u * fc->area * cf * oper_cf;
+        double un = fc->u * get_face_cf(fc);
+        double val = (un * fc->area * oper_cf) * alpha;
         double vol1 = m_grd->cells[fc->cl1]->volume;
         if (upwind_cind == -1) {
-            m_rhs[fc->cl1] += val * (alpha / vol1);
+            m_rhs[fc->cl1] += val / vol1; // un = -un;
         } else {
-            if (upwind_cind == fc->cl2) {
-                m_ret.B[fc->cl1] -= val * (alpha / vol1);
-                m_ret.C[fc->cl2] += val * (alpha / m_grd->cells[fc->cl2]->volume);
+            if (upwind_cind == fc->cl2) { // un = -un;
+                m_ret.B[fc->cl1] -= val / vol1;
+                m_ret.C[fc->cl2] += val / m_grd->cells[fc->cl2]->volume;
             } else {
                 if (fc->cl2 != -1)
-                    m_ret.B[fc->cl2] -= val * (alpha / m_grd->cells[fc->cl2]->volume);
-                m_ret.C[fc->cl1] += val * (alpha / vol1);
+                    m_ret.B[fc->cl2] -= val * m_grd->cells[fc->cl2]->volume;
+                m_ret.C[fc->cl1] += val * vol1;
             }
         }
     }
@@ -137,20 +140,20 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
     std::vector<double> result(m_grd->cells.size(), 0.0);
 
     double poro = 1.0;
-    double alpha = m_data->sat_setts->tau / poro;
+    double alpha = m_tau / poro;
     for (auto& fc : m_grd->faces) {
         int upwind_cind = get_cind_s_upwind(fc);
         double s = upwind_cind == -1
             ? fc->bound_satur
             : v[upwind_cind];
         double oper_cf = get_oper_cf(oper_tp, s);
-        double cf = get_face_cf(fc);
-        double val = oper_cf * fc->u * fc->area * cf;
+        double un = fc->u * get_face_cf(fc);
+        double val = un * fc->area * oper_cf;
         double vol1 = m_grd->cells[fc->cl1]->volume;
         if (upwind_cind != -1) {
             if (upwind_cind == fc->cl2) {
                 double vol2 = m_grd->cells[fc->cl2]->volume;
-                result[fc->cl2] += val * (alpha / vol2);
+                result[fc->cl2] -= val * (alpha / vol2);
             } else {
                 result[fc->cl1] += val * (alpha / vol1);
             }

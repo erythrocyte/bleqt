@@ -6,6 +6,8 @@ set (HEADERS
 	unit_tests/common/services/shockFrontTests.hpp
 	unit_tests/common/services/workRpTests.hpp
 	unit_tests/common/services/boundSourceServiceTests.hpp
+
+	unit_tests/calc/services/saturImplicitSolverTests.hpp
 )
 
 set (SOURCE
@@ -13,6 +15,9 @@ set (SOURCE
 	unit_tests/common/services/shockFrontTests.cpp
 	unit_tests/common/services/workRpTests.cpp
 	unit_tests/common/services/boundSourceServiceTests.cpp
+
+	unit_tests/calc/services/saturImplicitSolverTests.cpp
+
 	main.cpp
 )
 

@@ -11,7 +11,7 @@ class SaturImplicitSolverService {
 public:
     SaturImplicitSolverService() { }
     ~SaturImplicitSolverService() { }
-    std::vector<double> solve(const std::vector<double>& init,
+    std::vector<double> solve(double tau, const std::vector<double>& init,
         const std::shared_ptr<common::models::SolverData> data,
         const std::shared_ptr<mesh::models::Grid> grd, bool need_precise);
 
@@ -36,6 +36,7 @@ private:
     double get_face_cf(const std::shared_ptr<mesh::models::Face> fc);
     double get_oper_cf(oper_type oper_tp, double s);
     int get_cind_s_upwind(const std::shared_ptr<mesh::models::Face> fc);
+    void reset_matrix();
 };
 }
 

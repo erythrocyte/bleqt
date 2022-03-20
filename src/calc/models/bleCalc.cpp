@@ -146,7 +146,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 // save_press(index, grd, p);
             }
 
-            double t = get_tau(index, s_prev);
+            double t = data->sat_setts->type == SaturSolverType::kImplicit
+                ? data->sat_setts->tau
+                : get_tau(index, s_prev);
 
             double u = data->contour_press_bound_type == common::models::BoundCondType::kConst
                 ? services::getULiqInject(grd, data->mesh_setts->type)
@@ -154,7 +156,6 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             sumU += u * t;
 
             s_cur = services::solve_satur(t, index == 0, s_prev, data, grd);
-            return;
 
             s_prev = s_cur;
             sumT += t;
