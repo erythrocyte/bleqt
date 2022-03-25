@@ -29,7 +29,7 @@ ConditionsWidget::ConditionsWidget(QWidget* parent)
 
     subscribe();
 
-    ui->ContourBoundType->setCurrentIndex(1);
+    ui->ContourBoundType->setCurrentIndex(0);
     ui->BoundSType->setCurrentIndex(0);
     ui->BoundSConstValue->setValue(1.0);
     ui->BoundSFile->setText("../../samples/rhs/s_sample.blerhs");
