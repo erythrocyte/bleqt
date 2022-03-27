@@ -26,6 +26,23 @@ void print_vector(const std::vector<double>& a, const std::string& nm, const std
     std::cout << "[" << section << "] " << nm << " = (" << a[0] << "\t" << a[1] << ")" << std::endl;
 }
 
+void print_system(const models::DiagMat& mtr, const std::vector<double>& rhs)
+{
+    int n = rhs.size();
+    auto print_row = [&](int ri) {
+        if (ri == 0) {
+            std::cout << "(" << mtr.C[ri] << "\t" << mtr.B[ri] << ") * () = (" << rhs[ri] << ")" << std::endl;
+            // else if (ri == n - 1) {
+            //     std::cout << "(" << 0 << "\t" << mtr.C[ri] << ") * () = (" << rhs[ri] << ")" << std::endl;
+        } else {
+            std::cout << "(" << 0 << "\t" << mtr.C[ri] << ") * () = (" << rhs[ri] << ")" << std::endl;
+        }
+    };
+
+    for (int k = 0; k < n; k++)
+        print_row(k);
+}
+
 std::vector<double> SaturImplicitSolverService::solve(double tau, const std::vector<double>& init,
     const std::shared_ptr<common::models::SolverData> data,
     const std::shared_ptr<mesh::models::Grid> grd, bool need_precise)
@@ -44,34 +61,26 @@ std::vector<double> SaturImplicitSolverService::solve(double tau, const std::vec
             reset_matrix();
 
             std::vector<double> as = apply_oper(s, oper_type::a);
-            print_vector(as, "As", "simple b");
-            // std::cout << "[simple b] max(As) = " << *std::max_element(as.begin(), as.end()) << std::endl;
+            // print_vector(as, "As", "simple b");
             std::vector<double> t1 = cs::common_vector::subtract(m_init, as);
-            // std::cout << "[simple b] max(f - As) = " << *std::max_element(t1.begin(), t1.end()) << std::endl;
+            // std::vector<double> t1 = cs::common_vector::subtract(s, as);
             cs::common_vector::mult_scal(t1, lambda);
-            // std::cout << "[simple b] max(lam * (f-As)) = " << *std::max_element(t1.begin(), t1.end()) << std::endl;
             std::vector<double> bs = apply_oper(s, oper_type::b);
-            // std::cout << "[simple b] max (Bs) = " << *std::max_element(bs.begin(), bs.end()) << std::endl;
             m_rhs = cs::common_vector::add(t1, bs);
-            std::cout << "[simple b] r = (" << m_rhs[0] << "\t" << m_rhs[1] << ")" << std::endl;
-            // std::cout << "[simple b] max (lam*(f-As) + Bs) = " << *std::max_element(m_rhs.begin(), m_rhs.end()) << std::endl;
+            // print_vector(m_rhs, "r", "simble b");
 
             oper(oper_type::b, s);
-
-            std::cout << "[simple b] r(aft) = (" << m_rhs[0] << "\t" << m_rhs[1] << ")" << std::endl;
+            // print_system(m_ret, m_rhs);
+            // print_vector(m_rhs, "r(aft)", "simble b");
 
             s = m_ret.solve(m_rhs);
-            // cs::common_vector::save_vector("simple_b_s.dat", s);
-            std::cout << "[simple b] s = (" << s[0] << "\t" << s[1] << ")" << std::endl;
-            // std::cout << "[simple b] max s = " << *std::max_element(s.begin(), s.end()) << std::endl;
-
-            // return s;
+            // print_vector(s, "s", "simple b");
         }
     }
 
-    // return s;
+    // cs::common_vector::save_vector("simple_b_s.dat", s);
 
-    cs::common_vector::save_vector("simple_b_s.dat", s);
+    // print_vector(s, "s", "simple b");
 
     // newton
     double eps = 1e-10;
@@ -84,28 +93,18 @@ std::vector<double> SaturImplicitSolverService::solve(double tau, const std::vec
         reset_matrix();
 
         std::vector<double> as = apply_oper(s, oper_type::a);
-        std::cout << "[newton] max(A*s) = " << *std::max_element(as.begin(), as.end()) << std::endl;
-        // std::vector<double> t1 = cs::common_vector::subtract(s, as);
         m_rhs = cs::common_vector::subtract(m_init, as);
+        // m_rhs = cs::common_vector::subtract(s, as);
+        // print_vector(m_rhs, "r", "newton");
 
         oper(oper_type::ga, s);
-
-        std::cout << "=========maxtix=========" << std::endl;
-        std::cout << "(" << m_ret.C[0] << "\t" << m_ret.B[0] << ") () = (" << m_rhs[0] << ")" << std::endl;
-        std::cout << "(" << 0 << "\t" << m_ret.C[1] << ") () = (" << m_rhs[1] << ")" << std::endl;
-        std::cout << "========================" << std::endl;
-
-        std::cout << "[newton] max(r) = " << *std::max_element(m_rhs.begin(), m_rhs.end()) << std::endl;
-        std::cout << "[newton] max(r) = " << *std::min_element(m_rhs.begin(), m_rhs.end()) << std::endl;
+        // print_system(m_ret, m_rhs);
+        // print_vector(m_rhs, "r(aft)", "newton");
 
         std::vector<double> ksi = m_ret.solve(m_rhs);
-        std::cout << "[newton] max ksi = " << *std::max_element(s.begin(), s.end()) << std::endl;
-        std::cout << "[newton] min ksi = " << *std::min_element(s.begin(), s.end()) << std::endl;
         err = cs::common_vector::max_abs(ksi);
         s = cs::common_vector::add(ksi, s);
-        std::cout << "[newton] s[0] = " << s[0] << std::endl;
-        std::cout << "[newton] s[1] = " << s[1] << std::endl;
-        // std::cout << "[newton] max s = " << *std::max_element(s.begin(), s.end()) << std::endl;
+        // print_vector(s, "s", "newton");
 
         std::cout << "iter=" << iter << ", err = " << err << std::endl;
         iter++;
@@ -164,7 +163,9 @@ void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<doubl
         for (auto& fi : cl->faces) {
             auto fc = m_grd->faces[fi];
             int upwind_cind = get_cind_s_upwind(fc);
-            double u = (fc->cl1 == cl->ind) ? fc->u : -fc->u;
+            // if (upwind_cind == -1)
+            //     continue;
+            double u = (fc->cl1 == cl->ind) ? -fc->u : fc->u;
             double un = u * get_face_cf(fc);
             double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
             double oper_cf = (oper_tp == oper_type::b && upwind_cind != -1)
@@ -173,10 +174,10 @@ void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<doubl
             double val = alpha * (un * oper_cf * fc->area);
 
             if (upwind_cind == -1) {
-                if (oper_tp == oper_type::ga)
-                    m_rhs[cl->ind] += val * s;
-                else
-                    m_rhs[cl->ind] += val; // un = -un;
+                // if (oper_tp == oper_type::ga)
+                //     m_rhs[cl->ind] -= val * s;
+                // else
+                m_rhs[cl->ind] -= val; // un = -un;
             } else {
                 if (upwind_cind != cl->ind) { // un = -un;
                     m_ret.B[cl->ind] += val;
@@ -226,7 +227,7 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
             int upwind_cind = get_cind_s_upwind(fc);
             if (upwind_cind == -1)
                 continue;
-            double u = (fc->cl1 == cl->ind) ? fc->u : -fc->u;
+            double u = (fc->cl1 == cl->ind) ? -fc->u : fc->u;
             double un = u * get_face_cf(fc);
             double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
             double oper_cf = get_oper_cf(oper_tp, s, v[fc->cl1], upwind_cind == -1);
@@ -248,12 +249,14 @@ double SaturImplicitSolverService::get_oper_cf(oper_type oper_tp, double s, doub
         return s;
     case oper_type::ga:
         return calc_aver
-            ? std::max(
-                std::max(
-                    cs::rp::get_dfbl(s, m_data->rp_n, m_data->kmu),
-                    cs::rp::get_dfbl(s2, m_data->rp_n, m_data->kmu)),
-                cs::rp::get_dfbl((s + s2) * 0.5, m_data->rp_n, m_data->kmu))
+            //     ? std::max(
+            //         std::max(
+            //             cs::rp::get_dfbl(s, m_data->rp_n, m_data->kmu),
+            //             cs::rp::get_dfbl(s2, m_data->rp_n, m_data->kmu)),
+            //         cs::rp::get_dfbl((s + s2) * 0.5, m_data->rp_n, m_data->kmu))
+            ? 1.0
             : cs::rp::get_dfbl(s, m_data->rp_n, m_data->kmu);
+        // return cs::rp::get_dfbl(s, m_data->rp_n, m_data->kmu);
     default:
         return 0.0;
     }

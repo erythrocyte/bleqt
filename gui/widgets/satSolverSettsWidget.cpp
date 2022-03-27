@@ -18,7 +18,7 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
             QString::fromStdString(sclcm::SaturSolverType::get_description(v)));
     }
 
-    bool isExplicit = true;
+    bool isExplicit = false;
     make_solver_type_change(isExplicit);
     for (scm::TimeStepType::TypeEnum v : scm::TimeStepTypeEnumIterator()) {
         ui->TimeStepType->addItem(QString::fromStdString(scm::TimeStepType::get_description(v)));

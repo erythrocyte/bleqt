@@ -14,7 +14,7 @@ GridSettsWidget::GridSettsWidget(QWidget* parent)
     }
 
     ui->GridType->setCurrentIndex(1);
-    ui->CellCount->setValue(2);
+    ui->CellCount->setValue(200);
 
     subscribe();
 }
