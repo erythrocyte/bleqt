@@ -2,6 +2,7 @@
 
 #include "calc/services/saturImplicitSolver.hpp"
 #include "common/services/workRp.hpp"
+#include "logging/logger.hpp"
 #include "mesh/models/faceType.hpp"
 
 namespace cs = ble::src::common::services;

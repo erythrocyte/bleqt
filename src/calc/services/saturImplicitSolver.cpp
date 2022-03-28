@@ -106,7 +106,7 @@ std::vector<double> SaturImplicitSolverService::solve(double tau, const std::vec
         s = cs::common_vector::add(ksi, s);
         // print_vector(s, "s", "newton");
 
-        std::cout << "iter=" << iter << ", err = " << err << std::endl;
+        // std::cout << "iter=" << iter << ", err = " << err << std::endl;
         iter++;
     }
 
@@ -170,7 +170,7 @@ void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<doubl
             double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
             double oper_cf = (oper_tp == oper_type::b && upwind_cind != -1)
                 ? 1.0
-                : get_oper_cf(oper_tp, s, v[fc->cl1], upwind_cind == -1);
+                : get_oper_cf(oper_tp, s, upwind_cind == -1);
             double val = alpha * (un * oper_cf * fc->area);
 
             if (upwind_cind == -1) {
@@ -230,7 +230,7 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
             double u = (fc->cl1 == cl->ind) ? -fc->u : fc->u;
             double un = u * get_face_cf(fc);
             double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
-            double oper_cf = get_oper_cf(oper_tp, s, v[fc->cl1], upwind_cind == -1);
+            double oper_cf = get_oper_cf(oper_tp, s, upwind_cind == -1);
             double val = alpha * (un * oper_cf * fc->area);
 
             result[cl->ind] += val;
@@ -240,7 +240,7 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
     return result;
 }
 
-double SaturImplicitSolverService::get_oper_cf(oper_type oper_tp, double s, double s2, bool calc_aver)
+double SaturImplicitSolverService::get_oper_cf(oper_type oper_tp, double s, bool calc_aver)
 {
     switch (oper_tp) {
     case oper_type::a:
@@ -249,14 +249,8 @@ double SaturImplicitSolverService::get_oper_cf(oper_type oper_tp, double s, doub
         return s;
     case oper_type::ga:
         return calc_aver
-            //     ? std::max(
-            //         std::max(
-            //             cs::rp::get_dfbl(s, m_data->rp_n, m_data->kmu),
-            //             cs::rp::get_dfbl(s2, m_data->rp_n, m_data->kmu)),
-            //         cs::rp::get_dfbl((s + s2) * 0.5, m_data->rp_n, m_data->kmu))
-            ? 1.0
+            ? s
             : cs::rp::get_dfbl(s, m_data->rp_n, m_data->kmu);
-        // return cs::rp::get_dfbl(s, m_data->rp_n, m_data->kmu);
     default:
         return 0.0;
     }

@@ -34,7 +34,7 @@ private:
 
     std::vector<double> apply_oper(const std::vector<double>& v, oper_type oper_tp);
     double get_face_cf(const std::shared_ptr<mesh::models::Face> fc);
-    double get_oper_cf(oper_type oper_tp, double s, double s2, bool calc_aver);
+    double get_oper_cf(oper_type oper_tp, double s, bool calc_aver);
     int get_cind_s_upwind(const std::shared_ptr<mesh::models::Face> fc);
     void reset_matrix();
 };

@@ -141,6 +141,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
         // save_faces_val(grd, data);
     } else {
+        auto sst_name = SaturSolverType::get_description(data->sat_setts->type);
+        std::string mess = common::services::string_format("saturation solver type: %s", sst_name.c_str());
+        logging::write_log(mess, logging::kInfo);
         while (suit_step(cur_fw, sumT)) {
             if (index % data->sat_setts->pressure_update_n == 0) {
                 p = services::solve_press(grd, s_prev, data);
