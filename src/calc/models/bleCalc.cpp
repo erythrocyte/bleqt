@@ -72,8 +72,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     };
 
     auto save_aver_reached = [&](int index, const char* fn, bool conv) {
-        auto s = cs::string_format("fw shore and well converged in %i iter", index);
-        logging::write_log(s, logging::kInfo);
+        if (conv) {
+            auto s = cs::string_format("fw shore and well converged in %i iter", index);
+            logging::write_log(s, logging::kInfo);
+        }
         auto d = std::make_shared<calc::models::AverFwSaveData>();
         d->m = data->m;
         d->s_const = data->top_bot_bound_s[0]->v0;
@@ -210,7 +212,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             set_progress(perc);
 
             if (index > data->sat_setts->max_iter) {
-                logging::write_log("max iter reached", logging::kInfo);
+                auto s = cs::string_format("max iter {%i} reached", data->sat_setts->max_iter);
+                logging::write_log(s, logging::kInfo);
                 break;
             }
 
