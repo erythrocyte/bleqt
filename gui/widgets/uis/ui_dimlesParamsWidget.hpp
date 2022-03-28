@@ -26,7 +26,7 @@ public:
         _layout = new QVBoxLayout(_groupBox);
         _groupBox->setLayout(_layout);
 
-        valueM = new QLabel("Shock front value: -");
+        valueM = new QLabel("M = ");
         _layout->addWidget(valueM);
 
         retranslateUi(widget);

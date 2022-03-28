@@ -41,6 +41,8 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     auto gridsetts_view = std::static_pointer_cast<widgets::GridSettsWidget>(m_gridsetts_presenter->get_view());
     m_shockfront_presenter = m_container->resolve<bwp::ShockFrontSettsWidgetPresenter>();
     auto shockfront_view = std::static_pointer_cast<widgets::ShockFrontSettsWidget>(m_shockfront_presenter->get_view());
+    m_dimlesParamsPresenter = m_container->resolve<bwp::DimlesParamsWidgetPresenter>();
+    auto dimlesParams_view = std::static_pointer_cast<widgets::DimlesParamsWidget>(m_dimlesParamsPresenter->get_view());
 
     m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
     auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
@@ -61,6 +63,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
         satsolver_view,
         gridsetts_view,
         shockfront_view,
+        dimlesParams_view,
 
         fluidParamsWidget,
         resultDataWidget,
@@ -73,6 +76,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_shockfront_presenter->set_show_shockfront_status(false);
     onRpValuesUpdated();
     on_update_rhs_tab();
+    update_dimless_params();
 }
 
 void BleFramePresenter::run()
@@ -234,6 +238,13 @@ std::shared_ptr<ble::src::common::models::InputData> BleFramePresenter::get_data
     result->mesh_setts = m_gridsetts_presenter->get_data();
     result->sc_setts = m_shockfront_presenter->get_data();
     return result;
+}
+
+void BleFramePresenter::update_dimless_params()
+{
+    auto data = get_data();
+    double m = (data->data->delta * data->data->perm_fract) / (data->data->perm_res * data->data->r);
+    m_dimlesParamsPresenter->set_m_value(m);
 }
 
 }
