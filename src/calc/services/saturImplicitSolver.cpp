@@ -125,68 +125,82 @@ void SaturImplicitSolverService::build_simple()
 
 void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<double>& v)
 {
+    // models::DiagMat mm2;
+    // mm2.resize(m_grd->cells.size());
+    // std::vector<double> r2(m_grd->cells.size());
+
+    for (auto& cl : m_grd->cells) {
+        m_ret.C[cl->ind] += 1.0;
+    }
+
     double poro = 1.0;
-    // double alpha = m_tau / poro;
-    // for (auto& fc : m_grd->faces) {
-    //     int upwind_cind = get_cind_s_upwind(fc);
-    //     double s = upwind_cind == -1
-    //         ? fc->bound_satur
-    //         : v[upwind_cind];
-    //     double oper_cf = (oper_tp == oper_type::b && upwind_cind != -1)
-    //         ? 1.0
-    //         : get_oper_cf(oper_tp, s);
-    //     double un = fc->u * get_face_cf(fc);
-    //     double val = (un * fc->area * oper_cf) * alpha;
-    //     double vol1 = m_grd->cells[fc->cl1]->volume;
-    //     if (upwind_cind == -1) {
-    //         m_rhs[fc->cl1] += val / vol1; // un = -un;
-    //     } else {
-    //         if (upwind_cind == fc->cl2) { // un = -un;
-    //             m_ret.B[fc->cl1] -= val / vol1;
-    //             m_ret.C[fc->cl2] += val / m_grd->cells[fc->cl2]->volume;
-    //         } else {
-    //             if (fc->cl2 != -1)
-    //                 m_ret.B[fc->cl2] -= val * m_grd->cells[fc->cl2]->volume;
-    //             m_ret.C[fc->cl1] += val * vol1;
-    //         }
-    //     }
-    // }
+    double alpha = m_tau / poro;
+    for (auto const& fc : m_grd->faces) {
+        int upwind_cind = get_cind_s_upwind(fc);
+        double un = fc->u * get_face_cf(fc);
+        double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
+        double oper_cf = (oper_tp == oper_type::b && upwind_cind != -1)
+            ? 1.0
+            : get_oper_cf(oper_tp, s, upwind_cind == -1);
+        double val = alpha * (un * oper_cf * fc->area);
 
-    // for (auto& cl : m_grd->cells) {
-    //     m_ret.C[cl->ind] += 1.0;
-    // }
-
-    for (auto const& cl : m_grd->cells) {
-        double alpha = m_tau / (poro * cl->volume);
-
-        m_ret.C[cl->ind] = 1.0;
-        for (auto& fi : cl->faces) {
-            auto fc = m_grd->faces[fi];
-            int upwind_cind = get_cind_s_upwind(fc);
-            // if (upwind_cind == -1)
-            //     continue;
-            double u = (fc->cl1 == cl->ind) ? -fc->u : fc->u;
-            double un = u * get_face_cf(fc);
-            double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
-            double oper_cf = (oper_tp == oper_type::b && upwind_cind != -1)
-                ? 1.0
-                : get_oper_cf(oper_tp, s, upwind_cind == -1);
-            double val = alpha * (un * oper_cf * fc->area);
-
-            if (upwind_cind == -1) {
-                // if (oper_tp == oper_type::ga)
-                //     m_rhs[cl->ind] -= val * s;
-                // else
-                m_rhs[cl->ind] -= val; // un = -un;
+        if (upwind_cind == -1) {
+            double v = val / m_grd->cells[fc->cl1]->volume;
+            m_rhs[fc->cl1] += v; // un = -un;
+        } else {
+            if (upwind_cind == fc->cl2) {
+                m_ret.B[fc->cl1] -= val / m_grd->cells[fc->cl1]->volume;
+                m_ret.C[fc->cl2] += val / m_grd->cells[fc->cl2]->volume;
             } else {
-                if (upwind_cind != cl->ind) { // un = -un;
-                    m_ret.B[cl->ind] += val;
-                } else {
-                    m_ret.C[cl->ind] += val;
+                if (fc->cl2 != -1) {
+                    m_ret.B[fc->cl2] += val / m_grd->cells[fc->cl2]->volume;
                 }
+                m_ret.C[fc->cl1] -= val / m_grd->cells[fc->cl1]->volume;
             }
         }
     }
+
+    // std::cout << "==============================" << std::endl;
+    // std::cout << std::endl;
+
+    // models::DiagMat mm;
+    // mm.resize(m_grd->cells.size());
+    // std::vector<double> r(m_grd->cells.size());
+
+    // for (auto const& cl : m_grd->cells) {
+    //     double alpha = m_tau / (poro * cl->volume);
+
+    //     mm.C[cl->ind] = 1.0;
+    //     for (auto& fi : cl->faces) {
+    //         auto fc = m_grd->faces[fi];
+    //         int upwind_cind = get_cind_s_upwind(fc);
+    //         // if (upwind_cind == -1)
+    //         //     continue;
+    //         double u = (fc->cl1 == cl->ind) ? -fc->u : fc->u;
+    //         double un = u * get_face_cf(fc);
+    //         double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
+    //         double oper_cf = (oper_tp == oper_type::b && upwind_cind != -1)
+    //             ? 1.0
+    //             : get_oper_cf(oper_tp, s, upwind_cind == -1);
+    //         double val = alpha * (un * oper_cf * fc->area);
+
+    //         if (upwind_cind == -1) {
+    //             // if (oper_tp == oper_type::ga)
+    //             //     m_rhs[cl->ind] -= val * s;
+    //             // else
+    //             r[cl->ind] -= val; // un = -un;
+    //             std::cout << "fc[" << fc->ind << "].r = " << -val << std::endl;
+    //         } else {
+    //             if (upwind_cind != cl->ind) { // un = -un;
+    //                 std::cout << "fc[" << fc->ind << "].B[" << cl->ind << "] = " << val << std::endl;
+    //                 mm.B[cl->ind] += val;
+    //             } else {
+    //                 std::cout << "fc[" << fc->ind << "].C[" << cl->ind << "] = " << val << std::endl;
+    //                 mm.C[cl->ind] += val;
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<double>& v,
@@ -195,47 +209,49 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
     std::vector<double> result(m_grd->cells.size(), 0.0);
 
     double poro = 1.0;
-    // double alpha = m_tau / poro;
-    // for (auto& fc : m_grd->faces) {
-    //     int upwind_cind = get_cind_s_upwind(fc);
-    //     double s = upwind_cind == -1
-    //         ? fc->bound_satur
-    //         : v[upwind_cind];
-    //     double oper_cf = get_oper_cf(oper_tp, s);
-    //     double un = fc->u * get_face_cf(fc);
-    //     double val = un * fc->area * oper_cf;
-    //     double vol1 = m_grd->cells[fc->cl1]->volume;
-    //     if (upwind_cind != -1) {
-    //         if (upwind_cind == fc->cl2) {
-    //             double vol2 = m_grd->cells[fc->cl2]->volume;
-    //             result[fc->cl2] -= val * (alpha / vol2);
-    //         } else {
-    //             result[fc->cl1] += val * (alpha / vol1);
-    //         }
+    double alpha = m_tau / poro;
+    for (auto& fc : m_grd->faces) {
+        int upwind_cind = get_cind_s_upwind(fc);
+        if (upwind_cind == -1)
+            continue;
+        double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
+        double oper_cf = get_oper_cf(oper_tp, s, upwind_cind == -1);
+        double un = fc->u * get_face_cf(fc);
+        double val = alpha * (un * fc->area * oper_cf);
+
+        if (fc->cl2 != -1) {
+            result[fc->cl2] += val / m_grd->cells[fc->cl2]->volume;
+        }
+        result[fc->cl1] -= val / m_grd->cells[fc->cl1]->volume;
+    }
+
+    for (auto& cl : m_grd->cells) {
+        result[cl->ind] += v[cl->ind];
+    }
+
+    // print_vector(result2, "r", "by face");
+
+    // std::vector<double> result(m_grd->cells.size(), 0.0);
+
+    // for (auto const& cl : m_grd->cells) {
+    //     double alpha = m_tau / (poro * cl->volume);
+    //     result[cl->ind] = v[cl->ind];
+    //     for (auto& fi : cl->faces) {
+    //         auto fc = m_grd->faces[fi];
+    //         int upwind_cind = get_cind_s_upwind(fc);
+    //         if (upwind_cind == -1)
+    //             continue;
+    //         double u = (fc->cl1 == cl->ind) ? -fc->u : fc->u;
+    //         double un = u * get_face_cf(fc);
+    //         double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
+    //         double oper_cf = get_oper_cf(oper_tp, s, upwind_cind == -1);
+    //         double val = alpha * (un * oper_cf * fc->area);
+
+    //         result[cl->ind] += val;
     //     }
     // }
 
-    // for (auto& cl : m_grd->cells) {
-    //     result[cl->ind] += v[cl->ind];
-    // }
-
-    for (auto const& cl : m_grd->cells) {
-        double alpha = m_tau / (poro * cl->volume);
-        result[cl->ind] = v[cl->ind];
-        for (auto& fi : cl->faces) {
-            auto fc = m_grd->faces[fi];
-            int upwind_cind = get_cind_s_upwind(fc);
-            if (upwind_cind == -1)
-                continue;
-            double u = (fc->cl1 == cl->ind) ? -fc->u : fc->u;
-            double un = u * get_face_cf(fc);
-            double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
-            double oper_cf = get_oper_cf(oper_tp, s, upwind_cind == -1);
-            double val = alpha * (un * oper_cf * fc->area);
-
-            result[cl->ind] += val;
-        }
-    }
+    // print_vector(result, "r", "by cell");
 
     return result;
 }
@@ -269,5 +285,4 @@ double SaturImplicitSolverService::get_face_cf(const std::shared_ptr<mesh::model
         ? 1.0 / (2.0 * m_data->m)
         : 1.0;
 }
-
 }
