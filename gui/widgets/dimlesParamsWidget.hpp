@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 
+#include "models/dimlessParamsDto.hpp"
 #include "uis/ui_dimlesParamsWidget.hpp"
 
 namespace ble::gui::widgets {
@@ -15,7 +16,7 @@ public:
     DimlesParamsWidget(QWidget* parent = nullptr);
     ~DimlesParamsWidget() { delete ui; }
 
-    void set_mvalue(double value);
+    void set_params(const std::shared_ptr<models::DimlessParamsDto> params);
 
 private:
     UI::DimlessParams* ui;

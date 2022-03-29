@@ -95,6 +95,9 @@ void BleFramePresenter::set_signals()
     success = QObject::connect(m_conditionsWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
     Q_ASSERT(success);
 
+    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(dimless_params_updated()), this, SLOT(on_dimless_params_changed()));
+    Q_ASSERT(success);
+
     QObject* view_obj = dynamic_cast<QObject*>(m_view.get());
     success = QObject::connect(view_obj, SIGNAL(sgn_run_calc()), this, SLOT(on_run_calc()));
     Q_ASSERT(success);
@@ -243,8 +246,23 @@ std::shared_ptr<ble::src::common::models::InputData> BleFramePresenter::get_data
 void BleFramePresenter::update_dimless_params()
 {
     auto data = get_data();
-    double m = (data->data->delta * data->data->perm_fract) / (data->data->perm_res * data->data->r);
-    m_dimlesParamsPresenter->set_m_value(m);
+    std::shared_ptr<src::common::models::ScaleData> scale_data;
+    std::shared_ptr<src::common::models::SolverData> solver_data;
+    std::tie(scale_data, solver_data) = src::common::services::DimensionlessService::make_dimless(data);
+
+    auto prms = std::make_shared<widgets::models::DimlessParamsDto>();
+    prms->m = solver_data->m;
+    prms->l = solver_data->l;
+    prms->poro = 1.0;
+    prms->r = 1.0;
+    prms->rw = solver_data->rw;
+    prms->kmu = solver_data->kmu;
+    m_dimlesParamsPresenter->set_params(prms);
+}
+
+void BleFramePresenter::on_dimless_params_changed()
+{
+    update_dimless_params();
 }
 
 }

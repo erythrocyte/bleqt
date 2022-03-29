@@ -13,6 +13,11 @@ namespace ble::gui::widgets::UI {
 class DimlessParams {
 public:
     QLabel* valueM;
+    QLabel* valueL;
+    QLabel* valueR;
+    QLabel* valueRw;
+    QLabel* valuePoro;
+    QLabel* valueKmu;
 
     void setupUi(QWidget* widget)
     {
@@ -28,6 +33,21 @@ public:
 
         valueM = new QLabel("M = ");
         _layout->addWidget(valueM);
+
+        valueL = new QLabel();
+        _layout->addWidget(valueL);
+
+        valueR = new QLabel();
+        _layout->addWidget(valueR);
+
+        valueRw = new QLabel();
+        _layout->addWidget(valueRw);
+
+        valuePoro = new QLabel();
+        _layout->addWidget(valuePoro);
+
+        valueKmu = new QLabel();
+        _layout->addWidget(valueKmu);
 
         retranslateUi(widget);
     }

@@ -9,9 +9,14 @@ DimlesParamsWidget::DimlesParamsWidget(QWidget* parent)
     ui->setupUi(this);
 }
 
-void DimlesParamsWidget::set_mvalue(double value)
+void DimlesParamsWidget::set_params(const std::shared_ptr<models::DimlessParamsDto> params)
 {
-    ui->valueM->setText("M = " + QString::number(value));
+    ui->valueM->setText("M = " + QString::number(params->m));
+    ui->valueL->setText("L = " + QString::number(params->l));
+    ui->valueR->setText("Rc = " + QString::number(params->r));
+    ui->valueRw->setText("Rw = " + QString::number(params->rw));
+    ui->valuePoro->setText("Poro = " + QString::number(params->poro));
+    ui->valueKmu->setText("Kmu = " + QString::number(params->kmu));
 }
 
 } // namespace ble_gui::widgets

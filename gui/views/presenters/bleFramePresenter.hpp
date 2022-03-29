@@ -69,6 +69,7 @@ private slots:
     void on_run_calc();
     void handleFileChanged(QString str);
     void on_update_rhs_tab();
+    void on_dimless_params_changed();
 };
 }
 

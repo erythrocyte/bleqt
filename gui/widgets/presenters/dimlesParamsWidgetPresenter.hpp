@@ -8,6 +8,7 @@
 
 #include "blePresenter.hpp"
 #include "dimlesParamsWidget.hpp"
+#include "models/dimlessParamsDto.hpp"
 
 namespace ble::gui::widgets::presenters {
 
@@ -19,7 +20,7 @@ public:
     ~DimlesParamsWidgetPresenter() { }
 
     std::shared_ptr<DimlesParamsWidget> get_view();
-    void set_m_value(double value);
+    void set_params(const std::shared_ptr<models::DimlessParamsDto> params);
 };
 
 }

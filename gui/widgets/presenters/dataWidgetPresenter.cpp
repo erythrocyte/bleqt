@@ -15,8 +15,12 @@ DataWidgetPresenter::DataWidgetPresenter(
 void DataWidgetPresenter::set_signals()
 {
     QObject* view_obj = dynamic_cast<QObject*>(m_view.get());
-    auto success = QObject::connect(view_obj, SIGNAL(rp_values_updated()),
+    auto success = QObject::connect(view_obj, SIGNAL(on_rp_values_updated()),
         this, SLOT(onRpValuesChanged()));
+    Q_ASSERT(success);
+
+    success = QObject::connect(view_obj, SIGNAL(on_dimless_params_changed()),
+        this, SLOT(on_dimless_params_changed()));
     Q_ASSERT(success);
 }
 

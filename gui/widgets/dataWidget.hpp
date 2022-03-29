@@ -20,7 +20,8 @@ public:
     std::shared_ptr<ble::src::common::models::Data> get_data();
 
 signals:
-    void rp_values_updated();
+    void on_rp_values_updated();
+    void on_dimless_params_changed();
 
 private:
     UI::Data* ui;
@@ -28,7 +29,8 @@ private:
     void subscribe();
 
 private slots:
-    void rp_values_changed() { emit rp_values_updated(); }
+    void rp_values_changed() { emit on_rp_values_updated(); }
+    void dimless_params_changed() { emit on_dimless_params_changed(); }
     void use_fw_limit_toogled(bool state);
 };
 

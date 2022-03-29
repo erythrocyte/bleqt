@@ -14,9 +14,9 @@ std::shared_ptr<DimlesParamsWidget> DimlesParamsWidgetPresenter::get_view()
     return std::static_pointer_cast<DimlesParamsWidget>(m_view);
 }
 
-void DimlesParamsWidgetPresenter::set_m_value(double value)
+void DimlesParamsWidgetPresenter::set_params(const std::shared_ptr<models::DimlessParamsDto> params)
 {
-     get_view()->set_mvalue(value);
+    get_view()->set_params(params);
 }
 
 }
