@@ -46,6 +46,10 @@ double get_sigma(double s, int n, double kmu, double kw)
 
 double get_fbl(double s, int n, double kmu)
 {
+    if (s < 0.0)
+        return 0.0;
+    if (s > 1.0)
+        return 1.0;
     double kw = get_kw(s, n);
     double sig = get_sigma(s, n, kmu, kw);
 
@@ -54,6 +58,8 @@ double get_fbl(double s, int n, double kmu)
 
 double get_dfbl(double s, int n, double kmu)
 {
+    if ((s > 1) || (s < 0))
+        return 0.0;
     double kw = get_kw(s, n);
     double dkw = n * my_pow(s, n - 1), dkoil = -n * my_pow((1.0 - s), n - 1);
 

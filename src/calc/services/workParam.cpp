@@ -24,6 +24,8 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     const std::vector<double>& s, const std::shared_ptr<cm::SolverData> data, double t)
 {
     auto calc_fw = [](double qw, double ql) {
+        if (std::abs(ql) < 1e-12)
+            return 0.0;
         return qw / ql * 100.0;
     };
     auto result = std::make_shared<common::models::WellWorkParams>();

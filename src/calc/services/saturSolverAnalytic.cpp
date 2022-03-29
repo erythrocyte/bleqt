@@ -35,7 +35,7 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
     result.push_back(std::make_tuple(0.0, 0.0));
     result.push_back(std::make_tuple(xsc, 0.0));
 
-    std::vector<double> ss = common::services::make_vector(sc, 1.0, 100);
+    std::vector<double> ss = common::services::common_vector::make_vector(sc, 1.0, 100);
 
     for (auto& s : ss) {
         double x = get_xs(s);

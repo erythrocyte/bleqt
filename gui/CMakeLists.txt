@@ -29,6 +29,7 @@ set (SOURCES
 	widgets/boundVisualWidget.cpp
 	widgets/tauVisualWidget.cpp
 	widgets/fwVisualWidget.cpp
+	widgets/dimlesParamsWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
 	widgets/models/boundModel.cpp
@@ -46,6 +47,7 @@ set (SOURCES
 	widgets/presenters/boundVisualWidgetPresenter.cpp
 	widgets/presenters/tauVisualWidgetPresenter.cpp
 	widgets/presenters/fwVisualWidgetPresenter.cpp
+	widgets/presenters/dimlesParamsWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
 	

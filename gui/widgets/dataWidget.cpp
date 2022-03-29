@@ -21,12 +21,31 @@ DataWidget::~DataWidget()
 
 void DataWidget::subscribe()
 {
+    // fluid settings
     auto success = connect(ui->N, SIGNAL(valueChanged(int)), this, SLOT(rp_values_changed()));
     Q_ASSERT(success);
     success = connect(ui->MuWat, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
     Q_ASSERT(success);
     success = connect(ui->MuOil, SIGNAL(valueChanged(double)), this, SLOT(rp_values_changed()));
     Q_ASSERT(success);
+
+    // dimless parameters;
+    success = connect(ui->Delta, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DataWidget::dimless_params_changed);
+    Q_ASSERT(success);
+    success = connect(ui->L, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DataWidget::dimless_params_changed);
+    Q_ASSERT(success);
+    success = connect(ui->Perm, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DataWidget::dimless_params_changed);
+    Q_ASSERT(success);
+    success = connect(ui->PermFract, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DataWidget::dimless_params_changed);
+    Q_ASSERT(success);
+    success = connect(ui->R, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DataWidget::dimless_params_changed);
+    Q_ASSERT(success);
+    success = connect(ui->Rw, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DataWidget::dimless_params_changed);
+    Q_ASSERT(success);
+    success = connect(ui->PoroFract, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DataWidget::dimless_params_changed);
+    Q_ASSERT(success);
+
+    // other
     success = connect(ui->UseFwLimit, &QCheckBox::toggled, this, &DataWidget::use_fw_limit_toogled);
     Q_ASSERT(success);
 }

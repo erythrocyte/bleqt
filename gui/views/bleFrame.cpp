@@ -42,7 +42,8 @@ void BleFrame::set_settings_widget(
     std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
     std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
     std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
-    std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget)
+    std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget,
+    std::shared_ptr<widgets::DimlesParamsWidget> dimles_params_widget)
 {
     QTabWidget* tabSettings = new QTabWidget();
     tabSettings->setTabPosition(QTabWidget::TabPosition::West);
@@ -51,6 +52,7 @@ void BleFrame::set_settings_widget(
     tabSettings->addTab(satsolver_widget.get(), "");
     tabSettings->addTab(gridsetts_widget.get(), "");
     tabSettings->addTab(shockfront_widget.get(), "");
+    tabSettings->addTab(dimles_params_widget.get(), "");
     tabSettings->setMinimumWidth(330);
     QTabBar* tabbar = tabSettings->tabBar();
 
@@ -84,6 +86,12 @@ void BleFrame::set_settings_widget(
     tabSettings->setTabText(4, "");
     tabbar->setTabButton(4, QTabBar::LeftSide, label);
 
+    // dimless params
+    label = new frames::QVerticalLabel("Info");
+    label->setTextColor(QColor(0, 0, 50, 127));
+    tabSettings->setTabText(4, "");
+    tabbar->setTabButton(5, QTabBar::LeftSide, label);
+
     ui->dockSettings->setWidget(tabSettings);
 }
 
@@ -93,6 +101,7 @@ void BleFrame::set_widgets(
     std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
     std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
     std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget,
+    std::shared_ptr<widgets::DimlesParamsWidget> dimles_params_widget,
 
     std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
     std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
@@ -101,8 +110,12 @@ void BleFrame::set_widgets(
     std::shared_ptr<widgets::TauVisualWidget> tauWidget,
     std::shared_ptr<widgets::FwVisualWidget> fwWidget)
 {
-    this->set_settings_widget(dataWidget, conditionsWidget, satsolver_widget,
-        gridsetts_widget, shockfront_widget);
+    this->set_settings_widget(dataWidget,
+        conditionsWidget,
+        satsolver_widget,
+        gridsetts_widget,
+        shockfront_widget,
+        dimles_params_widget);
 
     ui->tabs->addTab(resultDataWidget.get(), "Results");
     ui->tabs->addTab(fluidParamsWidget.get(), "Fluid params");

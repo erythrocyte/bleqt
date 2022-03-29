@@ -7,6 +7,7 @@
 #include "boundVisualWidget.hpp"
 #include "conditionsWidget.hpp"
 #include "dataWidget.hpp"
+#include "dimlesParamsWidget.hpp"
 #include "fluidParamsGraphWidget.hpp"
 #include "fwVisualWidget.hpp"
 #include "gridSettsWidget.hpp"
@@ -37,6 +38,7 @@ public:
         std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
         std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
         std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget,
+        std::shared_ptr<widgets::DimlesParamsWidget> dimles_params_widget,
 
         std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
         std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
@@ -57,7 +59,8 @@ private:
         std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
         std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
         std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
-        std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget);
+        std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget,
+        std::shared_ptr<widgets::DimlesParamsWidget> dimles_params_widget);
 
 private slots:
     void handleRunButton() { emit sgn_run_calc(); }

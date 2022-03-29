@@ -88,10 +88,10 @@ void TauVisualWidget::fill_chart()
         mapper->setModel(m_model);
         ui->add_series(series, k);
 
-        // if (std::abs(min_value - max_value) < 1e-6) {
-        //     min_value = min_value * 0.95;
-        //     max_value = max_value * 1.05;
-        // }
+        if (std::abs(min_value - max_value) < 1e-12) {
+            min_value = min_value * 0.95;
+            max_value = max_value * 1.05;
+        }
 
         ui->setup_yaxis_range(min_value, max_value, k);
     }

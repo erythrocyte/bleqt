@@ -30,6 +30,9 @@ public:
     QDoubleSpinBox* FwShoreWellConverge;
     QComboBox* TimeStepType;
 
+    QDoubleSpinBox* TauForFim;
+    QSpinBox* SimpleIterCount;
+
     void setupUi(QWidget* widget)
     {
         _groupBox = new QGroupBox();
@@ -72,7 +75,7 @@ public:
 
         _solverTypeLabel = new QLabel();
         SolverType = new QComboBox();
-        SolverType->setEnabled(false);
+        SolverType->setEnabled(true);
         _layout->addWidget(_solverTypeLabel, 3, 0);
         _layout->addWidget(SolverType, 3, 1);
 
@@ -137,6 +140,24 @@ public:
         _layout->addWidget(m_timeStepTypeLabel, 12, 0);
         _layout->addWidget(TimeStepType, 12, 1);
 
+        m_tauLabel = new QLabel();
+        TauForFim = new QDoubleSpinBox();
+        TauForFim->setDecimals(8);
+        TauForFim->setMinimum(1e-8);
+        TauForFim->setMaximum(100);
+        TauForFim->setSingleStep(1e-8);
+        TauForFim->setValue(0.001);
+        _layout->addWidget(m_tauLabel, 13, 0);
+        _layout->addWidget(TauForFim, 13, 1);
+
+        m_simpleIterCountLabel = new QLabel();
+        SimpleIterCount = new QSpinBox();
+        SimpleIterCount->setMinimum(1);
+        SimpleIterCount->setMaximum(100);
+        SimpleIterCount->setValue(3);
+        _layout->addWidget(m_simpleIterCountLabel, 14, 0);
+        _layout->addWidget(SimpleIterCount, 14, 1);
+
         retranslateUi(widget);
     }
 
@@ -175,6 +196,12 @@ public:
         NeedStopFwPseudoConst->setText("Stop watercut change");
         NeedStopFwPseudoConst->setToolTip("Stop when watercut change less than delta for long iter");
 
+        m_tauLabel->setText("Tau");
+        m_tauLabel->setToolTip("Tau for fim");
+
+        m_simpleIterCountLabel->setText("Simple iter");
+        m_simpleIterCountLabel->setToolTip("Iter via simple method before Newton method");
+
         NeedStopFwShoreWellConverge->setText("Watercut shore|well on converge");
         NeedStopFwShoreWellConverge->setToolTip("Stop when watercut shore|well converged");
 
@@ -197,6 +224,8 @@ private:
     QLabel* m_maxIterLabel;
     QLabel* m_fwDeltaLabel;
     QLabel* m_fwDeltaIterLabel;
+    QLabel* m_tauLabel;
+    QLabel* m_simpleIterCountLabel;
     QLabel* m_fwShoreWellConvergeLabel;
     QLabel* m_timeStepTypeLabel;
 };

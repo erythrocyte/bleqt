@@ -23,12 +23,14 @@ public:
 
 signals:
     void rpValuesUpdated();
+    void dimless_params_updated();
 
 private:
     void set_signals();
 
 private slots:
     void onRpValuesChanged() { emit rpValuesUpdated(); }
+    void on_dimless_params_changed() {emit dimless_params_updated();}
 };
 
 }

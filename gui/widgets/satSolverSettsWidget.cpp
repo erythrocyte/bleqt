@@ -18,12 +18,15 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
             QString::fromStdString(sclcm::SaturSolverType::get_description(v)));
     }
 
+    bool isExplicit = false;
+    make_solver_type_change(isExplicit);
     for (scm::TimeStepType::TypeEnum v : scm::TimeStepTypeEnumIterator()) {
         ui->TimeStepType->addItem(QString::fromStdString(scm::TimeStepType::get_description(v)));
     }
 
     ui->MaxIter->setValue(10000);
-    ui->TimeStepType->setCurrentIndex(1);
+    ui->TimeStepType->setCurrentIndex(0);
+    ui->SolverType->setCurrentIndex(1);
 
     subscribe();
     need_stop_fw_shorewell_converge(false);
@@ -43,6 +46,8 @@ std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_d
     result->fw_delta = ui->FwDelta->value();
     result->fw_delta_iter = ui->FwDeltaIter->value();
 
+    result->tau = ui->TauForFim->value();
+    result->simple_iter_count = ui->SimpleIterCount->value();
     result->use_fw_shorewell_converge = ui->NeedStopFwShoreWellConverge->isChecked();
     result->fw_shw_conv = ui->FwShoreWellConverge->value();
 
@@ -59,6 +64,8 @@ void SatSolverSettsWidget::subscribe()
 {
     auto success = connect(ui->NeedStopFwPseudoConst, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_pseudo_const);
     Q_ASSERT(success);
+    success = QObject::connect(ui->SolverType, SIGNAL(currentIndexChanged(int)), this, SLOT(on_solver_type_changed(int)));
+    Q_ASSERT(success);
     success = connect(ui->NeedStopFwShoreWellConverge, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_shorewell_converge);
     Q_ASSERT(success);
 }
@@ -67,6 +74,20 @@ void SatSolverSettsWidget::need_stop_fw_pseudo_const(bool state)
 {
     ui->FwDelta->setEnabled(state);
     ui->FwDeltaIter->setEnabled(state);
+}
+
+void SatSolverSettsWidget::on_solver_type_changed(int index)
+{
+    make_solver_type_change(index == 0); // 0 is explicit
+}
+
+void SatSolverSettsWidget::make_solver_type_change(bool isExplicit)
+{
+    ui->TauForFim->setEnabled(!isExplicit);
+    ui->SimpleIterCount->setEnabled(!isExplicit);
+
+    ui->CurantFace->setEnabled(isExplicit);
+    ui->CurantVolume->setEnabled(isExplicit);
 }
 
 void SatSolverSettsWidget::need_stop_fw_shorewell_converge(bool state)

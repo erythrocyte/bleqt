@@ -41,6 +41,8 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     auto gridsetts_view = std::static_pointer_cast<widgets::GridSettsWidget>(m_gridsetts_presenter->get_view());
     m_shockfront_presenter = m_container->resolve<bwp::ShockFrontSettsWidgetPresenter>();
     auto shockfront_view = std::static_pointer_cast<widgets::ShockFrontSettsWidget>(m_shockfront_presenter->get_view());
+    m_dimlesParamsPresenter = m_container->resolve<bwp::DimlesParamsWidgetPresenter>();
+    auto dimlesParams_view = std::static_pointer_cast<widgets::DimlesParamsWidget>(m_dimlesParamsPresenter->get_view());
 
     m_fluidWidgetPresenter = m_container->resolve<bwp::FluidParamGraphWidgetPresenter>();
     auto fluidParamsWidget = std::static_pointer_cast<widgets::FluidParamsGraphWidget>(m_fluidWidgetPresenter->get_view());
@@ -61,6 +63,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
         satsolver_view,
         gridsetts_view,
         shockfront_view,
+        dimlesParams_view,
 
         fluidParamsWidget,
         resultDataWidget,
@@ -73,6 +76,7 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_shockfront_presenter->set_show_shockfront_status(false);
     onRpValuesUpdated();
     on_update_rhs_tab();
+    update_dimless_params();
 }
 
 void BleFramePresenter::run()
@@ -89,6 +93,9 @@ void BleFramePresenter::set_signals()
         this, SLOT(onRpValuesUpdated()));
     Q_ASSERT(success);
     success = QObject::connect(m_conditionsWidgetPresenter.get(), SIGNAL(update_rhs()), this, SLOT(on_update_rhs_tab()));
+    Q_ASSERT(success);
+
+    success = QObject::connect(m_dataWidgetPresenter.get(), SIGNAL(dimless_params_updated()), this, SLOT(on_dimless_params_changed()));
     Q_ASSERT(success);
 
     QObject* view_obj = dynamic_cast<QObject*>(m_view.get());
@@ -234,6 +241,28 @@ std::shared_ptr<ble::src::common::models::InputData> BleFramePresenter::get_data
     result->mesh_setts = m_gridsetts_presenter->get_data();
     result->sc_setts = m_shockfront_presenter->get_data();
     return result;
+}
+
+void BleFramePresenter::update_dimless_params()
+{
+    auto data = get_data();
+    std::shared_ptr<src::common::models::ScaleData> scale_data;
+    std::shared_ptr<src::common::models::SolverData> solver_data;
+    std::tie(scale_data, solver_data) = src::common::services::DimensionlessService::make_dimless(data);
+
+    auto prms = std::make_shared<widgets::models::DimlessParamsDto>();
+    prms->m = solver_data->m;
+    prms->l = solver_data->l;
+    prms->poro = 1.0;
+    prms->r = 1.0;
+    prms->rw = solver_data->rw;
+    prms->kmu = solver_data->kmu;
+    m_dimlesParamsPresenter->set_params(prms);
+}
+
+void BleFramePresenter::on_dimless_params_changed()
+{
+    update_dimless_params();
 }
 
 }

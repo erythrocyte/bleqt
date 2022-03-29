@@ -22,6 +22,8 @@ public:
     double fw_delta;
     int fw_delta_iter;
 
+    double tau;
+    int simple_iter_count;
     bool use_fw_shorewell_converge;
     double fw_shw_conv;
 

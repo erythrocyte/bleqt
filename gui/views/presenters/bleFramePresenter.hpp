@@ -13,14 +13,15 @@
 #include "common/models/inputData.hpp"
 #include "conditionsWidgetPresenter.hpp"
 #include "dataWidgetPresenter.hpp"
+#include "dimlesParamsWidgetPresenter.hpp"
 #include "fluidParamGraphWidgetPresenter.hpp"
+#include "fwVisualWidgetPresenter.hpp"
 #include "gridSettsWidgetPresenter.hpp"
 #include "logging/logger.hpp"
 #include "resultDataWidgetPresenter.hpp"
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
 #include "tauVisualWidgetPresenter.hpp"
-#include "fwVisualWidgetPresenter.hpp"
 #include "wellWorkDataWidgetPresenter.hpp"
 
 namespace bwp = ble::gui::widgets::presenters;
@@ -51,6 +52,7 @@ private:
     std::shared_ptr<bwp::BoundVisualWidgetPresenter> m_boundVisualPresenter;
     std::shared_ptr<bwp::TauVisualWidgetPresenter> m_tauVisualPresenter;
     std::shared_ptr<bwp::FwVisualWidgetPresenter> m_fwVisualPresenter;
+    std::shared_ptr<bwp::DimlesParamsWidgetPresenter> m_dimlesParamsPresenter;
 
     void set_signals();
     double get_sc();
@@ -59,6 +61,7 @@ private:
     void init_log();
     std::tuple<std::string, ble::src::logging::SeverityLevelEnum> parse_log_mess(std::string mess);
     std::shared_ptr<ble::src::common::models::InputData> get_data();
+    void update_dimless_params();
 
 private slots:
     void onShowShockFrontCurve(bool status);
@@ -66,6 +69,7 @@ private slots:
     void on_run_calc();
     void handleFileChanged(QString str);
     void on_update_rhs_tab();
+    void on_dimless_params_changed();
 };
 }
 

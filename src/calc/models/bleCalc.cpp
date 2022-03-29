@@ -72,8 +72,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     };
 
     auto save_aver_reached = [&](int index, const char* fn, bool conv) {
-        auto s = cs::string_format("fw shore and well converged in %i iter", index);
-        logging::write_log(s, logging::kInfo);
+        if (conv) {
+            auto s = cs::string_format("fw shore and well converged in %i iter", index);
+            logging::write_log(s, logging::kInfo);
+        }
         auto d = std::make_shared<calc::models::AverFwSaveData>();
         d->m = data->m;
         d->s_const = data->top_bot_bound_s[0]->v0;
@@ -139,6 +141,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
         // save_faces_val(grd, data);
     } else {
+        auto sst_name = SaturSolverType::get_description(data->sat_setts->type);
+        std::string mess = common::services::string_format("saturation solver type: %s", sst_name.c_str());
+        logging::write_log(mess, logging::kInfo);
         while (suit_step(cur_fw, sumT)) {
             if (index % data->sat_setts->pressure_update_n == 0) {
                 p = services::solve_press(grd, s_prev, data);
@@ -146,14 +151,16 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 // save_press(index, grd, p);
             }
 
-            double t = get_tau(index, s_prev);
+            double t = data->sat_setts->type == SaturSolverType::kImplicit
+                ? data->sat_setts->tau
+                : get_tau(index, s_prev);
 
             double u = data->contour_press_bound_type == common::models::BoundCondType::kConst
                 ? services::getULiqInject(grd, data->mesh_setts->type)
                 : 0.0;
             sumU += u * t;
 
-            s_cur = services::solve_satur(t, s_prev, data, grd);
+            s_cur = services::solve_satur(t, index == 0, s_prev, data, grd);
 
             s_prev = s_cur;
             sumT += t;
@@ -208,7 +215,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             set_progress(perc);
 
             if (index > data->sat_setts->max_iter) {
-                logging::write_log("max iter reached", logging::kInfo);
+                auto s = cs::string_format("max iter {%i} reached", data->sat_setts->max_iter);
+                logging::write_log(s, logging::kInfo);
                 break;
             }
 
