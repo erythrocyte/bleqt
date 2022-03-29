@@ -10,17 +10,6 @@ namespace cs = ble::src::common::services;
 
 namespace ble::src::calc::services {
 
-// SaturImplicitSolverService::SaturImplicitSolverService( //const std::shared_ptr<common::models::SolverData> data,
-//     const std::shared_ptr<mesh::models::Grid> grd)
-// {
-//     // m_data = data;
-//     m_grd = grd;
-// }
-
-// SaturImplicitSolverService::~SaturImplicitSolverService()
-// {
-// }
-
 void print_vector(const std::vector<double>& a, const std::string& nm, const std::string& section)
 {
     std::cout << "[" << section << "] " << nm << " = (" << a[0] << "\t" << a[1] << ")" << std::endl;
