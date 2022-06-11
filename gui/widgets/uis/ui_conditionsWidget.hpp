@@ -186,7 +186,7 @@ private:
         InitialConstSatur->setMinimum(0.0);
         InitialConstSatur->setMaximum(1.0);
         InitialConstSatur->setSingleStep(0.01);
-        InitialConstSatur->setValue(0.0);
+        InitialConstSatur->setValue(1.0);
         InitialConstSatur->setToolTip("Initial saturation value");
         layout->addWidget(m_initialsSaturConstLabel, 1, 0);
         layout->addWidget(InitialConstSatur, 1, 1, 1, max_col);

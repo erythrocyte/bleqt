@@ -29,7 +29,7 @@ ConditionsWidget::ConditionsWidget(QWidget* parent)
 
     subscribe();
 
-    ui->ContourBoundType->setCurrentIndex(0);
+    ui->ContourBoundType->setCurrentIndex(1);
     ui->BoundSType->setCurrentIndex(0);
     ui->BoundSConstValue->setValue(1.0);
     ui->BoundSFile->setText("../../samples/rhs/s_sample.blerhs");
@@ -145,6 +145,24 @@ std::shared_ptr<src::common::models::BoundCondData> ConditionsWidget::get_bound_
     case src::common::models::DataDistributionType::kFile: {
         std::string file_name = ui->BoundSFile->text().toStdString();
         result->top_bot_bound_s = scms::DataDistributionService::get_data_from_file(file_name);
+        break;
+    }
+    default:
+        break;
+    }
+
+    str = ui->InitialSaturType->currentText().toStdString();
+    result->initial_satur_type = src::common::models::DataDistributionType::get_enum(str);
+    switch (result->initial_satur_type) {
+    case src::common::models::DataDistributionType::kConst: {
+        double val = ui->InitialConstSatur->value();
+        int len_right_perc = 100;
+        result->initial_s = scms::DataDistributionService::get_data_from_const(val, len_right_perc, x0, x1);
+        break;
+    }
+    case src::common::models::DataDistributionType::kFile: {
+        std::string file_name = ui->InitialSaturFile->text().toStdString();
+        result->initial_s = scms::DataDistributionService::get_data_from_file(file_name);
         break;
     }
     default:

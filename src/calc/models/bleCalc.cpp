@@ -12,6 +12,7 @@
 #include "calc/services/saturSolverNum.hpp"
 #include "calc/services/workParam.hpp"
 #include "calc/services/workTimeStep.hpp"
+#include "common/services/dataDistributionService.hpp"
 #include "common/services/shockFront.hpp"
 #include "common/services/workString.hpp"
 #include "logging/logger.hpp"
@@ -245,9 +246,13 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
 void BleCalc::set_initial_cond()
 {
-    size_t n = m_grd->cells.size();
+    std::vector<double> s;
+    for (auto const& cl : m_grd->cells) {
+        double cl_s = src::common::services::DataDistributionService::get_value(cl->cntr, m_data->initial_s, 0.0);
+        s.push_back(cl_s);
+    }
 
-    std::vector<double> s(n, 0.);
+    // = m_data->initial_s;
     std::vector<double> p = services::solve_press(m_grd, s, m_data);
     std::vector<double> p_ex = services::calc_press_exact(m_grd, m_data);
 

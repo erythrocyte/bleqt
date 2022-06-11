@@ -149,6 +149,9 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
 
         fc->u = -sigma * (p1 - p2) / h;
     }
+
+    double err = calc_residual(grd, params);
+    std::cout << "err = " << err << "\n";
 }
 
 std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
@@ -188,6 +191,47 @@ std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
             break;
         }
         result.push_back(p);
+    }
+
+    return result;
+}
+
+double calc_residual(const std::shared_ptr<mm::Grid> grd,
+    const std::shared_ptr<common::models::SolverData> params)
+{
+    std::vector<double> errors;
+
+    auto get_face_cf = [&](int find) {
+        auto fc = grd->faces[find];
+
+        switch (fc->type) {
+        case mm::FaceType::kTop:
+        case mm::FaceType::kBot: {
+            switch (params->contour_press_bound_type) {
+            case common::models::BoundCondType::kImpermeable:
+                return 1.0 / (2.0 * params->m);
+            case common::models::BoundCondType::kConst:
+                return 1.0;
+            default:
+                return 1.0;
+            }
+        }
+        default:
+            return 1.0;
+        }
+    };
+
+    double result = -1e10;
+    for (auto const cl : grd->cells) {
+        double err = 0.0;
+        for (auto fi : cl->faces) {
+            auto fc = grd->faces[fi];
+            double q = fc->u * fc->area * get_face_cf(fi);
+            err += q;
+        }
+
+        if (err > result)
+            result = err;
     }
 
     return result;
