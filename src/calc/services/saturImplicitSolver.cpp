@@ -143,7 +143,6 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
         double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
         double oper_cf = get_oper_cf(oper_tp, s, upwind_cind == -1);
         double un = fc->u * get_face_cf(fc);
-        std::cout << "oper cf = " << oper_cf << "\n";
         double val = un * fc->area * oper_cf;
 
         if (fc->cl2 != -1) {

@@ -6,6 +6,8 @@
 #include "calc/services/workSigma.hpp"
 #include "common/models/commonVals.hpp"
 #include "common/services/workRp.hpp"
+#include "common/services/workString.hpp"
+#include "logging/logger.hpp"
 
 namespace ble::src::calc::services {
 
@@ -151,7 +153,8 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     }
 
     double err = calc_residual(grd, params);
-    std::cout << "err = " << err << "\n";
+    std::string mess = common::services::string_format("err = {:.0e}", err);
+    logging::write_log(mess, logging::kDebug);
 }
 
 std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
