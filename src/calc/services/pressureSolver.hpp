@@ -19,6 +19,8 @@ std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
 void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     const std::shared_ptr<common::models::SolverData> data,
     std::shared_ptr<mm::Grid> grd);
+double calc_residual(const std::shared_ptr<mm::Grid> grd,
+    const std::shared_ptr<common::models::SolverData> params);
 
 }
 

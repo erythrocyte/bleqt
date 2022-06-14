@@ -15,11 +15,20 @@ namespace ble::src::calc::models {
 struct DiagMat {
     std::vector<double> A, B, C;
     std::vector<double> alpha, beta;
+
     void resize(int n)
     {
         A.resize(n, 0.0);
         B.resize(n, 0.0);
         C.resize(n, 0.0);
+    }
+
+    void clear(int n)
+    {
+        A.clear();
+        B.clear();
+        C.clear();
+        resize(n);
     }
 
     std::vector<double> solve(const std::vector<double>& F)

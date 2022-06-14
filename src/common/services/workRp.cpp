@@ -1,6 +1,6 @@
 #include "workRp.hpp"
 
-// #include <cmath>
+#include <cmath>
 
 namespace ble::src::common::services::rp {
 
@@ -68,6 +68,19 @@ double get_dfbl(double s, int n, double kmu)
     double ff = dkw + kmu * dkoil;
 
     return (dkw * f - ff * kw) / f2;
+}
+
+double get_dfbl_approx(double s, int n, double kmu, bool is_left, double d)
+{
+    double f1 = get_fbl(s, n, kmu);
+
+    double s0 = is_left
+        ? s + d
+        : s - d;
+    
+    double f0 = get_fbl(s0, n, kmu);
+
+    return std::abs(f1 - f0) / d;
 }
 
 }
