@@ -9,6 +9,7 @@ double get_fbl(double s, int n, double kmu);
 double get_sigma(double s, int n, double kmu);
 double get_dfbl(double s, int n, double kmu);
 double get_sigma(double s, int n, double kmu, double kw);
+double get_dfbl_approx(double s, int n, double kmu, bool is_left, double d = 0.01);
 
 } // namespace ble::src
 

@@ -40,7 +40,7 @@ std::vector<double> SaturImplicitSolverService::solve(double tau, const std::vec
     m_tau = tau;
 
     std::vector<double> s(m_init);
-    double lambda = 0.01;
+    double lambda = m_tau * 0.1;
 
     // make initial;
     if (need_precise) {
@@ -87,8 +87,9 @@ std::vector<double> SaturImplicitSolverService::solve(double tau, const std::vec
 
 void SaturImplicitSolverService::reset_matrix()
 {
-    m_ret.clear(m_grd->cells.size());
-    std::fill(m_rhs.begin(), m_rhs.end(), 0.0);
+    int n = m_grd->cells.size();
+    m_ret.clear(n);
+    m_rhs.assign(n, 0.0);
 }
 
 void SaturImplicitSolverService::build_simple()
@@ -109,12 +110,16 @@ void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<doubl
         double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
         double oper_cf = (oper_tp == oper_type::b && upwind_cind != -1)
             ? 1.0
-            : get_oper_cf(oper_tp, s, upwind_cind == -1);
+            : get_oper_cf(oper_tp, s);
         double val = alpha * (un * oper_cf * fc->area);
 
         if (upwind_cind == -1) {
             double v = val / m_grd->cells[fc->cl1]->volume;
-            m_rhs[fc->cl1] += v; // un = -un;
+            if (oper_tp == oper_type::ga) {
+                m_ret.C[fc->cl1] += v;
+            } else {
+                m_rhs[fc->cl1] += v; // un = -un;
+            }
         } else {
             if (upwind_cind == fc->cl2) {
                 m_ret.B[fc->cl1] -= val / m_grd->cells[fc->cl1]->volume;
@@ -141,7 +146,7 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
         // if (upwind_cind == -1)
         //     continue;
         double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
-        double oper_cf = get_oper_cf(oper_tp, s, upwind_cind == -1);
+        double oper_cf = get_oper_cf(oper_tp, s);
         double un = fc->u * get_face_cf(fc);
         double val = un * fc->area * oper_cf;
 
@@ -159,7 +164,7 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
     return result;
 }
 
-double SaturImplicitSolverService::get_oper_cf(oper_type oper_tp, double s, bool calc_aver)
+double SaturImplicitSolverService::get_oper_cf(oper_type oper_tp, double s)
 {
     switch (oper_tp) {
     case oper_type::a:
@@ -167,8 +172,8 @@ double SaturImplicitSolverService::get_oper_cf(oper_type oper_tp, double s, bool
     case oper_type::b:
         return s;
     case oper_type::ga:
-        return calc_aver
-            ? s
+        return std::abs(s - 1.0) < 1e-6
+            ? cs::rp::get_dfbl_approx(s, m_data->rp_n, m_data->kmu, false)
             : cs::rp::get_dfbl(s, m_data->rp_n, m_data->kmu);
     default:
         return 0.0;

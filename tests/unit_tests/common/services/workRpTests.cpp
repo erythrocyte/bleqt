@@ -171,4 +171,52 @@ void case2_dfbl()
     BOOST_CHECK_CLOSE(expected, actual, 1e-8);
 }
 
+void case1_dfbl_approx()
+{
+    // arrange
+    double d = 0.01;
+    double expected = 0.020401917780266121; // from wxmaxima
+    double s = 1.0;
+    double kmu = 2.0; // = mw / moil;
+    double n = 2.0;
+
+    // act
+    double actual = cs::rp::get_dfbl_approx(s, n, kmu, false, d);
+
+    // assert
+    BOOST_CHECK_CLOSE(expected, actual, 1e-8);
+}
+
+void case2_dfbl_approx()
+{
+    // arrange
+    double d = 0.1;
+    double expected = 0.24096385542168641; // from wxmaxima
+    double s = 1.0;
+    double kmu = 2.0; // = mw / moil;
+    double n = 2.0;
+
+    // act
+    double actual = cs::rp::get_dfbl_approx(s, n, kmu, false, d);
+
+    // assert
+    BOOST_CHECK_CLOSE(expected, actual, 1e-8);
+}
+
+void case3_dfbl_approx()
+{
+    // arrange
+    double d = 0.1;
+    double expected = 0.06134969325153374; // from wxmaxima
+    double s = 0.0;
+    double kmu = 2.0; // = mw / moil;
+    double n = 2.0;
+
+    // act
+    double actual = cs::rp::get_dfbl_approx(s, n, kmu, true, d);
+
+    // assert
+    BOOST_CHECK_CLOSE(expected, actual, 1e-8);
+}
+
 }

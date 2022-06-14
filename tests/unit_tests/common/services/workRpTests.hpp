@@ -19,6 +19,10 @@ void case2_sigma();
 void case1_dfbl();
 void case2_dfbl();
 
+void case1_dfbl_approx();
+void case2_dfbl_approx();
+void case3_dfbl_approx();
+
 }
 
 #endif
