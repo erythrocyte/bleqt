@@ -14,15 +14,7 @@ namespace ble::src::common::models {
 
 class SolverData {
 public:
-    SolverData(double rw, double delta, double perm_fract)
-    {
-        this->rw = rw;
-        this->delta = delta;
-        this->perm_fract = perm_fract;
-        
-        this->len = 1.0 - rw;
-        this->m = delta * perm_fract;
-    };
+    SolverData(double rw, double delta, double perm_fract);
 
     int rp_n;
     double kmu;
@@ -46,6 +38,8 @@ public:
 
     std::shared_ptr<MeshSettings> mesh_setts = std::make_shared<MeshSettings>();
     std::shared_ptr<calc::models::SaturSolverSetts> sat_setts = std::make_shared<calc::models::SaturSolverSetts>();
+
+    void update_perm_fract(double kf);
 };
 
 }

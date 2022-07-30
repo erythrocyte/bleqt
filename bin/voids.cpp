@@ -43,10 +43,13 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
     result->sat_setts->max_iter = 2.5e7;
     result->sat_setts->use_fw_delta = false;
     result->sat_setts->fw_delta = 1e-5;
-    result->sat_setts->fw_delta_iter = 1e4;
+    result->sat_setts->fw_delta_iter = 1e6;
     result->sat_setts->use_fw_shorewell_converge = true;
-    result->sat_setts->fw_shw_conv = 3; // %
+    result->sat_setts->fw_shw_conv = 5; // %
     result->sat_setts->time_step_type = cm::TimeStepType::kNew;
+
+    result->sat_setts->tau = 0.1;
+    result->sat_setts->simple_iter_count = 3;
 
     // result->delta = 0.005 / 100.0;
     result->fw_lim = 99;
@@ -102,14 +105,14 @@ void Calculator::update_progress(double perc)
 
 void Calculator::run_s_const_loop()
 {
-    std::vector<double> ms = { /*1e-1, 1e0, */ 1e2, /*1e2, 1e3*/ };
+    std::vector<double> ms = { 1e-1, 1e0, 1e1, 1e2, 1e3 };
     std::vector<double> scs = { 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0 };
     // std::vector<double> scs = {0.85 };
 
     for (auto const& mi : ms) {
         for (auto const& s : scs) {
             auto data = get_solver_data();
-            data->perm_fract = mi / data->delta;
+            data->update_perm_fract(mi / data->delta);
 
             auto item = std::make_shared<cm::DataDistribution>();
             item->v0 = s;

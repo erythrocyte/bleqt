@@ -67,6 +67,8 @@ set (SOURCES
 
 	file/services/workFile.cpp
 
+	common/models/solverData.cpp
+
 	common/services/shockFront.cpp
 	common/services/workRp.cpp
 	common/services/commonVector.cpp

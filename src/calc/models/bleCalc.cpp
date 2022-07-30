@@ -83,8 +83,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         d->converged = conv;
         d->data = m_fw_data[m_fw_data.size() - 1];
         d->iter_count = index;
-        d->cv = data->sat_setts->cv;
-        d->cg = data->sat_setts->cg;
+        // d->cv = data->sat_setts->cv;
+        // d->cg = data->sat_setts->cg;
         save_aver_fw(fn, d);
     };
 
@@ -203,8 +203,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             }
 
             cur_fw = wwp->fw;
-            if (index % 100 == 0)
-                std::cout << "fw = " << cur_fw << ", t = " << t << ", index = " << index << std::endl;
+            if (index % 100 == 0) {
+                auto s = cs::string_format("fw = {%.6f}, t = {%.6f}, index = {%i}", cur_fw, t, index);
+                logging::write_log(s, logging::kInfo);
+            }
 
             sumQ += wwp->ql * t;
             double pv = sumQ / fract_pv; // how many pv are flushed
@@ -371,8 +373,8 @@ void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData>
           << "s_an\t"
           << "status\t"
           << "iter_count\t"
-          << "cv\t"
-          << "cg"
+        //   << "cv\t"
+        //   << "cg"
           << std::endl;
 
     f << data->m << "\t"
@@ -384,8 +386,8 @@ void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData>
       << data->data->sav_an_shore << "\t"
       << data->converged << "\t"
       << data->iter_count << "\t"
-      << data->cv << "\t"
-      << data->cg
+    //   << data->cv << "\t"
+    //   << data->cg
       << std::endl;
 
     f.close();
