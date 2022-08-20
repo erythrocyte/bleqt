@@ -153,7 +153,7 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     }
 
     double err = calc_residual(grd, params);
-    std::string mess = common::services::string_format("err = {:.0e}", err);
+    std::string mess = common::services::string_format("err = {%.10f}", err);
     logging::write_log(mess, logging::kDebug);
 }
 

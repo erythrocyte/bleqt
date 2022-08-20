@@ -198,7 +198,7 @@ private:
         Delta = new QDoubleSpinBox();
         Delta->setDecimals(3);
         Delta->setMinimum(1e-3);
-        Delta->setMaximum(0.1);
+        Delta->setMaximum(1);
         Delta->setSingleStep(1e-1);
         Delta->setValue(0.01);
         m_layoutGeom->addWidget(m_labelDelta, 2, 0);
@@ -207,7 +207,7 @@ private:
         m_labelRw = new QLabel("Rw");
         Rw = new QDoubleSpinBox();
         Rw->setDecimals(2);
-        Rw->setMinimum(1e-2);
+        Rw->setMinimum(0);
         Rw->setMaximum(1);
         Rw->setSingleStep(1e-2);
         Rw->setValue(0.1);

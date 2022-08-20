@@ -17,15 +17,18 @@ class Calculator {
 public:
     Calculator() { }
     ~Calculator() { }
-    std::shared_ptr<cm::SolverData> get_solver_data();
-    std::shared_ptr<msm::Grid> get_grid(const std::shared_ptr<cm::SolverData> params);
-    void solve(const std::shared_ptr<cm::SolverData> params, const std::shared_ptr<msm::Grid> grd);
     void run_s_const_loop();
+    void run_linear();
 
 private:
     int const PRINT_STEP = 1000;
     int print_index = 0;
+
     void update_progress(double perc);
+    std::shared_ptr<cm::SolverData> get_linear_solver_data();
+    std::shared_ptr<cm::SolverData> get_solver_data();
+    std::shared_ptr<msm::Grid> get_grid(const std::shared_ptr<cm::SolverData> params);
+    void solve(const std::shared_ptr<cm::SolverData> params, const std::shared_ptr<msm::Grid> grd);
 };
 
 }

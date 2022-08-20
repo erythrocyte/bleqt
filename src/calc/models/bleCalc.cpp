@@ -15,9 +15,11 @@
 #include "common/services/dataDistributionService.hpp"
 #include "common/services/shockFront.hpp"
 #include "common/services/workString.hpp"
+#include "file/services/workFile.hpp"
 #include "logging/logger.hpp"
 
 namespace cs = ble::src::common::services;
+namespace fss = ble::src::file::services;
 
 namespace ble::src::calc::models {
 
@@ -64,7 +66,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     auto get_fract_pv = [&]() {
         double ans = 0.0;
-        double poro = data->real_poro;
+        double poro = 1.0; // data->real_poro;
         for (const auto& cl : grd->cells) {
             ans += cl->volume;
         }
@@ -162,7 +164,6 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             sumU += u * t;
 
             s_cur = services::solve_satur(t, index == 0, s_prev, data, grd);
-
             s_prev = s_cur;
             sumT += t;
             m_tau_data.push_back(std::make_shared<common::models::TauData>(sumT, t));
@@ -205,7 +206,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             cur_fw = wwp->fw;
             if (index % 100 == 0) {
                 auto s = cs::string_format("fw = {%.6f}, t = {%.6f}, index = {%i}", cur_fw, t, index);
-                logging::write_log(s, logging::kInfo);
+                // logging::write_log(s, logging::kInfo);
             }
 
             sumQ += wwp->ql * t;
@@ -213,6 +214,21 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             // if (index % 100 == 0)
             //     std::cout << "sumq = " << sumQ << ", pv = " << pv << ", fpv = " << fract_pv << std::endl;
             add_aver_fw(pv, wwp->fw, wwp->fw_shore, s_cur);
+
+            if (!fss::file_exists("dd.dat")) {
+                std::ofstream a("dd.dat");
+                a << "s\tt\tu\tPVI\tsumT\tsumQ\tql\tvp\tql_shore\tfw\n";
+                a.close();
+            }
+
+            if (index % 1000 == 0) {
+                std::ofstream a("dd.dat", std::ios_base::app);
+                a << s_cur[0] << "\t" << t << "\t" << u << "\t"
+                  << pv << "\t" << sumT << "\t"
+                  << sumQ << "\t" << wwp->ql << "\t" << fract_pv << "\t"
+                  << wwp->ql_shore << "\t" << wwp->fw << "\n";
+                a.close();
+            }
 
             double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
@@ -226,6 +242,11 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             if (data->sat_setts->use_fw_shorewell_converge) {
                 double r = std::abs(wwp->fw - wwp->fw_shore); // residual
                 double dr = wwp->fw_shore * data->sat_setts->fw_shw_conv / 100.0;
+                if (index % 1000 == 0) {
+                    auto s = cs::string_format("fw_well = {%.6f}, fw_shore = {%.6f}, r = {%.6f}, dr = {%.6f}",
+                        wwp->fw, wwp->fw_shore, r, dr);
+                    logging::write_log(s, logging::kInfo);
+                }
                 if (r < dr) {
                     save_aver_reached(index, aver, true);
                     aver_reached = true;
@@ -239,9 +260,30 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     m_sum_t = sumT;
 
-    if (!aver_reached) {
+    if (!aver_reached && data->contour_press_bound_type == common::models::BoundCondType::kImpermeable) {
         save_aver_reached(index, aver, false);
     }
+
+    // std::string m = common::services::string_format("U/PV = %.8f", sumU / fract_pv / 2.0);
+    // logging::write_log(m, logging::kInfo);
+    // m = cs::string_format("PV = %.6f", fract_pv / 2.0);
+    // logging::write_log(m, logging::kInfo);
+
+    if (!fss::file_exists("1.dat")) {
+        std::ofstream ofs("1.dat");
+        ofs << "n\ttau\tfwlim\tU/m\ts\tPVI\tfpv\n";
+        ofs.close();
+    }
+
+    std::ofstream ofs("1.dat", std::ios_base::app);
+    ofs << grd->cells.size() << "\t"
+        << data->sat_setts->tau << "\t"
+        << data->fw_lim << "\t"
+        << sumU << "\t"
+        << s_cur[0] << "\t"
+        << sumQ / fract_pv << "\t" // how many pv are flushed // / fract_pv / 2.0 << "\n";
+        << fract_pv << "\n";
+    ofs.close();
 
     set_progress(100); // completed;
 }
@@ -373,8 +415,8 @@ void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData>
           << "s_an\t"
           << "status\t"
           << "iter_count\t"
-        //   << "cv\t"
-        //   << "cg"
+          //   << "cv\t"
+          //   << "cg"
           << std::endl;
 
     f << data->m << "\t"
@@ -386,8 +428,8 @@ void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData>
       << data->data->sav_an_shore << "\t"
       << data->converged << "\t"
       << data->iter_count << "\t"
-    //   << data->cv << "\t"
-    //   << data->cg
+      //   << data->cv << "\t"
+      //   << data->cg
       << std::endl;
 
     f.close();

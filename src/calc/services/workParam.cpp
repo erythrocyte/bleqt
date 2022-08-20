@@ -47,6 +47,7 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     std::tie(ql_shore, qw_shore) = get_facetype_ql_qw(grd, data, true, s,
         std::set<mm::FaceType::TypeEnum> { mm::FaceType::kTop, mm::FaceType::kBot });
     result->fw_shore = calc_fw(qw_shore, ql_shore);
+    result->ql_shore = ql_shore;
 
     return result;
 }

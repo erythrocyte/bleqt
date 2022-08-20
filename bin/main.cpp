@@ -10,10 +10,8 @@ int main(int argc, char** argv)
     ble::src::logging::init_log(fn);
 
     auto calculator = std::make_shared<ble::bin::Calculator>();
-    // auto params = calculator->get_solver_data();
-    // auto grd = calculator->get_grid(params);
-    // calculator->solve(params, grd);
     calculator->run_s_const_loop();
+    // calculator->run_linear();
 
     return 0;
 }

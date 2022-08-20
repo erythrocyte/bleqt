@@ -11,31 +11,34 @@
 #include "common/models/gridType.hpp"
 #include "common/models/meshSettings.hpp"
 #include "common/models/timeStepType.hpp"
+#include "common/services/shockFront.hpp"
+#include "common/services/workRp.hpp"
+#include "file/services/workFile.hpp"
 #include "mesh/services/makeGrid.hpp"
 
 namespace mss = ble::src::mesh::services;
 namespace clm = ble::src::calc::models;
 namespace cm = ble::src::common::models;
+namespace cs = ble::src::common::services;
+namespace fss = ble::src::file::services;
 
 namespace ble::bin {
 
-std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
+std::shared_ptr<cm::SolverData> Calculator::get_linear_solver_data()
 {
     auto result = std::make_shared<cm::SolverData>(
-        0.01 / 100, // rw
-        0.005 / 100.0, // delta
-        10 // perm_fract
+        0.01, // rw
+        0.5, // delta -- no fract
+        100 // perm_fract
     );
 
     // mesh settings
     result->mesh_setts = std::make_shared<cm::MeshSettings>();
-    result->mesh_setts->n = 500;
-    result->mesh_setts->type = cm::GridType::kRadial;
+    result->mesh_setts->n = 100;
+    result->mesh_setts->type = cm::GridType::kRegular;
 
     // satur solver settings
     result->sat_setts = std::make_shared<clm::SaturSolverSetts>();
-    result->sat_setts->cv = 0.5e-6;
-    result->sat_setts->cg = 0.9;
     result->sat_setts->need_satur_solve = true;
     result->sat_setts->pressure_update_n = 10;
     result->sat_setts->satur_field_save_n = 1e7;
@@ -46,21 +49,68 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
     result->sat_setts->fw_delta_iter = 1e6;
     result->sat_setts->use_fw_shorewell_converge = true;
     result->sat_setts->fw_shw_conv = 5; // %
-    result->sat_setts->time_step_type = cm::TimeStepType::kNew;
-
-    result->sat_setts->tau = 0.1;
+    result->sat_setts->time_step_type = cm::TimeStepType::kOld;
+    result->sat_setts->tau = 1e-3;
     result->sat_setts->simple_iter_count = 3;
 
-    // result->delta = 0.005 / 100.0;
-    result->fw_lim = 99;
+    result->fw_lim = 70;
     result->kmu = 1.0;
-    result->l = 500.0 / 100.0;
-    // result->m = 10.0;
-    result->rp_n = 2.0;
-    // result->rw = 0.01 / 100;
+    result->l = 5;
+    result->rp_n = 3.0;
     result->use_fwlim = true;
     result->period = 1.0;
-    // result->perm_fract = 10;
+    result->bound_satur = 1.0;
+    result->contour_press_bound_type = cm::BoundCondType::kConst;
+    result->real_poro = 0.2;
+
+    auto item = std::make_shared<cm::DataDistribution>();
+    item->v0 = 0.0;
+    item->v1 = 0.0;
+    item->x0 = 0.0;
+    item->x1 = 1.0;
+    result->initial_s.push_back(item);
+
+    return result;
+}
+
+std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
+{
+    auto result = std::make_shared<cm::SolverData>(
+        0.01 / 100, // rw
+        100 / 100.0, // delta
+        10 // perm_fract
+    );
+
+    // mesh settings
+    result->mesh_setts = std::make_shared<cm::MeshSettings>();
+    result->mesh_setts->n = 100;
+    result->mesh_setts->type = cm::GridType::kRadial;
+
+    // satur solver settings
+    result->sat_setts = std::make_shared<clm::SaturSolverSetts>();
+    result->sat_setts->cv = 1e-4;
+    result->sat_setts->cg = result->sat_setts->cv;
+    result->sat_setts->need_satur_solve = true;
+    result->sat_setts->pressure_update_n = 10;
+    result->sat_setts->satur_field_save_n = 1e7;
+    result->sat_setts->type = clm::SaturSolverType::kExplicit;
+    result->sat_setts->max_iter = 1e9;
+    result->sat_setts->use_fw_delta = false;
+    result->sat_setts->fw_delta = 1e-5;
+    result->sat_setts->fw_delta_iter = 1e6;
+    result->sat_setts->use_fw_shorewell_converge = true;
+    result->sat_setts->fw_shw_conv = 5; // %
+    result->sat_setts->time_step_type = cm::TimeStepType::kNew;
+
+    result->sat_setts->tau = 1e-1;
+    result->sat_setts->simple_iter_count = 3;
+
+    result->fw_lim = 70;
+    result->kmu = 1.0;
+    result->l = 500.0 / 100.0;
+    result->rp_n = 3.0;
+    result->use_fwlim = false;
+    result->period = 1e8;
     result->bound_satur = 1.0;
     result->contour_press_bound_type = cm::BoundCondType::kImpermeable;
     result->real_poro = 0.2;
@@ -71,6 +121,13 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
     item->x0 = 0.0;
     item->x1 = 1.0;
     result->initial_s.push_back(item);
+
+    // item = std::make_shared<cm::DataDistribution>();
+    // item->v0 = 1.0;
+    // item->v1 = 1.0;
+    // item->x0 = 0.0;
+    // item->x1 = result->len + result->rw;
+    // result->top_bot_bound_s.push_back(item);
 
     return result;
 }
@@ -89,7 +146,7 @@ void Calculator::solve(const std::shared_ptr<cm::SolverData> params, const std::
 
     auto wwp = solver->get_well_work_params();
 
-    std::cout << "last fw = " << wwp[wwp.size() - 1]->fw << std::endl;
+    // std::cout << "last fw = " << wwp[wwp.size() - 1]->fw << std::endl;
     print_index = 0;
     update_progress(100);
 }
@@ -97,7 +154,7 @@ void Calculator::solve(const std::shared_ptr<cm::SolverData> params, const std::
 void Calculator::update_progress(double perc)
 {
     if (print_index % PRINT_STEP == 0) {
-        std::cout << "calc progress: " << perc << " %" << std::endl;
+        // std::cout << "calc progress: " << perc << " %" << std::endl;
     }
 
     print_index++;
@@ -105,14 +162,21 @@ void Calculator::update_progress(double perc)
 
 void Calculator::run_s_const_loop()
 {
-    std::vector<double> ms = { 1e-1, 1e0, 1e1, 1e2, 1e3 };
-    std::vector<double> scs = { 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0 };
-    // std::vector<double> scs = {0.85 };
+    if (fss::file_exists("dd.dat")) {
+        std::remove("dd.dat");
+    }
+
+    // std::vector<double> ms = { 1e-1, 1e0, 1e1, 1e2, 1e3 };
+    // std::vector<double> scs = { 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0 };
+    std::vector<double> scs = { 1.0 };
+    std::vector<double> ms = { 1e0 };
 
     for (auto const& mi : ms) {
         for (auto const& s : scs) {
             auto data = get_solver_data();
             data->update_perm_fract(mi / data->delta);
+            std::cout << "kf = " << data->perm_fract << "\n";
+            std::cout << "delt = " << data->delta << "\n";
 
             auto item = std::make_shared<cm::DataDistribution>();
             item->v0 = s;
@@ -124,6 +188,34 @@ void Calculator::run_s_const_loop()
             auto grd = get_grid(data);
             solve(data, grd);
         }
+    }
+}
+
+void Calculator::run_linear()
+{
+    int n = 20;
+    double fw0 = 99, fw1 = 99, dfw = (fw1 - fw0) / (n - 1);
+
+    auto data = get_linear_solver_data();
+    data->bound_satur = 1.0;
+    auto grd = get_grid(data);
+    auto sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
+    fw0 = cs::rp::get_fbl(sc, data->rp_n, data->kmu) * 100;
+    dfw = (fw1 - fw0) / (n - 1);
+
+    std::vector<double> ns = { 1e2 };
+
+    for (auto const& ni : ns) {
+        data->mesh_setts->n = ni;
+        std::cout << "n = " << ni << "\n";
+        auto grd = get_grid(data);
+
+        for (int k = 0; k < n; k++) {
+            data->fw_lim = fw0 + k * dfw;
+            solve(data, grd);
+        }
+
+        break;
     }
 }
 
