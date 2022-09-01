@@ -39,7 +39,8 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
     auto result_solver_data = std::make_shared<models::SolverData>(
         scale_x(params->data->rw),
         scale_x(params->data->delta),
-        params->data->perm_fract / result_scale->perm0);
+        params->data->perm_fract / result_scale->perm0, 
+        params->bound->pc > params->bound->pw);
 
     result_solver_data->mesh_setts = params->mesh_setts;
     result_solver_data->sat_setts = params->sat_setts;
@@ -57,7 +58,7 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
     result_solver_data->real_poro = params->data->poro_fract;
 
     result_solver_data->bound_satur = params->bound->bound_satur;
-    result_solver_data->contour_press_bound_type = params->bound->contour_press_bound_type;
+    result_solver_data->set_contour_press_bound_type(params->bound->contour_press_bound_type);
     result_solver_data->top_bot_bound_s = scale_distr_s(params->bound->top_bot_bound_s);
     result_solver_data->initial_s = scale_distr_s(params->bound->initial_s);
 

@@ -137,11 +137,11 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
         cl->faces.push_back(k + 1);
         cl->volume = get_cell_volume(step, cl->xl, cl->xr);
         cl->poro = 1.0;
-        cl->perm = params->perm_fract;
+        cl->perm = params->get_perm_fract();
         result->cells.push_back(cl);
     }
 
-    bool isolated_contour = params->contour_press_bound_type == common::models::BoundCondType::kImpermeable;
+    bool isolated_contour = params->get_contour_press_bound_type() == common::models::BoundCondType::kImpermeable;
     double contour_bound_press = isolated_contour
         ? common::models::CommonVals::EMPTY_VAL
         : 1.0;
@@ -156,7 +156,7 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
     size_t ind = result->faces.size();
     for (auto& cl : result->cells) {
         double area = get_cell_volume(step, cl->xl, cl->xr);
-        double bound_u = params->contour_press_bound_type == common::models::BoundCondType::kConst
+        double bound_u = params->get_contour_press_bound_type() == common::models::BoundCondType::kConst
             ? 0.0
             : common::models::CommonVals::EMPTY_VAL;
         double bound_s = isolated_contour

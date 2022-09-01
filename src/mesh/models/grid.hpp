@@ -19,6 +19,8 @@ public:
     double sum_volume = 0.0;
 
     std::tuple<double, double> get_min_max();
+
+    std::vector<double> get_cells_centers();
 };
 
 }

@@ -80,7 +80,7 @@ void case_one_part()
     // arrange
     auto calc_service = std::make_shared<clcs::SaturImplicitSolverService>();
     std::vector<double> init = { 0.0, 0.0 };
-    auto data = std::make_shared<cmnm::SolverData>(0.0, 0.0, 0.0);
+    auto data = std::make_shared<cmnm::SolverData>(0.0, 0.0, 0.0, true);
     double tau = 1.0;
     data->sat_setts->simple_iter_count = 1;
     data->rp_n = 1;

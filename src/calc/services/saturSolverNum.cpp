@@ -20,16 +20,16 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
             : init[fc->cl1];
     };
 
-    auto get_eps = [&]() {
-        switch (data->contour_press_bound_type) {
-        case common::models::BoundCondType::kImpermeable: {
-            return 1.0 / data->perm_fract;
-        }
-        case common::models::BoundCondType::kConst:
-        default:
-            return 1.0;
-        }
-    };
+    // auto get_eps = [&]() {
+    //     switch (data->contour_press_bound_type) {
+    //     case common::models::BoundCondType::kImpermeable: {
+    //         return 1.0 / data->perm_fract;
+    //     }
+    //     case common::models::BoundCondType::kConst:
+    //     default:
+    //         return 1.0;
+    //     }
+    // };
 
     std::vector<double> result(init.size(), 0.);
     std::vector<double> dvs(grd->cells.size(), 0.);
@@ -39,7 +39,7 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
         double s = get_s(fc, u);
         double fbl = cs::rp::get_fbl(s, data->rp_n, data->kmu);
         double cf = mm::FaceType::is_top_bot(fc->type)
-            ? data->contour_press_bound_type == common::models::BoundCondType::kConst
+            ? data->get_contour_press_bound_type() == common::models::BoundCondType::kConst
                 ? 1.0
                 : 1.0 / (2.0 * data->m)
             : 1.0;
@@ -49,9 +49,9 @@ std::vector<double> solve_explicit(const double tau, const std::vector<double>& 
             dvs[fc->cl2] -= val;
     }
 
-    double eps = get_eps();
+    // double eps = get_eps();
     for (auto& cl : grd->cells) {
-        result[cl->ind] = init[cl->ind] + tau / (eps * cl->volume) * dvs[cl->ind];
+        result[cl->ind] = init[cl->ind] + tau / (data->eps * cl->volume) * dvs[cl->ind];
     }
 
     return result;

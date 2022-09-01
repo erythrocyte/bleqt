@@ -158,19 +158,36 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 ? data->sat_setts->tau
                 : get_tau(index, s_prev);
 
-            double u = data->contour_press_bound_type == common::models::BoundCondType::kConst
+            // double t = 1e-5;
+
+            double u = data->get_contour_press_bound_type() == common::models::BoundCondType::kConst
                 ? services::getULiqInject(grd, data->mesh_setts->type)
                 : 0.0;
             sumU += u * t;
 
+            std::string fn_s = data->sat_setts->type == SaturSolverType::kImplicit
+                ? "impl::"
+                : "expl::";
+
             s_cur = services::solve_satur(t, index == 0, s_prev, data, grd);
+            // auto x = m_grd->get_cells_centers();
+
+            // std::vector<std::tuple<double, double>> y(s_cur.size());
+            // std::transform(x.begin(), x.end(), s_cur.begin(), y.begin(),
+            //     [](auto&& a, auto&& b) {
+            //         return std::make_tuple(std::move(a), std::move(b));
+            //     });
+
+            // save_any_vector(y, fn_s);
+            // std::cout << fn_s << "tau = " << t << ", m = " << data->m << ", s[0] = " << s_cur[0] << "\n";
+            // break;
             s_prev = s_cur;
             sumT += t;
             m_tau_data.push_back(std::make_shared<common::models::TauData>(sumT, t));
 
             if (index % data->sat_setts->satur_field_save_n == 0) {
                 std::vector<std::tuple<double, double>> xs_an;
-                if (data->contour_press_bound_type == common::models::BoundCondType::kConst)
+                if (data->get_contour_press_bound_type() == common::models::BoundCondType::kConst)
                     xs_an = services::get_satur_exact(sc, sumU, data);
                 auto d = std::make_shared<ble::src::common::models::DynamicData>();
                 d->t = sumT;
@@ -215,20 +232,20 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             //     std::cout << "sumq = " << sumQ << ", pv = " << pv << ", fpv = " << fract_pv << std::endl;
             add_aver_fw(pv, wwp->fw, wwp->fw_shore, s_cur);
 
-            if (!fss::file_exists("dd.dat")) {
-                std::ofstream a("dd.dat");
-                a << "s\tt\tu\tPVI\tsumT\tsumQ\tql\tvp\tql_shore\tfw\n";
-                a.close();
-            }
+            // if (!fss::file_exists("dd.dat")) {
+            //     std::ofstream a("dd.dat");
+            //     a << "s\tt\tu\tPVI\tsumT\tsumQ\tql\tvp\tql_shore\tfw\n";
+            //     a.close();
+            // }
 
-            if (index % 1000 == 0) {
-                std::ofstream a("dd.dat", std::ios_base::app);
-                a << s_cur[0] << "\t" << t << "\t" << u << "\t"
-                  << pv << "\t" << sumT << "\t"
-                  << sumQ << "\t" << wwp->ql << "\t" << fract_pv << "\t"
-                  << wwp->ql_shore << "\t" << wwp->fw << "\n";
-                a.close();
-            }
+            // if (index % 1 == 0) {
+            //     std::ofstream a("dd.dat", std::ios_base::app);
+            //     a << s_cur[0] << "\t" << t << "\t" << u << "\t"
+            //       << pv << "\t" << sumT << "\t"
+            //       << sumQ << "\t" << wwp->ql << "\t" << fract_pv << "\t"
+            //       << wwp->ql_shore << "\t" << wwp->fw << "\n";
+            //     a.close();
+            // }
 
             double perc = get_pecr(cur_fw, sumT);
             set_progress(perc);
@@ -260,7 +277,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     m_sum_t = sumT;
 
-    if (!aver_reached && data->contour_press_bound_type == common::models::BoundCondType::kImpermeable) {
+    if (!aver_reached && data->get_contour_press_bound_type() == common::models::BoundCondType::kImpermeable) {
         save_aver_reached(index, aver, false);
     }
 
@@ -269,21 +286,21 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     // m = cs::string_format("PV = %.6f", fract_pv / 2.0);
     // logging::write_log(m, logging::kInfo);
 
-    if (!fss::file_exists("1.dat")) {
-        std::ofstream ofs("1.dat");
-        ofs << "n\ttau\tfwlim\tU/m\ts\tPVI\tfpv\n";
-        ofs.close();
-    }
+    // if (!fss::file_exists("1.dat")) {
+    //     std::ofstream ofs("1.dat");
+    //     ofs << "n\ttau\tfwlim\tU/m\ts\tPVI\tfpv\n";
+    //     ofs.close();
+    // }
 
-    std::ofstream ofs("1.dat", std::ios_base::app);
-    ofs << grd->cells.size() << "\t"
-        << data->sat_setts->tau << "\t"
-        << data->fw_lim << "\t"
-        << sumU << "\t"
-        << s_cur[0] << "\t"
-        << sumQ / fract_pv << "\t" // how many pv are flushed // / fract_pv / 2.0 << "\n";
-        << fract_pv << "\n";
-    ofs.close();
+    // std::ofstream ofs("1.dat", std::ios_base::app);
+    // ofs << grd->cells.size() << "\t"
+    //     << data->sat_setts->tau << "\t"
+    //     << data->fw_lim << "\t"
+    //     << sumU << "\t"
+    //     << s_cur[0] << "\t"
+    //     << sumQ / fract_pv << "\t" // how many pv are flushed // / fract_pv / 2.0 << "\n";
+    //     << fract_pv << "\n";
+    // ofs.close();
 
     set_progress(100); // completed;
 }

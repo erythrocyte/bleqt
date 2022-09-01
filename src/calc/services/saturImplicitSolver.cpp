@@ -102,24 +102,24 @@ void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<doubl
         m_ret.C[cl->ind] += 1.0;
     }
 
-    double poro = 1.0;
-    double alpha = m_tau / poro;
+    double alpha = m_tau / m_data->eps;
+    bool is_producer = m_data->is_producer_well();
     for (auto const& fc : m_grd->faces) {
         int upwind_cind = get_cind_s_upwind(fc);
         double un = fc->u * get_face_cf(fc);
         double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
         double oper_cf = (oper_tp == oper_type::b && upwind_cind != -1)
             ? 1.0
-            : get_oper_cf(oper_tp, s);
+            : get_oper_cf(oper_tp, s, fc->type, is_producer);
         double val = alpha * (un * oper_cf * fc->area);
 
         if (upwind_cind == -1) {
             double v = val / m_grd->cells[fc->cl1]->volume;
-            if (oper_tp == oper_type::ga) {
-                m_ret.C[fc->cl1] += v;
-            } else {
-                m_rhs[fc->cl1] += v; // un = -un;
-            }
+            // if (oper_tp == oper_type::ga) {
+            //     m_ret.C[fc->cl1] += v;
+            // } else {
+            m_rhs[fc->cl1] += v; // un = -un;
+            // }
         } else {
             if (upwind_cind == fc->cl2) {
                 m_ret.B[fc->cl1] -= val / m_grd->cells[fc->cl1]->volume;
@@ -139,14 +139,12 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
 {
     std::vector<double> result(m_grd->cells.size(), 0.0);
 
-    double poro = 1.0;
-    double alpha = m_tau / poro;
+    double alpha = m_tau / m_data->eps;
+    bool is_prod_well = m_data->is_producer_well();
     for (auto& fc : m_grd->faces) {
         int upwind_cind = get_cind_s_upwind(fc);
-        // if (upwind_cind == -1)
-        //     continue;
         double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
-        double oper_cf = get_oper_cf(oper_tp, s);
+        double oper_cf = get_oper_cf(oper_tp, s, fc->type, is_prod_well);
         double un = fc->u * get_face_cf(fc);
         double val = un * fc->area * oper_cf;
 
@@ -164,7 +162,8 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
     return result;
 }
 
-double SaturImplicitSolverService::get_oper_cf(oper_type oper_tp, double s)
+double SaturImplicitSolverService::get_oper_cf(oper_type oper_tp, double s,
+    const mesh::models::FaceType::TypeEnum face_tp, bool is_producer)
 {
     switch (oper_tp) {
     case oper_type::a:

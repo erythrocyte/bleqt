@@ -17,4 +17,15 @@ std::tuple<double, double> Grid::get_min_max()
     return std::make_tuple(minx, maxx);
 }
 
+std::vector<double> Grid::get_cells_centers()
+{
+    std::vector<double> res;
+
+    for (auto const& cl : cells) {
+        res.push_back(cl->cntr);
+    }
+
+    return res;
+}
+
 }

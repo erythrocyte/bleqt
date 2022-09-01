@@ -90,7 +90,7 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         }
         case mm::FaceType::kTop:
         case mm::FaceType::kBot: {
-            switch (params->contour_press_bound_type) {
+            switch (params->get_contour_press_bound_type()) {
             case common::models::BoundCondType::kImpermeable: {
                 double alp = (get_res_ceff(fc->bound_satur, params) * fc->area) / (2.0 * params->m);
                 ret.C[fc->cl1] += alp;
@@ -120,7 +120,7 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     for (auto& fc : grd->faces) {
         if (mm::FaceType::is_top_bot(fc->type)) {
             double u = 0.0;
-            switch (params->contour_press_bound_type) {
+            switch (params->get_contour_press_bound_type()) {
             case common::models::BoundCondType::kImpermeable: {
                 double alp = get_res_ceff(fc->bound_satur, params);
                 u = -alp * (p[fc->cl1] - 1.0);
@@ -204,13 +204,15 @@ double calc_residual(const std::shared_ptr<mm::Grid> grd,
 {
     std::vector<double> errors;
 
+    auto pbt = params->get_contour_press_bound_type();
+
     auto get_face_cf = [&](int find) {
         auto fc = grd->faces[find];
 
         switch (fc->type) {
         case mm::FaceType::kTop:
         case mm::FaceType::kBot: {
-            switch (params->contour_press_bound_type) {
+            switch (pbt) {
             case common::models::BoundCondType::kImpermeable:
                 return 1.0 / (2.0 * params->m);
             case common::models::BoundCondType::kConst:
