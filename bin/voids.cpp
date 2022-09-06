@@ -83,7 +83,7 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
 
     // mesh settings
     result->mesh_setts = std::make_shared<cm::MeshSettings>();
-    result->mesh_setts->n = 400;
+    result->mesh_setts->n = 14;
     result->mesh_setts->type = cm::GridType::kRadial;
 
     // satur solver settings
@@ -99,10 +99,10 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
     result->sat_setts->fw_delta = 1e-5;
     result->sat_setts->fw_delta_iter = 1e6;
     result->sat_setts->use_fw_shorewell_converge = true;
-    result->sat_setts->fw_shw_conv = 5; // %
+    result->sat_setts->fw_shw_conv = 1; // %
     result->sat_setts->time_step_type = cm::TimeStepType::kNew;
 
-    result->sat_setts->tau = 1e-1;
+    result->sat_setts->tau = 1e-2;
     result->sat_setts->simple_iter_count = 3;
 
     result->fw_lim = 70;
@@ -110,7 +110,7 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
     result->l = 500.0 / 100.0;
     result->rp_n = 3.0;
     result->use_fwlim = false;
-    result->period = 1e8;
+    result->period = 2e3;
     result->bound_satur = 1.0;
     result->set_contour_press_bound_type(cm::BoundCondType::kImpermeable);
     result->real_poro = 0.2;
@@ -162,9 +162,9 @@ void Calculator::update_progress(double perc)
 
 void Calculator::run_s_const_loop()
 {
-    // if (fss::file_exists("dd.dat")) {
-    //     std::remove("dd.dat");
-    // }
+    if (fss::file_exists("dd.dat")) {
+        std::remove("dd.dat");
+    }
 
     // if (fss::file_exists("1.dat")) {
     //     std::remove("1.dat");
@@ -175,9 +175,9 @@ void Calculator::run_s_const_loop()
     }
 
     // std::vector<double> ms = { 1e-1, 1e0, 1e1, 1e2, 1e3 };
-    std::vector<double> scs = { 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0 };
-    // std::vector<double> scs = { 1.0 };
-    std::vector<double> ms = { 1e-1 };
+    // std::vector<double> scs = { 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0 };
+    std::vector<double> scs = { 0.35 };
+    std::vector<double> ms = { 1e3 };
 
     for (auto const& mi : ms) {
         for (auto const& s : scs) {

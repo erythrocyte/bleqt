@@ -116,6 +116,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     int index = 0, fw_const_iter = 0;
     double sumT = 0.0, sumU = 0.0, cur_fw = 0.0, sumQ = 0.0;
     double fract_pv = get_fract_pv();
+    std::vector<double> pvi_inds = {}; // 0.1, 0.5, 1.0, 2.0, 4.0, 6.0 };
+    int pvi_ind = static_cast<int>(pvi_inds.size()) == 0
+        ? -1
+        : 0;
 
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
     std::vector<double> p = _results->data[0]->p;
@@ -232,6 +236,14 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             //     std::cout << "sumq = " << sumQ << ", pv = " << pv << ", fpv = " << fract_pv << std::endl;
             add_aver_fw(pv, wwp->fw, wwp->fw_shore, s_cur);
 
+            if (pvi_ind != -1 && pv > pvi_inds[pvi_ind]) {
+                save_pvi_s(pv, pvi_inds[pvi_ind], s_cur, m_data->m);
+
+                pvi_ind++;
+                if (pvi_ind >= static_cast<int>(pvi_inds.size()))
+                    pvi_ind = -1;
+            }
+
             // if (!fss::file_exists("dd.dat")) {
             //     std::ofstream a("dd.dat");
             //     a << "s\tt\tu\tPVI\tsumT\tsumQ\tql\tvp\tql_shore\tfw\n";
@@ -259,9 +271,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             if (data->sat_setts->use_fw_shorewell_converge) {
                 double r = std::abs(wwp->fw - wwp->fw_shore); // residual
                 double dr = wwp->fw_shore * data->sat_setts->fw_shw_conv / 100.0;
-                if (index % 1000 == 0) {
-                    auto s = cs::string_format("fw_well = {%.6f}, fw_shore = {%.6f}, r = {%.6f}, dr = {%.6f}",
-                        wwp->fw, wwp->fw_shore, r, dr);
+                // double dr = data->sat_setts->fw_shw_conv;
+                if (index % 10 == 0) {
+                    auto s = cs::string_format("fw_well = {%.6f}, fw_shore = {%.6f}, r = {%.6f}, dr = {%.6f}, s_w = {%.6f}",
+                        wwp->fw, wwp->fw_shore, r, dr, s_cur[0]);
                     logging::write_log(s, logging::kInfo);
                 }
                 if (r < dr) {
@@ -450,6 +463,21 @@ void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData>
       << std::endl;
 
     f.close();
+}
+
+void BleCalc::save_pvi_s(double pvi, double pvi_fake, std::vector<double> s, double m)
+{
+    std::ostringstream oss;
+    oss << "s_pvi_" << pvi << "_fpvi_" << pvi_fake << "_m_" << m << ".dat";
+    std::ofstream ofs(oss.str().c_str());
+
+    ofs << "r\ts\n";
+
+    for (auto& cl : m_grd->cells) {
+        ofs << cl->cntr << "\t" << s[cl->ind] << "\n";
+    }
+
+    ofs.close();
 }
 
 }

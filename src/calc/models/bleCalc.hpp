@@ -47,7 +47,9 @@ private:
     void save_faces_val();
     void add_aver_fw(double pv, double fw, double fw_shore, const std::vector<double> s);
     void check_conservative();
-    void save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data);    
+    void save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data);
+
+    void save_pvi_s(double pvi, double pvi_fake, std::vector<double> s, double m);
 };
 } // namespace ble::src
 
