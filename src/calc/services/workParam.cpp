@@ -2,8 +2,11 @@
 
 #include <math.h>
 
+#include "common/services/wellWorkCalc.hpp"
 #include "common/services/workRp.hpp"
 #include "mesh/models/faceType.hpp"
+
+namespace cms = ble::src::common::services;
 
 namespace ble::src::calc::services {
 
@@ -23,30 +26,20 @@ double getULiqInject(const std::shared_ptr<mm::Grid> grd, common::models::GridTy
 std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::shared_ptr<mm::Grid> grd,
     const std::vector<double>& s, const std::shared_ptr<cm::SolverData> data, double t)
 {
-    auto calc_fw = [](double qw, double ql) {
-        if (std::abs(ql) < 1e-12)
-            return 0.0;
-        return qw / ql * 100.0;
-    };
     auto result = std::make_shared<common::models::WellWorkParams>();
     result->t = t;
     double ql_well, qw_well;
-    std::tie(ql_well, qw_well) = get_facetype_ql_qw(grd, data, false, s,
-        std::set<mm::FaceType::TypeEnum> { mm::FaceType::kWell });
-    result->ql = ql_well;
-    result->qw = qw_well;
+    std::tie(ql_well, qw_well) = get_facetype_ql_qw(grd, data, false, s, { mm::FaceType::kWell });
+    // std::set<mm::FaceType::TypeEnum> { mm::FaceType::kWell });
 
-    double c = 2.0 * data->m; // data->delta * data->perm_fract;
-    result->ql *= c;
-    result->qw *= c;
-
-    result->qo = result->ql - result->qw;
-    result->fw = calc_fw(result->qw, result->ql);
+    qw_well *= (2.0 * data->m);
+    result->ql_well = ql_well * (2.0 * data->m);
+    result->fw_well = cms::wellworkcalc::calc_fw(result->ql_well, qw_well);
 
     double ql_shore, qw_shore;
-    std::tie(ql_shore, qw_shore) = get_facetype_ql_qw(grd, data, true, s,
-        std::set<mm::FaceType::TypeEnum> { mm::FaceType::kTop, mm::FaceType::kBot });
-    result->fw_shore = calc_fw(qw_shore, ql_shore);
+    std::tie(ql_shore, qw_shore) = get_facetype_ql_qw(grd, data, true, s, { mm::FaceType::kTop, mm::FaceType::kBot });
+    // std::set<mm::FaceType::TypeEnum> { mm::FaceType::kTop, mm::FaceType::kBot });
+    result->fw_shore = cms::wellworkcalc::calc_fw(ql_shore, qw_shore);
     result->ql_shore = ql_shore;
 
     return result;

@@ -28,6 +28,7 @@ set(HEADERS
 	common/services/workString.hpp
 	common/services/dataDistributionService.hpp
 	common/services/dimensionlessService.hpp
+	common/services/wellWorkCalc.hpp
 
 	common/utils/mapInit.hpp
 
@@ -76,6 +77,7 @@ set (SOURCES
 	common/services/workString.cpp
 	common/services/dataDistributionService.cpp
 	common/services/dimensionlessService.cpp
+	common/services/wellWorkCalc.cpp
 
 	mesh/models/grid.cpp
 

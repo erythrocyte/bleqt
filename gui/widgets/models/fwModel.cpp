@@ -26,7 +26,7 @@ QVariant FwModel::data(const QModelIndex& index, int role) const
 }
 
 int FwModel::rowCount(const QModelIndex& parent) const { return m_data.size(); };
-int FwModel::columnCount(const QModelIndex& parent) const { return 5; };
+int FwModel::columnCount(const QModelIndex& parent) const { return 6; };
 
 QVariant FwModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -42,6 +42,8 @@ QVariant FwModel::headerData(int section, Qt::Orientation orientation, int role)
             return QString("%1").arg("s_num");
         case 4:
             return QString("%1").arg("s_shore");
+        case 5:
+            return QString("%1").arg("s_balance");
         default:
             return QVariant();
         }
@@ -66,6 +68,8 @@ double FwModel::get_value(int column_index, int row_index) const
         return m_data[row_index]->sav_num;
     case 4:
         return m_data[row_index]->sav_an_shore;
+    case 5:
+        return m_data[row_index]->sav_balance;
     default:
         return empty_val;
     }
@@ -96,6 +100,7 @@ std::tuple<double, double> FwModel::get_value_range(int column_index)
         return std::make_tuple(0.0, 100.0);
     case 3:
     case 4:
+    case 5:
         return std::make_tuple(0.0, 1.0);
     default:
         return calc_range();

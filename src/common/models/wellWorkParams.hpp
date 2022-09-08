@@ -8,10 +8,10 @@ namespace ble::src::common::models {
 class WellWorkParams {
 public:
     double t = 0.0;
-    double qw = 0.0;
-    double ql = 0.0;
-    double qo = 0.0;
-    double fw = 0.0;
+    // double qw = 0.0;
+    double ql_well = 0.0;
+    // double qo = 0.0;
+    double fw_well = 0.0;
     double fw_shore = 0.0;
     double ql_shore = 0.0;
 };

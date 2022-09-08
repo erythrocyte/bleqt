@@ -3,6 +3,7 @@
 #include <chrono>
 #include <fstream>
 #include <math.h>
+#include <numeric>
 #include <sstream>
 #include <stdio.h>
 
@@ -101,6 +102,22 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         }
     };
 
+    auto snapshot_fields = [&](double sumU, double sumT, const std::vector<double>& p,
+                               const std::vector<double>& s) {
+        double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
+        std::vector<std::tuple<double, double>> xs_an;
+        if (data->get_contour_press_bound_type() == common::models::BoundCondType::kConst)
+            xs_an = services::get_satur_exact(sc, sumU, data);
+        auto d = std::make_shared<ble::src::common::models::DynamicData>();
+        d->t = sumT;
+        d->p = p;
+        d->s = s;
+        d->s_an = xs_an;
+        d->p_ex = _results->data[0]->p_ex;
+
+        _results->data.push_back(d);
+    };
+
     m_data = data;
     m_grd = grd;
 
@@ -111,7 +128,6 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
     m_sum_t = 0.0;
     set_initial_cond();
-    double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
 
     int index = 0, fw_const_iter = 0;
     double sumT = 0.0, sumU = 0.0, cur_fw = 0.0, sumQ = 0.0;
@@ -128,6 +144,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     std::chrono::system_clock::time_point start, end;
     std::chrono::duration<double> diff;
     bool aver_reached = false;
+    double sf_aver_prev = std::accumulate(s_prev.begin(), s_prev.end(), 0.0) / s_prev.size();
 
     const char* aver = "aver.dat";
     if (clear_aver)
@@ -143,7 +160,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         // double qnum = well_params->ql;
         // double perc = std::abs(qan - qnum) / qan * 100.0;
 
-        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, well_params->ql);
+        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, well_params->ql_well);
         logging::write_log(mess, logging::kInfo);
 
         // save_faces_val(grd, data);
@@ -169,11 +186,11 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 : 0.0;
             sumU += u * t;
 
-            std::string fn_s = data->sat_setts->type == SaturSolverType::kImplicit
-                ? "impl::"
-                : "expl::";
-
             s_cur = services::solve_satur(t, index == 0, s_prev, data, grd);
+
+            // std::string fn_s = data->sat_setts->type == SaturSolverType::kImplicit
+            //     ? "impl::"
+            //     : "expl::";
             // auto x = m_grd->get_cells_centers();
 
             // std::vector<std::tuple<double, double>> y(s_cur.size());
@@ -190,17 +207,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             m_tau_data.push_back(std::make_shared<common::models::TauData>(sumT, t));
 
             if (index % data->sat_setts->satur_field_save_n == 0) {
-                std::vector<std::tuple<double, double>> xs_an;
-                if (data->get_contour_press_bound_type() == common::models::BoundCondType::kConst)
-                    xs_an = services::get_satur_exact(sc, sumU, data);
-                auto d = std::make_shared<ble::src::common::models::DynamicData>();
-                d->t = sumT;
-                d->p = p;
-                d->s = s_cur;
-                d->s_an = xs_an;
-                d->p_ex = _results->data[0]->p_ex;
-
-                _results->data.push_back(d);
+                snapshot_fields(sumU, sumT, p, s_cur);
             }
             index++;
 
@@ -208,10 +215,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             _wellWorkParams.push_back(wwp);
 
             if (data->sat_setts->use_fw_delta) {
-                double r_fw = std::abs(wwp->fw - cur_fw);
+                double r_fw = std::abs(wwp->fw_well - cur_fw);
                 if (r_fw != 0.0) {
                     if (r_fw < data->sat_setts->fw_delta) {
-                        // std::cout << "r_fw = " << r_fw << ", fw_const_iter = " << fw_const_iter << std::endl;
                         fw_const_iter++;
                     } else {
                         fw_const_iter = 0;
@@ -224,17 +230,15 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                 }
             }
 
-            cur_fw = wwp->fw;
+            cur_fw = wwp->fw_well;
             if (index % 100 == 0) {
-                auto s = cs::string_format("fw = {%.6f}, t = {%.6f}, index = {%i}", cur_fw, t, index);
-                // logging::write_log(s, logging::kInfo);
+                auto s = cs::string_format("fw = {%.6f}, t = {%.6f}, s_w = {%.4f}, index = {%i}", cur_fw, t, s_cur[0], index);
+                logging::write_log(s, logging::kInfo);
             }
 
-            sumQ += wwp->ql * t;
+            sumQ += wwp->ql_well * t;
             double pv = sumQ / fract_pv; // how many pv are flushed
-            // if (index % 100 == 0)
-            //     std::cout << "sumq = " << sumQ << ", pv = " << pv << ", fpv = " << fract_pv << std::endl;
-            add_aver_fw(pv, wwp->fw, wwp->fw_shore, s_cur);
+            add_aver_fw(pv, wwp, s_cur, sf_aver_prev, t);
 
             if (pvi_ind != -1 && pv > pvi_inds[pvi_ind]) {
                 save_pvi_s(pv, pvi_inds[pvi_ind], s_cur, m_data->m);
@@ -269,12 +273,12 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
             }
 
             if (data->sat_setts->use_fw_shorewell_converge) {
-                double r = std::abs(wwp->fw - wwp->fw_shore); // residual
+                double r = std::abs(wwp->fw_well - wwp->fw_shore); // residual
                 double dr = wwp->fw_shore * data->sat_setts->fw_shw_conv / 100.0;
                 // double dr = data->sat_setts->fw_shw_conv;
                 if (index % 10 == 0) {
                     auto s = cs::string_format("fw_well = {%.6f}, fw_shore = {%.6f}, r = {%.6f}, dr = {%.6f}, s_w = {%.6f}",
-                        wwp->fw, wwp->fw_shore, r, dr, s_cur[0]);
+                        wwp->fw_well, wwp->fw_shore, r, dr, s_cur[0]);
                     logging::write_log(s, logging::kInfo);
                 }
                 if (r < dr) {
@@ -385,14 +389,18 @@ double BleCalc::get_period()
     return m_sum_t;
 }
 
-void BleCalc::add_aver_fw(double pv, double fw_well, double fw_shore, const std::vector<double> s)
+void BleCalc::add_aver_fw(double pv, const std::shared_ptr<cmm::WellWorkParams> wwp,
+    const std::vector<double>& s, double& sf_prev, double tau)
 {
     auto item = std::make_shared<common::models::FwData>();
     item->pv = pv;
-    item->fw_num_well = fw_well;
-    item->fw_num_shore = fw_shore;
-    item->sav_an_shore = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, fw_shore / 100.0, m_data->kmu);
+    item->fw_num_well = wwp->fw_well;
+    item->fw_num_shore = wwp->fw_shore;
+    item->sav_an_shore = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, wwp->fw_shore / 100.0, m_data->kmu);
     item->sav_num = services::SaturAverService::get_satur_aver_num(m_grd, s);
+    double dq = wwp->fw_shore * wwp->ql_shore - wwp->fw_well * wwp->ql_well;
+    item->sav_balance = calc_sf_aver(dq, sf_prev, tau);
+    sf_prev = item->sav_balance;
     m_fw_data.push_back(item);
 }
 
@@ -465,7 +473,7 @@ void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData>
     f.close();
 }
 
-void BleCalc::save_pvi_s(double pvi, double pvi_fake, std::vector<double> s, double m)
+void BleCalc::save_pvi_s(double pvi, double pvi_fake, const std::vector<double>& s, double m)
 {
     std::ostringstream oss;
     oss << "s_pvi_" << pvi << "_fpvi_" << pvi_fake << "_m_" << m << ".dat";
@@ -478,6 +486,11 @@ void BleCalc::save_pvi_s(double pvi, double pvi_fake, std::vector<double> s, dou
     }
 
     ofs.close();
+}
+
+double BleCalc::calc_sf_aver(double dq, double s_prev, double tau)
+{
+    return 0.0;
 }
 
 }

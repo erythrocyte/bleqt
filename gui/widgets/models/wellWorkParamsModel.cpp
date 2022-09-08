@@ -103,13 +103,15 @@ double WellWorkParamsModel::get_value(int column_index, int row_index) const
     case 0:
         return m_data[row_index]->t;
     case 1:
-        return m_data[row_index]->ql;
-    case 2:
-        return m_data[row_index]->qo;
+        return m_data[row_index]->ql_well;
+    case 2: {
+        double qw = m_data[row_index]->ql_well * m_data[row_index]->fw_well;
+        return m_data[row_index]->ql_well - qw;
+    }
     case 3:
-        return m_data[row_index]->qw;
+        return m_data[row_index]->ql_well * m_data[row_index]->fw_well;
     case 4:
-        return m_data[row_index]->fw;
+        return m_data[row_index]->fw_well;
     }
 
     return empty_val;

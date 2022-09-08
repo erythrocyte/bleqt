@@ -14,6 +14,8 @@
 #include "common/models/wellWorkParams.hpp"
 #include "mesh/models/grid.hpp"
 
+namespace cmm = ble::src::common::models;
+
 namespace ble::src::calc::models {
 class BleCalc {
 public:
@@ -45,11 +47,13 @@ private:
     void save_press(int index, const std::vector<double> p);
     void save_any_vector(const std::vector<std::tuple<double, double>>& v, const std::string& fn);
     void save_faces_val();
-    void add_aver_fw(double pv, double fw, double fw_shore, const std::vector<double> s);
+    void add_aver_fw(double pv, const std::shared_ptr<cmm::WellWorkParams> wwp,
+        const std::vector<double>& s, double& sf_prev, double tau);
     void check_conservative();
     void save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data);
 
-    void save_pvi_s(double pvi, double pvi_fake, std::vector<double> s, double m);
+    void save_pvi_s(double pvi, double pvi_fake, const std::vector<double>& s, double m);
+    double calc_sf_aver(double dq, double s_prev, double tau);
 };
 } // namespace ble::src
 

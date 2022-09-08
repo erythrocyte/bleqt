@@ -15,6 +15,7 @@ public:
     double fw_num_shore;
     double sav_num;
     double sav_an_shore;
+    double sav_balance;
 };
 }
 
