@@ -30,7 +30,6 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     result->t = t;
     double ql_well, qw_well;
     std::tie(ql_well, qw_well) = get_facetype_ql_qw(grd, data, false, s, { mm::FaceType::kWell });
-    // std::set<mm::FaceType::TypeEnum> { mm::FaceType::kWell });
 
     qw_well *= (2.0 * data->m);
     result->ql_well = ql_well * (2.0 * data->m);
@@ -38,7 +37,6 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
 
     double ql_shore, qw_shore;
     std::tie(ql_shore, qw_shore) = get_facetype_ql_qw(grd, data, true, s, { mm::FaceType::kTop, mm::FaceType::kBot });
-    // std::set<mm::FaceType::TypeEnum> { mm::FaceType::kTop, mm::FaceType::kBot });
     result->fw_shore = cms::wellworkcalc::calc_fw(ql_shore, qw_shore);
     result->ql_shore = ql_shore;
 
