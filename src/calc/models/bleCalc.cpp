@@ -490,7 +490,10 @@ void BleCalc::save_pvi_s(double pvi, double pvi_fake, const std::vector<double>&
 
 double BleCalc::calc_sf_aver(double dq, double s_prev, double tau)
 {
-    return 0.0;
+    double poro = 1.0;
+    double cv = (tau / (poro *  m_grd->sum_volume));
+
+    return s_prev + dq * cv;
 }
 
 }

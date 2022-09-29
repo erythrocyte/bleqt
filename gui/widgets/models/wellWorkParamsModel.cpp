@@ -9,22 +9,26 @@
 
 #include "wellWorkParamsModel.hpp"
 #include "common/models/commonVals.hpp"
+#include "common/services/wellWorkCalc.hpp"
+
+namespace cmm = ble::src::common::models;
+namespace cms = ble::src::common::services;
 
 namespace ble::gui::widgets::models {
 
-WellWorkParamsModel::WellWorkParamsModel(const std::vector<std::shared_ptr<ble::src::common::models::WellWorkParams>> data,
+WellWorkParamsModel::WellWorkParamsModel(const std::vector<std::shared_ptr<cmm::WellWorkParams>> data,
     QObject* parent)
     : QAbstractTableModel(parent)
 {
     m_data = data;
-    empty_val = src::common::models::CommonVals::EMPTY_VAL;
+    empty_val = cmm::CommonVals::EMPTY_VAL;
 }
 
 QVariant WellWorkParamsModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::DisplayRole) {
         double value = get_value(index.column(), index.row());
-        if (src::common::models::CommonVals::is_empty(value))
+        if (cmm::CommonVals::is_empty(value))
             return QVariant();
 
         return QString("%1")
@@ -104,12 +108,10 @@ double WellWorkParamsModel::get_value(int column_index, int row_index) const
         return m_data[row_index]->t;
     case 1:
         return m_data[row_index]->ql_well;
-    case 2: {
-        double qw = m_data[row_index]->ql_well * m_data[row_index]->fw_well;
-        return m_data[row_index]->ql_well - qw;
-    }
+    case 2:
+        return cms::wellworkcalc::calc_qo(m_data[row_index]->ql_well, m_data[row_index]->fw_well);
     case 3:
-        return m_data[row_index]->ql_well * m_data[row_index]->fw_well;
+        return cms::wellworkcalc::calc_qw(m_data[row_index]->ql_well, m_data[row_index]->fw_well);
     case 4:
         return m_data[row_index]->fw_well;
     }

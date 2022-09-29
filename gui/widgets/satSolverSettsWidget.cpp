@@ -86,6 +86,7 @@ void SatSolverSettsWidget::make_solver_type_change(bool isExplicit)
     ui->TauForFim->setEnabled(!isExplicit);
     ui->SimpleIterCount->setEnabled(!isExplicit);
 
+    ui->TimeStepType->setEnabled(isExplicit);
     ui->CurantFace->setEnabled(isExplicit);
     ui->CurantVolume->setEnabled(isExplicit);
 }

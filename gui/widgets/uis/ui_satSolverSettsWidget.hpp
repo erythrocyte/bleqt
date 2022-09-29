@@ -146,7 +146,7 @@ public:
         TauForFim->setMinimum(1e-8);
         TauForFim->setMaximum(100);
         TauForFim->setSingleStep(1e-8);
-        TauForFim->setValue(0.001);
+        TauForFim->setValue(1e-6);
         _layout->addWidget(m_tauLabel, 13, 0);
         _layout->addWidget(TauForFim, 13, 1);
 
