@@ -15,6 +15,7 @@
 #include "calc/services/workTimeStep.hpp"
 #include "common/services/dataDistributionService.hpp"
 #include "common/services/shockFront.hpp"
+#include "common/services/wellWorkCalc.hpp"
 #include "common/services/workString.hpp"
 #include "file/services/workFile.hpp"
 #include "logging/logger.hpp"
@@ -398,7 +399,7 @@ void BleCalc::add_aver_fw(double pv, const std::shared_ptr<cmm::WellWorkParams> 
     item->fw_num_shore = wwp->fw_shore;
     item->sav_an_shore = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, wwp->fw_shore / 100.0, m_data->kmu);
     item->sav_num = services::SaturAverService::get_satur_aver_num(m_grd, s);
-    double dq = wwp->fw_shore * wwp->ql_shore - wwp->fw_well * wwp->ql_well;
+    double dq = cs::wellworkcalc::calc_qw(wwp->ql_shore, wwp->fw_shore) - cs::wellworkcalc::calc_qw(wwp->ql_well, wwp->fw_well);
     item->sav_balance = calc_sf_aver(dq, sf_prev, tau);
     sf_prev = item->sav_balance;
     m_fw_data.push_back(item);
@@ -491,7 +492,7 @@ void BleCalc::save_pvi_s(double pvi, double pvi_fake, const std::vector<double>&
 double BleCalc::calc_sf_aver(double dq, double s_prev, double tau)
 {
     double poro = 1.0;
-    double cv = (tau / (poro *  m_grd->sum_volume));
+    double cv = (tau / (poro * m_grd->sum_volume));
 
     return s_prev + dq * cv;
 }
