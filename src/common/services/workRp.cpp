@@ -60,6 +60,13 @@ double get_dfbl(double s, int n, double kmu)
 {
     if ((s > 1) || (s < 0))
         return 0.0;
+
+    if (std ::abs(s - 1.0) < 1e-8)
+        return get_dfbl_approx(s, n, kmu, false);
+
+    if (std ::abs(s - 0.0) < 1e-8)
+        return get_dfbl_approx(s, n, kmu, true);
+
     double kw = get_kw(s, n);
     double dkw = n * my_pow(s, n - 1), dkoil = -n * my_pow((1.0 - s), n - 1);
 
@@ -77,10 +84,10 @@ double get_dfbl_approx(double s, int n, double kmu, bool is_left, double d)
     double s0 = is_left
         ? s + d
         : s - d;
-    
+
     double f0 = get_fbl(s0, n, kmu);
 
     return std::abs(f1 - f0) / d;
-}
+};
 
 }

@@ -10,6 +10,8 @@
 
 namespace ble::src::calc::services {
 
+double get_aver_dfbl(double s1, double s2, const std::shared_ptr<common::models::SolverData> data);
+
 double get_time_step(const std::shared_ptr<mesh::models::Grid> grd,
     const std::vector<double>& s, const std::shared_ptr<common::models::SolverData> data);
 

@@ -18,6 +18,11 @@ double get_face_dfbl(const std::shared_ptr<mesh::models::Face> fc,
         ? fc->bound_satur
         : init[fc->cl2];
     double s1 = init[fc->cl1];
+    return get_aver_dfbl(s1, s2, data);
+}
+
+double get_aver_dfbl(double s1, double s2, const std::shared_ptr<common::models::SolverData> data)
+{
     double s_av = (s2 + s1) / 2.0;
 
     double dfbl = std::max(

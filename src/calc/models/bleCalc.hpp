@@ -54,6 +54,7 @@ private:
 
     void save_pvi_s(double pvi, double pvi_fake, const std::vector<double>& s, double m);
     double calc_sf_aver(double dq, double s_prev, double tau);
+    double calc_sf_aver_time_step(double u_bound, double s_bound, double u_well, double s_well);
 };
 } // namespace ble::src
 

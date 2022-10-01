@@ -171,9 +171,7 @@ double SaturImplicitSolverService::get_oper_cf(oper_type oper_tp, double s,
     case oper_type::b:
         return s;
     case oper_type::ga:
-        return std::abs(s - 1.0) < 1e-6
-            ? cs::rp::get_dfbl_approx(s, m_data->rp_n, m_data->kmu, false)
-            : cs::rp::get_dfbl(s, m_data->rp_n, m_data->kmu);
+        return cs::rp::get_dfbl(s, m_data->rp_n, m_data->kmu);
     default:
         return 0.0;
     }

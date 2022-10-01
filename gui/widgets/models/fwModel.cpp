@@ -101,7 +101,7 @@ std::tuple<double, double> FwModel::get_value_range(int column_index)
     case 3:
     case 4:
     case 5:
-        return std::make_tuple(0.0, 1.0);
+        // return std::make_tuple(0.0, 1.0);
     default:
         return calc_range();
     }
