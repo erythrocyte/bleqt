@@ -503,10 +503,10 @@ double BleCalc::calc_sf_aver(double dq, double s_prev, double tau)
     double cv = tau / m_data->eps / sv / (2.0 * m_data->m);
     double result = s_prev + dq * cv;
 
-    std::cout << "s_old = " << s_prev << ", s_new = "
-              << result << "dq = " << dq << ", cv = " << cv
-              << ", tau = " << tau << std::endl;
-    return s_prev + dq * cv;
+    // std::cout << "s_old = " << s_prev << ", s_new = "
+    //           << result << "dq = " << dq << ", cv = " << cv
+    //           << ", tau = " << tau << std::endl;
+    return result;
 }
 
 double BleCalc::calc_sf_aver_time_step(double u_bound, double s_bound,
