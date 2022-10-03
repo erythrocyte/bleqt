@@ -402,11 +402,11 @@ void BleCalc::add_aver_fw(double pv, const std::shared_ptr<cmm::WellWorkParams> 
     double dq = cs::wellworkcalc::calc_qw(wwp->ql_shore, wwp->fw_shore) - cs::wellworkcalc::calc_qw(wwp->ql_well, wwp->fw_well);
 
     // time
-    double a_shore = M_PI * (1.0 - m_data->rw) * (1.0 - m_data->rw);
-    double u_shore = wwp->ql_shore / (2.0 * a_shore);
-    double a_well = 2.0 * M_PI * m_data->rw;
-    double u_well = wwp->ql_well / a_well / (2.0 * m_data->m);
-    double t = calc_sf_aver_time_step(u_shore, m_data->top_bot_bound_s[0]->v0, u_well, s[0]);
+    // double a_shore = M_PI * (1.0 - m_data->rw) * (1.0 - m_data->rw);
+    // double u_shore = wwp->ql_shore / (2.0 * a_shore);
+    // double a_well = 2.0 * M_PI * m_data->rw;
+    // double u_well = wwp->ql_well / a_well / (2.0 * m_data->m);
+    // double t = calc_sf_aver_time_step(u_shore, m_data->top_bot_bound_s[0]->v0, u_well, s[0]);
 
     item->sav_balance = calc_sf_aver(dq, sf_prev, tau);
     sf_prev = item->sav_balance;
