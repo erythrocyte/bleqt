@@ -399,7 +399,8 @@ void BleCalc::add_aver_fw(double pv, const std::shared_ptr<cmm::WellWorkParams> 
     item->fw_num_shore = wwp->fw_shore;
     item->sav_an_shore = services::SaturAverService::get_satur_aver_analytic(m_data->rp_n, wwp->fw_shore / 100.0, m_data->kmu);
     item->sav_num = services::SaturAverService::get_satur_aver_num(m_grd, s);
-    double dq = cs::wellworkcalc::calc_qw(wwp->ql_shore, wwp->fw_shore) - cs::wellworkcalc::calc_qw(wwp->ql_well, wwp->fw_well);
+    double qw_shore = cs::wellworkcalc::calc_qw(wwp->ql_shore, wwp->fw_shore);
+    double ql_well = wwp->ql_well;
 
     // time
     // double a_shore = M_PI * (1.0 - m_data->rw) * (1.0 - m_data->rw);
@@ -408,7 +409,7 @@ void BleCalc::add_aver_fw(double pv, const std::shared_ptr<cmm::WellWorkParams> 
     // double u_well = wwp->ql_well / a_well / (2.0 * m_data->m);
     // double t = calc_sf_aver_time_step(u_shore, m_data->top_bot_bound_s[0]->v0, u_well, s[0]);
 
-    item->sav_balance = calc_sf_aver(dq, sf_prev, tau);
+    item->sav_balance = services::SaturAverService::calc_sf_aver(qw_shore, ql_well, sf_prev, tau, m_grd, m_data);
     sf_prev = item->sav_balance;
     m_fw_data.push_back(item);
 }
@@ -497,32 +498,4 @@ void BleCalc::save_pvi_s(double pvi, double pvi_fake, const std::vector<double>&
     ofs.close();
 }
 
-double BleCalc::calc_sf_aver(double dq, double s_prev, double tau)
-{
-    double sv = m_grd->sum_volume;
-    double cv = tau / m_data->eps / sv / (2.0 * m_data->m);
-    double result = s_prev + dq * cv;
-
-    // std::cout << "s_old = " << s_prev << ", s_new = "
-    //           << result << "dq = " << dq << ", cv = " << cv
-    //           << ", tau = " << tau << std::endl;
-    return result;
-}
-
-double BleCalc::calc_sf_aver_time_step(double u_bound, double s_bound,
-    double u_well, double s_well)
-{
-    double dfbl_bound = services::get_aver_dfbl(s_bound, s_bound, m_data);
-    double dfbl_well = services::get_aver_dfbl(s_well, s_well, m_data);
-
-    double ufdbl = u_bound * dfbl_bound - u_well * dfbl_well;
-
-    double currant_value = 1.0; // m_data->sat_setts->cv;
-
-    double poro = 1.0;
-    double volume = m_grd->sum_volume;
-    double result = currant_value * poro * volume / ufdbl;
-
-    return result;
-}
 }
