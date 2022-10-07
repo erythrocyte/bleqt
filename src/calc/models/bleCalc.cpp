@@ -16,6 +16,7 @@
 #include "common/services/dataDistributionService.hpp"
 #include "common/services/shockFront.hpp"
 #include "common/services/wellWorkCalc.hpp"
+#include "common/services/workRp.hpp"
 #include "common/services/workString.hpp"
 #include "file/services/workFile.hpp"
 #include "logging/logger.hpp"
@@ -118,6 +119,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
         _results->data.push_back(d);
     };
+
+    create_one_calc_files_headers();
 
     m_data = data;
     m_grd = grd;
@@ -323,6 +326,14 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     set_progress(100); // completed;
 }
 
+void BleCalc::create_one_calc_files_headers()
+{
+    // sffw
+    std::ofstream ofs(m_sffw_fn);
+    ofs << "s\tf_sf\tf_num\n";
+    ofs.close();
+}
+
 void BleCalc::set_initial_cond()
 {
     std::vector<double> s;
@@ -412,6 +423,17 @@ void BleCalc::add_aver_fw(double pv, const std::shared_ptr<cmm::WellWorkParams> 
     item->sav_balance = services::SaturAverService::calc_sf_aver(qw_shore, ql_well, sf_prev, tau, m_grd, m_data);
     sf_prev = item->sav_balance;
     m_fw_data.push_back(item);
+
+    save_sf_fw(sf_prev, wwp->fw_well / 100.0);
+}
+
+void BleCalc::save_sf_fw(double s, double fw)
+{
+    std::ofstream ofs(m_sffw_fn, std::ios_base::app);
+    double f_sf = cs::rp::get_fbl(s, m_data->rp_n, m_data->kmu);
+    ofs << s << "\t" << f_sf << "\t" << fw << "\n";
+
+    ofs.close();
 }
 
 void BleCalc::check_conservative()

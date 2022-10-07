@@ -16,6 +16,8 @@ public:
     double poro;
     double r;
     double kmu;
+    double eps;
+    double rp_n;
 };
 
 }

@@ -257,6 +257,8 @@ void BleFramePresenter::update_dimless_params()
     prms->r = 1.0;
     prms->rw = solver_data->rw;
     prms->kmu = solver_data->kmu;
+    prms->eps = solver_data->eps;
+    prms->rp_n = solver_data->rp_n;
     m_dimlesParamsPresenter->set_params(prms);
 }
 

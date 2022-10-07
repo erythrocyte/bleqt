@@ -18,6 +18,8 @@ public:
     QLabel* valueRw;
     QLabel* valuePoro;
     QLabel* valueKmu;
+    QLabel* valueRpN;
+    QLabel* valueEps;
 
     void setupUi(QWidget* widget)
     {
@@ -48,6 +50,12 @@ public:
 
         valueKmu = new QLabel();
         _layout->addWidget(valueKmu);
+
+        valueRpN = new QLabel();
+        _layout->addWidget(valueRpN);
+
+        valueEps = new QLabel();
+        _layout->addWidget(valueEps);
 
         retranslateUi(widget);
     }

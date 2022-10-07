@@ -42,6 +42,7 @@ private:
     double m_sum_t;
     std::shared_ptr<mesh::models::Grid> m_grd;
     std::shared_ptr<common::models::SolverData> m_data;
+    std::string m_sffw_fn = "sf_fw.dat";
 
     void set_initial_cond();
     void save_press(int index, const std::vector<double> p);
@@ -53,6 +54,8 @@ private:
     void save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data);
 
     void save_pvi_s(double pvi, double pvi_fake, const std::vector<double>& s, double m);
+    void save_sf_fw(double s, double fw);
+    void create_one_calc_files_headers();
 };
 } // namespace ble::src
 

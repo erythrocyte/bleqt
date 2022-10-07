@@ -17,6 +17,8 @@ void DimlesParamsWidget::set_params(const std::shared_ptr<models::DimlessParamsD
     ui->valueRw->setText("Rw = " + QString::number(params->rw));
     ui->valuePoro->setText("Poro = " + QString::number(params->poro));
     ui->valueKmu->setText("Kmu = " + QString::number(params->kmu));
+    ui->valueEps->setText("Eps = " + QString::number(params->eps));
+    ui->valueRpN->setText("RpN = " + QString::number(params->rp_n));
 }
 
 } // namespace ble_gui::widgets
