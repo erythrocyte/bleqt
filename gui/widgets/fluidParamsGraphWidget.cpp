@@ -19,6 +19,10 @@ void FluidParamsGraphWidget::update_view(double n, double kmu, double sc)
     ui->series_sc->clear();
     ui->sigma->clear();
 
+    std::cout << "n = " << n << "\n"
+              << "kmu = " << kmu << "\n"
+              << "sc = " << sc << "\n";
+
     auto data = get_data(n, kmu, sc);
 
     if (data != nullptr) {

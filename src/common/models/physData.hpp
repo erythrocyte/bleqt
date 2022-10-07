@@ -9,7 +9,7 @@ public:
     {
         mu_wat = muw;
         mu_oil = muo;
-        k_mu = mu_oil / mu_oil;
+        k_mu = mu_oil / mu_wat;
         n_oil = noil;
         n_wat = nwat;
     }
@@ -19,8 +19,6 @@ public:
     int n_oil;
     int n_wat;
     double k_mu;
-
-    // double get_kmu() { return mu_wat / mu_oil; }
 };
 
 }
