@@ -5,11 +5,11 @@
 
 #include <QCheckBox>
 #include <QDoubleSpinBox>
-#include <QSpinBox>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QLabel>
 #include <QScrollArea>
+#include <QSpinBox>
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -122,8 +122,8 @@ private:
         m_labelPerm = new QLabel("Permeability");
         Perm = new QDoubleSpinBox();
         Perm->setDecimals(2);
-        Perm->setMinimum(0.01);
-        Perm->setMaximum(1000);
+        Perm->setMinimum(1e-8);
+        Perm->setMaximum(1e8);
         Perm->setSingleStep(1);
         Perm->setValue(0.01);
         m_layoutGeology->addWidget(m_labelPerm, 0, 0);
@@ -132,8 +132,8 @@ private:
         m_labelPermFract = new QLabel("Perm fract");
         PermFract = new QDoubleSpinBox();
         PermFract->setDecimals(2);
-        PermFract->setMinimum(0.01);
-        PermFract->setMaximum(1000);
+        PermFract->setMinimum(1e-8);
+        PermFract->setMaximum(1e8);
         PermFract->setSingleStep(1);
         PermFract->setValue(1000);
         m_layoutGeology->addWidget(m_labelPermFract, 1, 0);

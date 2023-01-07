@@ -26,7 +26,7 @@ QVariant FwModel::data(const QModelIndex& index, int role) const
 }
 
 int FwModel::rowCount(const QModelIndex& parent) const { return m_data.size(); };
-int FwModel::columnCount(const QModelIndex& parent) const { return 6; };
+int FwModel::columnCount(const QModelIndex& parent) const { return 5; };
 
 QVariant FwModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
