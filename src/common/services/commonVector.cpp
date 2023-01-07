@@ -1,5 +1,6 @@
 #include "commonVector.hpp"
 
+#include <cmath>
 #include <fstream>
 
 namespace ble::src::common::services::common_vector {
@@ -8,11 +9,16 @@ std::vector<double> make_vector(double begin, double end, int n)
 {
     std::vector<double> vec;
     double step = (end - begin) / n;
-
     vec.reserve(n);
-    while (begin <= end) {
+
+    if (std::abs(step) < 1e-6) {
         vec.push_back(begin);
-        begin += step;
+        vec.push_back(end);
+    } else {
+        while (begin <= end) {
+            vec.push_back(begin);
+            begin += step;
+        }
     }
 
     return vec;

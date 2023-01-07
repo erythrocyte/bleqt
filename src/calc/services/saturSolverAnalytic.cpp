@@ -4,6 +4,7 @@
 
 #include "common/models/physData.hpp"
 #include "common/services/commonVector.hpp"
+#include "common/services/dataDistributionService.hpp"
 #include "common/services/workRp.hpp"
 
 namespace cs = ble::src::common::services;
@@ -14,6 +15,9 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
     const std::shared_ptr<common::models::SolverData> params)
 {
     auto get_xs = [&](const double s) {
+        if (s < sc)
+            return s;
+
         double ksi0 = 1.0, poro = 1.0;
         double fu = u / poro * cs::rp::get_dfbl(s, params->rp_n, params->kmu);
         switch (params->mesh_setts->type) {
@@ -32,14 +36,28 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
 
     double xsc = get_xs(sc);
     std::vector<std::tuple<double, double>> result;
-    result.push_back(std::make_tuple(0.0, 0.0));
-    result.push_back(std::make_tuple(xsc, 0.0));
 
-    std::vector<double> ss = common::services::common_vector::make_vector(sc, 1.0, 100);
+    // initial satur
+    double ds = (xsc - params->rw) / (params->mesh_setts->n - 1);
 
-    for (auto& s : ss) {
-        double x = get_xs(s);
+    for (int k = 0; k < params->mesh_setts->n; k++) {
+        double x = params->rw + ds * k;
+        double s = src::common::services::DataDistributionService::get_value(x, params->initial_s, 0.0);
         result.push_back(std::make_tuple(x, s));
+    }
+
+    // BL
+    double s0 = params->bound_satur;
+    if (s0 < sc) {
+        result.push_back(std::make_tuple(xsc, s0));
+        result.push_back(std::make_tuple(1.0, s0));
+    } else {
+        std::vector<double> ss = common::services::common_vector::make_vector(sc, s0, 100);
+
+        for (auto& s : ss) {
+            double x = get_xs(s);
+            result.push_back(std::make_tuple(x, s));
+        }
     }
 
     return result;
