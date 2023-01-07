@@ -27,7 +27,7 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
             double a = ksi0 * ksi0 - 2.0 * fu;
             return a < 0.0
                 ? 0.0
-                : std::sqrt(ksi0 * ksi0 - 2.0 * fu);
+                : std::sqrt(a);
         }
         default:
             return 0.0;
@@ -38,9 +38,10 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
     std::vector<std::tuple<double, double>> result;
 
     // initial satur
-    double ds = (xsc - params->rw) / (params->mesh_setts->n - 1);
+    int n = params->mesh_setts->n;
+    double ds = (xsc - params->rw) / (n - 1);
 
-    for (int k = 0; k < params->mesh_setts->n; k++) {
+    for (int k = 0; k < n; k++) {
         double x = params->rw + ds * k;
         double s = src::common::services::DataDistributionService::get_value(x, params->initial_s, 0.0);
         result.push_back(std::make_tuple(x, s));

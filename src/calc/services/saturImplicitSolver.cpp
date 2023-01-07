@@ -115,11 +115,11 @@ void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<doubl
 
         if (upwind_cind == -1) {
             double v = val / m_grd->cells[fc->cl1]->volume;
-            // if (oper_tp == oper_type::ga) {
-            //     m_ret.C[fc->cl1] += v;
-            // } else {
-            m_rhs[fc->cl1] += v; // un = -un;
-            // }
+            if (oper_tp == oper_type::ga) {
+                m_ret.C[fc->cl1] += v;
+            } else {
+                m_rhs[fc->cl1] += v; // un = -un;
+            }
         } else {
             if (upwind_cind == fc->cl2) {
                 m_ret.B[fc->cl1] -= val / m_grd->cells[fc->cl1]->volume;
