@@ -1,5 +1,5 @@
-#ifndef BLE_GUI_WIDGETS_PRESENTERS_BLEPRESENTER_H_
-#define BLE_GUI_WIDGETS_PRESENTERS_BLEPRESENTER_H_
+#ifndef BLE_GUI_MVP_BLEPRESENTER_H_
+#define BLE_GUI_MVP_BLEPRESENTER_H_
 
 #include <iostream>
 #include <memory>
@@ -7,7 +7,6 @@
 #include <QWidget>
 
 #include "Hypodermic/Hypodermic.h"
-
 
 namespace ble::gui::mvp {
 

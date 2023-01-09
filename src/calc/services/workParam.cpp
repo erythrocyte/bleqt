@@ -64,6 +64,7 @@ std::tuple<double, double> get_facetype_ql_qw(const std::shared_ptr<mm::Grid> gr
             ? fc->bound_satur
             : s[fc->cl1];
     };
+
     double result_ql = 0.0, result_qw = 0.0;
     for (auto& fc : grd->faces) {
         if (types.find(fc->type) != types.end()) {

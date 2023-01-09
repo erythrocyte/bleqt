@@ -8,6 +8,7 @@
 #include <QAction>
 #include <QChart>
 #include <QChartView>
+#include <QCheckBox>
 #include <QCommonStyle>
 #include <QFont>
 #include <QGridLayout>
@@ -18,7 +19,6 @@
 #include <QToolBar>
 #include <QToolButton>
 #include <QValueAxis>
-#include <QCheckBox>
 
 using namespace QtCharts;
 
@@ -49,6 +49,7 @@ public:
     QAction* SpeedHighHalf;
     QAction* SpeedHighTwice;
     QCheckBox* PressGlobalLimit;
+    QCheckBox* LoopAnimation;
 
     void setupUi(QWidget* widget)
     {
@@ -58,7 +59,11 @@ public:
 
         PressGlobalLimit = new QCheckBox("Global limit for press", widget);
         PressGlobalLimit->setChecked(true);
-        _layout->addWidget(PressGlobalLimit, 2, 0, 1, 10);
+        _layout->addWidget(PressGlobalLimit, 2, 0, 1, 1);
+
+        LoopAnimation = new QCheckBox("Loop animation", widget);
+        LoopAnimation->setChecked(false);
+        _layout->addWidget(LoopAnimation, 2, 1, 1, 1);
 
         QCommonStyle* style = new QCommonStyle();
         m_toolbar = new QToolBar(widget);

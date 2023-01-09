@@ -53,6 +53,9 @@ void ResultDataWidget::subscribe()
 
     success = connect(ui->PressGlobalLimit, &QCheckBox::stateChanged, this, &ResultDataWidget::pressLimitsChanged);
     Q_ASSERT(success);
+
+    success = connect(ui->LoopAnimation, &QCheckBox::stateChanged, this, &ResultDataWidget::loopAnimationChanged);
+    Q_ASSERT(success);
 }
 
 void ResultDataWidget::setData(
@@ -183,8 +186,13 @@ void ResultDataWidget::PlayDynamicData()
 {
     if (m_playing) {
         int value = ui->Slider->value();
-        if (value == ui->Slider->maximum())
-            value = 1;
+        if (value == ui->Slider->maximum()) {
+            if (!ui->LoopAnimation->isChecked()) {
+                stop_timer();
+            } else {
+                value = 0;
+            }
+        }
         set_slider_value(value + 1);
     }
 }
@@ -205,6 +213,10 @@ void ResultDataWidget::pressLimitsChanged()
 {
     m_press_global_lim = ui->PressGlobalLimit->isChecked();
     update_press_axis();
+}
+
+void ResultDataWidget::loopAnimationChanged()
+{
 }
 
 void ResultDataWidget::update_press_axis()

@@ -83,7 +83,7 @@ private:
         TopBotBoundConstLenght->setMinimum(0);
         TopBotBoundConstLenght->setMaximum(100);
         TopBotBoundConstLenght->setSingleStep(1);
-        TopBotBoundConstLenght->setValue(100);
+        TopBotBoundConstLenght->setValue(20);
 
         m_boundConstLenghtLabel = new QLabel("Lenght");
         layout->addWidget(m_boundConstLenghtLabel, 1, 0, 1, 1);
@@ -95,6 +95,7 @@ private:
         BoundSatur->setMaximum(1.0);
         BoundSatur->setSingleStep(0.01);
         BoundSatur->setValue(1.0);
+        BoundSatur->setDecimals(3);
         BoundSatur->setToolTip("Bound satur value");
         layout->addWidget(m_boundSaturLabel, 2, 0);
         layout->addWidget(BoundSatur, 2, 1, 1, max_col);

@@ -25,6 +25,11 @@ signals:
 
 private:
     UI::FluidParams* ui;
+
+    void subscribe();
+
+private slots:
+    void handleImageSaveSvg();
 };
 
 } // namespace ble_gui::widgets

@@ -135,7 +135,7 @@ private:
         PermFract->setMinimum(1e-8);
         PermFract->setMaximum(1e8);
         PermFract->setSingleStep(1);
-        PermFract->setValue(1000);
+        PermFract->setValue(1);
         m_layoutGeology->addWidget(m_labelPermFract, 1, 0);
         m_layoutGeology->addWidget(PermFract, 1, 1);
 
@@ -178,7 +178,7 @@ private:
         R = new QDoubleSpinBox();
         R->setDecimals(1);
         R->setMinimum(1);
-        R->setMaximum(500);
+        R->setMaximum(1e6);
         R->setSingleStep(10);
         R->setValue(50);
         m_layoutGeom->addWidget(m_labelR, 0, 0);
@@ -188,19 +188,19 @@ private:
         L = new QDoubleSpinBox();
         L->setDecimals(1);
         L->setMinimum(1);
-        L->setMaximum(1000);
+        L->setMaximum(1e6);
         L->setSingleStep(10);
-        L->setValue(500);
+        L->setValue(100);
         m_layoutGeom->addWidget(m_labelL, 1, 0);
         m_layoutGeom->addWidget(L, 1, 1);
 
         m_labelDelta = new QLabel("Delta");
         Delta = new QDoubleSpinBox();
         Delta->setDecimals(3);
-        Delta->setMinimum(1e-3);
+        Delta->setMinimum(1e-5);
         Delta->setMaximum(1);
         Delta->setSingleStep(1e-1);
-        Delta->setValue(0.01);
+        Delta->setValue(0.005);
         m_layoutGeom->addWidget(m_labelDelta, 2, 0);
         m_layoutGeom->addWidget(Delta, 2, 1);
 

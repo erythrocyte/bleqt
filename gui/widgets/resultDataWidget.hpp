@@ -44,6 +44,7 @@ private:
     void set_slider_value(int value);
     void stop_timer();
     void pressLimitsChanged();
+    void loopAnimationChanged();
     void update_press_axis();
     double get_press_max();
 

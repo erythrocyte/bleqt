@@ -7,14 +7,17 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 if(CMAKE_VERSION VERSION_LESS "3.7.0")
-    set(CMAKE_INCLUDE_CURRENT_DIR ON)
+	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 endif()
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 find_package(Qt5 COMPONENTS Charts REQUIRED)
+find_package(Qt5 COMPONENTS Svg REQUIRED)
 
-set (SOURCES
+set(SOURCES
+	services/saveFilePathService.cpp
+
 	views/bleFrame.cpp
 	views/presenters/bleFramePresenter.cpp
 
@@ -50,7 +53,7 @@ set (SOURCES
 	widgets/presenters/dimlesParamsWidgetPresenter.cpp
 
 	mvp/blePresenter.cpp
-	
+
 	frames/qVerticalLabel.cpp
 
 	bleapp.cpp
@@ -59,13 +62,14 @@ set (SOURCES
 
 add_executable(${EXE_GUI_TARGET} ${SOURCES})
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -fPIC") 
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -fPIC")
 
 get_target_property(QtCore_location Qt5::Core LOCATION)
 
 target_link_libraries(${EXE_GUI_TARGET} Qt5::Widgets)
 target_link_libraries(${EXE_GUI_TARGET} Qt5::Core)
 target_link_libraries(${EXE_GUI_TARGET} Qt5::Charts)
+target_link_libraries(${EXE_GUI_TARGET} Qt5::Svg)
 
 target_link_libraries(${EXE_GUI_TARGET} ${LIB_BLE_TARGET})
 

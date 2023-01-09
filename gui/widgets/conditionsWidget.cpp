@@ -31,7 +31,7 @@ ConditionsWidget::ConditionsWidget(QWidget* parent)
 
     ui->ContourBoundType->setCurrentIndex(1);
     ui->BoundSType->setCurrentIndex(0);
-    ui->BoundSConstValue->setValue(1.0);
+    ui->BoundSConstValue->setValue(0.707);
     ui->BoundSFile->setText("../../samples/rhs/s_sample.blerhs");
     ui->BoundSFile->setEnabled(false);
     ui->BoundSType->setEnabled(false);

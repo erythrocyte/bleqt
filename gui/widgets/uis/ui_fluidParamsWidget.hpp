@@ -1,10 +1,13 @@
 #ifndef BLE_GUI_WIDGETS_UI_FLUIDPARAMSVISUAL_H_
 #define BLE_GUI_WIDGETS_UI_FLUIDPARAMSVISUAL_H_
 
+#include <QAction>
 #include <QChart>
 #include <QChartView>
+#include <QCommonStyle>
 #include <QGridLayout>
 #include <QLineSeries>
+#include <QToolBar>
 #include <QValueAxis>
 #include <QWidget>
 
@@ -21,8 +24,11 @@ public:
     QLineSeries* series_sc;
     QLineSeries* sigma;
     QGridLayout* layout;
+    QToolBar* _mainToolBar;
 
     QValueAxis* axis_dfY;
+    QAction* save_image_svg_action;
+    QChartView* chart_view;
 
     void retranslateUi(QWidget* widget)
     {
@@ -35,8 +41,8 @@ public:
     {
         layout = new QGridLayout(widget);
 
-        chart = new QChart();
-        chart->legend()->setVisible(true);
+        _chart = new QChart();
+        _chart->legend()->setVisible(true);
 
         // Настройка осей графика
         _axisS = new QValueAxis();
@@ -54,8 +60,10 @@ public:
         axis_dfY->setTickCount(5);
         axis_dfY->setMin(0.);
 
-        _chartView = new QChartView(chart);
-        layout->addWidget(_chartView, 0, 0, 1, 11);
+        chart_view = new QChartView(_chart);
+        _mainToolBar = new QToolBar(widget);
+        layout->addWidget(_mainToolBar, 0, 0, 1, 11);
+        layout->addWidget(chart_view, 1, 0, 1, 11);
 
         QPen pen;
         pen.setWidth(2);
@@ -91,16 +99,16 @@ public:
         pen.setStyle(Qt::DashDotDotLine);
         series_sc->setPen(pen);
 
-        chart->addSeries(series_kw);
-        chart->addSeries(series_koil);
-        chart->addSeries(series_fbl);
-        chart->addSeries(series_dfbl);
-        chart->addSeries(series_sc);
-        chart->addSeries(sigma);
+        _chart->addSeries(series_kw);
+        _chart->addSeries(series_koil);
+        _chart->addSeries(series_fbl);
+        _chart->addSeries(series_dfbl);
+        _chart->addSeries(series_sc);
+        _chart->addSeries(sigma);
 
-        chart->addAxis(_axisS, Qt::AlignBottom);
-        chart->addAxis(_axis_kY, Qt::AlignLeft);
-        chart->addAxis(axis_dfY, Qt::AlignRight);
+        _chart->addAxis(_axisS, Qt::AlignBottom);
+        _chart->addAxis(_axis_kY, Qt::AlignLeft);
+        _chart->addAxis(axis_dfY, Qt::AlignRight);
 
         series_kw->attachAxis(_axisS); // use instead of setAxisX,
         series_kw->attachAxis(_axis_kY); // but does not work for different points;
@@ -121,11 +129,21 @@ public:
         sigma->attachAxis(axis_dfY);
 
         retranslateUi(widget);
+
+        setupActions(widget);
     }
 
-private:
-    QChartView* _chartView;
-    QChart* chart;
+    void setupActions(QWidget* widget)
+    {
+        QCommonStyle* style = new QCommonStyle();
+        save_image_svg_action = new QAction("Save image as...", widget);
+        save_image_svg_action->setIcon(style->standardIcon(QStyle::SP_DialogSaveButton));
+
+        _mainToolBar->addAction(save_image_svg_action);
+    }
+
+private:    
+    QChart* _chart;
 
     QValueAxis* _axisS;
     QValueAxis* _axis_kY;
