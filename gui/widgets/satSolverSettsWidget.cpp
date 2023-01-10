@@ -26,10 +26,13 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
 
     ui->max_iter->setValue(10000);
     ui->time_step_type->setCurrentIndex(0);
+    ui->curant_face->setEnabled(false);
     ui->solver_type->setCurrentIndex(1);
 
     subscribe();
-    need_stop_fw_shorewell_converge(false);
+
+    ui->use_fw_limit->setChecked(true);
+    ui->fw_limit->setEnabled(true);
 }
 
 std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_data()
@@ -68,9 +71,23 @@ void SatSolverSettsWidget::subscribe()
     Q_ASSERT(success);
     success = connect(ui->need_stop_fw_shore_well_converge, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_shorewell_converge);
     Q_ASSERT(success);
+    success = connect(ui->use_fw_limit, &QRadioButton::toggled, this, &SatSolverSettsWidget::use_fw_limit_toogled);
+    Q_ASSERT(success);
+    success = QObject::connect(ui->time_step_type, SIGNAL(currentIndexChanged(int)), this, SLOT(on_time_step_type_changed(int)));
+    Q_ASSERT(success);
+    success = QObject::connect(ui->need_satur_solve, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_satur_solve_toogled);
+    Q_ASSERT(success);
+}
 
-    //     success = connect(ui->UseFwLimit, &QCheckBox::toggled, this, &DataWidget::use_fw_limit_toogled);
-    // Q_ASSERT(success);
+void SatSolverSettsWidget::need_satur_solve_toogled(bool state)
+{
+    ui->fix_fields_step->setEnabled(state);
+    ui->recalc_press_n->setEnabled(state);
+    ui->solver_type->setEnabled(state);
+
+    ui->stop_crit_gb->setEnabled(state);
+    ui->explicit_gb->setEnabled(state);
+    ui->implicit_gb->setEnabled(state);
 }
 
 void SatSolverSettsWidget::need_stop_fw_pseudo_const(bool state)
@@ -79,9 +96,19 @@ void SatSolverSettsWidget::need_stop_fw_pseudo_const(bool state)
     ui->fw_converge_iter->setEnabled(state);
 }
 
+void SatSolverSettsWidget::use_fw_limit_toogled(bool state)
+{
+    ui->fw_limit->setEnabled(state);
+}
+
 void SatSolverSettsWidget::on_solver_type_changed(int index)
 {
     make_solver_type_change(index == 0); // 0 is explicit
+}
+
+void SatSolverSettsWidget::on_time_step_type_changed(int index)
+{
+    ui->curant_face->setEnabled(index == 1);
 }
 
 void SatSolverSettsWidget::make_solver_type_change(bool isExplicit)
@@ -98,11 +125,5 @@ void SatSolverSettsWidget::need_stop_fw_shorewell_converge(bool state)
 {
     ui->fw_shore_well_converge_value->setEnabled(state);
 }
-
-// void DataWidget::use_fw_limit_toogled(bool state)
-// {
-//     ui->FwLimit->setEnabled(state);
-//     ui->Period->setEnabled(!state);
-// }
 
 }

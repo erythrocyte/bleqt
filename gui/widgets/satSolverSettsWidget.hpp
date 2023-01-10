@@ -26,8 +26,11 @@ private:
 private slots:
     void need_stop_fw_pseudo_const(bool state);
     void on_solver_type_changed(int index);
+    void on_time_step_type_changed(int index);
     void make_solver_type_change(bool isExplicit);
     void need_stop_fw_shorewell_converge(bool state);
+    void use_fw_limit_toogled(bool state);
+    void need_satur_solve_toogled(bool state);
 };
 
 } // namespace ble_gui::widgets

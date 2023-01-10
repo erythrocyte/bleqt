@@ -36,6 +36,11 @@ public:
     QDoubleSpinBox* impl_tau;
     QSpinBox* impl_simple_iter_count;
 
+    QGroupBox* common_gb;
+    QGroupBox* stop_crit_gb;
+    QGroupBox* explicit_gb;
+    QGroupBox* implicit_gb;
+
     void setupUi(QWidget* widget)
     {
         m_group_box = new QGroupBox();
@@ -44,8 +49,6 @@ public:
         m_layout->setMargin(5);
 
         m_main_layout = new QVBoxLayout(widget);
-        // m_main_layout->addStretch();
-        // m_main_layout->setDirection(QVBoxLayout::BottomToTop);
 
         QScrollArea* scrollArea = new QScrollArea();
         scrollArea->setWidget(m_group_box);
@@ -88,9 +91,9 @@ private:
 
     void setupUiCommon()
     {
-        auto common_group_box = new QGroupBox("Common");
-        auto common_layout = new QGridLayout(common_group_box);
-        common_group_box->setLayout(common_layout);
+        common_gb = new QGroupBox("Common");
+        auto common_layout = new QGridLayout(common_gb);
+        common_gb->setLayout(common_layout);
         common_layout->setMargin(5);
 
         need_satur_solve = new QCheckBox("Solve saturation");
@@ -119,7 +122,7 @@ private:
         common_layout->addWidget(m_fix_fields_step, 3, 0);
         common_layout->addWidget(fix_fields_step, 3, 1);
 
-        m_layout->addWidget(common_group_box);
+        m_layout->addWidget(common_gb);
     }
 
     void retranslateUiCommon()
@@ -159,9 +162,9 @@ private:
             return gbCrit;
         };
 
-        auto gb = new QGroupBox("Stop criteria");
-        auto gl = new QGridLayout(gb);
-        gb->setLayout(gl);
+        stop_crit_gb = new QGroupBox("Stop criteria");
+        auto gl = new QGridLayout(stop_crit_gb);
+        stop_crit_gb->setLayout(gl);
         gl->setMargin(5);
 
         m_max_iter_label = new QLabel("Max iteration");
@@ -181,7 +184,8 @@ private:
         fw_converge_delta->setMinimum(1e-8);
         fw_converge_delta->setMaximum(100);
         fw_converge_delta->setSingleStep(1e-8);
-        fw_converge_delta->setValue(5);
+        fw_converge_delta->setValue(0.1);
+        fw_converge_delta->setEnabled(false);
         gl->addWidget(m_fw_delta_label, 2, 0);
         gl->addWidget(fw_converge_delta, 2, 1);
 
@@ -189,7 +193,8 @@ private:
         fw_converge_iter = new QSpinBox();
         fw_converge_iter->setMinimum(1);
         fw_converge_iter->setMaximum(1e6);
-        fw_converge_iter->setValue(10000);
+        fw_converge_iter->setValue(100);
+        fw_converge_iter->setEnabled(false);
         gl->addWidget(m_fw_converge_iter_label, 3, 0);
         gl->addWidget(fw_converge_iter, 3, 1);
 
@@ -199,7 +204,8 @@ private:
         fw_shore_well_converge_value->setMinimum(1e-8);
         fw_shore_well_converge_value->setMaximum(100);
         fw_shore_well_converge_value->setSingleStep(1e-8);
-        fw_shore_well_converge_value->setValue(1e-5);
+        fw_shore_well_converge_value->setValue(1e-1);
+        fw_shore_well_converge_value->setEnabled(false);
         gl->addWidget(m_fw_shore_well_converge_label, 5, 0);
         gl->addWidget(fw_shore_well_converge_value, 5, 1);
 
@@ -209,11 +215,12 @@ private:
         fw_limit->setMaximum(99);
         fw_limit->setSingleStep(1);
         fw_limit->setValue(98);
+        fw_limit->setEnabled(false);
         fw_limit->setToolTip("Set modeling as a critical watercut value on well");
         gl->addWidget(m_fw_lim_label, 6, 0);
         gl->addWidget(fw_limit, 6, 1);
 
-        m_layout->addWidget(gb);
+        m_layout->addWidget(stop_crit_gb);
     }
 
     void retranslateUiStopCriteria()
@@ -247,9 +254,9 @@ private:
 
     void setupUiExplicit()
     {
-        auto gb = new QGroupBox("Explicit");
-        auto gl = new QGridLayout(gb);
-        gb->setLayout(gl);
+        explicit_gb = new QGroupBox("Explicit");
+        auto gl = new QGridLayout(explicit_gb);
+        explicit_gb->setLayout(gl);
         gl->setMargin(5);
 
         m_curant_volume_label = new QLabel();
@@ -277,7 +284,7 @@ private:
         gl->addWidget(m_timeStepTypeLabel, 12, 0);
         gl->addWidget(time_step_type, 12, 1);
 
-        m_layout->addWidget(gb);
+        m_layout->addWidget(explicit_gb);
     }
 
     void retranslateUiExplicit()
@@ -294,9 +301,9 @@ private:
 
     void setupUiImplicit()
     {
-        auto gb = new QGroupBox("Implicit");
-        auto gl = new QGridLayout(gb);
-        gb->setLayout(gl);
+        implicit_gb = new QGroupBox("Implicit");
+        auto gl = new QGridLayout(implicit_gb);
+        implicit_gb->setLayout(gl);
         gl->setMargin(5);
 
         m_impl_tau_label = new QLabel();
@@ -317,7 +324,7 @@ private:
         gl->addWidget(m_impl_simple_iter_count_label, 1, 0);
         gl->addWidget(impl_simple_iter_count, 1, 1);
 
-        m_layout->addWidget(gb);
+        m_layout->addWidget(implicit_gb);
     }
 
     void retranslateUiImplicit()
