@@ -10,6 +10,8 @@
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QLabel>
+#include <QRadioButton>
+#include <QScrollArea>
 #include <QSpinBox>
 #include <QWidget>
 
@@ -23,26 +25,32 @@ public:
     QCheckBox* need_satur_solve;
     QSpinBox* fix_fields_step;
     QSpinBox* max_iter;
-    QCheckBox* need_stop_fw_converge;
+    QRadioButton* need_stop_fw_converge;
     QDoubleSpinBox* fw_converge_delta;
     QSpinBox* fw_converge_iter;
-    QCheckBox* need_stop_fw_shore_well_converge;
+    QRadioButton* need_stop_fw_shore_well_converge;
     QDoubleSpinBox* fw_shore_well_converge_value;
     QComboBox* time_step_type;
-
+    QDoubleSpinBox* fw_limit;
+    QRadioButton* use_fw_limit;
     QDoubleSpinBox* impl_tau;
     QSpinBox* impl_simple_iter_count;
 
     void setupUi(QWidget* widget)
     {
         m_group_box = new QGroupBox();
-        m_main_layout = new QVBoxLayout(widget);
-        m_main_layout->addStretch();
-        m_main_layout->setDirection(QVBoxLayout::BottomToTop);
-        m_main_layout->addWidget(m_group_box);
         m_layout = new QGridLayout(m_group_box);
         m_group_box->setLayout(m_layout);
         m_layout->setMargin(5);
+
+        m_main_layout = new QVBoxLayout(widget);
+        // m_main_layout->addStretch();
+        // m_main_layout->setDirection(QVBoxLayout::BottomToTop);
+
+        QScrollArea* scrollArea = new QScrollArea();
+        scrollArea->setWidget(m_group_box);
+        scrollArea->setWidgetResizable(true);
+        m_main_layout->addWidget(scrollArea);
 
         setupUiCommon();
         setupUiStopCriteria();
@@ -76,6 +84,7 @@ private:
     QLabel* m_impl_simple_iter_count_label;
     QLabel* m_fw_shore_well_converge_label;
     QLabel* m_timeStepTypeLabel;
+    QLabel* m_fw_lim_label;
 
     void setupUiCommon()
     {
@@ -130,6 +139,26 @@ private:
 
     void setupUiStopCriteria()
     {
+        auto setupCriteriaChooseGroupBox = [&]() {
+            auto gbCrit = new QGroupBox();
+            auto glCrit = new QVBoxLayout();
+            gbCrit->setLayout(glCrit);
+
+            need_stop_fw_converge = new QRadioButton("Stop watercut change");
+            need_stop_fw_converge->setChecked(false);
+            glCrit->addWidget(need_stop_fw_converge, 0);
+
+            need_stop_fw_shore_well_converge = new QRadioButton("Watercut shore|well on converge");
+            need_stop_fw_shore_well_converge->setChecked(false);
+            glCrit->addWidget(need_stop_fw_shore_well_converge, 1);
+
+            use_fw_limit = new QRadioButton("Use watercut limit");
+            use_fw_limit->setChecked(true);
+            glCrit->addWidget(use_fw_limit, 2);
+
+            return gbCrit;
+        };
+
         auto gb = new QGroupBox("Stop criteria");
         auto gl = new QGridLayout(gb);
         gb->setLayout(gl);
@@ -143,9 +172,8 @@ private:
         gl->addWidget(m_max_iter_label, 0, 0);
         gl->addWidget(max_iter, 0, 1);
 
-        need_stop_fw_converge = new QCheckBox("Stop watercut change");
-        need_stop_fw_converge->setChecked(false);
-        gl->addWidget(need_stop_fw_converge, 1, 0, 1, 2);
+        auto gb_crit = setupCriteriaChooseGroupBox();
+        gl->addWidget(gb_crit, 1, 0, 1, 2);
 
         m_fw_delta_label = new QLabel();
         fw_converge_delta = new QDoubleSpinBox();
@@ -165,10 +193,6 @@ private:
         gl->addWidget(m_fw_converge_iter_label, 3, 0);
         gl->addWidget(fw_converge_iter, 3, 1);
 
-        need_stop_fw_shore_well_converge = new QCheckBox("Watercut shore|well on converge");
-        need_stop_fw_shore_well_converge->setChecked(false);
-        gl->addWidget(need_stop_fw_shore_well_converge, 4, 0, 1, 2);
-
         m_fw_shore_well_converge_label = new QLabel();
         fw_shore_well_converge_value = new QDoubleSpinBox();
         fw_shore_well_converge_value->setDecimals(8);
@@ -178,6 +202,16 @@ private:
         fw_shore_well_converge_value->setValue(1e-5);
         gl->addWidget(m_fw_shore_well_converge_label, 5, 0);
         gl->addWidget(fw_shore_well_converge_value, 5, 1);
+
+        m_fw_lim_label = new QLabel("Watercut limit, %");
+        fw_limit = new QDoubleSpinBox();
+        fw_limit->setMinimum(0.01);
+        fw_limit->setMaximum(99);
+        fw_limit->setSingleStep(1);
+        fw_limit->setValue(98);
+        fw_limit->setToolTip("Set modeling as a critical watercut value on well");
+        gl->addWidget(m_fw_lim_label, 6, 0);
+        gl->addWidget(fw_limit, 6, 1);
 
         m_layout->addWidget(gb);
     }
@@ -201,6 +235,14 @@ private:
 
         m_fw_shore_well_converge_label->setText("Fw shore|well delta, %");
         m_fw_shore_well_converge_label->setToolTip("Watercut shore|well residual max value to stop calculation");
+
+        m_fw_lim_label->setText("Watercut limit, %");
+        m_fw_lim_label->setToolTip("Set modeling as a critical watercut value on well");
+
+        fw_limit->setToolTip("Set modeling as a critical watercut value on well");
+
+        use_fw_limit->setText("Use watercut limit");
+        use_fw_limit->setToolTip("Use watercut limit if checked otherwise time limit will be used");
     }
 
     void setupUiExplicit()

@@ -42,31 +42,6 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     const std::shared_ptr<common::models::SolverData> data,
     std::function<void(double)> set_progress, bool clear_aver)
 {
-    auto suit_step = [&](double fw, double sum_t) {
-        bool result = true;
-        if (data->use_fwlim) {
-            result = fw <= data->fw_lim;
-            if (!result) {
-                std::cout << "max watercut value reached" << std::endl;
-            }
-        } else {
-            result = sum_t <= data->period;
-            if (!result) {
-                std::cout << "max time value reached" << std::endl;
-            }
-        }
-
-        return result;
-    };
-
-    auto get_perc = [&](double fw, double sum_t) {
-        double p = data->use_fwlim
-            ? fw / data->fw_lim
-            : sum_t / data->period;
-
-        return std::min(100.0, p * 100);
-    };
-
     auto get_fract_pv = [&]() {
         double ans = 0.0;
         double poro = 1.0; // data->real_poro;
@@ -77,21 +52,21 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         return ans * poro * 2.0 * data->delta;
     };
 
-    auto save_aver_reached = [&](int index, const char* fn, bool conv) {
-        if (conv) {
-            auto s = cs::string_format("fw shore and well converged in %i iter", index);
-            logging::write_log(s, logging::kInfo);
-        }
-        auto d = std::make_shared<calc::models::AverFwSaveData>();
-        d->m = data->m;
-        d->s_const = data->top_bot_bound_s[0]->v0;
-        d->converged = conv;
-        d->data = m_fw_data[m_fw_data.size() - 1];
-        d->iter_count = index;
-        // d->cv = data->sat_setts->cv;
-        // d->cg = data->sat_setts->cg;
-        save_aver_fw(fn, d);
-    };
+    // auto save_aver_reached = [&](int index, const char* fn, bool conv) {
+    //     if (conv) {
+    //         auto s = cs::string_format("fw shore and well converged in %i iter", index);
+    //         logging::write_log(s, logging::kInfo);
+    //     }
+    //     auto d = std::make_shared<calc::models::AverFwSaveData>();
+    //     d->m = data->m;
+    //     d->s_const = data->top_bot_bound_s[0]->v0;
+    //     d->converged = conv;
+    //     d->data = m_fw_data[m_fw_data.size() - 1];
+    //     d->iter_count = index;
+    //     // d->cv = data->sat_setts->cv;
+    //     // d->cg = data->sat_setts->cg;
+    //     save_aver_fw(fn, d);
+    // };
 
     auto get_tau = [&](int index, const std::vector<double> s) {
         switch (data->sat_setts->time_step_type) {
@@ -120,8 +95,6 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         _results->data.push_back(d);
     };
 
-    create_one_calc_files_headers();
-
     m_data = data;
     m_grd = grd;
 
@@ -136,10 +109,10 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     int index = 0, fw_const_iter = 0;
     double sumT = 0.0, sumU = 0.0, cur_fw = 0.0, sumQ = 0.0;
     double fract_pv = get_fract_pv();
-    std::vector<double> pvi_inds = {}; // 0.1, 0.5, 1.0, 2.0, 4.0, 6.0 };
-    int pvi_ind = static_cast<int>(pvi_inds.size()) == 0
-        ? -1
-        : 0;
+    // std::vector<double> pvi_inds = {}; // 0.1, 0.5, 1.0, 2.0, 4.0, 6.0 };
+    // int pvi_ind = static_cast<int>(pvi_inds.size()) == 0
+    //     ? -1
+    //     : 0;
 
     std::vector<double> s_cur, s_prev = _results->data[0]->s;
     std::vector<double> p = _results->data[0]->p;
@@ -147,16 +120,21 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     services::calc_u(p, s_prev, data, grd);
     std::chrono::system_clock::time_point start, end;
     std::chrono::duration<double> diff;
-    bool aver_reached = false;
+    // bool aver_reached = false;
     double sf_aver_prev = std::accumulate(s_prev.begin(), s_prev.end(), 0.0) / s_prev.size();
 
-    const char* aver = "aver.dat";
-    if (clear_aver)
-        std::remove(aver);
+    std::shared_ptr<common::models::WellWorkParams> wwp = services::calc_well_work_param(grd, s_prev, data, sumT);
+
+    auto suit_step_params = std::make_shared<SuitStepDto>();
+    suit_step_params->prev_fw = wwp->fw_well;
+    suit_step_params->data = data;
+    suit_step_params->fw_const_iter = fw_const_iter;
+    suit_step_params->index = index;
+    suit_step_params->scur0 = s_cur[0];
+    suit_step_params->sum_t = sumT;
+    suit_step_params->wwp = wwp;
 
     if (!data->sat_setts->need_satur_solve) {
-        auto well_params = services::calc_well_work_param(grd, s_prev, data, sumT);
-
         // check_conservative();
 
         // std::cout << "m = " << data->m << ", q = " << well_params->ql << std::endl;
@@ -164,143 +142,113 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         // double qnum = well_params->ql;
         // double perc = std::abs(qan - qnum) / qan * 100.0;
 
-        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, well_params->ql_well);
+        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, wwp->ql_well);
         logging::write_log(mess, logging::kInfo);
 
         // save_faces_val(grd, data);
-    } else {
-        auto sst_name = SaturSolverType::get_description(data->sat_setts->type);
-        std::string mess = common::services::string_format("saturation solver type: %s", sst_name.c_str());
-        logging::write_log(mess, logging::kInfo);
-        while (suit_step(cur_fw, sumT)) {
-            if (index % data->sat_setts->pressure_update_n == 0) {
-                p = services::solve_press(grd, s_prev, data);
-                services::calc_u(p, s_prev, data, grd);
-                // save_press(index, grd, p);
-            }
 
-            double t = data->sat_setts->type == SaturSolverType::kImplicit
-                ? data->sat_setts->tau
-                : get_tau(index, s_prev);
+        return;
+    }
 
-            // double t = 1e-5;
-
-            double u = data->get_contour_press_bound_type() == common::models::BoundCondType::kConst
-                ? services::getULiqInject(grd, data->mesh_setts->type)
-                : 0.0;
-            sumU += u * t;
-
-            s_cur = services::solve_satur(t, index == 0, s_prev, data, grd);
-
-            // std::string fn_s = data->sat_setts->type == SaturSolverType::kImplicit
-            //     ? "impl::"
-            //     : "expl::";
-            // auto x = m_grd->get_cells_centers();
-
-            // std::vector<std::tuple<double, double>> y(s_cur.size());
-            // std::transform(x.begin(), x.end(), s_cur.begin(), y.begin(),
-            //     [](auto&& a, auto&& b) {
-            //         return std::make_tuple(std::move(a), std::move(b));
-            //     });
-
-            // save_any_vector(y, fn_s);
-            // std::cout << fn_s << "tau = " << t << ", m = " << data->m << ", s[0] = " << s_cur[0] << "\n";
-            // break;
-            s_prev = s_cur;
-            sumT += t;
-            m_tau_data.push_back(std::make_shared<common::models::TauData>(sumT, t));
-
-            if (index % data->sat_setts->satur_field_save_n == 0) {
-                snapshot_fields(sumU, sumT, p, s_cur);
-            }
-            index++;
-
-            auto wwp = services::calc_well_work_param(grd, s_cur, data, sumT);
-            _wellWorkParams.push_back(wwp);
-
-            if (data->sat_setts->use_fw_delta) {
-                double r_fw = std::abs(wwp->fw_well - cur_fw);
-                if (r_fw != 0.0) {
-                    if (r_fw < data->sat_setts->fw_delta) {
-                        fw_const_iter++;
-                    } else {
-                        fw_const_iter = 0;
-                    }
-                }
-
-                if (fw_const_iter > data->sat_setts->fw_delta_iter) {
-                    logging::write_log("fw change significant reason for break calc", logging::kInfo);
-                    break;
-                }
-            }
-
-            cur_fw = wwp->fw_well;
-            if (index % 100 == 0) {
-                auto s = cs::string_format("fw = {%.6f}, t = {%.6f}, s_w = {%.4f}, index = {%i}", cur_fw, t, s_cur[0], index);
-                logging::write_log(s, logging::kInfo);
-            }
-
-            sumQ += wwp->ql_well * t;
-            double pv = sumQ / fract_pv; // how many pv are flushed
-            add_aver_fw(pv, wwp, s_cur, sf_aver_prev, t);
-
-            if (pvi_ind != -1 && pv > pvi_inds[pvi_ind]) {
-                save_pvi_s(pv, pvi_inds[pvi_ind], s_cur, m_data->m);
-
-                pvi_ind++;
-                if (pvi_ind >= static_cast<int>(pvi_inds.size()))
-                    pvi_ind = -1;
-            }
-
-            // if (!fss::file_exists("dd.dat")) {
-            //     std::ofstream a("dd.dat");
-            //     a << "s\tt\tu\tPVI\tsumT\tsumQ\tql\tvp\tql_shore\tfw\n";
-            //     a.close();
-            // }
-
-            // if (index % 1 == 0) {
-            //     std::ofstream a("dd.dat", std::ios_base::app);
-            //     a << s_cur[0] << "\t" << t << "\t" << u << "\t"
-            //       << pv << "\t" << sumT << "\t"
-            //       << sumQ << "\t" << wwp->ql << "\t" << fract_pv << "\t"
-            //       << wwp->ql_shore << "\t" << wwp->fw << "\n";
-            //     a.close();
-            // }
-
-            double perc = get_perc(cur_fw, sumT);
-            set_progress(perc);
-
-            if (index > data->sat_setts->max_iter) {
-                auto s = cs::string_format("max iter {%i} reached", data->sat_setts->max_iter);
-                logging::write_log(s, logging::kInfo);
-                break;
-            }
-
-            if (data->sat_setts->use_fw_shorewell_converge) {
-                double r = std::abs(wwp->fw_well - wwp->fw_shore); // residual
-                double dr = wwp->fw_shore * data->sat_setts->fw_shw_conv / 100.0;
-                // double dr = data->sat_setts->fw_shw_conv;
-                if (index % 10 == 0) {
-                    auto s = cs::string_format("fw_well = {%.6f}, fw_shore = {%.6f}, r = {%.6f}, dr = {%.6f}, s_w = {%.6f}",
-                        wwp->fw_well, wwp->fw_shore, r, dr, s_cur[0]);
-                    logging::write_log(s, logging::kInfo);
-                }
-                if (r < dr) {
-                    save_aver_reached(index, aver, true);
-                    aver_reached = true;
-                    break;
-                }
-            }
+    auto sst_name = SaturSolverType::get_description(data->sat_setts->type);
+    std::string mess = common::services::string_format("saturation solver type: %s", sst_name.c_str());
+    logging::write_log(mess, logging::kInfo);
+    while (suit_step(suit_step_params)) {
+        if (index % data->sat_setts->pressure_update_n == 0) {
+            p = services::solve_press(grd, s_prev, data);
+            services::calc_u(p, s_prev, data, grd);
+            // save_press(index, grd, p);
         }
 
-        logging::write_log("saturation solve completed", logging::kInfo);
+        double t = data->sat_setts->type == SaturSolverType::kImplicit
+            ? data->sat_setts->tau
+            : get_tau(index, s_prev);
+
+        // double t = 1e-5;
+
+        double u = data->get_contour_press_bound_type() == common::models::BoundCondType::kConst
+            ? services::getULiqInject(grd, data->mesh_setts->type)
+            : 0.0;
+        sumU += u * t;
+
+        s_cur = services::solve_satur(t, index == 0, s_prev, data, grd);
+
+        // std::string fn_s = data->sat_setts->type == SaturSolverType::kImplicit
+        //     ? "impl::"
+        //     : "expl::";
+        // auto x = m_grd->get_cells_centers();
+
+        // std::vector<std::tuple<double, double>> y(s_cur.size());
+        // std::transform(x.begin(), x.end(), s_cur.begin(), y.begin(),
+        //     [](auto&& a, auto&& b) {
+        //         return std::make_tuple(std::move(a), std::move(b));
+        //     });
+
+        // save_any_vector(y, fn_s);
+        // std::cout << fn_s << "tau = " << t << ", m = " << data->m << ", s[0] = " << s_cur[0] << "\n";
+        // break;
+        s_prev = s_cur;
+        sumT += t;
+        m_tau_data.push_back(std::make_shared<common::models::TauData>(sumT, t));
+
+        if (index % data->sat_setts->satur_field_save_n == 0) {
+            snapshot_fields(sumU, sumT, p, s_cur);
+        }
+        index++;
+
+        suit_step_params->prev_fw = wwp->fw_well;
+        auto wwp = services::calc_well_work_param(grd, s_cur, data, sumT);
+        _wellWorkParams.push_back(wwp);
+
+        cur_fw = wwp->fw_well;
+        if (index % 100 == 0) {
+            auto s = cs::string_format("fw = {%.6f}, t = {%.6f}, s_w = {%.4f}, index = {%i}", cur_fw, t, s_cur[0], index);
+            logging::write_log(s, logging::kInfo);
+        }
+
+        sumQ += wwp->ql_well * t;
+        double pv = sumQ / fract_pv; // how many pv are flushed
+        add_aver_fw(pv, wwp, s_cur, sf_aver_prev, t);
+
+        // if (pvi_ind != -1 && pv > pvi_inds[pvi_ind]) {
+        //     save_pvi_s(pv, pvi_inds[pvi_ind], s_cur, m_data->m);
+
+        //     pvi_ind++;
+        //     if (pvi_ind >= static_cast<int>(pvi_inds.size()))
+        //         pvi_ind = -1;
+        // }
+
+        // if (!fss::file_exists("dd.dat")) {
+        //     std::ofstream a("dd.dat");
+        //     a << "s\tt\tu\tPVI\tsumT\tsumQ\tql\tvp\tql_shore\tfw\n";
+        //     a.close();
+        // }
+
+        // if (index % 1 == 0) {
+        //     std::ofstream a("dd.dat", std::ios_base::app);
+        //     a << s_cur[0] << "\t" << t << "\t" << u << "\t"
+        //       << pv << "\t" << sumT << "\t"
+        //       << sumQ << "\t" << wwp->ql << "\t" << fract_pv << "\t"
+        //       << wwp->ql_shore << "\t" << wwp->fw << "\n";
+        //     a.close();
+        // }
+
+        double perc = get_perc(cur_fw, sumT);
+        set_progress(perc);
+
+        suit_step_params->fw_const_iter = fw_const_iter;
+        suit_step_params->index = index;
+        suit_step_params->scur0 = s_cur[0];
+        suit_step_params->wwp = wwp;
     }
+
+    logging::write_log("saturation solve completed", logging::kInfo);
 
     m_sum_t = sumT;
 
-    if (!aver_reached && data->get_contour_press_bound_type() == common::models::BoundCondType::kImpermeable) {
-        save_aver_reached(index, aver, false);
-    }
+    // if (!aver_reached && data->get_contour_press_bound_type() == common::models::BoundCondType::kImpermeable) {
+    //     save_aver_reached(index, aver, false);
+    // }
 
     // std::string m = common::services::string_format("U/PV = %.8f", sumU / fract_pv / 2.0);
     // logging::write_log(m, logging::kInfo);
@@ -324,14 +272,6 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     // ofs.close();
 
     set_progress(100); // completed;
-}
-
-void BleCalc::create_one_calc_files_headers()
-{
-    // sffw
-    std::ofstream ofs(m_sffw_fn);
-    ofs << "s\tf_sf\tf_num\n";
-    ofs.close();
 }
 
 void BleCalc::set_initial_cond()
@@ -423,17 +363,6 @@ void BleCalc::add_aver_fw(double pv, const std::shared_ptr<cmm::WellWorkParams> 
     item->sav_balance = services::SaturAverService::calc_sf_aver(qw_shore, ql_well, sf_prev, tau, m_grd, m_data);
     sf_prev = item->sav_balance;
     m_fw_data.push_back(item);
-
-    save_sf_fw(sf_prev, wwp->fw_well / 100.0);
-}
-
-void BleCalc::save_sf_fw(double s, double fw)
-{
-    std::ofstream ofs(m_sffw_fn, std::ios_base::app);
-    double f_sf = cs::rp::get_fbl(s, m_data->rp_n, m_data->kmu);
-    ofs << s << "\t" << f_sf << "\t" << fw << "\n";
-
-    ofs.close();
 }
 
 void BleCalc::check_conservative()
@@ -464,60 +393,112 @@ void BleCalc::check_conservative()
     logging::write_log(mess, logging::kInfo);
 }
 
-void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data)
+// void BleCalc::save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data)
+// {
+//     auto get_file_exists = [&]() {
+//         std::ifstream infile(fn);
+//         return infile.good();
+//     };
+
+//     bool file_exists = get_file_exists();
+
+//     std::ofstream f(fn, std::ios_base::app);
+
+//     if (!file_exists) // write headers
+//         f << "m\t"
+//           << "s\t"
+//           << "pv\t"
+//           << "fw_well\t"
+//           << "fw_shore\t"
+//           << "s_num\t"
+//           << "s_an\t"
+//           << "status\t"
+//           << "iter_count\t"
+//           //   << "cv\t"
+//           //   << "cg"
+//           << std::endl;
+
+//     f << data->m << "\t"
+//       << data->s_const << "\t"
+//       << data->data->pv << "\t"
+//       << data->data->fw_num_well << "\t"
+//       << data->data->fw_num_shore << "\t"
+//       << data->data->sav_num << "\t"
+//       << data->data->sav_an_shore << "\t"
+//       << data->converged << "\t"
+//       << data->iter_count << "\t"
+//       //   << data->cv << "\t"
+//       //   << data->cg
+//       << std::endl;
+
+//     f.close();
+// }
+
+// void BleCalc::save_pvi_s(double pvi, double pvi_fake, const std::vector<double>& s, double m)
+// {
+//     std::ostringstream oss;
+//     oss << "s_pvi_" << pvi << "_fpvi_" << pvi_fake << "_m_" << m << ".dat";
+//     std::ofstream ofs(oss.str().c_str());
+
+//     ofs << "r\ts\n";
+
+//     for (auto& cl : m_grd->cells) {
+//         ofs << cl->cntr << "\t" << s[cl->ind] << "\n";
+//     }
+
+//     ofs.close();
+// }
+
+bool BleCalc::suit_step(std::shared_ptr<SuitStepDto> prms)
 {
-    auto get_file_exists = [&]() {
-        std::ifstream infile(fn);
-        return infile.good();
-    };
+    bool result = true;
+    if (prms->data->sat_setts->use_fwlim) {
+        if (prms->wwp->fw_well > prms->data->sat_setts->fw_lim) {
+            result = false;
+            logging::write_log("max watercut value reached", logging::kInfo);
+        }
+    } else if (prms->data->sat_setts->use_fw_delta) {
+        double r_fw = std::abs(prms->wwp->fw_well - prms->prev_fw);
+        if (r_fw != 0.0) { // initial they are same;
+            if (r_fw < prms->data->sat_setts->fw_delta) {
+                prms->fw_const_iter++;
+            } else {
+                prms->fw_const_iter = 0;
+            }
+        }
 
-    bool file_exists = get_file_exists();
+        if (prms->fw_const_iter > prms->data->sat_setts->fw_delta_iter) {
+            result = false;
+            logging::write_log("calculation stop : fw change negligible", logging::kInfo);
+        }
 
-    std::ofstream f(fn, std::ios_base::app);
-
-    if (!file_exists) // write headers
-        f << "m\t"
-          << "s\t"
-          << "pv\t"
-          << "fw_well\t"
-          << "fw_shore\t"
-          << "s_num\t"
-          << "s_an\t"
-          << "status\t"
-          << "iter_count\t"
-          //   << "cv\t"
-          //   << "cg"
-          << std::endl;
-
-    f << data->m << "\t"
-      << data->s_const << "\t"
-      << data->data->pv << "\t"
-      << data->data->fw_num_well << "\t"
-      << data->data->fw_num_shore << "\t"
-      << data->data->sav_num << "\t"
-      << data->data->sav_an_shore << "\t"
-      << data->converged << "\t"
-      << data->iter_count << "\t"
-      //   << data->cv << "\t"
-      //   << data->cg
-      << std::endl;
-
-    f.close();
-}
-
-void BleCalc::save_pvi_s(double pvi, double pvi_fake, const std::vector<double>& s, double m)
-{
-    std::ostringstream oss;
-    oss << "s_pvi_" << pvi << "_fpvi_" << pvi_fake << "_m_" << m << ".dat";
-    std::ofstream ofs(oss.str().c_str());
-
-    ofs << "r\ts\n";
-
-    for (auto& cl : m_grd->cells) {
-        ofs << cl->cntr << "\t" << s[cl->ind] << "\n";
+    } else if (prms->data->sat_setts->use_fw_shorewell_converge) {
+        double r = std::abs(prms->wwp->fw_well - prms->wwp->fw_shore); // residual
+        double dr = prms->wwp->fw_shore * prms->data->sat_setts->fw_shw_conv / 100.0;
+        if (prms->index % 10 == 0) {
+            auto s = cs::string_format("fw_well = {%.6f}, fw_shore = {%.6f}, r = {%.6f}, dr = {%.6f}, s_w = {%.6f}",
+                prms->wwp->fw_well, prms->wwp->fw_shore, r, dr, prms->scur0);
+            logging::write_log(s, logging::kInfo);
+        }
+        if (r < dr) {
+            result = false;
+            logging::write_log("well and shore fw converged", logging::kInfo);
+        }
     }
 
-    ofs.close();
-}
+    if (prms->index > prms->data->sat_setts->max_iter) {
+        auto s = cs::string_format("max iter {%i} reached", prms->data->sat_setts->max_iter);
+        logging::write_log(s, logging::kInfo);
+        result = false;
+    }
+
+    return result;
+};
+
+double BleCalc::get_perc(int index, int max_index)
+{
+    double p = index / max_index;
+    return std::min(100.0, p * 100);
+};
 
 }

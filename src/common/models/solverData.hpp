@@ -21,9 +21,7 @@ public:
     double l; // distance in reservoir;
     double rw; // TODO : make const;
     double delta; // TODO : make const;
-    double period;
-    double fw_lim;
-    bool use_fwlim;
+    // double period;
     // double get_lenght() { return 1.0 - rw; }
     // double get_m() { return delta * perm_fract; }
     double real_poro;

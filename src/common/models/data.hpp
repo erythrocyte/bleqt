@@ -19,8 +19,6 @@ public:
     double rw;
     double delta;
     double period;
-    double fw_lim;
-    bool use_fwlim;
 };
 
 }

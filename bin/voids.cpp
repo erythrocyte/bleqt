@@ -52,13 +52,14 @@ std::shared_ptr<cm::SolverData> Calculator::get_linear_solver_data()
     result->sat_setts->time_step_type = cm::TimeStepType::kOld;
     result->sat_setts->tau = 1e-3;
     result->sat_setts->simple_iter_count = 3;
+    result->sat_setts->fw_lim = 70;
+    result->sat_setts->use_fwlim = true;
 
-    result->fw_lim = 70;
     result->kmu = 1.0;
     result->l = 5;
     result->rp_n = 3.0;
-    result->use_fwlim = true;
-    result->period = 1.0;
+
+    // result->period = 1.0;
     result->bound_satur = 1.0;
     result->set_contour_press_bound_type(cm::BoundCondType::kConst);
     result->real_poro = 0.2;
@@ -104,13 +105,14 @@ std::shared_ptr<cm::SolverData> Calculator::get_solver_data()
 
     result->sat_setts->tau = 1e-2;
     result->sat_setts->simple_iter_count = 3;
+    result->sat_setts->fw_lim = 70;
+    result->sat_setts->use_fwlim = false;
 
-    result->fw_lim = 70;
     result->kmu = 1.0;
     result->l = 500.0 / 100.0;
     result->rp_n = 3.0;
-    result->use_fwlim = false;
-    result->period = 2e3;
+
+    // result->period = 2e3;
     result->bound_satur = 1.0;
     result->set_contour_press_bound_type(cm::BoundCondType::kImpermeable);
     result->real_poro = 0.2;
@@ -220,7 +222,7 @@ void Calculator::run_linear()
         auto grd = get_grid(data);
 
         for (int k = 0; k < n; k++) {
-            data->fw_lim = fw0 + k * dfw;
+            data->sat_setts->fw_lim = fw0 + k * dfw;
             solve(data, grd);
         }
 

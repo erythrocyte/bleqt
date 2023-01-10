@@ -68,6 +68,9 @@ void SatSolverSettsWidget::subscribe()
     Q_ASSERT(success);
     success = connect(ui->need_stop_fw_shore_well_converge, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_shorewell_converge);
     Q_ASSERT(success);
+
+    //     success = connect(ui->UseFwLimit, &QCheckBox::toggled, this, &DataWidget::use_fw_limit_toogled);
+    // Q_ASSERT(success);
 }
 
 void SatSolverSettsWidget::need_stop_fw_pseudo_const(bool state)
@@ -95,5 +98,11 @@ void SatSolverSettsWidget::need_stop_fw_shorewell_converge(bool state)
 {
     ui->fw_shore_well_converge_value->setEnabled(state);
 }
+
+// void DataWidget::use_fw_limit_toogled(bool state)
+// {
+//     ui->FwLimit->setEnabled(state);
+//     ui->Period->setEnabled(!state);
+// }
 
 }

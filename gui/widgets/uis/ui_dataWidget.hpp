@@ -33,8 +33,6 @@ public:
 
     // model data
     QDoubleSpinBox* Period;
-    QDoubleSpinBox* FwLimit;
-    QCheckBox* UseFwLimit;
 
     // relative permeability
     QDoubleSpinBox* MuWat;
@@ -73,7 +71,6 @@ private:
     // model data
     QGroupBox* m_gbModelData;
     QLabel* m_periodLabel;
-    QLabel* m_saveFieldStepsLabel;
 
     // relative permeability
     QLabel* m_labelMuWat;
@@ -105,7 +102,7 @@ private:
 
         widget->setLayout(m_layout);
 
-        m_layout->addWidget(m_gbModelData);
+        // m_layout->addWidget(m_gbModelData);
         m_layout->addWidget(m_gbRelPerm);
         m_layout->addWidget(m_gbGeology);
         m_layout->addWidget(m_gbGeom);
@@ -237,38 +234,24 @@ private:
 
     void setupUiModelData(QWidget* widget)
     {
-        int max_col = 10;
-        m_gbModelData = new QGroupBox("Modeling data");
-        QGridLayout* layout = new QGridLayout(m_gbModelData);
-        m_gbModelData->setLayout(layout);
-        layout->setMargin(5);
+        // int max_col = 10;
+        // m_gbModelData = new QGroupBox("Modeling data");
+        // QGridLayout* layout = new QGridLayout(m_gbModelData);
+        // m_gbModelData->setLayout(layout);
+        // layout->setMargin(5);
 
-        m_periodLabel = new QLabel("Period, h");
-        Period = new QDoubleSpinBox();
-        Period->setMinimum(0.1);
-        Period->setMaximum(1e10);
-        Period->setSingleStep(0.1);
-        Period->setValue(5);
-        Period->setToolTip("Calculation time period, hours");
-        Period->setEnabled(false);
-        layout->addWidget(m_periodLabel, 0, 0);
-        layout->addWidget(Period, 0, 1, 1, max_col);
+        // m_periodLabel = new QLabel("Period, h");
+        // Period = new QDoubleSpinBox();
+        // Period->setMinimum(0.1);
+        // Period->setMaximum(1e10);
+        // Period->setSingleStep(0.1);
+        // Period->setValue(5);
+        // Period->setToolTip("Calculation time period, hours");
+        // Period->setEnabled(false);
+        // layout->addWidget(m_periodLabel, 0, 0);
+        // layout->addWidget(Period, 0, 1, 1, max_col);
 
-        m_saveFieldStepsLabel = new QLabel("Watercut limit, %");
-        FwLimit = new QDoubleSpinBox();
-        FwLimit->setMinimum(0.01);
-        FwLimit->setMaximum(99);
-        FwLimit->setSingleStep(1);
-        FwLimit->setValue(98);
-        FwLimit->setToolTip("Set modeling as a critical watercut value on well");
-        layout->addWidget(m_saveFieldStepsLabel, 1, 0);
-        layout->addWidget(FwLimit, 1, 1, 1, max_col);
-
-        UseFwLimit = new QCheckBox("Use watercut limit");
-        UseFwLimit->setCheckState(Qt::CheckState::Checked);
-        layout->addWidget(UseFwLimit, 2, 0, 1, max_col);
-
-        retranslateUiModelData(widget);
+        // retranslateUiModelData(widget);
     }
 
     void retranslateUiModelData(QWidget* widget)
@@ -279,14 +262,7 @@ private:
         m_periodLabel->setText("Period, h");
         m_periodLabel->setToolTip("Period in hours");
 
-        m_saveFieldStepsLabel->setText("Watercut limit, %");
-        m_saveFieldStepsLabel->setToolTip("Set modeling as a critical watercut value on well");
-
-        FwLimit->setToolTip("Set modeling as a critical watercut value on well");
         Period->setToolTip("Calculation time period");
-
-        UseFwLimit->setText("Use watercut limit");
-        UseFwLimit->setToolTip("Use watercut limit if checked otherwise time limit will be used");
     }
 
     void setupUiRelPerm(QWidget* widget)
