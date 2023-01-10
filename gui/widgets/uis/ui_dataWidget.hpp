@@ -226,7 +226,7 @@ private:
         m_labelDelta->setToolTip("Fracture half thickness, m");
 
         m_labelL->setText("L, m");
-        m_labelL->setToolTip("Reservoir lenght, m");
+        m_labelL->setToolTip("Well half lenght, m");
 
         m_labelR->setText("R, m");
         m_labelR->setToolTip("Reservoir radius, m");
