@@ -63,7 +63,7 @@ void BleFrame::set_settings_widget(const std::shared_ptr<models::SettingsWidgets
     tabbar->setTabButton(1, QTabBar::LeftSide, label);
 
     // satsolver
-    label = new frames::QVerticalLabel("Solver");
+    label = new frames::QVerticalLabel("Satur Solver");
     label->setTextColor(QColor(100, 0, 0, 127));
     tabSettings->setTabText(2, "");
     tabbar->setTabButton(2, QTabBar::LeftSide, label);

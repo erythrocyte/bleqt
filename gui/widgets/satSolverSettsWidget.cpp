@@ -14,19 +14,19 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
 {
     ui->setupUi(this);
     for (sclcm::SaturSolverType::TypeEnum v : sclcm::SaturSolverTypeEnumIterator()) {
-        ui->SolverType->addItem(
+        ui->solver_type->addItem(
             QString::fromStdString(sclcm::SaturSolverType::get_description(v)));
     }
 
     bool isExplicit = false;
     make_solver_type_change(isExplicit);
     for (scm::TimeStepType::TypeEnum v : scm::TimeStepTypeEnumIterator()) {
-        ui->TimeStepType->addItem(QString::fromStdString(scm::TimeStepType::get_description(v)));
+        ui->time_step_type->addItem(QString::fromStdString(scm::TimeStepType::get_description(v)));
     }
 
-    ui->MaxIter->setValue(10000);
-    ui->TimeStepType->setCurrentIndex(0);
-    ui->SolverType->setCurrentIndex(1);
+    ui->max_iter->setValue(10000);
+    ui->time_step_type->setCurrentIndex(0);
+    ui->solver_type->setCurrentIndex(1);
 
     subscribe();
     need_stop_fw_shorewell_converge(false);
@@ -35,26 +35,26 @@ SatSolverSettsWidget::SatSolverSettsWidget(QWidget* parent)
 std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_data()
 {
     auto result = std::make_shared<src::calc::models::SaturSolverSetts>();
-    result->cv = ui->CurantVolume->value();
-    result->cg = ui->CurantFace->value();
-    result->need_satur_solve = ui->NeedSaturSolve->isChecked();
-    result->pressure_update_n = ui->RecalcPressN->value();
-    result->satur_field_save_n = ui->SaveSaturField->value();
-    result->max_iter = ui->MaxIter->value();
+    result->cv = ui->curant_volume->value();
+    result->cg = ui->curant_face->value();
+    result->need_satur_solve = ui->need_satur_solve->isChecked();
+    result->pressure_update_n = ui->recalc_press_n->value();
+    result->satur_field_save_n = ui->fix_fields_step->value();
+    result->max_iter = ui->max_iter->value();
 
-    result->use_fw_delta = ui->NeedStopFwPseudoConst->isChecked();
-    result->fw_delta = ui->FwDelta->value();
-    result->fw_delta_iter = ui->FwDeltaIter->value();
+    result->use_fw_delta = ui->need_stop_fw_converge->isChecked();
+    result->fw_delta = ui->fw_converge_delta->value();
+    result->fw_delta_iter = ui->fw_converge_iter->value();
 
-    result->tau = ui->TauForFim->value();
-    result->simple_iter_count = ui->SimpleIterCount->value();
-    result->use_fw_shorewell_converge = ui->NeedStopFwShoreWellConverge->isChecked();
-    result->fw_shw_conv = ui->FwShoreWellConverge->value();
+    result->tau = ui->impl_tau->value();
+    result->simple_iter_count = ui->impl_simple_iter_count->value();
+    result->use_fw_shorewell_converge = ui->need_stop_fw_shore_well_converge->isChecked();
+    result->fw_shw_conv = ui->fw_shore_well_converge_value->value();
 
-    auto str = ui->SolverType->currentText().toStdString();
+    auto str = ui->solver_type->currentText().toStdString();
     result->type = src::calc::models::SaturSolverType::get_enum(str);
 
-    str = ui->TimeStepType->currentText().toStdString();
+    str = ui->time_step_type->currentText().toStdString();
     result->time_step_type = src::common::models::TimeStepType::get_enum(str);
 
     return result;
@@ -62,18 +62,18 @@ std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_d
 
 void SatSolverSettsWidget::subscribe()
 {
-    auto success = connect(ui->NeedStopFwPseudoConst, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_pseudo_const);
+    auto success = connect(ui->need_stop_fw_converge, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_pseudo_const);
     Q_ASSERT(success);
-    success = QObject::connect(ui->SolverType, SIGNAL(currentIndexChanged(int)), this, SLOT(on_solver_type_changed(int)));
+    success = QObject::connect(ui->solver_type, SIGNAL(currentIndexChanged(int)), this, SLOT(on_solver_type_changed(int)));
     Q_ASSERT(success);
-    success = connect(ui->NeedStopFwShoreWellConverge, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_shorewell_converge);
+    success = connect(ui->need_stop_fw_shore_well_converge, &QCheckBox::toggled, this, &SatSolverSettsWidget::need_stop_fw_shorewell_converge);
     Q_ASSERT(success);
 }
 
 void SatSolverSettsWidget::need_stop_fw_pseudo_const(bool state)
 {
-    ui->FwDelta->setEnabled(state);
-    ui->FwDeltaIter->setEnabled(state);
+    ui->fw_converge_delta->setEnabled(state);
+    ui->fw_converge_iter->setEnabled(state);
 }
 
 void SatSolverSettsWidget::on_solver_type_changed(int index)
@@ -83,17 +83,17 @@ void SatSolverSettsWidget::on_solver_type_changed(int index)
 
 void SatSolverSettsWidget::make_solver_type_change(bool isExplicit)
 {
-    ui->TauForFim->setEnabled(!isExplicit);
-    ui->SimpleIterCount->setEnabled(!isExplicit);
+    ui->impl_tau->setEnabled(!isExplicit);
+    ui->impl_simple_iter_count->setEnabled(!isExplicit);
 
-    ui->TimeStepType->setEnabled(isExplicit);
-    ui->CurantFace->setEnabled(isExplicit);
-    ui->CurantVolume->setEnabled(isExplicit);
+    ui->time_step_type->setEnabled(isExplicit);
+    ui->curant_face->setEnabled(isExplicit);
+    ui->curant_volume->setEnabled(isExplicit);
 }
 
 void SatSolverSettsWidget::need_stop_fw_shorewell_converge(bool state)
 {
-    ui->FwShoreWellConverge->setEnabled(state);
+    ui->fw_shore_well_converge_value->setEnabled(state);
 }
 
 }
