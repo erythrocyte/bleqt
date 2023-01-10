@@ -94,7 +94,7 @@ void BleFrame::set_widgets(const std::shared_ptr<models::ViewWidgetsDto> widgets
     auto setts_widgets = std::make_shared<models::SettingsWidgetsDto>();
     setts_widgets->conditionsWidget = widgets->conditionsWidget;
     setts_widgets->dataWidget = widgets->dataWidget;
-    setts_widgets->dimles_params_widget = widgets->dimles_params_widget;
+    setts_widgets->satsolver_widget = widgets->satsolver_widget;
     setts_widgets->gridsetts_widget = widgets->gridsetts_widget;
     setts_widgets->shockfront_widget = widgets->shockfront_widget;
     setts_widgets->dimles_params_widget = widgets->dimles_params_widget;
