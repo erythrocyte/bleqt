@@ -33,6 +33,7 @@ set(SOURCES
 	widgets/tauVisualWidget.cpp
 	widgets/fwVisualWidget.cpp
 	widgets/dimlesParamsWidget.cpp
+	widgets/schemeWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
 	widgets/models/boundModel.cpp

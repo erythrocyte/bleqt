@@ -5,14 +5,15 @@
 
 #include "bleFrame.hpp"
 #include "bleFramePresenter.hpp"
+#include "boundVisualWidgetPresenter.hpp"
+#include "conditionsWidgetPresenter.hpp"
 #include "dataWidgetPresenter.hpp"
 #include "fluidParamGraphWidgetPresenter.hpp"
 #include "gridSettsWidgetPresenter.hpp"
 #include "resultDataWidgetPresenter.hpp"
 #include "satSolverSettsWidgetPresenter.hpp"
 #include "shockFrontSettsWidgetPresenter.hpp"
-#include "conditionsWidgetPresenter.hpp"
-#include "boundVisualWidgetPresenter.hpp"
+#include "widgets/schemeWidget.hpp"
 
 namespace ble::gui {
 
@@ -33,6 +34,7 @@ BleApplication::BleApplication()
     builder.registerType<widgets::presenters::ShockFrontSettsWidgetPresenter>();
     builder.registerType<widgets::presenters::ConditionsWidgetPresenter>();
     builder.registerType<widgets::presenters::BoundVisualWidgetPresenter>();
+    builder.registerType<widgets::SchemeWidget>();
 
     m_container = builder.build();
 }

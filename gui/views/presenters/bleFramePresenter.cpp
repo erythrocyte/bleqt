@@ -57,20 +57,25 @@ BleFramePresenter::BleFramePresenter(std::shared_ptr<Hypodermic::Container> cont
     m_fwVisualPresenter = m_container->resolve<bwp::FwVisualWidgetPresenter>();
     auto fwVisualView = std::static_pointer_cast<widgets::FwVisualWidget>(m_fwVisualPresenter->get_view());
 
-    std::static_pointer_cast<BleFrame>(m_view)->set_widgets(
-        dataWidgetView,
-        conditionsWidgetView,
-        satsolver_view,
-        gridsetts_view,
-        shockfront_view,
-        dimlesParams_view,
+    m_scheme_view = m_container->resolve<widgets::SchemeWidget>();
 
-        fluidParamsWidget,
-        resultDataWidget,
-        wellWorkDataView,
-        boundVisualView,
-        tauVisualView,
-        fwVisualView);
+    auto widgets = std::make_shared<models::ViewWidgetsDto>();
+    widgets->dataWidget = dataWidgetView;
+    widgets->conditionsWidget = conditionsWidgetView;
+    widgets->satsolver_widget = satsolver_view;
+    widgets->gridsetts_widget = gridsetts_view;
+    widgets->shockfront_widget = shockfront_view;
+    widgets->dimles_params_widget = dimlesParams_view;
+
+    widgets->fluidParamsWidget = fluidParamsWidget;
+    widgets->resultDataWidget = resultDataWidget;
+    widgets->wellWorkDataWidget = wellWorkDataView;
+    widgets->condWidget = boundVisualView;
+    widgets->tauWidget = tauVisualView;
+    widgets->fwWidget = fwVisualView;
+    widgets->schemeWidget = m_scheme_view;
+
+    std::static_pointer_cast<BleFrame>(m_view)->set_widgets(widgets);
 
     set_signals();
     m_shockfront_presenter->set_show_shockfront_status(false);

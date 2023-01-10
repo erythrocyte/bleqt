@@ -4,20 +4,10 @@
 #include <iostream>
 #include <memory>
 
-#include "boundVisualWidget.hpp"
-#include "conditionsWidget.hpp"
-#include "dataWidget.hpp"
-#include "dimlesParamsWidget.hpp"
-#include "fluidParamsGraphWidget.hpp"
-#include "fwVisualWidget.hpp"
-#include "gridSettsWidget.hpp"
 #include "logging/logger.hpp"
-#include "resultDataWidget.hpp"
-#include "satSolverSettsWidget.hpp"
-#include "shockFrontSettsWidget.hpp"
-#include "tauVisualWidget.hpp"
+#include "models/settingsWidgetsDto.hpp"
+#include "models/viewWidgetsDto.hpp"
 #include "ui_bleFrame.hpp"
-#include "wellWorkDataWidget.hpp"
 
 #include <QMainWindow>
 
@@ -32,20 +22,7 @@ public:
 
     void run() { show(); }
 
-    void set_widgets(
-        std::shared_ptr<widgets::DataWidget> dataWidget,
-        std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
-        std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
-        std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
-        std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget,
-        std::shared_ptr<widgets::DimlesParamsWidget> dimles_params_widget,
-
-        std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
-        std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
-        std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget,
-        std::shared_ptr<widgets::BoundVisualWidget> condWidget,
-        std::shared_ptr<widgets::TauVisualWidget> tauWidget,
-        std::shared_ptr<widgets::FwVisualWidget> fwWidget);
+    void set_widgets(const std::shared_ptr<models::ViewWidgetsDto> widgets);
     void update_progress(double perc) { ui->statusProgressBar->setValue(perc); }
     void set_status(QString str) { ui->statusLabel->setText(str); }
     void add_log_message(std::string str, ble::src::logging::SeverityLevelEnum level);
@@ -55,12 +32,7 @@ signals:
 
 private:
     UI::UI_BleFrame* ui;
-    void set_settings_widget(std::shared_ptr<widgets::DataWidget> dataWidget,
-        std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
-        std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
-        std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
-        std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget,
-        std::shared_ptr<widgets::DimlesParamsWidget> dimles_params_widget);
+    void set_settings_widget(const std::shared_ptr<models::SettingsWidgetsDto> widgets);
 
 private slots:
     void handleRunButton() { emit sgn_run_calc(); }

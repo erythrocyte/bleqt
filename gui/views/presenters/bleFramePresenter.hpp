@@ -54,6 +54,8 @@ private:
     std::shared_ptr<bwp::FwVisualWidgetPresenter> m_fwVisualPresenter;
     std::shared_ptr<bwp::DimlesParamsWidgetPresenter> m_dimlesParamsPresenter;
 
+    std::shared_ptr<widgets::SchemeWidget> m_scheme_view;
+
     void set_signals();
     double get_sc();
     void update_progress(double perc) { get_view()->update_progress(perc); }

@@ -37,22 +37,16 @@ BleFrame::BleFrame(QWidget* parent)
     resizeDocks({ ui->dockSettings }, { 100 }, Qt::Horizontal); // This is the hack
 }
 
-void BleFrame::set_settings_widget(
-    std::shared_ptr<widgets::DataWidget> dataWidget,
-    std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
-    std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
-    std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
-    std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget,
-    std::shared_ptr<widgets::DimlesParamsWidget> dimles_params_widget)
+void BleFrame::set_settings_widget(const std::shared_ptr<models::SettingsWidgetsDto> widgets)
 {
     QTabWidget* tabSettings = new QTabWidget();
     tabSettings->setTabPosition(QTabWidget::TabPosition::West);
-    tabSettings->addTab(dataWidget.get(), "");
-    tabSettings->addTab(conditionsWidget.get(), "");
-    tabSettings->addTab(satsolver_widget.get(), "");
-    tabSettings->addTab(gridsetts_widget.get(), "");
-    tabSettings->addTab(shockfront_widget.get(), "");
-    tabSettings->addTab(dimles_params_widget.get(), "");
+    tabSettings->addTab(widgets->dataWidget.get(), "");
+    tabSettings->addTab(widgets->conditionsWidget.get(), "");
+    tabSettings->addTab(widgets->satsolver_widget.get(), "");
+    tabSettings->addTab(widgets->gridsetts_widget.get(), "");
+    tabSettings->addTab(widgets->shockfront_widget.get(), "");
+    tabSettings->addTab(widgets->dimles_params_widget.get(), "");
     tabSettings->setMinimumWidth(330);
     QTabBar* tabbar = tabSettings->tabBar();
 
@@ -95,34 +89,27 @@ void BleFrame::set_settings_widget(
     ui->dockSettings->setWidget(tabSettings);
 }
 
-void BleFrame::set_widgets(
-    std::shared_ptr<widgets::DataWidget> dataWidget,
-    std::shared_ptr<widgets::ConditionsWidget> conditionsWidget,
-    std::shared_ptr<widgets::SatSolverSettsWidget> satsolver_widget,
-    std::shared_ptr<widgets::GridSettsWidget> gridsetts_widget,
-    std::shared_ptr<widgets::ShockFrontSettsWidget> shockfront_widget,
-    std::shared_ptr<widgets::DimlesParamsWidget> dimles_params_widget,
-
-    std::shared_ptr<widgets::FluidParamsGraphWidget> fluidParamsWidget,
-    std::shared_ptr<widgets::ResultDataWidget> resultDataWidget,
-    std::shared_ptr<widgets::WellWorkDataWidget> wellWorkDataWidget,
-    std::shared_ptr<widgets::BoundVisualWidget> condWidget,
-    std::shared_ptr<widgets::TauVisualWidget> tauWidget,
-    std::shared_ptr<widgets::FwVisualWidget> fwWidget)
+void BleFrame::set_widgets(const std::shared_ptr<models::ViewWidgetsDto> widgets)
 {
-    this->set_settings_widget(dataWidget,
-        conditionsWidget,
-        satsolver_widget,
-        gridsetts_widget,
-        shockfront_widget,
-        dimles_params_widget);
+    auto setts_widgets = std::make_shared<models::SettingsWidgetsDto>();
+    setts_widgets->conditionsWidget = widgets->conditionsWidget;
+    setts_widgets->dataWidget = widgets->dataWidget;
+    setts_widgets->dimles_params_widget = widgets->dimles_params_widget;
+    setts_widgets->gridsetts_widget = widgets->gridsetts_widget;
+    setts_widgets->shockfront_widget = widgets->shockfront_widget;
+    setts_widgets->dimles_params_widget = widgets->dimles_params_widget;
 
-    ui->tabs->addTab(resultDataWidget.get(), "Results");
-    ui->tabs->addTab(fluidParamsWidget.get(), "Fluid params");
-    ui->tabs->addTab(wellWorkDataWidget.get(), "Well work");
-    ui->tabs->addTab(condWidget.get(), "Conditions");
-    ui->tabs->addTab(tauWidget.get(), "Tau");
-    ui->tabs->addTab(fwWidget.get(), "Aver");
+    this->set_settings_widget(setts_widgets);
+
+    ui->tabs->addTab(widgets->resultDataWidget.get(), "Results");
+    ui->tabs->addTab(widgets->fluidParamsWidget.get(), "Fluid params");
+    ui->tabs->addTab(widgets->wellWorkDataWidget.get(), "Well work");
+    ui->tabs->addTab(widgets->condWidget.get(), "Conditions");
+    ui->tabs->addTab(widgets->tauWidget.get(), "Tau");
+    ui->tabs->addTab(widgets->fwWidget.get(), "Aver");
+    ui->tabs->addTab(widgets->schemeWidget.get(), "Scheme");
+
+    std::cout << "a = " << widgets->schemeWidget.get() << "\n";
 }
 
 void BleFrame::add_log_message(std::string str, ble::src::logging::SeverityLevelEnum level)
