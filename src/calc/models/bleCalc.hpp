@@ -13,6 +13,7 @@
 #include "common/models/tauData.hpp"
 #include "common/models/wellWorkParams.hpp"
 #include "mesh/models/grid.hpp"
+#include "suitStepDto.hpp"
 
 namespace cmm = ble::src::common::models;
 
@@ -42,7 +43,9 @@ private:
     double m_sum_t;
     std::shared_ptr<mesh::models::Grid> m_grd;
     std::shared_ptr<common::models::SolverData> m_data;
-    std::string m_sffw_fn = "sf_fw.dat";
+
+    bool suit_step(std::shared_ptr<SuitStepDto> prms);
+    double get_perc(int index, int max_index);
 
     void set_initial_cond();
     void save_press(int index, const std::vector<double> p);
@@ -51,11 +54,8 @@ private:
     void add_aver_fw(double pv, const std::shared_ptr<cmm::WellWorkParams> wwp,
         const std::vector<double>& s, double& sf_prev, double tau);
     void check_conservative();
-    void save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data);
-
-    void save_pvi_s(double pvi, double pvi_fake, const std::vector<double>& s, double m);
-    void save_sf_fw(double s, double fw);
-    void create_one_calc_files_headers();
+    // void save_aver_fw(const char* fn, const std::shared_ptr<AverFwSaveData> data);
+    // void save_pvi_s(double pvi, double pvi_fake, const std::vector<double>& s, double m);
 };
 } // namespace ble::src
 

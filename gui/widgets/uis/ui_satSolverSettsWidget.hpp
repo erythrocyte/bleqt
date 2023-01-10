@@ -10,224 +10,331 @@
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QLabel>
+#include <QRadioButton>
+#include <QScrollArea>
 #include <QSpinBox>
 #include <QWidget>
 
 namespace ble::gui::widgets::UI {
 class SatSolverSetts {
 public:
-    QDoubleSpinBox* CurantVolume;
-    QDoubleSpinBox* CurantFace;
-    QSpinBox* RecalcPressN;
-    QComboBox* SolverType;
-    QCheckBox* NeedSaturSolve;
-    QSpinBox* SaveSaturField;
-    QSpinBox* MaxIter;
-    QCheckBox* NeedStopFwPseudoConst;
-    QDoubleSpinBox* FwDelta;
-    QSpinBox* FwDeltaIter;
-    QCheckBox* NeedStopFwShoreWellConverge;
-    QDoubleSpinBox* FwShoreWellConverge;
-    QComboBox* TimeStepType;
+    QDoubleSpinBox* curant_volume;
+    QDoubleSpinBox* curant_face;
+    QSpinBox* recalc_press_n;
+    QComboBox* solver_type;
+    QCheckBox* need_satur_solve;
+    QSpinBox* fix_fields_step;
+    QSpinBox* max_iter;
+    QRadioButton* need_stop_fw_converge;
+    QDoubleSpinBox* fw_converge_delta;
+    QSpinBox* fw_converge_iter;
+    QRadioButton* need_stop_fw_shore_well_converge;
+    QDoubleSpinBox* fw_shore_well_converge_value;
+    QComboBox* time_step_type;
+    QDoubleSpinBox* fw_limit;
+    QRadioButton* use_fw_limit;
+    QDoubleSpinBox* impl_tau;
+    QSpinBox* impl_simple_iter_count;
 
-    QDoubleSpinBox* TauForFim;
-    QSpinBox* SimpleIterCount;
+    QGroupBox* common_gb;
+    QGroupBox* stop_crit_gb;
+    QGroupBox* explicit_gb;
+    QGroupBox* implicit_gb;
 
     void setupUi(QWidget* widget)
     {
-        _groupBox = new QGroupBox();
-        _mainLayout = new QVBoxLayout(widget);
-        _mainLayout->addStretch();
-        _mainLayout->setDirection(QVBoxLayout::BottomToTop);
-        _mainLayout->addWidget(_groupBox);
-        _layout = new QGridLayout(_groupBox);
-        _groupBox->setLayout(_layout);
+        m_group_box = new QGroupBox();
+        m_layout = new QGridLayout(m_group_box);
+        m_group_box->setLayout(m_layout);
+        m_layout->setMargin(5);
 
-        _layout->setMargin(5);
+        m_main_layout = new QVBoxLayout(widget);
 
-        _curantVolumeLabel = new QLabel();
-        CurantVolume = new QDoubleSpinBox();
-        CurantVolume->setDecimals(7);
-        CurantVolume->setMinimum(1e-6);
-        CurantVolume->setMaximum(1e6);
-        CurantVolume->setSingleStep(0.001);
-        CurantVolume->setValue(0.9);
-        _layout->addWidget(_curantVolumeLabel, 0, 0);
-        _layout->addWidget(CurantVolume, 0, 1);
+        QScrollArea* scrollArea = new QScrollArea();
+        scrollArea->setWidget(m_group_box);
+        scrollArea->setWidgetResizable(true);
+        m_main_layout->addWidget(scrollArea);
 
-        _curantFaceLabel = new QLabel();
-        CurantFace = new QDoubleSpinBox();
-        CurantFace->setDecimals(7);
-        CurantFace->setMinimum(1e-6);
-        CurantFace->setMaximum(1e6);
-        CurantFace->setSingleStep(0.001);
-        CurantFace->setValue(0.9);
-        _layout->addWidget(_curantFaceLabel, 1, 0);
-        _layout->addWidget(CurantFace, 1, 1);
-
-        _recalcPressLabel = new QLabel();
-        RecalcPressN = new QSpinBox();
-        RecalcPressN->setMinimum(1);
-        RecalcPressN->setMaximum(100);
-        RecalcPressN->setValue(10);
-        _layout->addWidget(_recalcPressLabel, 2, 0);
-        _layout->addWidget(RecalcPressN, 2, 1);
-
-        _solverTypeLabel = new QLabel();
-        SolverType = new QComboBox();
-        SolverType->setEnabled(true);
-        _layout->addWidget(_solverTypeLabel, 3, 0);
-        _layout->addWidget(SolverType, 3, 1);
-
-        NeedSaturSolve = new QCheckBox("Solve saturation");
-        NeedSaturSolve->setChecked(true);
-        _layout->addWidget(NeedSaturSolve, 4, 0, 1, 2);
-
-        m_saveDataStep = new QLabel();
-        SaveSaturField = new QSpinBox();
-        SaveSaturField->setMinimum(1);
-        SaveSaturField->setMaximum(100000);
-        SaveSaturField->setValue(100);
-        _layout->addWidget(m_saveDataStep, 5, 0);
-        _layout->addWidget(SaveSaturField, 5, 1);
-
-        m_maxIterLabel = new QLabel("Max iteration");
-        MaxIter = new QSpinBox();
-        MaxIter->setMinimum(1);
-        MaxIter->setMaximum(100000000);
-        MaxIter->setValue(100000000);
-        _layout->addWidget(m_maxIterLabel, 6, 0);
-        _layout->addWidget(MaxIter, 6, 1);
-
-        NeedStopFwPseudoConst = new QCheckBox("Stop watercut change");
-        NeedStopFwPseudoConst->setChecked(false);
-        _layout->addWidget(NeedStopFwPseudoConst, 7, 0, 1, 2);
-
-        m_fwDeltaLabel = new QLabel();
-        FwDelta = new QDoubleSpinBox();
-        FwDelta->setDecimals(8);
-        FwDelta->setMinimum(1e-8);
-        FwDelta->setMaximum(100);
-        FwDelta->setSingleStep(1e-8);
-        FwDelta->setValue(5);
-        _layout->addWidget(m_fwDeltaLabel, 8, 0);
-        _layout->addWidget(FwDelta, 8, 1);
-
-        m_fwDeltaIterLabel = new QLabel("Max iteration");
-        FwDeltaIter = new QSpinBox();
-        FwDeltaIter->setMinimum(1);
-        FwDeltaIter->setMaximum(1e6);
-        FwDeltaIter->setValue(10000);
-        _layout->addWidget(m_fwDeltaIterLabel, 9, 0);
-        _layout->addWidget(FwDeltaIter, 9, 1);
-
-        NeedStopFwShoreWellConverge = new QCheckBox("Watercut shore|well on converge");
-        NeedStopFwShoreWellConverge->setChecked(false);
-        _layout->addWidget(NeedStopFwShoreWellConverge, 10, 0, 1, 2);
-
-        m_fwShoreWellConvergeLabel = new QLabel();
-        FwShoreWellConverge = new QDoubleSpinBox();
-        FwShoreWellConverge->setDecimals(8);
-        FwShoreWellConverge->setMinimum(1e-8);
-        FwShoreWellConverge->setMaximum(100);
-        FwShoreWellConverge->setSingleStep(1e-8);
-        FwShoreWellConverge->setValue(1e-5);
-        _layout->addWidget(m_fwShoreWellConvergeLabel, 11, 0);
-        _layout->addWidget(FwShoreWellConverge, 11, 1);
-
-        m_timeStepTypeLabel = new QLabel();
-        TimeStepType = new QComboBox();
-        _layout->addWidget(m_timeStepTypeLabel, 12, 0);
-        _layout->addWidget(TimeStepType, 12, 1);
-
-        m_tauLabel = new QLabel();
-        TauForFim = new QDoubleSpinBox();
-        TauForFim->setDecimals(8);
-        TauForFim->setMinimum(1e-8);
-        TauForFim->setMaximum(100);
-        TauForFim->setSingleStep(1e-8);
-        TauForFim->setValue(1e-3);
-        _layout->addWidget(m_tauLabel, 13, 0);
-        _layout->addWidget(TauForFim, 13, 1);
-
-        m_simpleIterCountLabel = new QLabel();
-        SimpleIterCount = new QSpinBox();
-        SimpleIterCount->setMinimum(1);
-        SimpleIterCount->setMaximum(100);
-        SimpleIterCount->setValue(3);
-        _layout->addWidget(m_simpleIterCountLabel, 14, 0);
-        _layout->addWidget(SimpleIterCount, 14, 1);
+        setupUiCommon();
+        setupUiStopCriteria();
+        setupUiExplicit();
+        setupUiImplicit();
 
         retranslateUi(widget);
     }
 
     void retranslateUi(QWidget* widget)
     {
-        // _groupBox->setTitle("Saturation");
-        // _groupBox->setToolTip("Saturation");
-
-        _curantVolumeLabel->setText("Curant (volume)");
-        _curantVolumeLabel->setToolTip("Curant number for grid cell");
-
-        _curantFaceLabel->setText("Curant (face)");
-        _curantFaceLabel->setToolTip("Curant number for grid faces");
-
-        _recalcPressLabel->setText("Calc press step");
-        _recalcPressLabel->setToolTip("Calculate pressure every N saturation calc step");
-
-        _solverTypeLabel->setText("Solver type");
-        _solverTypeLabel->setToolTip("Solver type");
-
-        NeedSaturSolve->setText("Solve saturation");
-        NeedSaturSolve->setToolTip("Solve saturation");
-
-        m_saveDataStep->setText("Save data");
-        m_saveDataStep->setToolTip("Save data step");
-
-        m_maxIterLabel->setText("Max iteration");
-        m_maxIterLabel->setToolTip("Max iteration count to stop calc");
-
-        m_fwDeltaLabel->setText("Watercut delta");
-        m_fwDeltaLabel->setToolTip("Watercut change delta");
-
-        m_fwDeltaIterLabel->setText("Watercut delta iter");
-        m_fwDeltaIterLabel->setToolTip("Watercut change for small delta iter count");
-
-        NeedStopFwPseudoConst->setText("Stop watercut change");
-        NeedStopFwPseudoConst->setToolTip("Stop when watercut change less than delta for long iter");
-
-        m_tauLabel->setText("Tau");
-        m_tauLabel->setToolTip("Tau for fim");
-
-        m_simpleIterCountLabel->setText("Simple iter");
-        m_simpleIterCountLabel->setToolTip("Iter via simple method before Newton method");
-
-        NeedStopFwShoreWellConverge->setText("Watercut shore|well on converge");
-        NeedStopFwShoreWellConverge->setToolTip("Stop when watercut shore|well converged");
-
-        m_fwShoreWellConvergeLabel->setText("Fw shore|well delta, %");
-        m_fwShoreWellConvergeLabel->setToolTip("Watercut shore|well residual max value to stop calculation");
-
-        m_timeStepTypeLabel->setText("Time step type");
-        m_timeStepTypeLabel->setToolTip("Time step define type");
+        retranslateUiCommon();
+        retranslateUiStopCriteria();
+        retranslateUiExplicit();
+        retranslateUiImplicit();
     }
 
 private:
-    QGroupBox* _groupBox;
-    QVBoxLayout* _mainLayout;
-    QGridLayout* _layout;
-    QLabel* _curantVolumeLabel;
-    QLabel* _curantFaceLabel;
-    QLabel* _recalcPressLabel;
-    QLabel* _solverTypeLabel;
-    QLabel* m_saveDataStep;
-    QLabel* m_maxIterLabel;
-    QLabel* m_fwDeltaLabel;
-    QLabel* m_fwDeltaIterLabel;
-    QLabel* m_tauLabel;
-    QLabel* m_simpleIterCountLabel;
-    QLabel* m_fwShoreWellConvergeLabel;
+    QGroupBox* m_group_box;
+    QVBoxLayout* m_main_layout;
+    QGridLayout* m_layout;
+    QLabel* m_curant_volume_label;
+    QLabel* m_curant_face_label;
+    QLabel* m_recalc_press_label;
+    QLabel* m_solver_type_label;
+    QLabel* m_fix_fields_step;
+    QLabel* m_max_iter_label;
+    QLabel* m_fw_delta_label;
+    QLabel* m_fw_converge_iter_label;
+    QLabel* m_impl_tau_label;
+    QLabel* m_impl_simple_iter_count_label;
+    QLabel* m_fw_shore_well_converge_label;
     QLabel* m_timeStepTypeLabel;
+    QLabel* m_fw_lim_label;
+
+    void setupUiCommon()
+    {
+        common_gb = new QGroupBox("Common");
+        auto common_layout = new QGridLayout(common_gb);
+        common_gb->setLayout(common_layout);
+        common_layout->setMargin(5);
+
+        need_satur_solve = new QCheckBox("Solve saturation");
+        need_satur_solve->setChecked(true);
+        common_layout->addWidget(need_satur_solve, 0, 0);
+
+        m_solver_type_label = new QLabel();
+        solver_type = new QComboBox();
+        solver_type->setEnabled(true);
+        common_layout->addWidget(m_solver_type_label, 1, 0);
+        common_layout->addWidget(solver_type, 1, 1);
+
+        m_recalc_press_label = new QLabel();
+        recalc_press_n = new QSpinBox();
+        recalc_press_n->setMinimum(1);
+        recalc_press_n->setMaximum(1e5);
+        recalc_press_n->setValue(10);
+        common_layout->addWidget(m_recalc_press_label, 2, 0);
+        common_layout->addWidget(recalc_press_n, 2, 1);
+
+        m_fix_fields_step = new QLabel();
+        fix_fields_step = new QSpinBox();
+        fix_fields_step->setMinimum(1);
+        fix_fields_step->setMaximum(100000);
+        fix_fields_step->setValue(100);
+        common_layout->addWidget(m_fix_fields_step, 3, 0);
+        common_layout->addWidget(fix_fields_step, 3, 1);
+
+        m_layout->addWidget(common_gb);
+    }
+
+    void retranslateUiCommon()
+    {
+        need_satur_solve->setText("Solve saturation");
+        need_satur_solve->setToolTip("Solve saturation");
+
+        m_solver_type_label->setText("Solver type");
+        m_solver_type_label->setToolTip("Solver type");
+
+        m_recalc_press_label->setText("Calc press step");
+        m_recalc_press_label->setToolTip("Calculate pressure every N saturation calc step");
+
+        m_fix_fields_step->setText("Fix data");
+        m_fix_fields_step->setToolTip("Fix data for given step to visualize");
+    }
+
+    void setupUiStopCriteria()
+    {
+        auto setupCriteriaChooseGroupBox = [&]() {
+            auto gbCrit = new QGroupBox();
+            auto glCrit = new QVBoxLayout();
+            gbCrit->setLayout(glCrit);
+
+            need_stop_fw_converge = new QRadioButton("Stop watercut change");
+            need_stop_fw_converge->setChecked(false);
+            glCrit->addWidget(need_stop_fw_converge, 0);
+
+            need_stop_fw_shore_well_converge = new QRadioButton("Watercut shore|well on converge");
+            need_stop_fw_shore_well_converge->setChecked(false);
+            glCrit->addWidget(need_stop_fw_shore_well_converge, 1);
+
+            use_fw_limit = new QRadioButton("Use watercut limit");
+            use_fw_limit->setChecked(true);
+            glCrit->addWidget(use_fw_limit, 2);
+
+            return gbCrit;
+        };
+
+        stop_crit_gb = new QGroupBox("Stop criteria");
+        auto gl = new QGridLayout(stop_crit_gb);
+        stop_crit_gb->setLayout(gl);
+        gl->setMargin(5);
+
+        m_max_iter_label = new QLabel("Max iteration");
+        max_iter = new QSpinBox();
+        max_iter->setMinimum(1);
+        max_iter->setMaximum(100000000);
+        max_iter->setValue(100000000);
+        gl->addWidget(m_max_iter_label, 0, 0);
+        gl->addWidget(max_iter, 0, 1);
+
+        auto gb_crit = setupCriteriaChooseGroupBox();
+        gl->addWidget(gb_crit, 1, 0, 1, 2);
+
+        m_fw_delta_label = new QLabel();
+        fw_converge_delta = new QDoubleSpinBox();
+        fw_converge_delta->setDecimals(8);
+        fw_converge_delta->setMinimum(1e-8);
+        fw_converge_delta->setMaximum(100);
+        fw_converge_delta->setSingleStep(1e-8);
+        fw_converge_delta->setValue(0.1);
+        fw_converge_delta->setEnabled(false);
+        gl->addWidget(m_fw_delta_label, 2, 0);
+        gl->addWidget(fw_converge_delta, 2, 1);
+
+        m_fw_converge_iter_label = new QLabel("Max iteration");
+        fw_converge_iter = new QSpinBox();
+        fw_converge_iter->setMinimum(1);
+        fw_converge_iter->setMaximum(1e6);
+        fw_converge_iter->setValue(100);
+        fw_converge_iter->setEnabled(false);
+        gl->addWidget(m_fw_converge_iter_label, 3, 0);
+        gl->addWidget(fw_converge_iter, 3, 1);
+
+        m_fw_shore_well_converge_label = new QLabel();
+        fw_shore_well_converge_value = new QDoubleSpinBox();
+        fw_shore_well_converge_value->setDecimals(8);
+        fw_shore_well_converge_value->setMinimum(1e-8);
+        fw_shore_well_converge_value->setMaximum(100);
+        fw_shore_well_converge_value->setSingleStep(1e-8);
+        fw_shore_well_converge_value->setValue(1e-1);
+        fw_shore_well_converge_value->setEnabled(false);
+        gl->addWidget(m_fw_shore_well_converge_label, 5, 0);
+        gl->addWidget(fw_shore_well_converge_value, 5, 1);
+
+        m_fw_lim_label = new QLabel("Watercut limit, %");
+        fw_limit = new QDoubleSpinBox();
+        fw_limit->setMinimum(0.01);
+        fw_limit->setMaximum(99);
+        fw_limit->setSingleStep(1);
+        fw_limit->setValue(98);
+        fw_limit->setEnabled(false);
+        fw_limit->setToolTip("Set modeling as a critical watercut value on well");
+        gl->addWidget(m_fw_lim_label, 6, 0);
+        gl->addWidget(fw_limit, 6, 1);
+
+        m_layout->addWidget(stop_crit_gb);
+    }
+
+    void retranslateUiStopCriteria()
+    {
+        m_max_iter_label->setText("Max iteration");
+        m_max_iter_label->setToolTip("Max iteration count to stop calc");
+
+        m_fw_delta_label->setText("Watercut delta");
+        m_fw_delta_label->setToolTip("Watercut change delta");
+
+        m_fw_converge_iter_label->setText("Watercut delta iter");
+        m_fw_converge_iter_label->setToolTip("Watercut change for small delta iter count");
+
+        need_stop_fw_converge->setText("Stop watercut change");
+        need_stop_fw_converge->setToolTip("Stop when watercut change less than delta for long iter");
+
+        need_stop_fw_shore_well_converge->setText("Watercut shore|well on converge");
+        need_stop_fw_shore_well_converge->setToolTip("Stop when watercut shore|well converged");
+
+        m_fw_shore_well_converge_label->setText("Fw shore|well delta, %");
+        m_fw_shore_well_converge_label->setToolTip("Watercut shore|well residual max value to stop calculation");
+
+        m_fw_lim_label->setText("Watercut limit, %");
+        m_fw_lim_label->setToolTip("Set modeling as a critical watercut value on well");
+
+        fw_limit->setToolTip("Set modeling as a critical watercut value on well");
+
+        use_fw_limit->setText("Use watercut limit");
+        use_fw_limit->setToolTip("Use watercut limit if checked otherwise time limit will be used");
+    }
+
+    void setupUiExplicit()
+    {
+        explicit_gb = new QGroupBox("Explicit");
+        auto gl = new QGridLayout(explicit_gb);
+        explicit_gb->setLayout(gl);
+        gl->setMargin(5);
+
+        m_curant_volume_label = new QLabel();
+        curant_volume = new QDoubleSpinBox();
+        curant_volume->setDecimals(7);
+        curant_volume->setMinimum(1e-6);
+        curant_volume->setMaximum(1e6);
+        curant_volume->setSingleStep(0.001);
+        curant_volume->setValue(0.9);
+        gl->addWidget(m_curant_volume_label, 0, 0);
+        gl->addWidget(curant_volume, 0, 1);
+
+        m_curant_face_label = new QLabel();
+        curant_face = new QDoubleSpinBox();
+        curant_face->setDecimals(7);
+        curant_face->setMinimum(1e-6);
+        curant_face->setMaximum(1e6);
+        curant_face->setSingleStep(0.001);
+        curant_face->setValue(0.9);
+        gl->addWidget(m_curant_face_label, 1, 0);
+        gl->addWidget(curant_face, 1, 1);
+
+        m_timeStepTypeLabel = new QLabel();
+        time_step_type = new QComboBox();
+        gl->addWidget(m_timeStepTypeLabel, 12, 0);
+        gl->addWidget(time_step_type, 12, 1);
+
+        m_layout->addWidget(explicit_gb);
+    }
+
+    void retranslateUiExplicit()
+    {
+        m_timeStepTypeLabel->setText("Time step type");
+        m_timeStepTypeLabel->setToolTip("Time step define type");
+
+        m_curant_volume_label->setText("Curant (volume)");
+        m_curant_volume_label->setToolTip("Curant number for grid cell");
+
+        m_curant_face_label->setText("Curant (face)");
+        m_curant_face_label->setToolTip("Curant number for grid faces");
+    }
+
+    void setupUiImplicit()
+    {
+        implicit_gb = new QGroupBox("Implicit");
+        auto gl = new QGridLayout(implicit_gb);
+        implicit_gb->setLayout(gl);
+        gl->setMargin(5);
+
+        m_impl_tau_label = new QLabel();
+        impl_tau = new QDoubleSpinBox();
+        impl_tau->setDecimals(8);
+        impl_tau->setMinimum(1e-8);
+        impl_tau->setMaximum(100);
+        impl_tau->setSingleStep(1e-8);
+        impl_tau->setValue(1e-3);
+        gl->addWidget(m_impl_tau_label, 0, 0);
+        gl->addWidget(impl_tau, 0, 1);
+
+        m_impl_simple_iter_count_label = new QLabel();
+        impl_simple_iter_count = new QSpinBox();
+        impl_simple_iter_count->setMinimum(1);
+        impl_simple_iter_count->setMaximum(100);
+        impl_simple_iter_count->setValue(3);
+        gl->addWidget(m_impl_simple_iter_count_label, 1, 0);
+        gl->addWidget(impl_simple_iter_count, 1, 1);
+
+        m_layout->addWidget(implicit_gb);
+    }
+
+    void retranslateUiImplicit()
+    {
+        m_impl_tau_label->setText("Tau");
+        m_impl_tau_label->setToolTip("Tau for fim");
+
+        m_impl_simple_iter_count_label->setText("Simple iter");
+        m_impl_simple_iter_count_label->setToolTip("Iter via simple method before Newton method");
+    }
 };
 
 }

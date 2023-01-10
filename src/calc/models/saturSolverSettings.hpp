@@ -27,6 +27,9 @@ public:
     bool use_fw_shorewell_converge;
     double fw_shw_conv;
 
+    double fw_lim;
+    bool use_fwlim;
+
     scm::TimeStepType::TypeEnum time_step_type;
 };
 

@@ -10,8 +10,6 @@ DataWidget::DataWidget(QWidget* parent)
 {
     ui->setupUI(this);
     subscribe();
-
-    ui->FwLimit->setValue(98);
 }
 
 DataWidget::~DataWidget()
@@ -44,10 +42,6 @@ void DataWidget::subscribe()
     Q_ASSERT(success);
     success = connect(ui->PoroFract, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DataWidget::dimless_params_changed);
     Q_ASSERT(success);
-
-    // other
-    success = connect(ui->UseFwLimit, &QCheckBox::toggled, this, &DataWidget::use_fw_limit_toogled);
-    Q_ASSERT(success);
 }
 
 std::shared_ptr<ble::src::common::models::Data> DataWidget::get_data()
@@ -66,9 +60,7 @@ std::shared_ptr<ble::src::common::models::Data> DataWidget::get_data()
     result->perm_fract = ui->PermFract->value();
 
     // model
-    result->period = ui->Period->value();
-    result->fw_lim = ui->FwLimit->value();
-    result->use_fwlim = ui->UseFwLimit->isChecked();
+    // result->period = ui->Period->value();
 
     // rel perm
     result->phys = std::make_shared<ble::src::common::models::PhysData>(
@@ -80,10 +72,6 @@ std::shared_ptr<ble::src::common::models::Data> DataWidget::get_data()
     return result;
 }
 
-void DataWidget::use_fw_limit_toogled(bool state)
-{
-    ui->FwLimit->setEnabled(state);
-    ui->Period->setEnabled(!state);
-}
+
 
 }

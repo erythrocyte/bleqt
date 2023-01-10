@@ -14,7 +14,7 @@ BleFrame::BleFrame(QWidget* parent)
 
     setCentralWidget(ui->central);
     setWindowTitle("Ble Frame");
-    this->setFixedSize(1100, 750);
+    this->setFixedSize(1150, 750);
 
     // status bar
     this->setStatusBar(ui->statusBar);
@@ -47,7 +47,7 @@ void BleFrame::set_settings_widget(const std::shared_ptr<models::SettingsWidgets
     tabSettings->addTab(widgets->gridsetts_widget.get(), "");
     tabSettings->addTab(widgets->shockfront_widget.get(), "");
     tabSettings->addTab(widgets->dimles_params_widget.get(), "");
-    tabSettings->setMinimumWidth(330);
+    tabSettings->setMinimumWidth(370);
     QTabBar* tabbar = tabSettings->tabBar();
 
     // data widget caption
@@ -63,7 +63,7 @@ void BleFrame::set_settings_widget(const std::shared_ptr<models::SettingsWidgets
     tabbar->setTabButton(1, QTabBar::LeftSide, label);
 
     // satsolver
-    label = new frames::QVerticalLabel("Solver");
+    label = new frames::QVerticalLabel("Satur Solver");
     label->setTextColor(QColor(100, 0, 0, 127));
     tabSettings->setTabText(2, "");
     tabbar->setTabButton(2, QTabBar::LeftSide, label);
