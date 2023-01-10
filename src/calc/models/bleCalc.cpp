@@ -130,7 +130,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     suit_step_params->data = data;
     suit_step_params->fw_const_iter = fw_const_iter;
     suit_step_params->index = index;
-    suit_step_params->scur0 = s_cur[0];
+    suit_step_params->scur0 = s_prev[0];
     suit_step_params->sum_t = sumT;
     suit_step_params->wwp = wwp;
 
@@ -233,7 +233,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         //     a.close();
         // }
 
-        double perc = get_perc(cur_fw, sumT);
+        double perc = get_perc(index, data->sat_setts->max_iter);
         set_progress(perc);
 
         suit_step_params->fw_const_iter = fw_const_iter;
@@ -497,7 +497,7 @@ bool BleCalc::suit_step(std::shared_ptr<SuitStepDto> prms)
 
 double BleCalc::get_perc(int index, int max_index)
 {
-    double p = index / max_index;
+    double p = index / (double)max_index;
     return std::min(100.0, p * 100);
 };
 
