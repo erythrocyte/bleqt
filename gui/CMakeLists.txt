@@ -60,6 +60,7 @@ set(SOURCES
 	bleapp.cpp
 	main.cpp
 )
+qt5_add_resources(SOURCES resources.qrc)
 
 add_executable(${EXE_GUI_TARGET} ${SOURCES})
 

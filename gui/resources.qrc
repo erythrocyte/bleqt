@@ -1,0 +1,5 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="guiresources"> 
+    <file alias="scheme">images/scheme.svg</file>
+</qresource>
+</RCC>

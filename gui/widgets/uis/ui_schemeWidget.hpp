@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <QGridLayout>
+#include <QSvgRenderer>
 #include <QSvgWidget>
 #include <QToolBar>
 #include <QWidget>
@@ -25,11 +26,19 @@ public:
 
         widget->setLayout(layout);
 
-        std::cout << "in setup ui\n";
+        render_svg_image();
     }
 
 private:
     QToolBar* _mainToolBar;
+
+    QSvgRenderer* m_svg_renderer;
+
+    void render_svg_image()
+    {
+        QString file_path = ":/guirecources/scheme";
+        m_svg_renderer = new QSvgRenderer(file_path);
+    }
 };
 
 }

@@ -47,10 +47,14 @@ void BleApplication::run(int argc, char** argv)
 {
     QApplication qapp(argc, argv);
 
+    // Q_INIT_RESOURCE(resources);
+
     auto mainPresenter = m_container->resolve<views::presenters::BleFramePresenter>();
     mainPresenter->run();
 
     qapp.exec();
+
+    // Q_CLEANUP_RESOURCE(resources);
 }
 
 }
