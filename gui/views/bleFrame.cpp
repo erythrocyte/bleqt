@@ -108,8 +108,6 @@ void BleFrame::set_widgets(const std::shared_ptr<models::ViewWidgetsDto> widgets
     ui->tabs->addTab(widgets->tauWidget.get(), "Tau");
     ui->tabs->addTab(widgets->fwWidget.get(), "Aver");
     ui->tabs->addTab(widgets->schemeWidget.get(), "Scheme");
-
-    std::cout << "a = " << widgets->schemeWidget.get() << "\n";
 }
 
 void BleFrame::add_log_message(std::string str, ble::src::logging::SeverityLevelEnum level)
