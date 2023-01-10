@@ -47,7 +47,7 @@ void BleFrame::set_settings_widget(const std::shared_ptr<models::SettingsWidgets
     tabSettings->addTab(widgets->gridsetts_widget.get(), "");
     tabSettings->addTab(widgets->shockfront_widget.get(), "");
     tabSettings->addTab(widgets->dimles_params_widget.get(), "");
-    tabSettings->setMinimumWidth(330);
+    tabSettings->setMinimumWidth(370);
     QTabBar* tabbar = tabSettings->tabBar();
 
     // data widget caption
