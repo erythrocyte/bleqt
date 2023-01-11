@@ -151,11 +151,12 @@ void BleFramePresenter::on_run_calc()
     std::string mess = cs::string_format("calculation completed in %.2f sec.", diff.count());
     set_status(QString::fromStdString(mess));
 
+    auto ble_result = solver->get_result();
     m_resultDataWidgetPresenter->set_data(results, solver_data->get_contour_press_bound_type(), a);
-    m_wellWorkDataWidgetPresenter->set_data(solver->get_well_work_params());
+    m_wellWorkDataWidgetPresenter->set_data(ble_result->well_work);
     m_wellWorkDataWidgetPresenter->set_time_period(solver->get_period());
-    m_tauVisualPresenter->set_data(solver->get_tau_data());
-    m_fwVisualPresenter->set_data(solver->get_aver_fw_data());
+    m_tauVisualPresenter->set_data(ble_result->tau_t);
+    m_fwVisualPresenter->set_data(ble_result->aver);
     update_progress(100);
 }
 

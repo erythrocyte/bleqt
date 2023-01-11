@@ -52,7 +52,7 @@ std::shared_ptr<src::calc::models::SaturSolverSetts> SatSolverSettsWidget::get_d
     result->tau = ui->impl_tau->value();
     result->simple_iter_count = ui->impl_simple_iter_count->value();
     result->use_fw_shorewell_converge = ui->need_stop_fw_shore_well_converge->isChecked();
-    result->fw_shw_conv = ui->fw_shore_well_converge_value->value();
+    result->fw_shore_well_conv_delta = ui->fw_shore_well_converge_value->value();
 
     result->use_fwlim = ui->use_fw_limit->isChecked();
     result->fw_lim = ui->fw_limit->value();

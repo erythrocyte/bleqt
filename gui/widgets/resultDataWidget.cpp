@@ -73,16 +73,16 @@ void ResultDataWidget::setData(
     set_slider_value(1);
     ui->Label->setText("");
 
-    ui->Slider->setMaximum(_data->data.size());
+    ui->Slider->setMaximum(_data->fields.size());
     handleSliderValueChange(); // call slider value change handler. setValue does not call it;
 }
 
 void ResultDataWidget::handleSliderValueChange()
 {
     int value = ui->Slider->value() - 1;
-    if (value < static_cast<int>(_data->data.size())) {
+    if (value < static_cast<int>(_data->fields.size())) {
         update_time_info(value);
-        fill_time_series(false, _data->data[value]);
+        fill_time_series(false, _data->fields[value]);
     }
 }
 
@@ -130,7 +130,7 @@ void ResultDataWidget::update_sc_series(double l, double sc)
 
 void ResultDataWidget::update_time_info(int index)
 {
-    int count = _data->data.size();
+    int count = _data->fields.size();
     std::ostringstream oss;
     oss << index + 1 << "/" << count;
     ui->Label->setText(QString::fromStdString(oss.str()));
@@ -237,7 +237,7 @@ double ResultDataWidget::get_press_max()
     if (_data == nullptr)
         return 1.0;
 
-    for (auto& d : _data->data)
+    for (auto& d : _data->fields)
         if (d->p[cind] > result)
             result = d->p[cind];
 

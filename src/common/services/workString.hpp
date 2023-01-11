@@ -18,6 +18,7 @@ double to_dbl(const std::string& ss);
 std::string replace_symbol(const std::string& ss, const std::string& searchable,
     const std::string& replacable);
 bool str_starts_with(const std::string& ss, const std::string& sub_str);
+
 template <typename... Args>
 std::string string_format(const std::string& format, Args... args)
 {

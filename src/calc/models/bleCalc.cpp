@@ -33,9 +33,8 @@ BleCalc::BleCalc()
 
 BleCalc::~BleCalc()
 {
-    _results.reset();
-    _wellWorkParams.clear();
-    m_tau_data.clear();
+    // _results.reset();
+    _results->clear();
 }
 
 void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
@@ -90,18 +89,15 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         d->p = p;
         d->s = s;
         d->s_an = xs_an;
-        d->p_ex = _results->data[0]->p_ex;
+        d->p_ex = _results->fields[0]->p_ex;
 
-        _results->data.push_back(d);
+        _results->fields.push_back(d);
     };
 
     m_data = data;
     m_grd = grd;
 
-    _results->data.clear();
-    m_tau_data.clear();
-    m_fw_data.clear();
-    _wellWorkParams.clear();
+    _results->clear();
 
     m_sum_t = 0.0;
     set_initial_cond();
@@ -114,8 +110,8 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     //     ? -1
     //     : 0;
 
-    std::vector<double> s_cur, s_prev = _results->data[0]->s;
-    std::vector<double> p = _results->data[0]->p;
+    std::vector<double> s_cur, s_prev = _results->fields[0]->s;
+    std::vector<double> p = _results->fields[0]->p;
 
     services::calc_u(p, s_prev, data, grd);
     std::chrono::system_clock::time_point start, end;
@@ -189,7 +185,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         // break;
         s_prev = s_cur;
         sumT += t;
-        m_tau_data.push_back(std::make_shared<common::models::TauData>(sumT, t));
+        _results->tau_t.push_back(std::make_shared<common::models::TauData>(sumT, t));
 
         if (index % data->sat_setts->satur_field_save_n == 0) {
             snapshot_fields(sumU, sumT, p, s_cur);
@@ -198,7 +194,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
         suit_step_params->prev_fw = wwp->fw_well;
         auto wwp = services::calc_well_work_param(grd, s_cur, data, sumT);
-        _wellWorkParams.push_back(wwp);
+        _results->well_work.push_back(wwp);
 
         cur_fw = wwp->fw_well;
         if (index % 100 == 0) {
@@ -292,7 +288,7 @@ void BleCalc::set_initial_cond()
     d->s = s;
     d->p_ex = p_ex;
 
-    _results->data.push_back(d);
+    _results->fields.push_back(d);
 }
 
 void BleCalc::save_press(int index, const std::vector<double> p)
@@ -362,7 +358,7 @@ void BleCalc::add_aver_fw(double pv, const std::shared_ptr<cmm::WellWorkParams> 
 
     item->sav_balance = services::SaturAverService::calc_sf_aver(qw_shore, ql_well, sf_prev, tau, m_grd, m_data);
     sf_prev = item->sav_balance;
-    m_fw_data.push_back(item);
+    _results->aver.push_back(item);
 }
 
 void BleCalc::check_conservative()
@@ -474,7 +470,7 @@ bool BleCalc::suit_step(std::shared_ptr<SuitStepDto> prms)
 
     } else if (prms->data->sat_setts->use_fw_shorewell_converge) {
         double r = std::abs(prms->wwp->fw_well - prms->wwp->fw_shore); // residual
-        double dr = prms->wwp->fw_shore * prms->data->sat_setts->fw_shw_conv / 100.0;
+        double dr = prms->wwp->fw_shore * prms->data->sat_setts->fw_shore_well_conv_delta / 100.0;
         if (prms->index % 10 == 0) {
             auto s = cs::string_format("fw_well = {%.6f}, fw_shore = {%.6f}, r = {%.6f}, dr = {%.6f}, s_w = {%.6f}",
                 prms->wwp->fw_well, prms->wwp->fw_shore, r, dr, prms->scur0);

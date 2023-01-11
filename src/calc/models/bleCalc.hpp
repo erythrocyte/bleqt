@@ -27,19 +27,19 @@ public:
         std::function<void(double)> set_progress,
         bool clear_aver);
 
-    size_t get_data_len() { return _results->data.size(); }
-    std::shared_ptr<common::models::DynamicData> get_data(int index) const { return _results->data[index]; }
+    // size_t get_data_len() { return _results->data.size(); }
+    // std::shared_ptr<common::models::DynamicData> get_data(int index) const { return _results->data[index]; }
     std::shared_ptr<BleResultData> get_result() { return _results; }
-    std::vector<std::shared_ptr<common::models::WellWorkParams>> get_well_work_params() { return _wellWorkParams; }
-    std::vector<std::shared_ptr<common::models::TauData>> get_tau_data() { return m_tau_data; }
-    std::vector<std::shared_ptr<common::models::FwData>> get_aver_fw_data() { return m_fw_data; }
+    // std::vector<std::shared_ptr<common::models::WellWorkParams>> get_well_work_params() { return _wellWorkParams; }
+    // std::vector<std::shared_ptr<common::models::TauData>> get_tau_data() { return m_tau_data; }
+    // std::vector<std::shared_ptr<common::models::FwData>> get_aver_fw_data() { return m_fw_data; }
     double get_period();
 
 private:
     std::shared_ptr<BleResultData> _results;
-    std::vector<std::shared_ptr<common::models::WellWorkParams>> _wellWorkParams;
-    std::vector<std::shared_ptr<common::models::TauData>> m_tau_data;
-    std::vector<std::shared_ptr<common::models::FwData>> m_fw_data;
+    // std::vector<std::shared_ptr<common::models::WellWorkParams>> _wellWorkParams;
+    // std::vector<std::shared_ptr<common::models::TauData>> m_tau_data;
+    // std::vector<std::shared_ptr<common::models::FwData>> m_fw_data;
     double m_sum_t;
     std::shared_ptr<mesh::models::Grid> m_grd;
     std::shared_ptr<common::models::SolverData> m_data;

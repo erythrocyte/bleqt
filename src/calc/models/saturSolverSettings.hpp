@@ -25,7 +25,7 @@ public:
     double tau;
     int simple_iter_count;
     bool use_fw_shorewell_converge;
-    double fw_shw_conv;
+    double fw_shore_well_conv_delta;
 
     double fw_lim;
     bool use_fwlim;

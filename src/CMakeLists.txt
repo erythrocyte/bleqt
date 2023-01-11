@@ -7,6 +7,7 @@ set(HEADERS
 	calc/models/saturSolverType.hpp	
 	calc/models/diagMatrix.hpp
 	calc/models/bleCalc.hpp
+	calc/models/bleResultData.hpp
 
 	calc/services/workSigma.hpp
 	calc/services/pressureSolver.hpp	
@@ -26,6 +27,7 @@ set(HEADERS
 	common/services/commonVector.hpp
 	common/services/commonMath.hpp
 	common/services/workString.hpp
+	common/services/workDir.hpp
 	common/services/dataDistributionService.hpp
 	common/services/dimensionlessService.hpp
 	common/services/wellWorkCalc.hpp
@@ -63,6 +65,7 @@ set (SOURCES
 	calc/services/saturImplicitSolver.cpp
 	
 	calc/models/bleCalc.cpp
+	calc/models/bleResultData.cpp
 	
 	logging/logger.cpp
 
@@ -75,6 +78,7 @@ set (SOURCES
 	common/services/commonVector.cpp
 	common/services/commonMath.cpp
 	common/services/workString.cpp
+	common/services/workDir.cpp
 	common/services/dataDistributionService.cpp
 	common/services/dimensionlessService.cpp
 	common/services/wellWorkCalc.cpp
@@ -99,3 +103,5 @@ install(TARGETS ${LIB_BLE_TARGET}
 target_link_libraries(${LIB_BLE_TARGET} ${Boost_LIBRARIES})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
+
+target_link_libraries(${LIB_BLE_TARGET} stdc++fs)
