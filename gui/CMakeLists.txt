@@ -34,6 +34,7 @@ set(SOURCES
 	widgets/fwVisualWidget.cpp
 	widgets/dimlesParamsWidget.cpp
 	widgets/schemeWidget.cpp
+	widgets/fractShoreBoundaryWidget.cpp
 
 	widgets/models/wellWorkParamsModel.cpp
 	widgets/models/boundModel.cpp

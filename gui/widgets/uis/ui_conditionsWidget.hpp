@@ -11,8 +11,11 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QSpinBox>
 #include <QWidget>
+
+#include "widgets/fractShoreBoundaryWidget.hpp"
 
 namespace ble::gui::widgets::UI {
 
@@ -34,24 +37,39 @@ public:
     QComboBox* InitialSaturType;
     QLineEdit* InitialSaturFile;
 
+    widgets::FractShoreWidget* fract_shores_left_right;
+
     void setupUI(QWidget* widget)
     {
         setupUiBound(widget);
         setupUiInit(widget);
 
-        m_layout = new QVBoxLayout(widget);
-        m_layout->addStretch();
-        m_layout->setDirection(QVBoxLayout::BottomToTop);
+        auto gb = new QGroupBox();
+        auto gl = new QGridLayout(gb);
+        gb->setLayout(gl);
+        gl->setMargin(5);
+
+        auto vbl = new QVBoxLayout(widget);
+
+        QScrollArea* scrollArea = new QScrollArea();
+        scrollArea->setWidget(gb);
+        scrollArea->setWidgetResizable(true);
+        vbl->addWidget(scrollArea);
+
+        m_layout = new QGridLayout(widget);
         widget->setLayout(m_layout);
 
-        m_layout->addWidget(m_gbBound);
-        m_layout->addWidget(m_gbInit);
+        gl->addWidget(m_gbInit, 0, 0, 1, 1);
+        gl->addWidget(m_gbBound, 1, 0, 1, 1);
+
+        fract_shores_left_right = new widgets::FractShoreWidget(widget);
+        gl->addWidget(fract_shores_left_right, 2, 0, 1, 1);
     }
 
 private:
     QGroupBox* m_gbBound;
     QGroupBox* m_gbInit;
-    QVBoxLayout* m_layout;
+    QGridLayout* m_layout;
 
     QLabel* m_contourBoundTypeLabel;
     QLabel* m_boundConstLenghtLabel;
