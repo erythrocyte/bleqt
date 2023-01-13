@@ -8,15 +8,15 @@
 
 namespace ble::gui::widgets {
 
-class FractShoreWidget : public QWidget, private UI::FractShore {
+class FractShoreWidget : public QWidget, public UI::FractShore {
     Q_OBJECT
 public:
     FractShoreWidget(QWidget* parent = nullptr);
     ~FractShoreWidget() { delete ui; }
 
-private:
     UI::FractShore* ui;
 
+private:
     void subscribe();
 };
 

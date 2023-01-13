@@ -21,6 +21,7 @@ public:
 
 signals:
     void rhs_updated();
+    void init_updated();
 
 private:
     UI::Conditions* ui;
@@ -36,6 +37,13 @@ private slots:
     void onBoundUConstValueChanged(double);
     void onBoundSConstValueChanged(double);
     void onTopBotBoundLenghtChanged(int);
+
+    void initSaturTypeChanged(const QString& value);
+    void initSaturFileChosen(bool checked);
+    void initSatConstChanged(double value);
+    void useQChecked(bool checked);
+    void impermChecked(bool checked);
+    void fractEndImperChecked(bool state);
 };
 
 } // namespace ble_gui::widgets

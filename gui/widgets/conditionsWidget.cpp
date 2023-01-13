@@ -15,6 +15,8 @@
 #include "common/models/dataDistributionType.hpp"
 #include "common/services/dataDistributionService.hpp"
 
+#include "utils/qwidgetUtils.hpp"
+
 namespace scmm = ble::src::common::models;
 namespace scms = ble::src::common::services;
 
@@ -41,31 +43,101 @@ ConditionsWidget::ConditionsWidget(QWidget* parent)
 
 void ConditionsWidget::set_items()
 {
-    for (scmm::BoundCondType::TypeEnum v : scmm::BoundCondTypeEnumIterator()) {
-        ui->ContourBoundType->addItem(QString::fromStdString(scmm::BoundCondType::get_description(v)));
-    }
+    // for (scmm::BoundCondType::TypeEnum v : scmm::BoundCondTypeEnumIterator()) {
+    //     ui->ContourBoundType->addItem(QString::fromStdString(scmm::BoundCondType::get_description(v)));
+    // }
 
     for (scmm::DataDistributionType::TypeEnum v : scmm::DataDistributionTypeEnumIterator()) {
-        ui->init_satur_type->addItem(QString::fromStdString(scmm::DataDistributionType::get_description(v)));
+        auto item = QString::fromStdString(scmm::DataDistributionType::get_description(v));
+        ui->init_satur_type->addItem(item);
+        ui->fract_shores_left_right->ui->q_distr_type->addItem(item);
+        ui->fract_shores_left_right->ui->satur_distr_type->addItem(item);
     }
 
-    for (scmm::DataDistributionType::TypeEnum v : scmm::DataDistributionTypeEnumIterator()) {
-        ui->BoundSType->addItem(QString::fromStdString(scmm::DataDistributionType::get_description(v)));
-    }
+    // for (scmm::DataDistributionType::TypeEnum v : scmm::DataDistributionTypeEnumIterator()) {
+    //     ui->BoundSType->addItem(QString::fromStdString(scmm::DataDistributionType::get_description(v)));
+    // }
 }
 
 void ConditionsWidget::subscribe()
 {
-    auto success = QObject::connect(ui->ContourBoundType, SIGNAL(currentIndexChanged(const QString&)),
-        this, SLOT(contourTypeChanged(const QString&)));
+    // auto success = QObject::connect(ui->ContourBoundType, SIGNAL(currentIndexChanged(const QString&)),
+    //     this, SLOT(contourTypeChanged(const QString&)));
+    // Q_ASSERT(success);
+    // success = QObject::connect(ui->TopBotBoundConstLenght, SIGNAL(valueChanged(int)), this, SLOT(onTopBotBoundLenghtChanged(int)));
+    // Q_ASSERT(success);
+    // success = QObject::connect(ui->BoundSConstValue, SIGNAL(valueChanged(double)), this, SLOT(onBoundSConstValueChanged(double)));
+    // Q_ASSERT(success);
+    // success = QObject::connect(ui->BoundSFileChooseButton, SIGNAL(clicked()), this, SLOT(fileBoundSChooseClicked()));
+    // success = QObject::connect(ui->BoundSType, SIGNAL(currentIndexChanged(const QString&)),
+    //     this, SLOT(topBotBoundSTypeChanged(const QString&)));
+
+    auto success = QObject::connect(ui->init_satur_type, QOverload<const QString&>::of(&QComboBox::currentIndexChanged),
+        this, &ConditionsWidget::initSaturTypeChanged);
+    success = QObject::connect(ui->init_satur_file_button, &QPushButton::clicked,
+        this, &ConditionsWidget::initSaturFileChosen);
+    success = QObject::connect(ui->init_satur, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+        this, &ConditionsWidget::initSatConstChanged);
+
+    success = QObject::connect(ui->fract_shores_left_right->ui->use_q, &QCheckBox::toggled,
+        this, &ConditionsWidget::useQChecked);
+    // success = QObject::connect(ui->fract_shores_left_right->use_q, SIGNAL(toggled(bool)),
+    //     this, SLOT(useQChecked(bool)));
+    success = QObject::connect(ui->fract_shores_left_right->ui->impermeable, &QCheckBox::toggled,
+        this, &ConditionsWidget::impermChecked);
+
+    success = QObject::connect(ui->fract_end_imperm, &QCheckBox::toggled, this,
+        &ConditionsWidget::fractEndImperChecked);
     Q_ASSERT(success);
-    success = QObject::connect(ui->TopBotBoundConstLenght, SIGNAL(valueChanged(int)), this, SLOT(onTopBotBoundLenghtChanged(int)));
-    Q_ASSERT(success);
-    success = QObject::connect(ui->BoundSConstValue, SIGNAL(valueChanged(double)), this, SLOT(onBoundSConstValueChanged(double)));
-    Q_ASSERT(success);
-    success = QObject::connect(ui->BoundSFileChooseButton, SIGNAL(clicked()), this, SLOT(fileBoundSChooseClicked()));
-    success = QObject::connect(ui->BoundSType, SIGNAL(currentIndexChanged(const QString&)),
-        this, SLOT(topBotBoundSTypeChanged(const QString&)));
+}
+
+void ConditionsWidget::initSatConstChanged(double value)
+{
+    emit init_updated();
+}
+
+void ConditionsWidget::initSaturFileChosen(bool checked)
+{
+    QString file_name = get_choosed_file();
+    if (!file_name.trimmed().isEmpty()) {
+        ui->init_satur_file->setText(file_name);
+        emit init_updated();
+    }
+}
+
+void ConditionsWidget::initSaturTypeChanged(const QString& value)
+{
+    auto m = scmm::DataDistributionType::get_enum(value.toStdString());
+
+    // auto children = gui::utils::QWidgetUtils::getChildWidgets(ui->gb_init);
+    // for (auto const child : children) {
+    //     child->setEnabled(false);
+    // }
+
+    ui->init_satur->setEnabled(false);
+    ui->init_satur_label->setEnabled(false);
+    ui->init_satur_file->setEnabled(false);
+    ui->init_satur_file_button->setEnabled(false);
+    ui->init_satur_file_label->setEnabled(false);
+
+    if (m == scmm::DataDistributionType::kConst) { // in this way with if, coz it is possible to be more then 2 branches
+        ui->init_satur->setEnabled(true);
+        ui->init_satur_label->setEnabled(true);
+    } else if (m == scmm::DataDistributionType::kFile) {
+        ui->init_satur_file->setEnabled(true);
+        ui->init_satur_file_button->setEnabled(true);
+        ui->init_satur_file_label->setEnabled(true);
+    }
+
+    emit init_updated();
+}
+
+void ConditionsWidget::fractEndImperChecked(bool state)
+{
+    ui->p_fract_end_label->setEnabled(!state);
+    ui->s_fract_end_label->setEnabled(!state);
+    ui->press_fract_end->setEnabled(!state);
+    ui->sat_fract_end->setEnabled(!state);
 }
 
 void ConditionsWidget::contourTypeChanged(const QString& value)
@@ -189,6 +261,19 @@ void ConditionsWidget::onBoundUConstValueChanged(double value)
 void ConditionsWidget::onBoundSConstValueChanged(double value)
 {
     emit rhs_updated();
+}
+
+void ConditionsWidget::useQChecked(bool checked)
+{
+    ui->fract_shores_left_right->ui->gb_q->setEnabled(checked);
+    ui->fract_shores_left_right->ui->contour_press->setEnabled(!checked);
+    ui->fract_shores_left_right->ui->contour_press_label->setEnabled(!checked);
+}
+
+void ConditionsWidget::impermChecked(bool checked)
+{
+    ui->fract_shores_left_right->ui->gb_satur->setEnabled(!checked);
+    ui->fract_shores_left_right->ui->gb_flow->setEnabled(!checked);
 }
 
 }

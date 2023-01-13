@@ -18,6 +18,8 @@ find_package(Qt5 COMPONENTS Svg REQUIRED)
 set(SOURCES
 	services/saveFilePathService.cpp
 
+	utils/qwidgetUtils.cpp
+
 	views/bleFrame.cpp
 	views/presenters/bleFramePresenter.cpp
 

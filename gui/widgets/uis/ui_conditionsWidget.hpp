@@ -33,15 +33,20 @@ public:
     QDoubleSpinBox* PressureWell;
 
     // initial
+    QGroupBox* gb_init;
     QDoubleSpinBox* init_satur;
     QPushButton* init_satur_file_button;
     QComboBox* init_satur_type;
     QLineEdit* init_satur_file;
+    QLabel* init_satur_label;
+    QLabel* init_satur_file_label;
 
     // fract end;
     QCheckBox* fract_end_imperm;
     QDoubleSpinBox* press_fract_end;
     QDoubleSpinBox* sat_fract_end;
+    QLabel* s_fract_end_label;
+    QLabel* p_fract_end_label;
 
     // well
     QDoubleSpinBox* p_well;
@@ -59,23 +64,23 @@ public:
         gb->setLayout(gl);
         gl->setMargin(5);
 
-        auto vbl = new QVBoxLayout(widget);
+        auto vbl = new QVBoxLayout();
 
         QScrollArea* scrollArea = new QScrollArea();
         scrollArea->setWidget(gb);
         scrollArea->setWidgetResizable(true);
         vbl->addWidget(scrollArea);
 
-        m_layout = new QGridLayout(widget);
+        widget->setLayout(vbl);
+        // m_layout = new QGridLayout(widget);
         // widget->setLayout(m_layout);
 
-        gl->addWidget(m_gbInit, 0, 0, 1, 1);
+        gl->addWidget(gb_init, 0, 0, 1, 1);
         gl->addWidget(m_gbBound, 1, 0, 1, 1);
     }
 
 private:
     QGroupBox* m_gbBound;
-    QGroupBox* m_gbInit;
     QGridLayout* m_layout;
     QGroupBox* m_gb_fract_end;
     QGroupBox* m_gb_well;
@@ -91,12 +96,6 @@ private:
 
     // initial
     QLabel* m_initialSaturTypeLabel;
-    QLabel* m_initialsSaturConstLabel;
-    QLabel* m_initialSaturFileLabel;
-
-    // fract end;
-    QLabel* m_s_fract_end_label;
-    QLabel* m_p_fract_end_label;
 
     // well
     QLabel* m_s_well_label;
@@ -220,24 +219,28 @@ private:
         m_gb_fract_end->setLayout(layout);
 
         fract_end_imperm = new QCheckBox("Impermeable");
-        fract_end_imperm->setChecked(false);
+        fract_end_imperm->setChecked(true);
         layout->addWidget(fract_end_imperm, 0, 0, 1, 3);
 
-        m_p_fract_end_label = new QLabel("p, at");
+        p_fract_end_label = new QLabel("p, at");
+        p_fract_end_label->setEnabled(false);
         press_fract_end = new QDoubleSpinBox();
         press_fract_end->setMinimum(-1e8);
         press_fract_end->setMaximum(1e8);
         press_fract_end->setValue(150);
-        layout->addWidget(m_p_fract_end_label, 1, 0, 1, 1);
+        press_fract_end->setEnabled(false);
+        layout->addWidget(p_fract_end_label, 1, 0, 1, 1);
         layout->addWidget(press_fract_end, 1, 1, 1, 2);
 
-        m_s_fract_end_label = new QLabel("s");
+        s_fract_end_label = new QLabel("s");
+        s_fract_end_label->setEnabled(false);
         sat_fract_end = new QDoubleSpinBox();
         sat_fract_end->setMinimum(0.0);
         sat_fract_end->setMaximum(1.0);
         sat_fract_end->setValue(1.0);
         sat_fract_end->setSingleStep(0.1);
-        layout->addWidget(m_s_fract_end_label, 2, 0, 1, 1);
+        sat_fract_end->setEnabled(false);
+        layout->addWidget(s_fract_end_label, 2, 0, 1, 1);
         layout->addWidget(sat_fract_end, 2, 1, 1, 2);
     }
 
@@ -269,26 +272,27 @@ private:
     void setupUiInit(QWidget* widget)
     {
         int max_col = 10;
-        m_gbInit = new QGroupBox("Initial");
+        gb_init = new QGroupBox("Initial");
         auto layout = new QGridLayout();
-        m_gbInit->setLayout(layout);
+        gb_init->setLayout(layout);
 
         m_initialSaturTypeLabel = new QLabel("Init satur type");
         init_satur_type = new QComboBox(widget);
         layout->addWidget(m_initialSaturTypeLabel, 0, 0);
         layout->addWidget(init_satur_type, 0, 1, 1, max_col);
 
-        m_initialsSaturConstLabel = new QLabel("Init satur type");
+        init_satur_label = new QLabel("Init satur type");
         init_satur = new QDoubleSpinBox();
         init_satur->setMinimum(0.0);
         init_satur->setMaximum(1.0);
         init_satur->setSingleStep(0.01);
         init_satur->setValue(0.0);
         init_satur->setToolTip("Initial saturation value");
-        layout->addWidget(m_initialsSaturConstLabel, 1, 0);
+        layout->addWidget(init_satur_label, 1, 0);
         layout->addWidget(init_satur, 1, 1, 1, max_col);
 
-        m_initialSaturFileLabel = new QLabel("Init satur type");
+        init_satur_file_label = new QLabel("Init satur type");
+        init_satur_file_label->setEnabled(false);
         init_satur_file = new QLineEdit();
         init_satur_file->setReadOnly(true);
         init_satur_file->setEnabled(false);
@@ -297,7 +301,7 @@ private:
         init_satur_file_button->setToolTip("Choose file with initial saturation distribution");
         init_satur_file_button->setStyleSheet("padding: 0px 5px 0px 5px;");
         init_satur_file_button->setEnabled(false);
-        layout->addWidget(m_initialSaturFileLabel, 2, 0);
+        layout->addWidget(init_satur_file_label, 2, 0);
         layout->addWidget(init_satur_file, 2, 1, 1, 9);
         layout->addWidget(init_satur_file_button, 2, max_col, 1, 1);
 
@@ -306,14 +310,14 @@ private:
 
     void retranslateUiInit(QWidget* widget)
     {
-        m_gbInit->setTitle("Initial");
-        m_gbInit->setToolTip("Initial Conditions");
-        m_initialSaturTypeLabel->setText("Satur type");
+        gb_init->setTitle("Initial");
+        gb_init->setToolTip("Initial Conditions");
+        m_initialSaturTypeLabel->setText("Type");
         m_initialSaturTypeLabel->setToolTip("Initail saturation type");
-        m_initialsSaturConstLabel->setText("Satur (const)");
-        m_initialsSaturConstLabel->setToolTip("Initial constant saturation value");
-        m_initialSaturFileLabel->setText("Satur (file)");
-        m_initialSaturFileLabel->setToolTip("Initial saturation distribution file");
+        init_satur_label->setText("S");
+        init_satur_label->setToolTip("Initial constant saturation value");
+        init_satur_file_label->setText("File");
+        init_satur_file_label->setToolTip("Initial saturation distribution file");
         init_satur_file_button->setText("...");
         init_satur_file_button->setToolTip("Choose file with initial saturation distribution");
         init_satur->setToolTip("Initial saturation value");
