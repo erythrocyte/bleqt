@@ -1,5 +1,7 @@
 #include "dimensionlessService.hpp"
 
+#include <functional>
+
 #include "common/models/dataDistribution.hpp"
 
 namespace ble::src::common::services {
@@ -13,23 +15,35 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
         return x / result_scale->r0;
     };
 
-    auto scale_distr_s = [&](const std::vector<std::shared_ptr<models::DataDistribution>>& data) {
+    auto scale_p = [&](double p) {
+        return (p - result_scale->p0) / result_scale->dp;
+    };
+
+    auto scale_q = [&](double q) {
+        double q0 = result_scale->u0() * (result_scale->r0 * result_scale->r0);
+        return q / q0;
+    };
+
+    auto scale_distr_func = [&](const std::vector<std::shared_ptr<models::DataDistribution>>& data,
+                                std::function<double(double)> func) {
         std::vector<std::shared_ptr<models::DataDistribution>> result;
 
         for (auto const d : data) {
             auto item = std::make_shared<models::DataDistribution>();
             item->x0 = scale_x(d->x0);
             item->x1 = scale_x(d->x1);
-            item->v0 = d->v0;
-            item->v1 = d->v1;
+            item->v0 = func(d->v0);
+            item->v1 = func(d->v1);
             result.push_back(item);
         }
 
         return result;
     };
 
+    double p_max = std::max(params->bound->pc, params->bound->fract_end_press);
+
     result_scale->mu0 = params->data->phys->mu_wat;
-    result_scale->dp = params->bound->pc - params->bound->pw;
+    result_scale->dp = p_max - params->bound->pw;
     result_scale->perm0 = params->data->perm_res;
     result_scale->poro0 = params->data->poro_fract;
     result_scale->r0 = params->data->r;
@@ -53,14 +67,14 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
 
     result_solver_data->fract_end_satur = params->bound->fract_end_satur;
     result_solver_data->fract_end_imperm = params->bound->fract_end_imperm;
-    result_solver_data->setFractShoreImperm(params->bound->fract_end_imperm);
-    result_solver_data->fract_shore_s = scale_distr_s(params->bound->fract_shore_s);
-    result_solver_data->fract_shore_q = scale_distr_s(params->bound->fract_shore_q);
-    result_solver_data->initial_s = scale_distr_s(params->bound->initial_s);
-    result_solver_data->fract_end_press = params->bound->fract_end_press;
+    result_solver_data->setFractShoreImperm(params->bound->fract_shore_imperm);
+    result_solver_data->fract_shore_s = scale_distr_func(params->bound->fract_shore_s, [&](double s) { return s; });
+    result_solver_data->fract_shore_q = scale_distr_func(params->bound->fract_shore_q, scale_q);
+    result_solver_data->initial_s = scale_distr_func(params->bound->initial_s, [&](double s) { return s; });
+    result_solver_data->fract_end_press = scale_p(params->bound->fract_end_press);
     result_solver_data->use_q = params->bound->use_q;
-    result_solver_data->pc = params->bound->pc;
-    result_solver_data->pw = params->bound->pw;
+    result_solver_data->pc = scale_p(params->bound->pc);
+    result_solver_data->pw = scale_p(params->bound->pw);
     result_solver_data->sw = params->bound->sw;
 
     return std::make_tuple(result_scale, result_solver_data);

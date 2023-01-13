@@ -93,6 +93,11 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
         }
         case mm::FaceType::kContour: {
             if (!params->fract_end_imperm) {
+                if (!common::models::CommonVals::is_empty(fc->bound_press)) {
+                    rhs[fc->cl1] += cf * fc->bound_press;
+                    ret.C[fc->cl1] += cf;
+                }
+            } else {
                 rhs[fc->cl1] += fc->area * fc->u;
             }
         }
