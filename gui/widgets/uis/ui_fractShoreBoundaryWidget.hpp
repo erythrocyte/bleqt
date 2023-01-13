@@ -2,18 +2,34 @@
 #define BLE_GUI_WIDGETS_UIS_UIFRACTSHOREBOUNDARYWIDGET_H_
 
 #include <QCheckBox>
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QWidget>
 
 namespace ble::gui::widgets::UI {
 
 class FractShore {
 public:
-    QCheckBox* cb_impermeable;
-    QDoubleSpinBox* qdsb_press_value;
+    QCheckBox* impermeable;
+    QDoubleSpinBox* contour_press;
+
+    // satur
+    QComboBox* satur_distr_type;
+    QDoubleSpinBox* satur;
+    QLineEdit* satur_file;
+    QPushButton* satur_file_button;
+
+    // flow
+    QCheckBox* use_q;
+    QComboBox* q_distr_type;
+    QDoubleSpinBox* q;
+    QLineEdit* q_file;
+    QPushButton* q_file_button;
 
     void setupUi(QWidget* parent)
     {
@@ -29,38 +45,103 @@ public:
         setupGbSatur(gb);
         setupGbFlow(gb);
 
-        cb_impermeable = new QCheckBox("Impermeable", gb);
-        cb_impermeable->setChecked(false);
-        gl->addWidget(cb_impermeable, 0, 0, 1, 4);
+        impermeable = new QCheckBox("Impermeable", gb);
+        impermeable->setChecked(false);
+        gl->addWidget(impermeable, 0, 0, 1, 4);
 
         gl->addWidget(m_gb_satur, 1, 0, 1, 4);
         gl->addWidget(m_gb_flow, 2, 0, 1, 4);
-
-        m_ql_press = new QLabel("P contour");
-        qdsb_press_value = new QDoubleSpinBox();
-
-        gl->addWidget(m_ql_press, 3, 0, 1, 2);
-        gl->addWidget(qdsb_press_value, 3, 2, 1, 2);
     }
 
 private:
     QGroupBox* m_gb_satur;
     QGroupBox* m_gb_flow;
     QLabel* m_ql_press;
-    // QGridLayout* m_layout;
+
+    // satur
+    QLabel* m_satur_distr_label;
+    QLabel* m_satur_label;
+    QLabel* m_satur_file_label;
+
+    // flow
+    QGroupBox* m_gb_q;
+    QLabel* m_q_distr_label;
+    QLabel* m_q_label;
+    QLabel* m_q_file_label;
 
     void setupGbSatur(QWidget* parent)
     {
         m_gb_satur = new QGroupBox("Satur", parent);
         auto layout = new QGridLayout();
         m_gb_satur->setLayout(layout);
+
+        m_satur_distr_label = new QLabel("Satur type");
+        satur_distr_type = new QComboBox();
+        layout->addWidget(m_satur_distr_label, 0, 0, 1, 2);
+        layout->addWidget(satur_distr_type, 0, 2, 1, 4);
+
+        m_satur_label = new QLabel("S");
+        satur = new QDoubleSpinBox();
+        satur->setMinimum(0.0);
+        satur->setMaximum(1.0);
+        satur->setSingleStep(0.1);
+        satur->setValue(1.0);
+        layout->addWidget(m_satur_label, 1, 0, 1, 2);
+        layout->addWidget(satur, 1, 2, 1, 4);
+
+        m_satur_file_label = new QLabel("S file");
+        satur_file = new QLineEdit();
+        satur_file_button = new QPushButton("...");
+        satur_file_button->setStyleSheet("padding: 0px 5px 0px 5px;");
+        layout->addWidget(m_satur_file_label, 2, 0, 1, 2);
+        layout->addWidget(satur_file, 2, 2, 1, 3);
+        layout->addWidget(satur_file_button, 2, 5, 1, 1);
     }
 
     void setupGbFlow(QWidget* parent)
     {
-        m_gb_flow = new QGroupBox("Satur", parent);
+        m_gb_flow = new QGroupBox("Flow", parent);
         auto layout = new QGridLayout();
         m_gb_flow->setLayout(layout);
+
+        use_q = new QCheckBox("use q");
+        layout->addWidget(use_q, 0, 0, 1, 4);
+
+        m_gb_q = new QGroupBox("q");
+        auto gbq_layout = new QGridLayout();
+        m_gb_q->setLayout(gbq_layout);
+
+        m_q_distr_label = new QLabel("q type");
+        q_distr_type = new QComboBox();
+        gbq_layout->addWidget(m_q_distr_label, 0, 0, 1, 2);
+        gbq_layout->addWidget(q_distr_type, 0, 2, 1, 4);
+
+        m_q_label = new QLabel("q, m3/s");
+        q = new QDoubleSpinBox();
+        q->setMinimum(0.0);
+        q->setMaximum(1e5);
+        q->setSingleStep(1);
+        q->setValue(1.0);
+        gbq_layout->addWidget(m_q_label, 1, 0, 1, 2);
+        gbq_layout->addWidget(q, 1, 2, 1, 4);
+
+        m_q_file_label = new QLabel("q file");
+        q_file = new QLineEdit();
+        q_file_button = new QPushButton("...");
+        q_file_button->setStyleSheet("padding: 0px 5px 0px 5px;");
+        gbq_layout->addWidget(m_q_file_label, 2, 0, 1, 2);
+        gbq_layout->addWidget(q_file, 2, 2, 1, 3);
+        gbq_layout->addWidget(q_file_button, 2, 5, 1, 1);
+        layout->addWidget(m_gb_q, 1, 0, 1, 6);
+
+        m_ql_press = new QLabel("P contour,at");
+        contour_press = new QDoubleSpinBox();
+        contour_press->setMinimum(-1e8);
+        contour_press->setMaximum(1e8);
+        contour_press->setValue(150);
+
+        layout->addWidget(m_ql_press, 2, 0, 1, 2);
+        layout->addWidget(contour_press, 2, 2, 1, 4);
     }
 };
 
