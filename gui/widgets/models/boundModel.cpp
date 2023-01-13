@@ -44,7 +44,7 @@ QVariant BoundModel::data(const QModelIndex& index, int role) const
             return x_values[row_index];
         case 1: {
             double x = x_values[row_index];
-            return src::common::services::DataDistributionService::get_value(x, m_data->top_bot_bound_s, empty_val);
+            return src::common::services::DataDistributionService::get_value(x, m_data->fract_shore_s, empty_val);
         }
         }
 
@@ -87,7 +87,7 @@ std::tuple<double, double> BoundModel::getValueRange(int column_index)
     std::vector<std::shared_ptr<ble::src::common::models::DataDistribution>> data;
     switch (column_index) {
     case 1:
-        data = m_data->top_bot_bound_s;
+        data = m_data->fract_shore_s;
         break;
     }
 

@@ -39,8 +39,9 @@ std::shared_ptr<cm::SolverData> SolverDataPreparer::get_linear_solver_data()
     result->rp_n = 3.0;
 
     // result->period = 1.0;
-    result->bound_satur = 1.0;
-    result->set_contour_press_bound_type(cm::BoundCondType::kConst);
+    result->fract_end_satur = 1.0;
+    result->fract_end_imperm = false;
+    result->setFractShoreImperm(true);
     result->real_poro = 0.2;
 
     auto item = std::make_shared<cm::DataDistribution>();
@@ -61,6 +62,9 @@ std::shared_ptr<cm::SolverData> SolverDataPreparer::get_solver_data()
         0.001 / rf, // delta
         10, // perm_fract
         true);
+
+    result->pw = 0.0;
+    result->pc = 1.0;
 
     // mesh settings
     result->mesh_setts = std::make_shared<cm::MeshSettings>();
@@ -93,8 +97,9 @@ std::shared_ptr<cm::SolverData> SolverDataPreparer::get_solver_data()
     result->rp_n = 3.0;
 
     // result->period = 2e3;
-    result->bound_satur = 1.0;
-    result->set_contour_press_bound_type(cm::BoundCondType::kImpermeable);
+    result->fract_end_satur = 1.0;
+    result->fract_end_imperm = true;
+    result->setFractShoreImperm(false);
     result->real_poro = 0.2;
 
     auto item = std::make_shared<cm::DataDistribution>();

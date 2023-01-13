@@ -82,7 +82,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
                                const std::vector<double>& s) {
         double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
         std::vector<std::tuple<double, double>> xs_an;
-        if (data->get_contour_press_bound_type() == common::models::BoundCondType::kConst)
+        if (!data->fract_end_imperm && data->isFractShoreImperm())
             xs_an = services::get_satur_exact(sc, sumU, data);
         auto d = std::make_shared<ble::src::common::models::DynamicData>();
         d->t = sumT;
@@ -162,7 +162,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
 
         // double t = 1e-5;
 
-        double u = data->get_contour_press_bound_type() == common::models::BoundCondType::kConst
+        double u = !data->fract_end_imperm && data->isFractShoreImperm()
             ? services::getULiqInject(grd, data->mesh_setts->type)
             : 0.0;
         sumU += u * t;

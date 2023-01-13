@@ -31,12 +31,6 @@ private:
     QString get_choosed_file();
 
 private slots:
-    void contourTypeChanged(const QString&);
-    void topBotBoundSTypeChanged(const QString&);
-    void fileBoundSChooseClicked();
-    void onBoundUConstValueChanged(double);
-    void onBoundSConstValueChanged(double);
-    void onTopBotBoundLenghtChanged(int);
 
     void initSaturTypeChanged(const QString& value);
     void initSaturFileChosen(bool checked);

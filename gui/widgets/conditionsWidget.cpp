@@ -11,7 +11,6 @@
 
 #include <QFileDialog>
 
-#include "common/models/boundCondType.hpp"
 #include "common/models/dataDistributionType.hpp"
 #include "common/services/dataDistributionService.hpp"
 
@@ -31,39 +30,21 @@ ConditionsWidget::ConditionsWidget(QWidget* parent)
 
     subscribe();
 
-    ui->ContourBoundType->setCurrentIndex(1);
-    ui->BoundSType->setCurrentIndex(0);
-    ui->BoundSConstValue->setValue(0.707);
-    ui->BoundSFile->setText("../../samples/rhs/s_sample.blerhs");
-    ui->BoundSFile->setEnabled(false);
-    ui->BoundSType->setEnabled(false);
-    ui->TopBotBoundConstLenght->setEnabled(false);
     emit rhs_updated();
 }
 
 void ConditionsWidget::set_items()
 {
-    // for (scmm::BoundCondType::TypeEnum v : scmm::BoundCondTypeEnumIterator()) {
-    //     ui->ContourBoundType->addItem(QString::fromStdString(scmm::BoundCondType::get_description(v)));
-    // }
-
     for (scmm::DataDistributionType::TypeEnum v : scmm::DataDistributionTypeEnumIterator()) {
         auto item = QString::fromStdString(scmm::DataDistributionType::get_description(v));
         ui->init_satur_type->addItem(item);
         ui->fract_shores_left_right->ui->q_distr_type->addItem(item);
         ui->fract_shores_left_right->ui->satur_distr_type->addItem(item);
     }
-
-    // for (scmm::DataDistributionType::TypeEnum v : scmm::DataDistributionTypeEnumIterator()) {
-    //     ui->BoundSType->addItem(QString::fromStdString(scmm::DataDistributionType::get_description(v)));
-    // }
 }
 
 void ConditionsWidget::subscribe()
 {
-    // auto success = QObject::connect(ui->ContourBoundType, SIGNAL(currentIndexChanged(const QString&)),
-    //     this, SLOT(contourTypeChanged(const QString&)));
-    // Q_ASSERT(success);
     // success = QObject::connect(ui->TopBotBoundConstLenght, SIGNAL(valueChanged(int)), this, SLOT(onTopBotBoundLenghtChanged(int)));
     // Q_ASSERT(success);
     // success = QObject::connect(ui->BoundSConstValue, SIGNAL(valueChanged(double)), this, SLOT(onBoundSConstValueChanged(double)));
@@ -236,51 +217,6 @@ void ConditionsWidget::fractEndImperChecked(bool state)
     ui->sat_fract_end->setEnabled(!state);
 }
 
-void ConditionsWidget::contourTypeChanged(const QString& value)
-{
-    auto m = scmm::BoundCondType::get_enum(value.toStdString());
-    if (m == scmm::BoundCondType::kConst) {
-        ui->TopBotBoundConstLenght->setEnabled(false);
-        ui->BoundSType->setEnabled(false);
-        ui->BoundSConstValue->setEnabled(false);
-        ui->BoundSFile->setEnabled(false);
-        ui->BoundSFileChooseButton->setEnabled(false);
-        ui->BoundSatur->setEnabled(true);
-    } else if (m == scmm::BoundCondType::kImpermeable) {
-        ui->BoundSType->setEnabled(true);
-        topBotBoundSTypeChanged(ui->BoundSType->currentText());
-        ui->BoundSatur->setEnabled(false);
-        ui->TopBotBoundConstLenght->setEnabled(true);
-    }
-}
-
-void ConditionsWidget::topBotBoundSTypeChanged(const QString& value)
-{
-    auto m = scmm::DataDistributionType::get_enum(value.toStdString());
-    switch (m) {
-    case scmm::DataDistributionType::kConst:
-        ui->BoundSConstValue->setEnabled(true);
-        ui->BoundSFile->setEnabled(false);
-        ui->BoundSFileChooseButton->setEnabled(false);
-        break;
-    case scmm::DataDistributionType::kFile:
-        ui->BoundSConstValue->setEnabled(false);
-        ui->BoundSFile->setEnabled(true);
-        ui->BoundSFileChooseButton->setEnabled(true);
-        break;
-    }
-    emit rhs_updated();
-}
-
-void ConditionsWidget::fileBoundSChooseClicked()
-{
-    QString file_name = get_choosed_file();
-    if (!file_name.trimmed().isEmpty()) {
-        ui->BoundSFile->setText(file_name);
-        emit rhs_updated();
-    }
-}
-
 QString ConditionsWidget::get_choosed_file()
 {
     QString filter = tr("BLERHS (*.blerhs)");
@@ -298,27 +234,56 @@ std::shared_ptr<src::common::models::BoundCondData> ConditionsWidget::get_bound_
 {
     std::shared_ptr<src::common::models::BoundCondData> result = std::make_shared<src::common::models::BoundCondData>();
 
-    std::string str = ui->ContourBoundType->currentText().toStdString();
-    result->contour_press_bound_type = src::common::models::BoundCondType::get_enum(str);
+    // fract end;
+    result->fract_end_imperm = ui->fract_end_imperm->isChecked();
+    result->fract_end_satur = ui->sat_fract_end->value();
+    result->fract_end_press = ui->press_fract_end->value();
 
-    str = ui->BoundSType->currentText().toStdString();
-    result->top_bot_bound_s_type = src::common::models::DataDistributionType::get_enum(str);
-    switch (result->top_bot_bound_s_type) {
+    // fract shore
+    std::string str = ui->fract_shores_left_right->ui->satur_distr_type->currentText().toStdString();
+    result->fract_shore_s_type = src::common::models::DataDistributionType::get_enum(str);
+    switch (result->fract_shore_s_type) {
     case src::common::models::DataDistributionType::kConst: {
-        double val = ui->BoundSConstValue->value();
-        int len_right_perc = ui->TopBotBoundConstLenght->value();
-        result->top_bot_bound_s = scms::DataDistributionService::get_data_from_const(val, len_right_perc, x0, x1);
+        double val = ui->fract_shores_left_right->ui->satur->value();
+        int len_right_perc = 100;
+        result->fract_shore_s = scms::DataDistributionService::get_data_from_const(val, len_right_perc, x0, x1);
         break;
     }
     case src::common::models::DataDistributionType::kFile: {
-        std::string file_name = ui->BoundSFile->text().toStdString();
-        result->top_bot_bound_s = scms::DataDistributionService::get_data_from_file(file_name);
+        std::string file_name = ui->fract_shores_left_right->ui->satur_file->text().toStdString();
+        result->fract_shore_s = scms::DataDistributionService::get_data_from_file(file_name);
         break;
     }
     default:
         break;
     }
 
+    str = ui->fract_shores_left_right->ui->q_distr_type->currentText().toStdString();
+    result->fract_shore_q_type = src::common::models::DataDistributionType::get_enum(str);
+    switch (result->fract_shore_q_type) {
+    case src::common::models::DataDistributionType::kConst: {
+        double val = ui->fract_shores_left_right->ui->q->value();
+        int len_right_perc = 100;
+        result->fract_shore_q = scms::DataDistributionService::get_data_from_const(val, len_right_perc, x0, x1);
+        break;
+    }
+    case src::common::models::DataDistributionType::kFile: {
+        std::string file_name = ui->fract_shores_left_right->ui->q_file->text().toStdString();
+        result->fract_shore_q = scms::DataDistributionService::get_data_from_file(file_name);
+        break;
+    }
+    default:
+        break;
+    }
+    result->fract_shore_imperm = ui->fract_shores_left_right->ui->impermeable->isChecked();
+    result->pc = ui->fract_shores_left_right->ui->contour_press->value();
+    result->use_q = ui->fract_shores_left_right->ui->use_q->isChecked();
+
+    // well
+    result->pw = ui->p_well->value();
+    result->sw = ui->s_well->value();
+
+    // initial
     str = ui->init_satur_type->currentText().toStdString();
     result->initial_satur_type = src::common::models::DataDistributionType::get_enum(str);
     switch (result->initial_satur_type) {
@@ -337,26 +302,7 @@ std::shared_ptr<src::common::models::BoundCondData> ConditionsWidget::get_bound_
         break;
     }
 
-    result->bound_satur = ui->BoundSatur->value();
-    result->pc = ui->PressureContour->value();
-    result->pw = ui->PressureWell->value();
-
     return result;
-}
-
-void ConditionsWidget::onTopBotBoundLenghtChanged(int value)
-{
-    emit rhs_updated();
-}
-
-void ConditionsWidget::onBoundUConstValueChanged(double value)
-{
-    emit rhs_updated();
-}
-
-void ConditionsWidget::onBoundSConstValueChanged(double value)
-{
-    emit rhs_updated();
 }
 
 void ConditionsWidget::useQChecked(bool checked)

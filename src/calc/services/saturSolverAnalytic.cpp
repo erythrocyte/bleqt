@@ -48,7 +48,7 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
     }
 
     // BL
-    double s0 = params->bound_satur;
+    double s0 = params->fract_end_satur;
     if (s0 < sc) {
         result.push_back(std::make_tuple(xsc, s0));
         result.push_back(std::make_tuple(1.0, s0));

@@ -11,7 +11,6 @@
 #include "calc/models/bleCalc.hpp"
 #include "calc/models/saturSolverSettings.hpp"
 #include "calc/models/saturSolverType.hpp"
-#include "common/models/boundCondType.hpp"
 #include "common/models/dataDistribution.hpp"
 #include "common/models/gridType.hpp"
 #include "common/models/meshSettings.hpp"
@@ -82,8 +81,8 @@ void Calculator::run_s_const_loop()
     for (auto const& mi : ms) {
         for (auto const& s : scs) {
             auto data = SolverDataPreparer::get_solver_data();
-            data->set_perm_fract(mi / data->delta);
-            std::cout << "kf = " << data->get_perm_fract() << "\n";
+            data->setPermFract(mi / data->delta);
+            std::cout << "kf = " << data->getPermFract() << "\n";
             std::cout << "delt = " << data->delta << "\n";
             std::cout << "sb = " << s << "\n";
 
@@ -92,7 +91,7 @@ void Calculator::run_s_const_loop()
             item->v1 = s;
             item->x0 = 0.0;
             item->x1 = 1.0;
-            data->top_bot_bound_s.push_back(item);
+            data->fract_shore_s.push_back(item);
 
             auto grd = get_grid(data);
             solve(data, grd);
@@ -106,7 +105,7 @@ void Calculator::run_linear()
     double fw0 = 99, fw1 = 99, dfw = (fw1 - fw0) / (n - 1);
 
     auto data = SolverDataPreparer::get_linear_solver_data();
-    data->bound_satur = 1.0;
+    data->fract_end_satur = 1.0;
     auto grd = get_grid(data);
     auto sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
     fw0 = cs::rp::get_fbl(sc, data->rp_n, data->kmu) * 100;
@@ -143,7 +142,7 @@ void Calculator::run_pv_m()
     item->v1 = sc;
     item->x0 = 0.8;
     item->x1 = 1.0;
-    data->top_bot_bound_s.push_back(item);
+    data->fract_shore_s.push_back(item);
 
     // prepare input dynamic data;
     std::vector<double> ms = { 1e-2, 2e-2, 4e-2, 6e-2, 8e-2, 1e-1, 5e-1, 1e0, 1e1, 1e2 };
@@ -163,7 +162,7 @@ void Calculator::run_pv_m()
         int index = 0;
 
         for (auto const& mi : ms) {
-            data->set_perm_fract(mi / data->delta);
+            data->setPermFract(mi / data->delta);
             data->sat_setts->tau = taus[index];
 
             auto grd = get_grid(data);

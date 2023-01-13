@@ -152,7 +152,8 @@ void BleFramePresenter::on_run_calc()
     set_status(QString::fromStdString(mess));
 
     auto ble_result = solver->get_result();
-    m_resultDataWidgetPresenter->set_data(results, solver_data->get_contour_press_bound_type(), a);
+    m_resultDataWidgetPresenter->set_data(results, solver_data->fract_end_imperm,
+        solver_data->isFractShoreImperm(), a);
     m_wellWorkDataWidgetPresenter->set_data(ble_result->well_work);
     m_wellWorkDataWidgetPresenter->set_time_period(solver->get_period());
     m_tauVisualPresenter->set_data(ble_result->tau_t);

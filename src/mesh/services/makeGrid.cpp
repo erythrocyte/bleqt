@@ -137,31 +137,30 @@ std::shared_ptr<mesh::models::Grid> make_grid(const std::shared_ptr<common::mode
         cl->faces.push_back(k + 1);
         cl->volume = get_cell_volume(step, cl->xl, cl->xr);
         cl->poro = 1.0;
-        cl->perm = params->get_perm_fract();
+        cl->perm = params->getPermFract();
         result->cells.push_back(cl);
     }
 
-    bool isolated_contour = params->get_contour_press_bound_type() == common::models::BoundCondType::kImpermeable;
-    double contour_bound_press = isolated_contour
+    double fract_end_press = params->fract_end_imperm
         ? common::models::CommonVals::EMPTY_VAL
-        : 1.0;
+        : params->fract_end_press;
 
     // last face;
     auto fc = make_face(params->mesh_setts->n, 1.0, params->mesh_setts->n - 1, -1,
         get_cyl_area(1.0), mesh::models::FaceType::kContour,
-        contour_bound_press, params->bound_satur, 0.0);
+        fract_end_press, params->fract_end_satur, 0.0);
     result->faces.push_back(fc);
 
     // up and bottom faces;
     size_t ind = result->faces.size();
     for (auto& cl : result->cells) {
         double area = get_cell_volume(step, cl->xl, cl->xr);
-        double bound_u = params->get_contour_press_bound_type() == common::models::BoundCondType::kConst
+        double bound_u = params->fract_end_imperm
             ? 0.0
             : common::models::CommonVals::EMPTY_VAL;
-        double bound_s = isolated_contour
-            ? common::services::DataDistributionService::get_value(cl->cntr, params->top_bot_bound_s, 0.0)
-            : 0.0;
+        double bound_s = params->isFractShoreImperm()
+            ? 0.0
+            : common::services::DataDistributionService::get_value(cl->cntr, params->fract_shore_s, 0.0);
         auto top = make_face(ind++, cl->cntr, cl->ind, -1, area, mesh::models::FaceType::kTop,
             common::models::CommonVals::EMPTY_VAL, bound_s, bound_u);
         cl->faces.push_back(top->ind);

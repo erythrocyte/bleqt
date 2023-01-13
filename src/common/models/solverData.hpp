@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "boundCondData.hpp"
-#include "boundCondType.hpp"
 #include "calc/models/saturSolverSettings.hpp"
 #include "dataDistribution.hpp"
 #include "meshSettings.hpp"
@@ -29,28 +28,34 @@ public:
     double len;
     double eps;
 
-    std::vector<std::shared_ptr<DataDistribution>> top_bot_bound_s;
+    double pw; // well press
+    double pc; // reservoir contour press
+    double fract_end_press;
+
     std::vector<std::shared_ptr<DataDistribution>> initial_s;
-    // BoundCondType::TypeEnum contour_press_bound_type;
-    double bound_satur;
+    double fract_end_satur;
+    double sw; // satur well
+    std::vector<std::shared_ptr<DataDistribution>> fract_shore_s;
+    std::vector<std::shared_ptr<DataDistribution>> fract_shore_q;
+
+    bool use_q;
+    bool fract_end_imperm;
 
     std::shared_ptr<MeshSettings> mesh_setts = std::make_shared<MeshSettings>();
     std::shared_ptr<calc::models::SaturSolverSetts> sat_setts = std::make_shared<calc::models::SaturSolverSetts>();
 
-    void set_perm_fract(double kf);
-    double get_perm_fract();
+    void setPermFract(double kf);
+    double getPermFract();
 
-    void set_contour_press_bound_type(BoundCondType::TypeEnum value);
-    BoundCondType::TypeEnum get_contour_press_bound_type();
+    void setFractShoreImperm(bool value);
+    bool isFractShoreImperm();
 
     bool is_producer_well();
 
 private:
-    double pw; // well press
-    double pc; // reservoir contour press
     bool is_producer;
     double m_kf;
-    BoundCondType::TypeEnum m_contour_press_bound_type;
+    bool m_is_fract_shore_imperm;
 
     void update_eps();
 };

@@ -11,7 +11,7 @@ ResultDataWidgetPresenter::ResultDataWidgetPresenter(
 
 void ResultDataWidgetPresenter::update_sc(double l, double sc)
 {
-    get_view()->update_sc_series(l, sc);
+    get_view()->updateScSeries(l, sc);
 }
 
 std::shared_ptr<ResultDataWidget> ResultDataWidgetPresenter::get_view()
@@ -21,14 +21,13 @@ std::shared_ptr<ResultDataWidget> ResultDataWidgetPresenter::get_view()
 
 void ResultDataWidgetPresenter::set_sc_visibility(bool state)
 {
-    get_view()->set_sc_visible(state);
+    get_view()->setScVisible(state);
 }
 
 void ResultDataWidgetPresenter::set_data(const std::shared_ptr<ble::src::calc::models::BleResultData> data,
-    src::common::models::BoundCondType::TypeEnum bound_type,
-    std::function<void(double)> progress)
+    bool fract_end_imperm, bool fract_shore_imperm, std::function<void(double)> progress)
 {
-    get_view()->setData(data, bound_type, progress);
+    get_view()->setData(data, fract_end_imperm, fract_shore_imperm, progress);
 }
 
 }

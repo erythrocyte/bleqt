@@ -19,41 +19,32 @@ bool SolverData::is_producer_well()
     return this->is_producer;
 }
 
-void SolverData::set_perm_fract(double kf)
+void SolverData::setPermFract(double kf)
 {
     this->m_kf = kf;
     this->m = this->delta * this->m_kf;
     update_eps();
 }
 
-double SolverData::get_perm_fract()
+double SolverData::getPermFract()
 {
     return this->m_kf;
 }
 
-void SolverData::set_contour_press_bound_type(BoundCondType::TypeEnum value)
+void SolverData::setFractShoreImperm(bool value)
 {
-    this->m_contour_press_bound_type = value;
+    this->m_is_fract_shore_imperm = value;
     update_eps();
 }
 
-BoundCondType::TypeEnum SolverData::get_contour_press_bound_type()
+bool SolverData::isFractShoreImperm()
 {
-    return this->m_contour_press_bound_type;
+    return this->m_is_fract_shore_imperm;
 }
 
 void SolverData::update_eps()
 {
-    switch (this->m_contour_press_bound_type) {
-    case common::models::BoundCondType::kImpermeable: {
-        this->eps = 1.0 / m_kf;
-        break;
-    }
-    case common::models::BoundCondType::kConst: // coz only one k is exists and dimless = 1.0;
-    default:
-        this->eps = 1.0;
-        break;
-    }
+    double value = use_q ? 1.0 : 1.0 / m_kf;
+    this->eps = m_is_fract_shore_imperm ? 1.0 : value;
 }
-
 }

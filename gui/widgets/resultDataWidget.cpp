@@ -60,11 +60,11 @@ void ResultDataWidget::subscribe()
 
 void ResultDataWidget::setData(
     const std::shared_ptr<ble::src::calc::models::BleResultData> data,
-    src::common::models::BoundCondType::TypeEnum bound_type,
-    std::function<void(double)> progress)
+    bool fract_end_imperm, bool fract_shore_imperm, std::function<void(double)> progress)
 {
     _data = data;
-    m_bound_type = bound_type;
+    m_fract_end_imperm = fract_end_imperm;
+    m_fract_shore_imperm = fract_shore_imperm;
     ui->tool_bar_enabled(true);
 
     pressLimitsChanged();
@@ -103,12 +103,12 @@ void ResultDataWidget::fill_time_series(bool init,
     for (auto& cl : _data->grd->cells) {
         ui->SeriesPress->append(cl->cntr, d->p[cl->ind]);
         ui->SeriesSatNum->append(cl->cntr, d->s[cl->ind]);
-        if (m_bound_type == src::common::models::BoundCondType::kConst) {
+        if (!m_fract_end_imperm && m_fract_shore_imperm) {
             ui->SeriesPressAn->append(cl->cntr, d->p_ex[cl->ind]);
         }
     }
 
-    if (m_bound_type == src::common::models::BoundCondType::kConst) {
+    if (!m_fract_end_imperm && m_fract_shore_imperm) {
         for (auto& v : d->s_an) {
             double x1, s1;
             std::tie(x1, s1) = v;
@@ -120,7 +120,7 @@ void ResultDataWidget::fill_time_series(bool init,
         ui->set_press_axis_range(0.0, d->p[_data->grd->cells.size() - 1]);
 }
 
-void ResultDataWidget::update_sc_series(double l, double sc)
+void ResultDataWidget::updateScSeries(double l, double sc)
 {
     ui->SeriesSc->clear();
 

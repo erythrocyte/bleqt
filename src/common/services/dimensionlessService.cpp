@@ -51,10 +51,17 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
     // result_solver_data->period = params->data->period / result_scale->t0();
     result_solver_data->real_poro = params->data->poro_fract;
 
-    result_solver_data->bound_satur = params->bound->bound_satur;
-    result_solver_data->set_contour_press_bound_type(params->bound->contour_press_bound_type);
-    result_solver_data->top_bot_bound_s = scale_distr_s(params->bound->top_bot_bound_s);
+    result_solver_data->fract_end_satur = params->bound->fract_end_satur;
+    result_solver_data->fract_end_imperm = params->bound->fract_end_imperm;
+    result_solver_data->setFractShoreImperm(params->bound->fract_end_imperm);
+    result_solver_data->fract_shore_s = scale_distr_s(params->bound->fract_shore_s);
+    result_solver_data->fract_shore_q = scale_distr_s(params->bound->fract_shore_q);
     result_solver_data->initial_s = scale_distr_s(params->bound->initial_s);
+    result_solver_data->fract_end_press = params->bound->fract_end_press;
+    result_solver_data->use_q = params->bound->use_q;
+    result_solver_data->pc = params->bound->pc;
+    result_solver_data->pw = params->bound->pw;
+    result_solver_data->sw = params->bound->sw;
 
     return std::make_tuple(result_scale, result_solver_data);
 }

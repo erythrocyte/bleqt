@@ -5,9 +5,13 @@
 #include "calc/models/diagMatrix.hpp"
 #include "calc/services/workSigma.hpp"
 #include "common/models/commonVals.hpp"
+#include "common/services/dataDistributionService.hpp"
 #include "common/services/workRp.hpp"
 #include "common/services/workString.hpp"
 #include "logging/logger.hpp"
+
+namespace scs = ble::src::common::services;
+namespace cm = ble::src::common::models;
 
 namespace ble::src::calc::services {
 
@@ -80,30 +84,32 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
             ret.C[fc->cl2] += cf;
             break;
         }
-        case mm::FaceType::kWell:
-        case mm::FaceType::kContour: {
+        case mm::FaceType::kWell: {
             if (!common::models::CommonVals::is_empty(fc->bound_press)) {
                 rhs[fc->cl1] += cf * fc->bound_press;
                 ret.C[fc->cl1] += cf;
             }
             break;
         }
+        case mm::FaceType::kContour: {
+            if (!params->fract_end_imperm) {
+                rhs[fc->cl1] += fc->area * fc->u;
+            }
+        }
         case mm::FaceType::kTop:
         case mm::FaceType::kBot: {
-            switch (params->get_contour_press_bound_type()) {
-            case common::models::BoundCondType::kImpermeable: {
-                double alp = (get_res_ceff(fc->bound_satur, params) * fc->area) / (2.0 * params->m);
-                ret.C[fc->cl1] += alp;
-                rhs[fc->cl1] += alp; // alp * pw (= 1);
-            } break;
-            case common::models::BoundCondType::kConst: {
-                if (!common::models::CommonVals::is_empty(fc->bound_press)) {
-                    rhs[fc->cl1] += fc->area * fc->bound_u;
+            if (!params->isFractShoreImperm()) {
+                if (params->use_q) { // given q or
+                    double qi = scs::DataDistributionService::get_value(fc->cntr, params->fract_shore_q, 0.0);
+                    rhs[fc->cl1] += qi;
+
+                } else { // flow from res via 1/(2M)
+                    double alp = (get_res_ceff(fc->bound_satur, params) * fc->area) / (2.0 * params->m);
+                    ret.C[fc->cl1] += alp;
+                    rhs[fc->cl1] += alp; // alp * pw (= 1);
                 }
-            } break;
-            default:
-                break;
             }
+
             break;
         }
         default:
@@ -118,27 +124,35 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     const std::shared_ptr<common::models::SolverData> params, std::shared_ptr<mm::Grid> grd)
 {
     for (auto& fc : grd->faces) {
+        double u = 0.0;
         if (mm::FaceType::is_top_bot(fc->type)) {
-            double u = 0.0;
-            switch (params->get_contour_press_bound_type()) {
-            case common::models::BoundCondType::kImpermeable: {
-                double alp = get_res_ceff(fc->bound_satur, params);
-                u = -alp * (p[fc->cl1] - 1.0);
-                break;
-            }
-            case common::models::BoundCondType::kConst:
-                u = 0.0;
-                break;
-            default:
-                break;
+
+            if (!params->isFractShoreImperm()) {
+                if (params->use_q) {
+                    double q = scs::DataDistributionService::get_value(fc->cntr, params->fract_shore_q, 0.0);
+                    u = q / fc->area;
+                } else {
+                    double alp = get_res_ceff(fc->bound_satur, params);
+                    u = -alp * (p[fc->cl1] - params->pc);
+                    break;
+                }
             }
             fc->u = u;
             continue;
         }
 
-        if (mm::FaceType::is_well_countour(fc->type) && common::models::CommonVals::is_empty(fc->bound_press)) {
-            fc->u = 0.0; // empty bound press means that face is impermeable;
+        if (fc->type == mm::FaceType::kWell) {
+            fc->u = 0.0;
             continue;
+        }
+
+        if (fc->type == mm::FaceType::kContour) {
+            if (!params->fract_end_imperm && !cm::CommonVals::is_empty(fc->bound_press)) {
+                double alp = get_res_ceff(fc->bound_satur, params);
+                u = -alp * (p[fc->cl1] - fc->bound_press);
+                break;
+                fc->u = 0.0; // empty bound press means that face is impermeable;
+            }
         }
 
         double sigma = get_face_sigma(fc, s, params, grd);
@@ -204,22 +218,19 @@ double calc_residual(const std::shared_ptr<mm::Grid> grd,
 {
     std::vector<double> errors;
 
-    auto pbt = params->get_contour_press_bound_type();
-
     auto get_face_cf = [&](int find) {
         auto fc = grd->faces[find];
 
         switch (fc->type) {
         case mm::FaceType::kTop:
         case mm::FaceType::kBot: {
-            switch (pbt) {
-            case common::models::BoundCondType::kImpermeable:
-                return 1.0 / (2.0 * params->m);
-            case common::models::BoundCondType::kConst:
+            if (params->isFractShoreImperm())
                 return 1.0;
-            default:
+
+            if (params->use_q)
                 return 1.0;
-            }
+
+            return 1.0 / (2.0 * params->m);
         }
         default:
             return 1.0;
