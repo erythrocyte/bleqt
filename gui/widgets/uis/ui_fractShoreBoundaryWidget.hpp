@@ -27,6 +27,8 @@ public:
     QDoubleSpinBox* satur;
     QLineEdit* satur_file;
     QPushButton* satur_file_button;
+    QLabel* satur_label;
+    QLabel* satur_file_label;
 
     // flow
     QGroupBox* gb_q;
@@ -35,6 +37,8 @@ public:
     QDoubleSpinBox* q;
     QLineEdit* q_file;
     QPushButton* q_file_button;
+    QLabel* q_label;
+    QLabel* q_file_label;
 
     void setupUi(QWidget* parent)
     {
@@ -61,13 +65,9 @@ public:
 private:
     // satur
     QLabel* m_satur_distr_label;
-    QLabel* m_satur_label;
-    QLabel* m_satur_file_label;
 
     // flow
     QLabel* m_q_distr_label;
-    QLabel* m_q_label;
-    QLabel* m_q_file_label;
 
     void setupGbSatur(QWidget* parent)
     {
@@ -80,23 +80,23 @@ private:
         layout->addWidget(m_satur_distr_label, 0, 0, 1, 2);
         layout->addWidget(satur_distr_type, 0, 2, 1, 4);
 
-        m_satur_label = new QLabel("S");
+        satur_label = new QLabel("S");
         satur = new QDoubleSpinBox();
         satur->setMinimum(0.0);
         satur->setMaximum(1.0);
         satur->setSingleStep(0.1);
         satur->setValue(1.0);
-        layout->addWidget(m_satur_label, 1, 0, 1, 2);
+        layout->addWidget(satur_label, 1, 0, 1, 2);
         layout->addWidget(satur, 1, 2, 1, 4);
 
-        m_satur_file_label = new QLabel("File");
-        m_satur_file_label->setEnabled(false);
+        satur_file_label = new QLabel("File");
+        satur_file_label->setEnabled(false);
         satur_file = new QLineEdit();
         satur_file->setEnabled(false);
         satur_file_button = new QPushButton("...");
         satur_file_button->setEnabled(false);
         satur_file_button->setStyleSheet("padding: 0px 5px 0px 5px;");
-        layout->addWidget(m_satur_file_label, 2, 0, 1, 2);
+        layout->addWidget(satur_file_label, 2, 0, 1, 2);
         layout->addWidget(satur_file, 2, 2, 1, 3);
         layout->addWidget(satur_file_button, 2, 5, 1, 1);
     }
@@ -120,23 +120,23 @@ private:
         gbq_layout->addWidget(m_q_distr_label, 0, 0, 1, 2);
         gbq_layout->addWidget(q_distr_type, 0, 2, 1, 4);
 
-        m_q_label = new QLabel("q, m3/s");
+        q_label = new QLabel("q, m3/s");
         q = new QDoubleSpinBox();
         q->setMinimum(0.0);
         q->setMaximum(1e5);
         q->setSingleStep(1);
         q->setValue(1.0);
-        gbq_layout->addWidget(m_q_label, 1, 0, 1, 2);
+        gbq_layout->addWidget(q_label, 1, 0, 1, 2);
         gbq_layout->addWidget(q, 1, 2, 1, 4);
 
-        m_q_file_label = new QLabel("File");
-        m_q_file_label->setEnabled(false);
+        q_file_label = new QLabel("File");
+        q_file_label->setEnabled(false);
         q_file = new QLineEdit();
         q_file->setEnabled(false);
         q_file_button = new QPushButton("...");
         q_file_button->setEnabled(false);
         q_file_button->setStyleSheet("padding: 0px 5px 0px 5px;");
-        gbq_layout->addWidget(m_q_file_label, 2, 0, 1, 2);
+        gbq_layout->addWidget(q_file_label, 2, 0, 1, 2);
         gbq_layout->addWidget(q_file, 2, 2, 1, 3);
         gbq_layout->addWidget(q_file_button, 2, 5, 1, 1);
         layout->addWidget(gb_q, 1, 0, 1, 6);

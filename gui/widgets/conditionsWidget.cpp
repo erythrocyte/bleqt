@@ -72,6 +72,7 @@ void ConditionsWidget::subscribe()
     // success = QObject::connect(ui->BoundSType, SIGNAL(currentIndexChanged(const QString&)),
     //     this, SLOT(topBotBoundSTypeChanged(const QString&)));
 
+    // init
     auto success = QObject::connect(ui->init_satur_type, QOverload<const QString&>::of(&QComboBox::currentIndexChanged),
         this, &ConditionsWidget::initSaturTypeChanged);
     success = QObject::connect(ui->init_satur_file_button, &QPushButton::clicked,
@@ -79,10 +80,23 @@ void ConditionsWidget::subscribe()
     success = QObject::connect(ui->init_satur, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
         this, &ConditionsWidget::initSatConstChanged);
 
+    // bound satur
+    success = QObject::connect(ui->fract_shores_left_right->ui->satur_distr_type, QOverload<const QString&>::of(&QComboBox::currentIndexChanged),
+        this, &ConditionsWidget::boundSaturTypeChanged);
+    success = QObject::connect(ui->fract_shores_left_right->ui->satur_file_button, &QPushButton::clicked,
+        this, &ConditionsWidget::boundSaturFileChosen);
+    success = QObject::connect(ui->fract_shores_left_right->ui->satur, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+        this, &ConditionsWidget::boundSaturConstChanged);
+
+    // bound q
+    success = QObject::connect(ui->fract_shores_left_right->ui->q_distr_type, QOverload<const QString&>::of(&QComboBox::currentIndexChanged),
+        this, &ConditionsWidget::qTypeChanged);
+    success = QObject::connect(ui->fract_shores_left_right->ui->q_file_button, &QPushButton::clicked,
+        this, &ConditionsWidget::qFileChosen);
+    success = QObject::connect(ui->fract_shores_left_right->ui->q, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+        this, &ConditionsWidget::qConstChanged);
     success = QObject::connect(ui->fract_shores_left_right->ui->use_q, &QCheckBox::toggled,
         this, &ConditionsWidget::useQChecked);
-    // success = QObject::connect(ui->fract_shores_left_right->use_q, SIGNAL(toggled(bool)),
-    //     this, SLOT(useQChecked(bool)));
     success = QObject::connect(ui->fract_shores_left_right->ui->impermeable, &QCheckBox::toggled,
         this, &ConditionsWidget::impermChecked);
 
@@ -103,6 +117,88 @@ void ConditionsWidget::initSaturFileChosen(bool checked)
         ui->init_satur_file->setText(file_name);
         emit init_updated();
     }
+}
+
+void ConditionsWidget::qConstChanged(double value)
+{
+    emit rhs_updated();
+}
+
+void ConditionsWidget::qFileChosen(bool checked)
+{
+    QString file_name = get_choosed_file();
+    if (!file_name.trimmed().isEmpty()) {
+        ui->fract_shores_left_right->ui->q_file->setText(file_name);
+        emit init_updated();
+    }
+}
+
+void ConditionsWidget::qTypeChanged(const QString& value)
+{
+    auto m = scmm::DataDistributionType::get_enum(value.toStdString());
+
+    // auto children = gui::utils::QWidgetUtils::getChildWidgets(ui->gb_init);
+    // for (auto const child : children) {
+    //     child->setEnabled(false);
+    // }
+
+    ui->fract_shores_left_right->ui->q_label->setEnabled(false);
+    ui->fract_shores_left_right->ui->q->setEnabled(false);
+    ui->fract_shores_left_right->ui->q_file->setEnabled(false);
+    ui->fract_shores_left_right->ui->q_file_button->setEnabled(false);
+    ui->fract_shores_left_right->ui->q_file_label->setEnabled(false);
+
+    if (m == scmm::DataDistributionType::kConst) { // in this way with if, coz it is possible to be more then 2 branches
+        ui->fract_shores_left_right->ui->q_label->setEnabled(true);
+        ui->fract_shores_left_right->ui->q->setEnabled(true);
+    } else if (m == scmm::DataDistributionType::kFile) {
+        ui->fract_shores_left_right->ui->q_file->setEnabled(true);
+        ui->fract_shores_left_right->ui->q_file_button->setEnabled(true);
+        ui->fract_shores_left_right->ui->q_file_label->setEnabled(true);
+    }
+
+    emit rhs_updated();
+}
+
+void ConditionsWidget::boundSaturConstChanged(double value)
+{
+    emit rhs_updated();
+}
+
+void ConditionsWidget::boundSaturFileChosen(bool checked)
+{
+    QString file_name = get_choosed_file();
+    if (!file_name.trimmed().isEmpty()) {
+        ui->fract_shores_left_right->ui->satur_file->setText(file_name);
+        emit init_updated();
+    }
+}
+
+void ConditionsWidget::boundSaturTypeChanged(const QString& value)
+{
+    auto m = scmm::DataDistributionType::get_enum(value.toStdString());
+
+    // auto children = gui::utils::QWidgetUtils::getChildWidgets(ui->gb_init);
+    // for (auto const child : children) {
+    //     child->setEnabled(false);
+    // }
+
+    ui->fract_shores_left_right->ui->satur_label->setEnabled(false);
+    ui->fract_shores_left_right->ui->satur->setEnabled(false);
+    ui->fract_shores_left_right->ui->satur_file->setEnabled(false);
+    ui->fract_shores_left_right->ui->satur_file_button->setEnabled(false);
+    ui->fract_shores_left_right->ui->satur_file_label->setEnabled(false);
+
+    if (m == scmm::DataDistributionType::kConst) { // in this way with if, coz it is possible to be more then 2 branches
+        ui->fract_shores_left_right->ui->satur->setEnabled(true);
+        ui->fract_shores_left_right->ui->satur_label->setEnabled(true);
+    } else if (m == scmm::DataDistributionType::kFile) {
+        ui->fract_shores_left_right->ui->satur_file->setEnabled(true);
+        ui->fract_shores_left_right->ui->satur_file_button->setEnabled(true);
+        ui->fract_shores_left_right->ui->satur_file_label->setEnabled(true);
+    }
+
+    emit rhs_updated();
 }
 
 void ConditionsWidget::initSaturTypeChanged(const QString& value)

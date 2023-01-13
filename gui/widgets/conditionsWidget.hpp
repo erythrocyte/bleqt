@@ -41,8 +41,15 @@ private slots:
     void initSaturTypeChanged(const QString& value);
     void initSaturFileChosen(bool checked);
     void initSatConstChanged(double value);
-    void useQChecked(bool checked);
+
     void impermChecked(bool checked);
+    void boundSaturTypeChanged(const QString& value);
+    void boundSaturFileChosen(bool checked);
+    void boundSaturConstChanged(double value);
+    void qTypeChanged(const QString& value);
+    void qFileChosen(bool checked);
+    void qConstChanged(double value);
+    void useQChecked(bool checked);
     void fractEndImperChecked(bool state);
 };
 
