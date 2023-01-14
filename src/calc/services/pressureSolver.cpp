@@ -100,6 +100,7 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
             } else {
                 rhs[fc->cl1] += fc->area * fc->bound_u;
             }
+            break;
         }
         case mm::FaceType::kTop:
         case mm::FaceType::kBot: {
@@ -109,7 +110,8 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
                     rhs[fc->cl1] += qi;
 
                 } else { // flow from res via 1/(2M)
-                    double alp = (get_res_ceff(fc->bound_satur, params) * fc->area) / (2.0 * params->m);
+                    double res_cf = get_res_ceff(fc->bound_satur, params); //  = sigma / l;
+                    double alp = (res_cf * fc->area) / (2.0 * params->m);
                     ret.C[fc->cl1] += alp;
                     rhs[fc->cl1] += alp; // alp * pw (= 1);
                 }
@@ -131,7 +133,6 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     for (auto& fc : grd->faces) {
         double u = 0.0;
         if (mm::FaceType::is_top_bot(fc->type)) {
-
             if (!params->isFractShoreImperm()) {
                 if (params->use_q) {
                     double q = scs::DataDistributionService::get_value(fc->cntr, params->fract_shore_q, 0.0);
@@ -139,7 +140,6 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
                 } else {
                     double alp = get_res_ceff(fc->bound_satur, params);
                     u = -alp * (p[fc->cl1] - params->pc);
-                    break;
                 }
             }
             fc->u = u;
@@ -167,8 +167,10 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
         fc->u = -sigma * (p1 - p2) / h;
     }
 
-    double err = calc_residual(grd, params);
-    std::string mess = common::services::string_format("err = {%.10f}", err);
+    int max_err_cind;
+    double max_err;
+    std::tie(max_err_cind, max_err) = calc_residual(grd, params);
+    std::string mess = common::services::string_format("err = {%.10f} at cell[%i]", max_err, max_err_cind);
     logging::write_log(mess, logging::kDebug);
 }
 
@@ -214,10 +216,10 @@ std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
     return result;
 }
 
-double calc_residual(const std::shared_ptr<mm::Grid> grd,
+std::tuple<int, double> calc_residual(const std::shared_ptr<mm::Grid> grd,
     const std::shared_ptr<common::models::SolverData> params)
 {
-    std::vector<double> errors;
+    // std::vector<double> errors;
 
     auto get_face_cf = [&](int find) {
         auto fc = grd->faces[find];
@@ -238,6 +240,7 @@ double calc_residual(const std::shared_ptr<mm::Grid> grd,
         }
     };
 
+    int cind = -1;
     double result = -1e10;
     for (auto const cl : grd->cells) {
         double err = 0.0;
@@ -247,11 +250,13 @@ double calc_residual(const std::shared_ptr<mm::Grid> grd,
             err += q;
         }
 
-        if (err > result)
+        if (err > result) {
+            cind = cl->ind;
             result = err;
+        }
     }
 
-    return result;
+    return std::make_tuple(cind, result);
 }
 
 }

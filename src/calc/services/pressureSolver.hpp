@@ -2,6 +2,7 @@
 #define BLE_SRC_PRESSURE_SOLVER_H_
 
 #include <iostream>
+#include <tuple>
 #include <vector>
 
 #include "common/models/gridType.hpp"
@@ -19,7 +20,7 @@ std::vector<double> calc_press_exact(const std::shared_ptr<mm::Grid> grd,
 void calc_u(const std::vector<double>& p, const std::vector<double>& s,
     const std::shared_ptr<common::models::SolverData> data,
     std::shared_ptr<mm::Grid> grd);
-double calc_residual(const std::shared_ptr<mm::Grid> grd,
+std::tuple<int, double> calc_residual(const std::shared_ptr<mm::Grid> grd,
     const std::shared_ptr<common::models::SolverData> params);
 
 }

@@ -151,7 +151,7 @@ void Calculator::run_pv_m()
 
     // std::vector<std::shared_ptr<models::FwWellShoreConvResults>> results;
 
-    std::string dir_path = "../../../../../move/bleqt_results/out/m_pv";
+    std::string dir_path = "out/m_pv";
     cs::work_dir::remove_dir_my(dir_path);
     cs::work_dir::make_dir_my(dir_path);
 

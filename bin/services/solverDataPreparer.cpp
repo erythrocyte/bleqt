@@ -101,6 +101,7 @@ std::shared_ptr<cm::SolverData> SolverDataPreparer::get_solver_data()
     result->fract_end_imperm = true;
     result->setFractShoreImperm(false);
     result->real_poro = 0.2;
+    result->use_q = false;
 
     auto item = std::make_shared<cm::DataDistribution>();
     item->v0 = 0.0;
