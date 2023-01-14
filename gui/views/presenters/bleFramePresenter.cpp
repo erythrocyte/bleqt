@@ -6,6 +6,7 @@
 #include <QFileSystemWatcher>
 
 #include "calc/models/bleCalc.hpp"
+#include "calc/models/bleResultData.hpp"
 #include "common/models/scaleData.hpp"
 #include "common/models/solverData.hpp"
 #include "common/services/dimensionlessService.hpp"
@@ -143,21 +144,20 @@ void BleFramePresenter::on_run_calc()
     std::function<void(int)> a = std::bind(&BleFramePresenter::update_progress, this, std::placeholders::_1);
     auto solver = std::make_shared<src::calc::models::BleCalc>();
     solver->calc(grd, solver_data, a, false);
-    auto results = solver->get_result();
-    results->grd = grd;
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end - start;
     std::string mess = cs::string_format("calculation completed in %.2f sec.", diff.count());
     set_status(QString::fromStdString(mess));
 
-    auto ble_result = solver->get_result();
-    m_resultDataWidgetPresenter->set_data(results, solver_data->fract_end_imperm,
+    auto result = std::make_shared<src::calc::models::BleResultData>(*solver->get_result());
+    result->grd = grd;
+    m_resultDataWidgetPresenter->set_data(result, solver_data->fract_end_imperm,
         solver_data->isFractShoreImperm(), a);
-    m_wellWorkDataWidgetPresenter->set_data(ble_result->well_work);
+    m_wellWorkDataWidgetPresenter->set_data(result->well_work);
     m_wellWorkDataWidgetPresenter->set_time_period(solver->get_period());
-    m_tauVisualPresenter->set_data(ble_result->tau_t);
-    m_fwVisualPresenter->set_data(ble_result->aver);
+    m_tauVisualPresenter->set_data(result->tau_t);
+    m_fwVisualPresenter->set_data(result->aver);
     update_progress(100);
 }
 

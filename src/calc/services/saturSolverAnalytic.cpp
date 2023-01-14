@@ -15,36 +15,51 @@ std::vector<std::tuple<double, double>> get_satur_exact(const double sc, const d
     const std::shared_ptr<common::models::SolverData> params)
 {
     auto get_xs = [&](const double s) {
+        double result = s;
         if (s < sc)
-            return s;
+            return result; // why this ???
 
         double ksi0 = 1.0, poro = 1.0;
         double fu = u / poro * cs::rp::get_dfbl(s, params->rp_n, params->kmu);
         switch (params->mesh_setts->type) {
         case common::models::GridType::kRegular:
-            return ksi0 - fu;
+            result = ksi0 - fu;
+            break;
+            ;
         case common::models::GridType::kRadial: {
             double a = ksi0 * ksi0 - 2.0 * fu;
-            return a < 0.0
+            result = a < 0.0
                 ? 0.0
                 : std::sqrt(a);
+            break;
+            ;
         }
         default:
-            return 0.0;
+            result = 0.0;
+            break;
+            ;
         }
+
+        if (result < 1e-10) // should be out of domain;
+            result = -0.1; // to draw;
+
+        return result;
     };
 
     double xsc = get_xs(sc);
     std::vector<std::tuple<double, double>> result;
 
     // initial satur
-    int n = params->mesh_setts->n;
-    double ds = (xsc - params->rw) / (n - 1);
 
-    for (int k = 0; k < n; k++) {
-        double x = params->rw + ds * k;
-        double s = src::common::services::DataDistributionService::get_value(x, params->initial_s, 0.0);
-        result.push_back(std::make_tuple(x, s));
+    if (xsc > params->rw) {
+        int n = params->mesh_setts->n;
+        double ds = (xsc - params->rw) / (n - 1);
+
+        for (int k = 0; k < n; k++) {
+            double x = params->rw + ds * k;
+            double s = src::common::services::DataDistributionService::get_value(x, params->initial_s, 0.0);
+            result.push_back(std::make_tuple(x, s));
+        }
     }
 
     // BL

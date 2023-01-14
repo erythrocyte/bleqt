@@ -48,7 +48,7 @@ public:
     QAction* SpeedHighQuarter;
     QAction* SpeedHighHalf;
     QAction* SpeedHighTwice;
-    QCheckBox* PressGlobalLimit;
+    QCheckBox* press_global_limit;
     QCheckBox* LoopAnimation;
 
     void setupUi(QWidget* widget)
@@ -57,9 +57,9 @@ public:
 
         _layout = new QGridLayout(widget);
 
-        PressGlobalLimit = new QCheckBox("Global limit for press", widget);
-        PressGlobalLimit->setChecked(true);
-        _layout->addWidget(PressGlobalLimit, 2, 0, 1, 1);
+        press_global_limit = new QCheckBox("Global limit for press", widget);
+        press_global_limit->setChecked(true);
+        _layout->addWidget(press_global_limit, 2, 0, 1, 1);
 
         LoopAnimation = new QCheckBox("Loop animation", widget);
         LoopAnimation->setChecked(false);

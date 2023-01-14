@@ -51,7 +51,7 @@ void ResultDataWidget::subscribe()
     success = connect(ui->SpeedHighTwice, &QAction::triggered, this, &ResultDataWidget::speedChanged);
     Q_ASSERT(success);
 
-    success = connect(ui->PressGlobalLimit, &QCheckBox::stateChanged, this, &ResultDataWidget::pressLimitsChanged);
+    success = connect(ui->press_global_limit, &QCheckBox::stateChanged, this, &ResultDataWidget::pressLimitsChanged);
     Q_ASSERT(success);
 
     success = connect(ui->LoopAnimation, &QCheckBox::stateChanged, this, &ResultDataWidget::loopAnimationChanged);
@@ -211,7 +211,7 @@ void ResultDataWidget::stop_timer()
 
 void ResultDataWidget::pressLimitsChanged()
 {
-    m_press_global_lim = ui->PressGlobalLimit->isChecked();
+    m_press_global_lim = ui->press_global_limit->isChecked();
     update_press_axis();
 }
 
