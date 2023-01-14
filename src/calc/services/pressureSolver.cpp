@@ -98,7 +98,7 @@ std::vector<double> solve_press(const std::shared_ptr<mm::Grid> grd, const std::
                     ret.C[fc->cl1] += cf;
                 }
             } else {
-                rhs[fc->cl1] += fc->area * fc->u;
+                rhs[fc->cl1] += fc->area * fc->bound_u;
             }
         }
         case mm::FaceType::kTop:
@@ -146,18 +146,14 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
             continue;
         }
 
-        if (fc->type == mm::FaceType::kWell) {
+        if (fc->type == mm::FaceType::kWell && common::models::CommonVals::is_empty(fc->bound_press)) {
             fc->u = 0.0;
             continue;
         }
 
-        if (fc->type == mm::FaceType::kContour) {
-            if (!params->fract_end_imperm && !cm::CommonVals::is_empty(fc->bound_press)) {
-                double alp = get_res_ceff(fc->bound_satur, params);
-                u = -alp * (p[fc->cl1] - fc->bound_press);
-                break;
-                fc->u = 0.0; // empty bound press means that face is impermeable;
-            }
+        if (fc->type == mm::FaceType::kContour && params->fract_end_imperm) {
+            fc->u = 0.0;
+            continue;
         }
 
         double sigma = get_face_sigma(fc, s, params, grd);
