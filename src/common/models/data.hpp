@@ -15,7 +15,7 @@ public:
     double perm_fract;
     double poro_fract;
     double l;
-    double r;
+    double rf;
     double rw;
     double delta;
     double period;

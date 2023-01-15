@@ -138,7 +138,9 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         // double qnum = well_params->ql;
         // double perc = std::abs(qan - qnum) / qan * 100.0;
 
-        std::string mess = common::services::string_format("m = %.4f, q = %.5f", data->m, wwp->ql_well);
+        std::string mess = common::services::string_format(
+            "m = %.4f, q = %.5f, q_b = %.8f",
+            data->m, wwp->ql_well, wwp->ql_shore); // 2.0 * data->fract_shore_q[0]->v0);
         logging::write_log(mess, logging::kInfo);
 
         // save_faces_val(grd, data);

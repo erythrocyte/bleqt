@@ -167,6 +167,16 @@ void calc_u(const std::vector<double>& p, const std::vector<double>& s,
         fc->u = -sigma * (p1 - p2) / h;
     }
 
+    std::vector<double> q;
+    std::vector<double> u;
+
+    for (auto& fc : grd->faces) {
+        if (fc->type == mm::FaceType::kTop) {
+            q.push_back(fc->area * fc->u);
+            u.push_back(fc->u);
+        }
+    }
+
     int max_err_cind;
     double max_err;
     std::tie(max_err_cind, max_err) = calc_residual(grd, params);

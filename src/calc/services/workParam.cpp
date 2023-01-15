@@ -31,8 +31,11 @@ std::shared_ptr<common::models::WellWorkParams> calc_well_work_param(const std::
     double ql_well, qw_well;
     std::tie(ql_well, qw_well) = get_facetype_ql_qw(grd, data, false, s, { mm::FaceType::kWell });
 
-    qw_well *= (2.0 * data->m);
-    result->ql_well = ql_well * (2.0 * data->m);
+    if (!data->use_q) {
+        qw_well *= (2.0 * data->m);
+        ql_well *= (2.0 * data->m);
+    }
+    result->ql_well = ql_well;
     result->fw_well = cms::wellworkcalc::calc_fw(result->ql_well, qw_well);
 
     double ql_shore, qw_shore;

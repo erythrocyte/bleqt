@@ -115,7 +115,7 @@ void BleFramePresenter::onShowShockFrontCurve(bool status)
     if (status) {
         auto data = m_dataWidgetPresenter->get_data();
         double sc = cs::shock_front::get_shock_front(data->phys->n_wat, data->phys->k_mu);
-        m_resultDataWidgetPresenter->update_sc(data->r, sc);
+        m_resultDataWidgetPresenter->update_sc(data->rf, sc);
     }
 }
 
@@ -124,7 +124,7 @@ void BleFramePresenter::onRpValuesUpdated()
     auto data = m_dataWidgetPresenter->get_data();
     double sc = cs::shock_front::get_shock_front(data->phys->n_wat, data->phys->k_mu);
     m_shockfront_presenter->set_shockfront_value(sc);
-    m_resultDataWidgetPresenter->update_sc(data->r, sc);
+    m_resultDataWidgetPresenter->update_sc(data->rf, sc);
     m_fluidWidgetPresenter->update_view(data->phys->n_wat, data->phys->k_mu, sc);
 }
 
@@ -236,14 +236,14 @@ std::tuple<std::string, ble::src::logging::SeverityLevelEnum> BleFramePresenter:
 void BleFramePresenter::on_update_rhs_tab()
 {
     auto data = get_data();
-    m_boundVisualPresenter->set_data(data->data->rw, data->data->r, 100, data->bound);
+    m_boundVisualPresenter->set_data(data->data->rw, data->data->rf, 100, data->bound);
 }
 
 std::shared_ptr<ble::src::common::models::InputData> BleFramePresenter::get_data()
 {
     auto result = std::make_shared<ble::src::common::models::InputData>();
     result->data = m_dataWidgetPresenter->get_data();
-    result->bound = m_conditionsWidgetPresenter->get_bound_data(result->data->rw, result->data->r);
+    result->bound = m_conditionsWidgetPresenter->get_bound_data(result->data->rw, result->data->rf);
     result->sat_setts = m_satsolver_presenter->get_data();
     result->mesh_setts = m_gridsetts_presenter->get_data();
     result->sc_setts = m_shockfront_presenter->get_data();

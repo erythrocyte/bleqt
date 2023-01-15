@@ -51,7 +51,7 @@ std::shared_ptr<ble::src::common::models::Data> DataWidget::get_data()
     // geom
     result->delta = ui->Delta->value();
     result->l = ui->L->value();
-    result->r = ui->R->value();
+    result->rf = ui->R->value();
     result->rw = ui->Rw->value();
 
     // geol

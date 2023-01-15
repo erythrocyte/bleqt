@@ -183,7 +183,7 @@ public:
 
     void retranslateUi()
     {
-        _axisX->setTitleText("x");
+        _axisX->setTitleText("x/r");
         _axisYSat->setTitleText("s");
         _axisYPress->setTitleText("p");
         SeriesPress->setName("p");
