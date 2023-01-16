@@ -51,45 +51,50 @@ public:
     QCheckBox* press_global_limit;
     QCheckBox* LoopAnimation;
 
+    QAction* action_save;
+
     void setupUi(QWidget* widget)
     {
         Timer = new QTimer(widget);
 
         _layout = new QGridLayout(widget);
 
+        prepareMainToolbarUp(widget);
+        _layout->addWidget(m_toolbar_up, 0, 0, 1, 11);
+
         press_global_limit = new QCheckBox("Global limit for press", widget);
         press_global_limit->setChecked(true);
-        _layout->addWidget(press_global_limit, 2, 0, 1, 1);
+        _layout->addWidget(press_global_limit, 3, 0, 1, 1);
 
         LoopAnimation = new QCheckBox("Loop animation", widget);
         LoopAnimation->setChecked(false);
-        _layout->addWidget(LoopAnimation, 2, 1, 1, 1);
+        _layout->addWidget(LoopAnimation, 3, 1, 1, 1);
 
         QCommonStyle* style = new QCommonStyle();
-        m_toolbar = new QToolBar(widget);
+        m_toolbar_play_buttons = new QToolBar(widget);
         BtnSeekBack = new QAction("&Seek Back", widget);
         BtnSeekBack->setIcon(style->standardIcon(QStyle::SP_MediaSkipBackward));
-        m_toolbar->addAction(BtnSeekBack);
+        m_toolbar_play_buttons->addAction(BtnSeekBack);
         BtnStepBack = new QAction("&Step Back", widget);
         BtnStepBack->setIcon(style->standardIcon(QStyle::SP_MediaSeekBackward));
-        m_toolbar->addAction(BtnStepBack);
+        m_toolbar_play_buttons->addAction(BtnStepBack);
         BtnPlayPause = new QAction("&Play", widget);
         BtnPlayPause->setIcon(style->standardIcon(QStyle::SP_MediaPlay));
-        m_toolbar->addAction(BtnPlayPause);
+        m_toolbar_play_buttons->addAction(BtnPlayPause);
         BtnStop = new QAction("&Stop", widget);
         BtnStop->setIcon(style->standardIcon(QStyle::SP_MediaStop));
-        m_toolbar->addAction(BtnStop);
+        m_toolbar_play_buttons->addAction(BtnStop);
         BtnStepForward = new QAction("&Step Forward", widget);
         BtnStepForward->setIcon(style->standardIcon(QStyle::SP_MediaSeekForward));
-        m_toolbar->addAction(BtnStepForward);
+        m_toolbar_play_buttons->addAction(BtnStepForward);
         BtnSeekForward = new QAction("&Seek Forward", widget);
         BtnSeekForward->setIcon(style->standardIcon(QStyle::SP_MediaSkipForward));
-        m_toolbar->addAction(BtnSeekForward);
+        m_toolbar_play_buttons->addAction(BtnSeekForward);
 
         QAction* speedAction = new QAction("&Speed", widget);
         speedAction->setIcon(style->standardIcon(QStyle::SP_DesktopIcon));
-        m_toolbar->addAction(speedAction);
-        TlBtnSpeed = dynamic_cast<QToolButton*>(m_toolbar->widgetForAction(speedAction));
+        m_toolbar_play_buttons->addAction(speedAction);
+        TlBtnSpeed = dynamic_cast<QToolButton*>(m_toolbar_play_buttons->widgetForAction(speedAction));
         TlBtnSpeed->setPopupMode(QToolButton::InstantPopup);
         TlBtnSpeed->addAction(SpeedLowQuarter = new QAction("0.25", widget));
         TlBtnSpeed->addAction(SpeedLowHalf = new QAction("0.5", widget));
@@ -103,17 +108,17 @@ public:
         m_currentSpeed = SpeedNormal;
         update_selected_speed(m_currentSpeed);
 
-        _layout->addWidget(m_toolbar, 1, 0, 1, 3);
+        _layout->addWidget(m_toolbar_play_buttons, 2, 0, 1, 3);
 
         Slider = new QSlider(Qt::Orientation::Horizontal);
-        _layout->addWidget(Slider, 1, 3, 1, 7);
+        _layout->addWidget(Slider, 2, 3, 1, 7);
         Slider->setTickInterval(1.);
         Slider->setMinimum(1);
         Slider->setMaximum(1);
         Slider->setValue(1);
 
         Label = new QLabel();
-        _layout->addWidget(Label, 1, 10);
+        _layout->addWidget(Label, 2, 10);
 
         Chart = new QChart();
         Chart->legend()->setVisible(true);
@@ -135,7 +140,7 @@ public:
         _axisYPress->setRange(0., 1.);
 
         _chartView = new QChartView(Chart);
-        _layout->addWidget(_chartView, 0, 0, 1, 11);
+        _layout->addWidget(_chartView, 1, 0, 1, 11);
 
         SeriesPress = new QLineSeries();
         SeriesPressAn = new QLineSeries();
@@ -205,7 +210,7 @@ public:
 
     void tool_bar_enabled(bool status)
     {
-        m_toolbar->setEnabled(status);
+        m_toolbar_play_buttons->setEnabled(status);
     }
 
     double update_selected_speed(QObject* sender)
@@ -237,7 +242,8 @@ private:
     QValueAxis* _axisX;
     QValueAxis* _axisYPress;
     QValueAxis* _axisYSat;
-    QToolBar* m_toolbar;
+    QToolBar* m_toolbar_play_buttons;
+    QToolBar* m_toolbar_up;
     QAction* m_currentSpeed;
 
     double get_speed(QAction* action)
@@ -260,6 +266,17 @@ private:
             cf = 100;
 
         return norm_speed * (1.0 / cf);
+    }
+
+    void prepareMainToolbarUp(QWidget* widget)
+    {
+        m_toolbar_up = new QToolBar(widget);
+
+        QCommonStyle* style = new QCommonStyle();
+
+        action_save = new QAction("Save", widget);
+        action_save->setIcon(style->standardIcon(QStyle::SP_DialogSaveButton));
+        m_toolbar_up->addAction(action_save);
     }
 };
 

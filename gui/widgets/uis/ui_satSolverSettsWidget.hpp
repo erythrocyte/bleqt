@@ -212,7 +212,7 @@ private:
         m_fw_lim_label = new QLabel("Watercut limit, %");
         fw_limit = new QDoubleSpinBox();
         fw_limit->setMinimum(0.01);
-        fw_limit->setMaximum(99);
+        fw_limit->setMaximum(99.99);
         fw_limit->setSingleStep(1);
         fw_limit->setValue(98);
         fw_limit->setEnabled(false);

@@ -11,11 +11,16 @@ namespace ble::src::calc::models {
 
 class SuitStepDto {
 public:
+    SuitStepDto() { }
+    ~SuitStepDto() { }
+
     double sum_t;
     int index;
     double scur0;
-    int fw_const_iter;
     double prev_fw;
+    int fw_const_iter;
+    double tau;
+
     std::shared_ptr<common::models::WellWorkParams> wwp;
     std::shared_ptr<common::models::SolverData> data;
 };

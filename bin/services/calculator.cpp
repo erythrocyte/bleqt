@@ -11,6 +11,7 @@
 #include "calc/models/bleCalc.hpp"
 #include "calc/models/saturSolverSettings.hpp"
 #include "calc/models/saturSolverType.hpp"
+#include "calc/services/fieldDataSaver.hpp"
 #include "common/models/dataDistribution.hpp"
 #include "common/models/gridType.hpp"
 #include "common/models/meshSettings.hpp"
@@ -18,11 +19,13 @@
 #include "common/services/shockFront.hpp"
 #include "common/services/workDir.hpp"
 #include "common/services/workRp.hpp"
+#include "common/services/workString.hpp"
 #include "file/services/workFile.hpp"
 #include "mesh/services/makeGrid.hpp"
 
 namespace mss = ble::src::mesh::services;
 namespace clm = ble::src::calc::models;
+namespace cls = ble::src::calc::services;
 namespace cm = ble::src::common::models;
 namespace cs = ble::src::common::services;
 namespace fss = ble::src::file::services;
@@ -183,6 +186,72 @@ void Calculator::run_pv_m()
         // save to file;
         FwWellShoreConvResultsSaver::save(dir_path, one_result);
     }
+}
+
+void Calculator::run_stationary_s()
+{
+    auto data = SolverDataPreparer::get_solver_data();
+    data->kmu = 1.0;
+    data->rp_n = 2.0;
+    data->sat_setts->use_fw_shorewell_converge = false;
+    data->sat_setts->use_fwlim = false;
+    data->sat_setts->use_fw_delta = true;
+    data->sat_setts->fw_delta = 0.05;
+    data->sat_setts->fw_delta_iter = 200;
+    data->use_q = true;
+    data->sat_setts->satur_field_save_n = 1000;
+
+    auto item = std::make_shared<cm::DataDistribution>();
+    item->v0 = 0.5;
+    item->v1 = 0.5;
+    item->x0 = 0.0;
+    item->x1 = 1.0;
+    data->fract_shore_q.push_back(item);
+
+    item = std::make_shared<cm::DataDistribution>();
+    item->v0 = 1.0;
+    item->v1 = 1.0;
+    item->x0 = 0.0;
+    item->x1 = 1.0;
+    data->fract_shore_s.push_back(item);
+
+    // prepare shore saturation;
+    // double sc = cs::shock_front::get_shock_front(data->rp_n, data->kmu);
+    // item = std::make_shared<cm::DataDistribution>();
+    // item->v0 = sc;
+    // item->v1 = sc;
+    // item->x0 = 0.8;
+    // item->x1 = 1.0;
+    // data->fract_shore_s.push_back(item);
+
+    // prepare input dynamic data;
+    // std::vector<double> ms = { 1e-2, 2e-2, 4e-2, 6e-2, 8e-2, 1e-1, 5e-1, 1e0, 1e1, 1e2 };
+    // std::vector<double> taus = { 1e-5, 1e-5, 1e-5, 1e-5, 1e-5, 1e-6, 1e-6, 1e-7, 1e-7, 1e-7 };
+    // std::vector<double> fw_deltas = { 1, 10 };
+
+    double m = 1e-2;
+    double tau = 1e-5;
+
+    // std::vector<std::shared_ptr<models::FwWellShoreConvResults>> results;
+
+    std::string dir_path = "out/stationary_s";
+    cs::work_dir::remove_dir_my(dir_path);
+    cs::work_dir::make_dir_my(dir_path);
+
+    data->setPermFract(m / data->delta);
+    data->sat_setts->tau = tau;
+
+    auto grd = get_grid(data);
+    auto solve_result = solve(data, grd);
+
+    auto last_field = solve_result->fields.back();
+
+    // save to file;
+    std::string file_name = cs::string_format("field_t_%.5f.dat", last_field->t);
+    std::string file_path = cs::work_dir::combine_dir_my(dir_path, file_name);
+
+    // dir_path
+    cls::FieldDataSaver::save(file_path, grd, last_field);
 }
 
 }

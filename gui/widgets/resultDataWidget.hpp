@@ -56,6 +56,7 @@ private slots:
     void handleBtnSeekForwardClick();
     void PlayDynamicData();
     void speedChanged();
+    void saveField();
 };
 
 } // namespace ble_gui::widgets

@@ -5,6 +5,7 @@
 #include "common/services/commonVector.hpp"
 #include "common/services/workRp.hpp"
 #include "mesh/models/faceType.hpp"
+#include "saturSolverShared.hpp"
 
 namespace cs = ble::src::common::services;
 
@@ -106,7 +107,7 @@ void SaturImplicitSolverService::oper(oper_type oper_tp, const std::vector<doubl
     bool is_producer = m_data->is_producer_well();
     for (auto const& fc : m_grd->faces) {
         int upwind_cind = get_cind_s_upwind(fc);
-        double un = fc->u * get_face_cf(fc);
+        double un = fc->u * satur_solver_shared::get_face_cf(m_data, fc);
         double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
         double oper_cf = (oper_tp == oper_type::b && upwind_cind != -1)
             ? 1.0
@@ -145,7 +146,7 @@ std::vector<double> SaturImplicitSolverService::apply_oper(const std::vector<dou
         int upwind_cind = get_cind_s_upwind(fc);
         double s = upwind_cind == -1 ? fc->bound_satur : v[upwind_cind];
         double oper_cf = get_oper_cf(oper_tp, s, fc->type, is_prod_well);
-        double un = fc->u * get_face_cf(fc);
+        double un = fc->u * satur_solver_shared::get_face_cf(m_data, fc);
         double val = un * fc->area * oper_cf;
 
         if (fc->cl2 != -1) {
@@ -184,10 +185,4 @@ int SaturImplicitSolverService::get_cind_s_upwind(const std::shared_ptr<mesh::mo
         : fc->cl1;
 }
 
-double SaturImplicitSolverService::get_face_cf(const std::shared_ptr<mesh::models::Face> fc)
-{
-    return mesh::models::FaceType::is_top_bot(fc->type)
-        ? 1.0 / (2.0 * m_data->m)
-        : 1.0;
-}
 }

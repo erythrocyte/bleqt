@@ -17,6 +17,9 @@ set(HEADERS
 	calc/services/workParam.hpp
 	calc/services/saturAverService.hpp
 	calc/services/saturImplicitSolver.hpp
+	calc/services/saturSolverShared.hpp
+	calc/services/saturExplicitSolver.hpp
+	calc/services/fieldDataSaver.hpp
 	
 	logging/logger.hpp
 
@@ -63,6 +66,9 @@ set (SOURCES
 	calc/services/workParam.cpp
 	calc/services/saturAverService.cpp
 	calc/services/saturImplicitSolver.cpp
+	calc/services/saturSolverShared.cpp
+	calc/services/saturExplicitSolver.cpp
+	calc/services/fieldDataSaver.cpp
 	
 	calc/models/bleCalc.cpp
 	calc/models/bleResultData.cpp

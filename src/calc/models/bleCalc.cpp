@@ -102,7 +102,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     m_sum_t = 0.0;
     set_initial_cond();
 
-    int index = 0, fw_const_iter = 0;
+    int index = 0;
     double sumT = 0.0, sumU = 0.0, cur_fw = 0.0, sumQ = 0.0;
     double fract_pv = get_fract_pv();
     // std::vector<double> pvi_inds = {}; // 0.1, 0.5, 1.0, 2.0, 4.0, 6.0 };
@@ -120,15 +120,18 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
     double sf_aver_prev = std::accumulate(s_prev.begin(), s_prev.end(), 0.0) / s_prev.size();
 
     std::shared_ptr<common::models::WellWorkParams> wwp = services::calc_well_work_param(grd, s_prev, data, sumT);
+    cur_fw = wwp->fw_well;
 
     auto suit_step_params = std::make_shared<SuitStepDto>();
-    suit_step_params->prev_fw = wwp->fw_well;
+    suit_step_params->prev_fw = cur_fw;
     suit_step_params->data = data;
-    suit_step_params->fw_const_iter = fw_const_iter;
+    suit_step_params->fw_const_iter = 0;
     suit_step_params->index = index;
     suit_step_params->scur0 = s_prev[0];
     suit_step_params->sum_t = sumT;
     suit_step_params->wwp = wwp;
+    suit_step_params->tau = 0.0;
+
 
     if (!data->sat_setts->need_satur_solve) {
         // check_conservative();
@@ -194,7 +197,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         }
         index++;
 
-        suit_step_params->prev_fw = wwp->fw_well;
+        suit_step_params->prev_fw = cur_fw;
         auto wwp = services::calc_well_work_param(grd, s_cur, data, sumT);
         _results->well_work.push_back(wwp);
 
@@ -234,7 +237,7 @@ void BleCalc::calc(const std::shared_ptr<mesh::models::Grid> grd,
         double perc = get_perc(index, data->sat_setts->max_iter);
         set_progress(perc);
 
-        suit_step_params->fw_const_iter = fw_const_iter;
+        suit_step_params->tau = t;
         suit_step_params->index = index;
         suit_step_params->scur0 = s_cur[0];
         suit_step_params->wwp = wwp;
@@ -458,7 +461,7 @@ bool BleCalc::suit_step(std::shared_ptr<SuitStepDto> prms)
     } else if (prms->data->sat_setts->use_fw_delta) {
         double r_fw = std::abs(prms->wwp->fw_well - prms->prev_fw);
         if (r_fw != 0.0) { // initial they are same;
-            if (r_fw < prms->data->sat_setts->fw_delta) {
+            if (r_fw < prms->data->sat_setts->fw_delta * prms->tau) {
                 prms->fw_const_iter++;
             } else {
                 prms->fw_const_iter = 0;

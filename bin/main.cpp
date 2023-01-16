@@ -12,7 +12,8 @@ int main(int argc, char** argv)
     auto calculator = std::make_shared<ble::bin::services::Calculator>();
     // calculator->run_s_const_loop();
     // calculator->run_linear();
-    calculator->run_pv_m();
+    // calculator->run_pv_m();
+    calculator->run_stationary_s();
 
     return 0;
 }

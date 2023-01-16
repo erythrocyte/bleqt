@@ -2,6 +2,9 @@
 
 #include <sstream>
 
+#include "calc/services/fieldDataSaver.hpp"
+#include "services/saveFilePathService.hpp"
+
 namespace ble::gui::widgets {
 
 ResultDataWidget::ResultDataWidget(QWidget* parent)
@@ -55,6 +58,10 @@ void ResultDataWidget::subscribe()
     Q_ASSERT(success);
 
     success = connect(ui->LoopAnimation, &QCheckBox::stateChanged, this, &ResultDataWidget::loopAnimationChanged);
+    Q_ASSERT(success);
+
+    // up toolbar
+    success = connect(ui->action_save, &QAction::triggered, this, &ResultDataWidget::saveField);
     Q_ASSERT(success);
 }
 
@@ -242,6 +249,17 @@ double ResultDataWidget::get_press_max()
             result = d->p[cind];
 
     return result;
+}
+
+void ResultDataWidget::saveField()
+{
+    QString file_path = services::save_file_path::getSaveFilePathDat(this, "/home");
+
+    if (file_path.isEmpty())
+        return;
+
+    src::calc::services::FieldDataSaver::save(file_path.toStdString(), _data->grd,
+        _data->fields[ui->Slider->maximum() - 1]);
 }
 
 }

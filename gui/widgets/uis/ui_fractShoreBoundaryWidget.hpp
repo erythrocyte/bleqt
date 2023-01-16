@@ -125,7 +125,7 @@ private:
         q->setMinimum(0.0);
         q->setMaximum(1e5);
         q->setSingleStep(1);
-        q->setValue(1.0);
+        q->setValue(0.5);
         gbq_layout->addWidget(q_label, 1, 0, 1, 2);
         gbq_layout->addWidget(q, 1, 2, 1, 4);
 

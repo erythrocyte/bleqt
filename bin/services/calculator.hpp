@@ -22,6 +22,7 @@ public:
     void run_s_const_loop();
     void run_linear();
     void run_pv_m();
+    void run_stationary_s();
 
 private:
     int const PRINT_STEP = 1000;
