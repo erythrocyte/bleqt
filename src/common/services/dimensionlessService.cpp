@@ -97,7 +97,7 @@ std::tuple<std::shared_ptr<models::ScaleData>, std::shared_ptr<models::SolverDat
     result_solver_data->fract_end_imperm = params->bound->fract_end_imperm;
     result_solver_data->setFractShoreImperm(params->bound->fract_shore_imperm);
     result_solver_data->fract_shore_s = scale_distr_func(params->bound->fract_shore_s, [&](double s) { return s; });
-    result_solver_data->fract_shore_q = scale_distr_func(params->bound->fract_shore_q, scale_q);
+    result_solver_data->fract_shore_q = scale_distr_func(params->bound->fract_shore_q, [&](double q) { return q; });
     result_solver_data->initial_s = scale_distr_func(params->bound->initial_s, [&](double s) { return s; });
     result_solver_data->fract_end_press = scale_p(params->bound->fract_end_press);
     result_solver_data->pc = scale_p(params->bound->pc);
